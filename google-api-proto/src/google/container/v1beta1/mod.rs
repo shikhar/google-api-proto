@@ -999,7 +999,7 @@ pub struct IpAllocationPolicy {
 }
 /// Nested message and enum types in `IPAllocationPolicy`.
 pub mod ip_allocation_policy {
-    /// IP stack type
+    /// Possible values for IP stack type
     #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
     #[repr(i32)]
     pub enum StackType {
@@ -1025,8 +1025,10 @@ pub mod ip_allocation_policy {
 /// Configuration for Binary Authorization.
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct BinaryAuthorization {
-    /// Enable Binary Authorization for this cluster. If enabled, all container
-    /// images will be validated by Binary Authorization.
+    /// This field is deprecated. Leave this unset and instead configure
+    /// BinaryAuthorization using evaluation_mode. If evaluation_mode is set to
+    /// anything other than EVALUATION_MODE_UNSPECIFIED, this field is ignored.
+    #[deprecated]
     #[prost(bool, tag="1")]
     pub enabled: bool,
     /// Mode of operation for binauthz policy evaluation. Currently the only
@@ -1531,7 +1533,7 @@ pub struct NodePoolDefaults {
 /// Subset of NodeConfig message that has defaults.
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct NodeConfigDefaults {
-    /// GCFS (Google Container File System, a.k.a. Riptide) options.
+    /// GCFS (Google Container File System, also known as Riptide) options.
     #[prost(message, optional, tag="1")]
     pub gcfs_config: ::core::option::Option<GcfsConfig>,
 }
@@ -3275,7 +3277,7 @@ pub struct SetNodePoolSizeRequest {
 pub struct CompleteNodePoolUpgradeRequest {
     /// The name (project, location, cluster, node pool id) of the node pool to
     /// complete upgrade.
-    /// Specified in the format 'projects/*/locations/*/clusters/*/nodePools/*'.
+    /// Specified in the format `projects/*/locations/*/clusters/*/nodePools/*`.
     #[prost(string, tag="1")]
     pub name: ::prost::alloc::string::String,
 }
@@ -3404,7 +3406,8 @@ pub struct AutoprovisioningNodePoolDefaults {
     /// information, read [how to specify min CPU
     /// platform](<https://cloud.google.com/compute/docs/instances/specify-min-cpu-platform>)
     /// This field is deprecated, min_cpu_platform should be specified using
-    /// cloud.google.com/requested-min-cpu-platform label selector on the pod.
+    /// <https://cloud.google.com/requested-min-cpu-platform> label selector on the
+    /// pod.
     /// To unset the min cpu platform field pass "automatic"
     /// as field value.
     #[deprecated]
@@ -3827,7 +3830,7 @@ pub struct Location {
     /// Specified in the format `projects/*/locations/*`.
     #[prost(string, tag="2")]
     pub name: ::prost::alloc::string::String,
-    /// Whether the location is recomended for GKE cluster scheduling.
+    /// Whether the location is recommended for GKE cluster scheduling.
     #[prost(bool, tag="3")]
     pub recommended: bool,
 }
