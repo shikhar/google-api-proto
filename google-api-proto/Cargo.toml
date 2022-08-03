@@ -107,7 +107,6 @@ google-cloud-apigeeregistry-v1 = ["google-api", "google-cloud", "google-longrunn
 google-cloud-asset-v1 = ["google-api", "google-cloud", "google-cloud-orgpolicy-v1", "google-cloud-osconfig-v1", "google-iam-v1", "google-identity-accesscontextmanager-v1", "google-longrunning", "google-rpc", "google-type"]
 google-cloud-asset-v1p1beta1 = ["google-api", "google-cloud", "google-iam-v1"]
 google-cloud-asset-v1p2beta1 = ["google-api", "google-cloud", "google-iam-v1", "google-longrunning"]
-google-cloud-asset-v1p4beta1 = ["google-api", "google-cloud", "google-iam-v1", "google-longrunning", "google-rpc"]
 google-cloud-asset-v1p5beta1 = ["google-api", "google-cloud", "google-cloud-orgpolicy-v1", "google-iam-v1", "google-identity-accesscontextmanager-v1"]
 google-cloud-asset-v1p7beta1 = ["google-api", "google-cloud", "google-cloud-orgpolicy-v1", "google-cloud-osconfig-v1", "google-iam-v1", "google-identity-accesscontextmanager-v1", "google-longrunning"]
 google-cloud-assuredworkloads-regulatoryintercept-logging-v1 = ["google-cloud"]

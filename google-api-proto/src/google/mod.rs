@@ -120,7 +120,6 @@ pub mod chromeos;
         feature = "google-cloud-asset-v1",
         feature = "google-cloud-asset-v1p1beta1",
         feature = "google-cloud-asset-v1p2beta1",
-        feature = "google-cloud-asset-v1p4beta1",
         feature = "google-cloud-asset-v1p5beta1",
         feature = "google-cloud-asset-v1p7beta1",
         feature = "google-cloud-assuredworkloads-regulatoryintercept-logging-v1",
