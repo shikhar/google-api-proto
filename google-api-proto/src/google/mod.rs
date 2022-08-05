@@ -493,7 +493,12 @@ pub mod search;
 pub mod spanner;
 #[cfg(any(feature = "google-storage-v1", feature = "google-storage-v2"))]
 pub mod storage;
-#[cfg(any(feature = "google-storagetransfer-v1"))]
+#[cfg(
+    any(
+        feature = "google-storagetransfer-logging",
+        feature = "google-storagetransfer-v1",
+    )
+)]
 pub mod storagetransfer;
 #[cfg(any(feature = "google-streetview-publish-v1"))]
 pub mod streetview;

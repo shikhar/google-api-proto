@@ -389,6 +389,7 @@ pub mod ccc;
         feature = "google-spanner-v1",
         feature = "google-storage-v1",
         feature = "google-storage-v2",
+        feature = "google-storagetransfer-logging",
         feature = "google-storagetransfer-v1",
         feature = "google-streetview-publish-v1",
         feature = "google-type",
