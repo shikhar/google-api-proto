@@ -104,6 +104,8 @@ pub mod channel;
     )
 )]
 pub mod clouddms;
+#[cfg(any(feature = "google-cloud-cloudsetup-logging-v1"))]
+pub mod cloudsetup;
 #[cfg(any(feature = "google-cloud-commerce-consumer-procurement-v1alpha1"))]
 pub mod commerce;
 #[cfg(any(feature = "google-cloud-common"))]
