@@ -88,8 +88,8 @@ pub struct Asset {
     /// effectively policy is the union of both the policy set on this resource
     /// and each policy set on all of the resource's ancestry resource levels in
     /// the hierarchy. See
-    /// [this topic](<https://cloud.google.com/iam/docs/policies#inheritance>) for
-    /// more information.
+    /// [this topic](<https://cloud.google.com/iam/help/allow-policies/inheritance>)
+    /// for more information.
     #[prost(message, optional, tag="4")]
     pub iam_policy: ::core::option::Option<super::super::super::iam::v1::Policy>,
     /// A representation of an [organization
@@ -273,6 +273,7 @@ pub struct RelatedAsset {
     pub relationship_type: ::prost::alloc::string::String,
 }
 /// A result of Resource Search, containing information of a cloud resource.
+/// Next ID: 29
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ResourceSearchResult {
     /// The full resource name of this resource. Example:
@@ -1543,6 +1544,14 @@ pub struct SearchAllResourcesRequest {
     /// * `labels.env:*` to find Cloud resources that have a label "env".
     /// * `kmsKey:key` to find Cloud resources encrypted with a customer-managed
     ///   encryption key whose name contains the word "key".
+    /// * `relationships:instance-group-1` to find Cloud resources that have
+    ///   relationships with "instance-group-1" in the related resource name.
+    /// * `relationships:INSTANCE_TO_INSTANCEGROUP` to find compute instances that
+    ///   have relationships of type "INSTANCE_TO_INSTANCEGROUP".
+    /// * `relationships.INSTANCE_TO_INSTANCEGROUP:instance-group-1` to find
+    ///   compute instances that have relationships with "instance-group-1" in the
+    ///   compute instance group resource name, for relationship type
+    ///   "INSTANCE_TO_INSTANCEGROUP".
     /// * `state:ACTIVE` to find Cloud resources whose state contains "ACTIVE" as a
     ///   word.
     /// * `NOT state:ACTIVE` to find Cloud resources whose state doesn't contain
@@ -1687,8 +1696,8 @@ pub struct SearchAllIamPoliciesRequest {
     /// compared against each Cloud IAM policy binding, including its principals,
     /// roles, and Cloud IAM conditions. The returned Cloud IAM policies will only
     /// contain the bindings that match your query. To learn more about the IAM
-    /// policy structure, see [IAM policy
-    /// doc](<https://cloud.google.com/iam/docs/policies#structure>).
+    /// policy structure, see the [IAM policy
+    /// documentation](<https://cloud.google.com/iam/help/allow-policies/structure>).
     ///
     /// Examples:
     ///
