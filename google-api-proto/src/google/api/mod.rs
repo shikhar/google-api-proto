@@ -1,3 +1,5 @@
+#[cfg(any(feature = "google-api-apikeys-v2"))]
+pub mod apikeys;
 #[cfg(
     any(
         feature = "google-api-expr-conformance-v1alpha1",

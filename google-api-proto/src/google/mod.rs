@@ -42,6 +42,7 @@ pub mod analytics;
 #[cfg(
     any(
         feature = "google-api",
+        feature = "google-api-apikeys-v2",
         feature = "google-api-expr-conformance-v1alpha1",
         feature = "google-api-expr-v1alpha1",
         feature = "google-api-expr-v1beta1",

@@ -29,6 +29,7 @@ pub mod ccc;
         feature = "google-analytics-data-v1alpha",
         feature = "google-analytics-data-v1beta",
         feature = "google-api",
+        feature = "google-api-apikeys-v2",
         feature = "google-api-expr-conformance-v1alpha1",
         feature = "google-api-expr-v1alpha1",
         feature = "google-api-expr-v1beta1",
