@@ -114,6 +114,8 @@ pub mod common;
     any(feature = "google-cloud-compute-v1", feature = "google-cloud-compute-v1small")
 )]
 pub mod compute;
+#[cfg(any(feature = "google-cloud-connectors-v1"))]
+pub mod connectors;
 #[cfg(any(feature = "google-cloud-contactcenterinsights-v1"))]
 pub mod contactcenterinsights;
 #[cfg(

@@ -124,6 +124,7 @@ pub mod ccc;
         feature = "google-cloud-common",
         feature = "google-cloud-compute-v1",
         feature = "google-cloud-compute-v1small",
+        feature = "google-cloud-connectors-v1",
         feature = "google-cloud-contactcenterinsights-v1",
         feature = "google-cloud-datacatalog-v1",
         feature = "google-cloud-datacatalog-v1beta1",
