@@ -367,6 +367,7 @@ pub mod ccc;
         feature = "google-logging-type",
         feature = "google-logging-v2",
         feature = "google-longrunning",
+        feature = "google-maps-mapsplatformdatasets-v1alpha",
         feature = "google-maps-playablelocations-v3",
         feature = "google-maps-playablelocations-v3-sample",
         feature = "google-maps-regionlookup-v1alpha",

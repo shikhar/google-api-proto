@@ -1,3 +1,5 @@
+#[cfg(any(feature = "google-maps-mapsplatformdatasets-v1alpha"))]
+pub mod mapsplatformdatasets;
 #[cfg(
     any(
         feature = "google-maps-playablelocations-v3",

@@ -395,6 +395,7 @@ google-identity-accesscontextmanager-v1 = ["google-api", "google-identity-access
 google-logging-type = []
 google-logging-v2 = ["google-api", "google-logging-type", "google-longrunning", "google-rpc"]
 google-longrunning = ["google-api", "google-rpc"]
+google-maps-mapsplatformdatasets-v1alpha = ["google-api"]
 google-maps-playablelocations-v3 = ["google-api", "google-maps-playablelocations-v3-sample", "google-maps-unity", "google-type"]
 google-maps-playablelocations-v3-sample = ["google-api", "google-maps-playablelocations-v3", "google-type"]
 google-maps-regionlookup-v1alpha = ["google-api", "google-type"]
