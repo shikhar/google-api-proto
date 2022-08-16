@@ -1,330 +1,3 @@
-/// Runtime configuration for a workload.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct RuntimeConfig {
-    /// Optional. Version of the batch runtime.
-    #[prost(string, tag="1")]
-    pub version: ::prost::alloc::string::String,
-    /// Optional. Optional custom container image for the job runtime environment. If
-    /// not specified, a default container image will be used.
-    #[prost(string, tag="2")]
-    pub container_image: ::prost::alloc::string::String,
-    /// Optional. A mapping of property names to values, which are used to configure workload
-    /// execution.
-    #[prost(btree_map="string, string", tag="3")]
-    pub properties: ::prost::alloc::collections::BTreeMap<::prost::alloc::string::String, ::prost::alloc::string::String>,
-}
-/// Environment configuration for a workload.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct EnvironmentConfig {
-    /// Optional. Execution configuration for a workload.
-    #[prost(message, optional, tag="1")]
-    pub execution_config: ::core::option::Option<ExecutionConfig>,
-    /// Optional. Peripherals configuration that workload has access to.
-    #[prost(message, optional, tag="2")]
-    pub peripherals_config: ::core::option::Option<PeripheralsConfig>,
-}
-/// Execution configuration for a workload.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ExecutionConfig {
-    /// Optional. Service account that used to execute workload.
-    #[prost(string, tag="2")]
-    pub service_account: ::prost::alloc::string::String,
-    /// Optional. Tags used for network traffic control.
-    #[prost(string, repeated, tag="6")]
-    pub network_tags: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
-    /// Optional. The Cloud KMS key to use for encryption.
-    #[prost(string, tag="7")]
-    pub kms_key: ::prost::alloc::string::String,
-    /// Network configuration for workload execution.
-    #[prost(oneof="execution_config::Network", tags="4, 5")]
-    pub network: ::core::option::Option<execution_config::Network>,
-}
-/// Nested message and enum types in `ExecutionConfig`.
-pub mod execution_config {
-    /// Network configuration for workload execution.
-    #[derive(Clone, PartialEq, ::prost::Oneof)]
-    pub enum Network {
-        /// Optional. Network URI to connect workload to.
-        #[prost(string, tag="4")]
-        NetworkUri(::prost::alloc::string::String),
-        /// Optional. Subnetwork URI to connect workload to.
-        #[prost(string, tag="5")]
-        SubnetworkUri(::prost::alloc::string::String),
-    }
-}
-/// Spark History Server configuration for the workload.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct SparkHistoryServerConfig {
-    /// Optional. Resource name of an existing Dataproc Cluster to act as a Spark History
-    /// Server for the workload.
-    ///
-    /// Example:
-    ///
-    /// * `projects/\[project_id]/regions/[region]/clusters/[cluster_name\]`
-    #[prost(string, tag="1")]
-    pub dataproc_cluster: ::prost::alloc::string::String,
-}
-/// Auxiliary services configuration for a workload.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct PeripheralsConfig {
-    /// Optional. Resource name of an existing Dataproc Metastore service.
-    ///
-    /// Example:
-    ///
-    /// * `projects/\[project_id]/locations/[region]/services/[service_id\]`
-    #[prost(string, tag="1")]
-    pub metastore_service: ::prost::alloc::string::String,
-    /// Optional. The Spark History Server configuration for the workload.
-    #[prost(message, optional, tag="2")]
-    pub spark_history_server_config: ::core::option::Option<SparkHistoryServerConfig>,
-}
-/// Runtime information about workload execution.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct RuntimeInfo {
-    /// Output only. Map of remote access endpoints (such as web interfaces and APIs) to their
-    /// URIs.
-    #[prost(btree_map="string, string", tag="1")]
-    pub endpoints: ::prost::alloc::collections::BTreeMap<::prost::alloc::string::String, ::prost::alloc::string::String>,
-    /// Output only. A URI pointing to the location of the stdout and stderr of the workload.
-    #[prost(string, tag="2")]
-    pub output_uri: ::prost::alloc::string::String,
-    /// Output only. A URI pointing to the location of the diagnostics tarball.
-    #[prost(string, tag="3")]
-    pub diagnostic_output_uri: ::prost::alloc::string::String,
-}
-/// The cluster's GKE config.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct GkeClusterConfig {
-    /// Optional. A target GKE cluster to deploy to. It must be in the same project and
-    /// region as the Dataproc cluster (the GKE cluster can be zonal or regional).
-    /// Format: 'projects/{project}/locations/{location}/clusters/{cluster_id}'
-    #[prost(string, tag="2")]
-    pub gke_cluster_target: ::prost::alloc::string::String,
-    /// Optional. GKE NodePools where workloads will be scheduled. At least one node pool
-    /// must be assigned the 'default' role. Each role can be given to only a
-    /// single NodePoolTarget. All NodePools must have the same location settings.
-    /// If a nodePoolTarget is not specified, Dataproc constructs a default
-    /// nodePoolTarget.
-    #[prost(message, repeated, tag="3")]
-    pub node_pool_target: ::prost::alloc::vec::Vec<GkeNodePoolTarget>,
-}
-/// The configuration for running the Dataproc cluster on Kubernetes.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct KubernetesClusterConfig {
-    /// Optional. A namespace within the Kubernetes cluster to deploy into. If this namespace
-    /// does not exist, it is created. If it exists, Dataproc
-    /// verifies that another Dataproc VirtualCluster is not installed
-    /// into it. If not specified, the name of the Dataproc Cluster is used.
-    #[prost(string, tag="1")]
-    pub kubernetes_namespace: ::prost::alloc::string::String,
-    /// Optional. The software configuration for this Dataproc cluster running on Kubernetes.
-    #[prost(message, optional, tag="3")]
-    pub kubernetes_software_config: ::core::option::Option<KubernetesSoftwareConfig>,
-    #[prost(oneof="kubernetes_cluster_config::Config", tags="2")]
-    pub config: ::core::option::Option<kubernetes_cluster_config::Config>,
-}
-/// Nested message and enum types in `KubernetesClusterConfig`.
-pub mod kubernetes_cluster_config {
-    #[derive(Clone, PartialEq, ::prost::Oneof)]
-    pub enum Config {
-        /// Required. The configuration for running the Dataproc cluster on GKE.
-        #[prost(message, tag="2")]
-        GkeClusterConfig(super::GkeClusterConfig),
-    }
-}
-/// The software configuration for this Dataproc cluster running on Kubernetes.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct KubernetesSoftwareConfig {
-    /// The components that should be installed in this Dataproc cluster. The key
-    /// must be a string from the KubernetesComponent enumeration. The value is
-    /// the version of the software to be installed.
-    /// At least one entry must be specified.
-    #[prost(btree_map="string, string", tag="1")]
-    pub component_version: ::prost::alloc::collections::BTreeMap<::prost::alloc::string::String, ::prost::alloc::string::String>,
-    /// The properties to set on daemon config files.
-    ///
-    /// Property keys are specified in `prefix:property` format, for example
-    /// `spark:spark.kubernetes.container.image`. The following are supported
-    /// prefixes and their mappings:
-    ///
-    /// * spark:  `spark-defaults.conf`
-    ///
-    /// For more information, see [Cluster
-    /// properties](<https://cloud.google.com/dataproc/docs/concepts/cluster-properties>).
-    #[prost(btree_map="string, string", tag="2")]
-    pub properties: ::prost::alloc::collections::BTreeMap<::prost::alloc::string::String, ::prost::alloc::string::String>,
-}
-/// GKE NodePools that Dataproc workloads run on.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct GkeNodePoolTarget {
-    /// Required. The target GKE NodePool.
-    /// Format:
-    /// 'projects/{project}/locations/{location}/clusters/{cluster}/nodePools/{node_pool}'
-    #[prost(string, tag="1")]
-    pub node_pool: ::prost::alloc::string::String,
-    /// Required. The types of role for a GKE NodePool
-    #[prost(enumeration="gke_node_pool_target::Role", repeated, packed="false", tag="2")]
-    pub roles: ::prost::alloc::vec::Vec<i32>,
-    /// Optional. The configuration for the GKE NodePool.
-    ///
-    /// If specified, Dataproc attempts to create a NodePool with the
-    /// specified shape. If one with the same name already exists, it is
-    /// verified against all specified fields. If a field differs, the
-    /// virtual cluster creation will fail.
-    ///
-    /// If omitted, any NodePool with the specified name is used. If a
-    /// NodePool with the specified name does not exist, Dataproc create a NodePool
-    /// with default values.
-    #[prost(message, optional, tag="3")]
-    pub node_pool_config: ::core::option::Option<GkeNodePoolConfig>,
-}
-/// Nested message and enum types in `GkeNodePoolTarget`.
-pub mod gke_node_pool_target {
-    /// `Role` specifies whose tasks will run on the NodePool. The roles can be
-    /// specific to workloads. Exactly one GkeNodePoolTarget within the
-    /// VirtualCluster must have 'default' role, which is used to run all workloads
-    /// that are not associated with a NodePool.
-    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
-    #[repr(i32)]
-    pub enum Role {
-        /// Role is unspecified.
-        Unspecified = 0,
-        /// Any roles that are not directly assigned to a NodePool run on the
-        /// `default` role's NodePool.
-        Default = 1,
-        /// Run controllers and webhooks.
-        Controller = 2,
-        /// Run spark driver.
-        SparkDriver = 3,
-        /// Run spark executors.
-        SparkExecutor = 4,
-    }
-}
-/// The configuration of a GKE NodePool used by a [Dataproc-on-GKE
-/// cluster](<https://cloud.google.com/dataproc/docs/concepts/jobs/dataproc-gke#create-a-dataproc-on-gke-cluster>).
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct GkeNodePoolConfig {
-    /// Optional. The node pool configuration.
-    #[prost(message, optional, tag="2")]
-    pub config: ::core::option::Option<gke_node_pool_config::GkeNodeConfig>,
-    /// Optional. The list of Compute Engine
-    /// \[zones\](<https://cloud.google.com/compute/docs/zones#available>) where
-    /// NodePool's nodes will be located.
-    ///
-    /// **Note:** Currently, only one zone may be specified.
-    ///
-    /// If a location is not specified during NodePool creation, Dataproc will
-    /// choose a location.
-    #[prost(string, repeated, tag="13")]
-    pub locations: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
-    /// Optional. The autoscaler configuration for this NodePool. The autoscaler is enabled
-    /// only when a valid configuration is present.
-    #[prost(message, optional, tag="4")]
-    pub autoscaling: ::core::option::Option<gke_node_pool_config::GkeNodePoolAutoscalingConfig>,
-}
-/// Nested message and enum types in `GkeNodePoolConfig`.
-pub mod gke_node_pool_config {
-    /// Parameters that describe cluster nodes.
-    #[derive(Clone, PartialEq, ::prost::Message)]
-    pub struct GkeNodeConfig {
-        /// Optional. The name of a Compute Engine [machine
-        /// type](<https://cloud.google.com/compute/docs/machine-types>).
-        #[prost(string, tag="1")]
-        pub machine_type: ::prost::alloc::string::String,
-        /// Optional. Whether the nodes are created as [preemptible VM
-        /// instances](<https://cloud.google.com/compute/docs/instances/preemptible>).
-        #[prost(bool, tag="10")]
-        pub preemptible: bool,
-        /// Optional. The number of local SSD disks to attach to the node, which is limited by
-        /// the maximum number of disks allowable per zone (see [Adding Local
-        /// SSDs](<https://cloud.google.com/compute/docs/disks/local-ssd>)).
-        #[prost(int32, tag="7")]
-        pub local_ssd_count: i32,
-        /// Optional. A list of [hardware
-        /// accelerators](<https://cloud.google.com/compute/docs/gpus>) to attach to
-        /// each node.
-        #[prost(message, repeated, tag="11")]
-        pub accelerators: ::prost::alloc::vec::Vec<GkeNodePoolAcceleratorConfig>,
-        /// Optional. [Minimum CPU
-        /// platform](<https://cloud.google.com/compute/docs/instances/specify-min-cpu-platform>)
-        /// to be used by this instance. The instance may be scheduled on the
-        /// specified or a newer CPU platform. Specify the friendly names of CPU
-        /// platforms, such as "Intel Haswell"` or Intel Sandy Bridge".
-        #[prost(string, tag="13")]
-        pub min_cpu_platform: ::prost::alloc::string::String,
-    }
-    /// A GkeNodeConfigAcceleratorConfig represents a Hardware Accelerator request
-    /// for a NodePool.
-    #[derive(Clone, PartialEq, ::prost::Message)]
-    pub struct GkeNodePoolAcceleratorConfig {
-        /// The number of accelerator cards exposed to an instance.
-        #[prost(int64, tag="1")]
-        pub accelerator_count: i64,
-        /// The accelerator type resource namename (see GPUs on Compute Engine).
-        #[prost(string, tag="2")]
-        pub accelerator_type: ::prost::alloc::string::String,
-    }
-    /// GkeNodePoolAutoscaling contains information the cluster autoscaler needs to
-    /// adjust the size of the node pool to the current cluster usage.
-    #[derive(Clone, PartialEq, ::prost::Message)]
-    pub struct GkeNodePoolAutoscalingConfig {
-        /// The minimum number of nodes in the NodePool. Must be >= 0 and <=
-        /// max_node_count.
-        #[prost(int32, tag="2")]
-        pub min_node_count: i32,
-        /// The maximum number of nodes in the NodePool. Must be >= min_node_count.
-        /// **Note:** Quota must be sufficient to scale up the cluster.
-        #[prost(int32, tag="3")]
-        pub max_node_count: i32,
-    }
-}
-/// Cluster components that can be activated.
-#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
-#[repr(i32)]
-pub enum Component {
-    /// Unspecified component. Specifying this will cause Cluster creation to fail.
-    Unspecified = 0,
-    /// The Anaconda python distribution. The Anaconda component is not supported
-    /// in the Dataproc
-    /// <a
-    /// href="/dataproc/docs/concepts/versioning/dataproc-release-2.0">2.0
-    /// image</a>. The 2.0 image is pre-installed with Miniconda.
-    Anaconda = 5,
-    /// Docker
-    Docker = 13,
-    /// The Druid query engine. (alpha)
-    Druid = 9,
-    /// Flink
-    Flink = 14,
-    /// HBase. (beta)
-    Hbase = 11,
-    /// The Hive Web HCatalog (the REST service for accessing HCatalog).
-    HiveWebhcat = 3,
-    /// The Jupyter Notebook.
-    Jupyter = 1,
-    /// The Presto query engine.
-    Presto = 6,
-    /// The Ranger service.
-    Ranger = 12,
-    /// The Solr service.
-    Solr = 10,
-    /// The Zeppelin notebook.
-    Zeppelin = 4,
-    /// The Zookeeper service.
-    Zookeeper = 8,
-}
-/// Actions in response to failure of a resource associated with a cluster.
-#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
-#[repr(i32)]
-pub enum FailureAction {
-    /// When FailureAction is unspecified, failure action defaults to NO_ACTION.
-    Unspecified = 0,
-    /// Take no action on failure to create a cluster resource. NO_ACTION is the
-    /// default.
-    NoAction = 1,
-    /// Delete the failed cluster resource.
-    Delete = 2,
-}
 /// Describes an autoscaling policy for Dataproc cluster autoscaler.
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct AutoscalingPolicy {
@@ -750,6 +423,333 @@ pub mod autoscaling_policy_service_client {
             self.inner.unary(request.into_request(), path, codec).await
         }
     }
+}
+/// Runtime configuration for a workload.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct RuntimeConfig {
+    /// Optional. Version of the batch runtime.
+    #[prost(string, tag="1")]
+    pub version: ::prost::alloc::string::String,
+    /// Optional. Optional custom container image for the job runtime environment. If
+    /// not specified, a default container image will be used.
+    #[prost(string, tag="2")]
+    pub container_image: ::prost::alloc::string::String,
+    /// Optional. A mapping of property names to values, which are used to configure workload
+    /// execution.
+    #[prost(btree_map="string, string", tag="3")]
+    pub properties: ::prost::alloc::collections::BTreeMap<::prost::alloc::string::String, ::prost::alloc::string::String>,
+}
+/// Environment configuration for a workload.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct EnvironmentConfig {
+    /// Optional. Execution configuration for a workload.
+    #[prost(message, optional, tag="1")]
+    pub execution_config: ::core::option::Option<ExecutionConfig>,
+    /// Optional. Peripherals configuration that workload has access to.
+    #[prost(message, optional, tag="2")]
+    pub peripherals_config: ::core::option::Option<PeripheralsConfig>,
+}
+/// Execution configuration for a workload.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ExecutionConfig {
+    /// Optional. Service account that used to execute workload.
+    #[prost(string, tag="2")]
+    pub service_account: ::prost::alloc::string::String,
+    /// Optional. Tags used for network traffic control.
+    #[prost(string, repeated, tag="6")]
+    pub network_tags: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
+    /// Optional. The Cloud KMS key to use for encryption.
+    #[prost(string, tag="7")]
+    pub kms_key: ::prost::alloc::string::String,
+    /// Network configuration for workload execution.
+    #[prost(oneof="execution_config::Network", tags="4, 5")]
+    pub network: ::core::option::Option<execution_config::Network>,
+}
+/// Nested message and enum types in `ExecutionConfig`.
+pub mod execution_config {
+    /// Network configuration for workload execution.
+    #[derive(Clone, PartialEq, ::prost::Oneof)]
+    pub enum Network {
+        /// Optional. Network URI to connect workload to.
+        #[prost(string, tag="4")]
+        NetworkUri(::prost::alloc::string::String),
+        /// Optional. Subnetwork URI to connect workload to.
+        #[prost(string, tag="5")]
+        SubnetworkUri(::prost::alloc::string::String),
+    }
+}
+/// Spark History Server configuration for the workload.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct SparkHistoryServerConfig {
+    /// Optional. Resource name of an existing Dataproc Cluster to act as a Spark History
+    /// Server for the workload.
+    ///
+    /// Example:
+    ///
+    /// * `projects/\[project_id]/regions/[region]/clusters/[cluster_name\]`
+    #[prost(string, tag="1")]
+    pub dataproc_cluster: ::prost::alloc::string::String,
+}
+/// Auxiliary services configuration for a workload.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct PeripheralsConfig {
+    /// Optional. Resource name of an existing Dataproc Metastore service.
+    ///
+    /// Example:
+    ///
+    /// * `projects/\[project_id]/locations/[region]/services/[service_id\]`
+    #[prost(string, tag="1")]
+    pub metastore_service: ::prost::alloc::string::String,
+    /// Optional. The Spark History Server configuration for the workload.
+    #[prost(message, optional, tag="2")]
+    pub spark_history_server_config: ::core::option::Option<SparkHistoryServerConfig>,
+}
+/// Runtime information about workload execution.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct RuntimeInfo {
+    /// Output only. Map of remote access endpoints (such as web interfaces and APIs) to their
+    /// URIs.
+    #[prost(btree_map="string, string", tag="1")]
+    pub endpoints: ::prost::alloc::collections::BTreeMap<::prost::alloc::string::String, ::prost::alloc::string::String>,
+    /// Output only. A URI pointing to the location of the stdout and stderr of the workload.
+    #[prost(string, tag="2")]
+    pub output_uri: ::prost::alloc::string::String,
+    /// Output only. A URI pointing to the location of the diagnostics tarball.
+    #[prost(string, tag="3")]
+    pub diagnostic_output_uri: ::prost::alloc::string::String,
+}
+/// The cluster's GKE config.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct GkeClusterConfig {
+    /// Optional. A target GKE cluster to deploy to. It must be in the same project and
+    /// region as the Dataproc cluster (the GKE cluster can be zonal or regional).
+    /// Format: 'projects/{project}/locations/{location}/clusters/{cluster_id}'
+    #[prost(string, tag="2")]
+    pub gke_cluster_target: ::prost::alloc::string::String,
+    /// Optional. GKE NodePools where workloads will be scheduled. At least one node pool
+    /// must be assigned the 'default' role. Each role can be given to only a
+    /// single NodePoolTarget. All NodePools must have the same location settings.
+    /// If a nodePoolTarget is not specified, Dataproc constructs a default
+    /// nodePoolTarget.
+    #[prost(message, repeated, tag="3")]
+    pub node_pool_target: ::prost::alloc::vec::Vec<GkeNodePoolTarget>,
+}
+/// The configuration for running the Dataproc cluster on Kubernetes.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct KubernetesClusterConfig {
+    /// Optional. A namespace within the Kubernetes cluster to deploy into. If this namespace
+    /// does not exist, it is created. If it exists, Dataproc
+    /// verifies that another Dataproc VirtualCluster is not installed
+    /// into it. If not specified, the name of the Dataproc Cluster is used.
+    #[prost(string, tag="1")]
+    pub kubernetes_namespace: ::prost::alloc::string::String,
+    /// Optional. The software configuration for this Dataproc cluster running on Kubernetes.
+    #[prost(message, optional, tag="3")]
+    pub kubernetes_software_config: ::core::option::Option<KubernetesSoftwareConfig>,
+    #[prost(oneof="kubernetes_cluster_config::Config", tags="2")]
+    pub config: ::core::option::Option<kubernetes_cluster_config::Config>,
+}
+/// Nested message and enum types in `KubernetesClusterConfig`.
+pub mod kubernetes_cluster_config {
+    #[derive(Clone, PartialEq, ::prost::Oneof)]
+    pub enum Config {
+        /// Required. The configuration for running the Dataproc cluster on GKE.
+        #[prost(message, tag="2")]
+        GkeClusterConfig(super::GkeClusterConfig),
+    }
+}
+/// The software configuration for this Dataproc cluster running on Kubernetes.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct KubernetesSoftwareConfig {
+    /// The components that should be installed in this Dataproc cluster. The key
+    /// must be a string from the KubernetesComponent enumeration. The value is
+    /// the version of the software to be installed.
+    /// At least one entry must be specified.
+    #[prost(btree_map="string, string", tag="1")]
+    pub component_version: ::prost::alloc::collections::BTreeMap<::prost::alloc::string::String, ::prost::alloc::string::String>,
+    /// The properties to set on daemon config files.
+    ///
+    /// Property keys are specified in `prefix:property` format, for example
+    /// `spark:spark.kubernetes.container.image`. The following are supported
+    /// prefixes and their mappings:
+    ///
+    /// * spark:  `spark-defaults.conf`
+    ///
+    /// For more information, see [Cluster
+    /// properties](<https://cloud.google.com/dataproc/docs/concepts/cluster-properties>).
+    #[prost(btree_map="string, string", tag="2")]
+    pub properties: ::prost::alloc::collections::BTreeMap<::prost::alloc::string::String, ::prost::alloc::string::String>,
+}
+/// GKE NodePools that Dataproc workloads run on.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct GkeNodePoolTarget {
+    /// Required. The target GKE NodePool.
+    /// Format:
+    /// 'projects/{project}/locations/{location}/clusters/{cluster}/nodePools/{node_pool}'
+    #[prost(string, tag="1")]
+    pub node_pool: ::prost::alloc::string::String,
+    /// Required. The types of role for a GKE NodePool
+    #[prost(enumeration="gke_node_pool_target::Role", repeated, packed="false", tag="2")]
+    pub roles: ::prost::alloc::vec::Vec<i32>,
+    /// Optional. The configuration for the GKE NodePool.
+    ///
+    /// If specified, Dataproc attempts to create a NodePool with the
+    /// specified shape. If one with the same name already exists, it is
+    /// verified against all specified fields. If a field differs, the
+    /// virtual cluster creation will fail.
+    ///
+    /// If omitted, any NodePool with the specified name is used. If a
+    /// NodePool with the specified name does not exist, Dataproc create a NodePool
+    /// with default values.
+    #[prost(message, optional, tag="3")]
+    pub node_pool_config: ::core::option::Option<GkeNodePoolConfig>,
+}
+/// Nested message and enum types in `GkeNodePoolTarget`.
+pub mod gke_node_pool_target {
+    /// `Role` specifies whose tasks will run on the NodePool. The roles can be
+    /// specific to workloads. Exactly one GkeNodePoolTarget within the
+    /// VirtualCluster must have 'default' role, which is used to run all workloads
+    /// that are not associated with a NodePool.
+    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+    #[repr(i32)]
+    pub enum Role {
+        /// Role is unspecified.
+        Unspecified = 0,
+        /// Any roles that are not directly assigned to a NodePool run on the
+        /// `default` role's NodePool.
+        Default = 1,
+        /// Run controllers and webhooks.
+        Controller = 2,
+        /// Run spark driver.
+        SparkDriver = 3,
+        /// Run spark executors.
+        SparkExecutor = 4,
+    }
+}
+/// The configuration of a GKE NodePool used by a [Dataproc-on-GKE
+/// cluster](<https://cloud.google.com/dataproc/docs/concepts/jobs/dataproc-gke#create-a-dataproc-on-gke-cluster>).
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct GkeNodePoolConfig {
+    /// Optional. The node pool configuration.
+    #[prost(message, optional, tag="2")]
+    pub config: ::core::option::Option<gke_node_pool_config::GkeNodeConfig>,
+    /// Optional. The list of Compute Engine
+    /// \[zones\](<https://cloud.google.com/compute/docs/zones#available>) where
+    /// NodePool's nodes will be located.
+    ///
+    /// **Note:** Currently, only one zone may be specified.
+    ///
+    /// If a location is not specified during NodePool creation, Dataproc will
+    /// choose a location.
+    #[prost(string, repeated, tag="13")]
+    pub locations: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
+    /// Optional. The autoscaler configuration for this NodePool. The autoscaler is enabled
+    /// only when a valid configuration is present.
+    #[prost(message, optional, tag="4")]
+    pub autoscaling: ::core::option::Option<gke_node_pool_config::GkeNodePoolAutoscalingConfig>,
+}
+/// Nested message and enum types in `GkeNodePoolConfig`.
+pub mod gke_node_pool_config {
+    /// Parameters that describe cluster nodes.
+    #[derive(Clone, PartialEq, ::prost::Message)]
+    pub struct GkeNodeConfig {
+        /// Optional. The name of a Compute Engine [machine
+        /// type](<https://cloud.google.com/compute/docs/machine-types>).
+        #[prost(string, tag="1")]
+        pub machine_type: ::prost::alloc::string::String,
+        /// Optional. Whether the nodes are created as [preemptible VM
+        /// instances](<https://cloud.google.com/compute/docs/instances/preemptible>).
+        #[prost(bool, tag="10")]
+        pub preemptible: bool,
+        /// Optional. The number of local SSD disks to attach to the node, which is limited by
+        /// the maximum number of disks allowable per zone (see [Adding Local
+        /// SSDs](<https://cloud.google.com/compute/docs/disks/local-ssd>)).
+        #[prost(int32, tag="7")]
+        pub local_ssd_count: i32,
+        /// Optional. A list of [hardware
+        /// accelerators](<https://cloud.google.com/compute/docs/gpus>) to attach to
+        /// each node.
+        #[prost(message, repeated, tag="11")]
+        pub accelerators: ::prost::alloc::vec::Vec<GkeNodePoolAcceleratorConfig>,
+        /// Optional. [Minimum CPU
+        /// platform](<https://cloud.google.com/compute/docs/instances/specify-min-cpu-platform>)
+        /// to be used by this instance. The instance may be scheduled on the
+        /// specified or a newer CPU platform. Specify the friendly names of CPU
+        /// platforms, such as "Intel Haswell"` or Intel Sandy Bridge".
+        #[prost(string, tag="13")]
+        pub min_cpu_platform: ::prost::alloc::string::String,
+    }
+    /// A GkeNodeConfigAcceleratorConfig represents a Hardware Accelerator request
+    /// for a NodePool.
+    #[derive(Clone, PartialEq, ::prost::Message)]
+    pub struct GkeNodePoolAcceleratorConfig {
+        /// The number of accelerator cards exposed to an instance.
+        #[prost(int64, tag="1")]
+        pub accelerator_count: i64,
+        /// The accelerator type resource namename (see GPUs on Compute Engine).
+        #[prost(string, tag="2")]
+        pub accelerator_type: ::prost::alloc::string::String,
+    }
+    /// GkeNodePoolAutoscaling contains information the cluster autoscaler needs to
+    /// adjust the size of the node pool to the current cluster usage.
+    #[derive(Clone, PartialEq, ::prost::Message)]
+    pub struct GkeNodePoolAutoscalingConfig {
+        /// The minimum number of nodes in the NodePool. Must be >= 0 and <=
+        /// max_node_count.
+        #[prost(int32, tag="2")]
+        pub min_node_count: i32,
+        /// The maximum number of nodes in the NodePool. Must be >= min_node_count.
+        /// **Note:** Quota must be sufficient to scale up the cluster.
+        #[prost(int32, tag="3")]
+        pub max_node_count: i32,
+    }
+}
+/// Cluster components that can be activated.
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+#[repr(i32)]
+pub enum Component {
+    /// Unspecified component. Specifying this will cause Cluster creation to fail.
+    Unspecified = 0,
+    /// The Anaconda python distribution. The Anaconda component is not supported
+    /// in the Dataproc
+    /// <a
+    /// href="/dataproc/docs/concepts/versioning/dataproc-release-2.0">2.0
+    /// image</a>. The 2.0 image is pre-installed with Miniconda.
+    Anaconda = 5,
+    /// Docker
+    Docker = 13,
+    /// The Druid query engine. (alpha)
+    Druid = 9,
+    /// Flink
+    Flink = 14,
+    /// HBase. (beta)
+    Hbase = 11,
+    /// The Hive Web HCatalog (the REST service for accessing HCatalog).
+    HiveWebhcat = 3,
+    /// The Jupyter Notebook.
+    Jupyter = 1,
+    /// The Presto query engine.
+    Presto = 6,
+    /// The Ranger service.
+    Ranger = 12,
+    /// The Solr service.
+    Solr = 10,
+    /// The Zeppelin notebook.
+    Zeppelin = 4,
+    /// The Zookeeper service.
+    Zookeeper = 8,
+}
+/// Actions in response to failure of a resource associated with a cluster.
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+#[repr(i32)]
+pub enum FailureAction {
+    /// When FailureAction is unspecified, failure action defaults to NO_ACTION.
+    Unspecified = 0,
+    /// Take no action on failure to create a cluster resource. NO_ACTION is the
+    /// default.
+    NoAction = 1,
+    /// Delete the failed cluster resource.
+    Delete = 2,
 }
 /// Describes the identifying information, config, and status of
 /// a Dataproc cluster
@@ -2165,6 +2165,542 @@ pub mod cluster_controller_client {
             self.inner.unary(request.into_request(), path, codec).await
         }
     }
+}
+/// A request to create a batch workload.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct CreateBatchRequest {
+    /// Required. The parent resource where this batch will be created.
+    #[prost(string, tag="1")]
+    pub parent: ::prost::alloc::string::String,
+    /// Required. The batch to create.
+    #[prost(message, optional, tag="2")]
+    pub batch: ::core::option::Option<Batch>,
+    /// Optional. The ID to use for the batch, which will become the final component of
+    /// the batch's resource name.
+    ///
+    /// This value must be 4-63 characters. Valid characters are `/\[a-z][0-9\]-/`.
+    #[prost(string, tag="3")]
+    pub batch_id: ::prost::alloc::string::String,
+    /// Optional. A unique ID used to identify the request. If the service
+    /// receives two
+    /// \[CreateBatchRequest\](<https://cloud.google.com/dataproc/docs/reference/rpc/google.cloud.dataproc.v1#google.cloud.dataproc.v1.CreateBatchRequest>)s
+    /// with the same request_id, the second request is ignored and the
+    /// Operation that corresponds to the first Batch created and stored
+    /// in the backend is returned.
+    ///
+    /// Recommendation: Set this value to a
+    /// \[UUID\](<https://en.wikipedia.org/wiki/Universally_unique_identifier>).
+    ///
+    /// The value must contain only letters (a-z, A-Z), numbers (0-9),
+    /// underscores (_), and hyphens (-). The maximum length is 40 characters.
+    #[prost(string, tag="4")]
+    pub request_id: ::prost::alloc::string::String,
+}
+/// A request to get the resource representation for a batch workload.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct GetBatchRequest {
+    /// Required. The name of the batch to retrieve.
+    #[prost(string, tag="1")]
+    pub name: ::prost::alloc::string::String,
+}
+/// A request to list batch workloads in a project.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ListBatchesRequest {
+    /// Required. The parent, which owns this collection of batches.
+    #[prost(string, tag="1")]
+    pub parent: ::prost::alloc::string::String,
+    /// Optional. The maximum number of batches to return in each response.
+    /// The service may return fewer than this value.
+    /// The default page size is 20; the maximum page size is 1000.
+    #[prost(int32, tag="2")]
+    pub page_size: i32,
+    /// Optional. A page token received from a previous `ListBatches` call.
+    /// Provide this token to retrieve the subsequent page.
+    #[prost(string, tag="3")]
+    pub page_token: ::prost::alloc::string::String,
+}
+/// A list of batch workloads.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ListBatchesResponse {
+    /// The batches from the specified collection.
+    #[prost(message, repeated, tag="1")]
+    pub batches: ::prost::alloc::vec::Vec<Batch>,
+    /// A token, which can be sent as `page_token` to retrieve the next page.
+    /// If this field is omitted, there are no subsequent pages.
+    #[prost(string, tag="2")]
+    pub next_page_token: ::prost::alloc::string::String,
+}
+/// A request to delete a batch workload.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct DeleteBatchRequest {
+    /// Required. The name of the batch resource to delete.
+    #[prost(string, tag="1")]
+    pub name: ::prost::alloc::string::String,
+}
+/// A representation of a batch workload in the service.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct Batch {
+    /// Output only. The resource name of the batch.
+    #[prost(string, tag="1")]
+    pub name: ::prost::alloc::string::String,
+    /// Output only. A batch UUID (Unique Universal Identifier). The service
+    /// generates this value when it creates the batch.
+    #[prost(string, tag="2")]
+    pub uuid: ::prost::alloc::string::String,
+    /// Output only. The time when the batch was created.
+    #[prost(message, optional, tag="3")]
+    pub create_time: ::core::option::Option<::prost_types::Timestamp>,
+    /// Output only. Runtime information about batch execution.
+    #[prost(message, optional, tag="8")]
+    pub runtime_info: ::core::option::Option<RuntimeInfo>,
+    /// Output only. The state of the batch.
+    #[prost(enumeration="batch::State", tag="9")]
+    pub state: i32,
+    /// Output only. Batch state details, such as a failure
+    /// description if the state is `FAILED`.
+    #[prost(string, tag="10")]
+    pub state_message: ::prost::alloc::string::String,
+    /// Output only. The time when the batch entered a current state.
+    #[prost(message, optional, tag="11")]
+    pub state_time: ::core::option::Option<::prost_types::Timestamp>,
+    /// Output only. The email address of the user who created the batch.
+    #[prost(string, tag="12")]
+    pub creator: ::prost::alloc::string::String,
+    /// Optional. The labels to associate with this batch.
+    /// Label **keys** must contain 1 to 63 characters, and must conform to
+    /// [RFC 1035](<https://www.ietf.org/rfc/rfc1035.txt>).
+    /// Label **values** may be empty, but, if present, must contain 1 to 63
+    /// characters, and must conform to [RFC
+    /// 1035](<https://www.ietf.org/rfc/rfc1035.txt>). No more than 32 labels can be
+    /// associated with a batch.
+    #[prost(btree_map="string, string", tag="13")]
+    pub labels: ::prost::alloc::collections::BTreeMap<::prost::alloc::string::String, ::prost::alloc::string::String>,
+    /// Optional. Runtime configuration for the batch execution.
+    #[prost(message, optional, tag="14")]
+    pub runtime_config: ::core::option::Option<RuntimeConfig>,
+    /// Optional. Environment configuration for the batch execution.
+    #[prost(message, optional, tag="15")]
+    pub environment_config: ::core::option::Option<EnvironmentConfig>,
+    /// Output only. The resource name of the operation associated with this batch.
+    #[prost(string, tag="16")]
+    pub operation: ::prost::alloc::string::String,
+    /// Output only. Historical state information for the batch.
+    #[prost(message, repeated, tag="17")]
+    pub state_history: ::prost::alloc::vec::Vec<batch::StateHistory>,
+    /// The application/framework-specific portion of the batch configuration.
+    #[prost(oneof="batch::BatchConfig", tags="4, 5, 6, 7")]
+    pub batch_config: ::core::option::Option<batch::BatchConfig>,
+}
+/// Nested message and enum types in `Batch`.
+pub mod batch {
+    /// Historical state information.
+    #[derive(Clone, PartialEq, ::prost::Message)]
+    pub struct StateHistory {
+        /// Output only. The state of the batch at this point in history.
+        #[prost(enumeration="State", tag="1")]
+        pub state: i32,
+        /// Output only. Details about the state at this point in history.
+        #[prost(string, tag="2")]
+        pub state_message: ::prost::alloc::string::String,
+        /// Output only. The time when the batch entered the historical state.
+        #[prost(message, optional, tag="3")]
+        pub state_start_time: ::core::option::Option<::prost_types::Timestamp>,
+    }
+    /// The batch state.
+    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+    #[repr(i32)]
+    pub enum State {
+        /// The batch state is unknown.
+        Unspecified = 0,
+        /// The batch is created before running.
+        Pending = 1,
+        /// The batch is running.
+        Running = 2,
+        /// The batch is cancelling.
+        Cancelling = 3,
+        /// The batch cancellation was successful.
+        Cancelled = 4,
+        /// The batch completed successfully.
+        Succeeded = 5,
+        /// The batch is no longer running due to an error.
+        Failed = 6,
+    }
+    /// The application/framework-specific portion of the batch configuration.
+    #[derive(Clone, PartialEq, ::prost::Oneof)]
+    pub enum BatchConfig {
+        /// Optional. PySpark batch config.
+        #[prost(message, tag="4")]
+        PysparkBatch(super::PySparkBatch),
+        /// Optional. Spark batch config.
+        #[prost(message, tag="5")]
+        SparkBatch(super::SparkBatch),
+        /// Optional. SparkR batch config.
+        #[prost(message, tag="6")]
+        SparkRBatch(super::SparkRBatch),
+        /// Optional. SparkSql batch config.
+        #[prost(message, tag="7")]
+        SparkSqlBatch(super::SparkSqlBatch),
+    }
+}
+/// A configuration for running an
+/// [Apache
+/// PySpark](<https://spark.apache.org/docs/latest/api/python/getting_started/quickstart.html>)
+/// batch workload.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct PySparkBatch {
+    /// Required. The HCFS URI of the main Python file to use as the Spark driver. Must
+    /// be a .py file.
+    #[prost(string, tag="1")]
+    pub main_python_file_uri: ::prost::alloc::string::String,
+    /// Optional. The arguments to pass to the driver. Do not include arguments
+    /// that can be set as batch properties, such as `--conf`, since a collision
+    /// can occur that causes an incorrect batch submission.
+    #[prost(string, repeated, tag="2")]
+    pub args: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
+    /// Optional. HCFS file URIs of Python files to pass to the PySpark
+    /// framework. Supported file types: `.py`, `.egg`, and `.zip`.
+    #[prost(string, repeated, tag="3")]
+    pub python_file_uris: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
+    /// Optional. HCFS URIs of jar files to add to the classpath of the
+    /// Spark driver and tasks.
+    #[prost(string, repeated, tag="4")]
+    pub jar_file_uris: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
+    /// Optional. HCFS URIs of files to be placed in the working directory of
+    /// each executor.
+    #[prost(string, repeated, tag="5")]
+    pub file_uris: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
+    /// Optional. HCFS URIs of archives to be extracted into the working directory
+    /// of each executor. Supported file types:
+    /// `.jar`, `.tar`, `.tar.gz`, `.tgz`, and `.zip`.
+    #[prost(string, repeated, tag="6")]
+    pub archive_uris: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
+}
+/// A configuration for running an [Apache Spark](<http://spark.apache.org/>)
+/// batch workload.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct SparkBatch {
+    /// Optional. The arguments to pass to the driver. Do not include arguments
+    /// that can be set as batch properties, such as `--conf`, since a collision
+    /// can occur that causes an incorrect batch submission.
+    #[prost(string, repeated, tag="3")]
+    pub args: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
+    /// Optional. HCFS URIs of jar files to add to the classpath of the
+    /// Spark driver and tasks.
+    #[prost(string, repeated, tag="4")]
+    pub jar_file_uris: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
+    /// Optional. HCFS URIs of files to be placed in the working directory of
+    /// each executor.
+    #[prost(string, repeated, tag="5")]
+    pub file_uris: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
+    /// Optional. HCFS URIs of archives to be extracted into the working directory
+    /// of each executor. Supported file types:
+    /// `.jar`, `.tar`, `.tar.gz`, `.tgz`, and `.zip`.
+    #[prost(string, repeated, tag="6")]
+    pub archive_uris: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
+    /// The specification of the main method to call to drive the Spark
+    /// workload. Specify either the jar file that contains the main class or the
+    /// main class name. To pass both a main jar and a main class in that jar, add
+    /// the jar to `jar_file_uris`, and then specify the main class
+    /// name in `main_class`.
+    #[prost(oneof="spark_batch::Driver", tags="1, 2")]
+    pub driver: ::core::option::Option<spark_batch::Driver>,
+}
+/// Nested message and enum types in `SparkBatch`.
+pub mod spark_batch {
+    /// The specification of the main method to call to drive the Spark
+    /// workload. Specify either the jar file that contains the main class or the
+    /// main class name. To pass both a main jar and a main class in that jar, add
+    /// the jar to `jar_file_uris`, and then specify the main class
+    /// name in `main_class`.
+    #[derive(Clone, PartialEq, ::prost::Oneof)]
+    pub enum Driver {
+        /// Optional. The HCFS URI of the jar file that contains the main class.
+        #[prost(string, tag="1")]
+        MainJarFileUri(::prost::alloc::string::String),
+        /// Optional. The name of the driver main class. The jar file that contains the class
+        /// must be in the classpath or specified in `jar_file_uris`.
+        #[prost(string, tag="2")]
+        MainClass(::prost::alloc::string::String),
+    }
+}
+/// A configuration for running an
+/// [Apache SparkR](<https://spark.apache.org/docs/latest/sparkr.html>)
+/// batch workload.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct SparkRBatch {
+    /// Required. The HCFS URI of the main R file to use as the driver.
+    /// Must be a `.R` or `.r` file.
+    #[prost(string, tag="1")]
+    pub main_r_file_uri: ::prost::alloc::string::String,
+    /// Optional. The arguments to pass to the Spark driver. Do not include arguments
+    /// that can be set as batch properties, such as `--conf`, since a collision
+    /// can occur that causes an incorrect batch submission.
+    #[prost(string, repeated, tag="2")]
+    pub args: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
+    /// Optional. HCFS URIs of files to be placed in the working directory of
+    /// each executor.
+    #[prost(string, repeated, tag="3")]
+    pub file_uris: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
+    /// Optional. HCFS URIs of archives to be extracted into the working directory
+    /// of each executor. Supported file types:
+    /// `.jar`, `.tar`, `.tar.gz`, `.tgz`, and `.zip`.
+    #[prost(string, repeated, tag="4")]
+    pub archive_uris: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
+}
+/// A configuration for running
+/// [Apache Spark SQL](<http://spark.apache.org/sql/>) queries as a batch workload.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct SparkSqlBatch {
+    /// Required. The HCFS URI of the script that contains Spark SQL queries to execute.
+    #[prost(string, tag="1")]
+    pub query_file_uri: ::prost::alloc::string::String,
+    /// Optional. Mapping of query variable names to values (equivalent to the
+    /// Spark SQL command: `SET name="value";`).
+    #[prost(btree_map="string, string", tag="2")]
+    pub query_variables: ::prost::alloc::collections::BTreeMap<::prost::alloc::string::String, ::prost::alloc::string::String>,
+    /// Optional. HCFS URIs of jar files to be added to the Spark CLASSPATH.
+    #[prost(string, repeated, tag="3")]
+    pub jar_file_uris: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
+}
+/// Generated client implementations.
+pub mod batch_controller_client {
+    #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
+    use tonic::codegen::*;
+    /// The BatchController provides methods to manage batch workloads.
+    #[derive(Debug, Clone)]
+    pub struct BatchControllerClient<T> {
+        inner: tonic::client::Grpc<T>,
+    }
+    impl<T> BatchControllerClient<T>
+    where
+        T: tonic::client::GrpcService<tonic::body::BoxBody>,
+        T::Error: Into<StdError>,
+        T::ResponseBody: Body<Data = Bytes> + Send + 'static,
+        <T::ResponseBody as Body>::Error: Into<StdError> + Send,
+    {
+        pub fn new(inner: T) -> Self {
+            let inner = tonic::client::Grpc::new(inner);
+            Self { inner }
+        }
+        pub fn with_interceptor<F>(
+            inner: T,
+            interceptor: F,
+        ) -> BatchControllerClient<InterceptedService<T, F>>
+        where
+            F: tonic::service::Interceptor,
+            T::ResponseBody: Default,
+            T: tonic::codegen::Service<
+                http::Request<tonic::body::BoxBody>,
+                Response = http::Response<
+                    <T as tonic::client::GrpcService<tonic::body::BoxBody>>::ResponseBody,
+                >,
+            >,
+            <T as tonic::codegen::Service<
+                http::Request<tonic::body::BoxBody>,
+            >>::Error: Into<StdError> + Send + Sync,
+        {
+            BatchControllerClient::new(InterceptedService::new(inner, interceptor))
+        }
+        /// Compress requests with `gzip`.
+        ///
+        /// This requires the server to support it otherwise it might respond with an
+        /// error.
+        #[must_use]
+        pub fn send_gzip(mut self) -> Self {
+            self.inner = self.inner.send_gzip();
+            self
+        }
+        /// Enable decompressing responses with `gzip`.
+        #[must_use]
+        pub fn accept_gzip(mut self) -> Self {
+            self.inner = self.inner.accept_gzip();
+            self
+        }
+        /// Creates a batch workload that executes asynchronously.
+        pub async fn create_batch(
+            &mut self,
+            request: impl tonic::IntoRequest<super::CreateBatchRequest>,
+        ) -> Result<
+            tonic::Response<super::super::super::super::longrunning::Operation>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/google.cloud.dataproc.v1.BatchController/CreateBatch",
+            );
+            self.inner.unary(request.into_request(), path, codec).await
+        }
+        /// Gets the batch workload resource representation.
+        pub async fn get_batch(
+            &mut self,
+            request: impl tonic::IntoRequest<super::GetBatchRequest>,
+        ) -> Result<tonic::Response<super::Batch>, tonic::Status> {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/google.cloud.dataproc.v1.BatchController/GetBatch",
+            );
+            self.inner.unary(request.into_request(), path, codec).await
+        }
+        /// Lists batch workloads.
+        pub async fn list_batches(
+            &mut self,
+            request: impl tonic::IntoRequest<super::ListBatchesRequest>,
+        ) -> Result<tonic::Response<super::ListBatchesResponse>, tonic::Status> {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/google.cloud.dataproc.v1.BatchController/ListBatches",
+            );
+            self.inner.unary(request.into_request(), path, codec).await
+        }
+        /// Deletes the batch workload resource. If the batch is not in terminal state,
+        /// the delete fails and the response returns `FAILED_PRECONDITION`.
+        pub async fn delete_batch(
+            &mut self,
+            request: impl tonic::IntoRequest<super::DeleteBatchRequest>,
+        ) -> Result<tonic::Response<()>, tonic::Status> {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/google.cloud.dataproc.v1.BatchController/DeleteBatch",
+            );
+            self.inner.unary(request.into_request(), path, codec).await
+        }
+    }
+}
+/// Metadata describing the Batch operation.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct BatchOperationMetadata {
+    /// Name of the batch for the operation.
+    #[prost(string, tag="1")]
+    pub batch: ::prost::alloc::string::String,
+    /// Batch UUID for the operation.
+    #[prost(string, tag="2")]
+    pub batch_uuid: ::prost::alloc::string::String,
+    /// The time when the operation was created.
+    #[prost(message, optional, tag="3")]
+    pub create_time: ::core::option::Option<::prost_types::Timestamp>,
+    /// The time when the operation finished.
+    #[prost(message, optional, tag="4")]
+    pub done_time: ::core::option::Option<::prost_types::Timestamp>,
+    /// The operation type.
+    #[prost(enumeration="batch_operation_metadata::BatchOperationType", tag="6")]
+    pub operation_type: i32,
+    /// Short description of the operation.
+    #[prost(string, tag="7")]
+    pub description: ::prost::alloc::string::String,
+    /// Labels associated with the operation.
+    #[prost(btree_map="string, string", tag="8")]
+    pub labels: ::prost::alloc::collections::BTreeMap<::prost::alloc::string::String, ::prost::alloc::string::String>,
+    /// Warnings encountered during operation execution.
+    #[prost(string, repeated, tag="9")]
+    pub warnings: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
+}
+/// Nested message and enum types in `BatchOperationMetadata`.
+pub mod batch_operation_metadata {
+    /// Operation type for Batch resources
+    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+    #[repr(i32)]
+    pub enum BatchOperationType {
+        /// Batch operation type is unknown.
+        Unspecified = 0,
+        /// Batch operation type.
+        Batch = 1,
+    }
+}
+/// The status of the operation.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ClusterOperationStatus {
+    /// Output only. A message containing the operation state.
+    #[prost(enumeration="cluster_operation_status::State", tag="1")]
+    pub state: i32,
+    /// Output only. A message containing the detailed operation state.
+    #[prost(string, tag="2")]
+    pub inner_state: ::prost::alloc::string::String,
+    /// Output only. A message containing any operation metadata details.
+    #[prost(string, tag="3")]
+    pub details: ::prost::alloc::string::String,
+    /// Output only. The time this state was entered.
+    #[prost(message, optional, tag="4")]
+    pub state_start_time: ::core::option::Option<::prost_types::Timestamp>,
+}
+/// Nested message and enum types in `ClusterOperationStatus`.
+pub mod cluster_operation_status {
+    /// The operation state.
+    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+    #[repr(i32)]
+    pub enum State {
+        /// Unused.
+        Unknown = 0,
+        /// The operation has been created.
+        Pending = 1,
+        /// The operation is running.
+        Running = 2,
+        /// The operation is done; either cancelled or completed.
+        Done = 3,
+    }
+}
+/// Metadata describing the operation.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ClusterOperationMetadata {
+    /// Output only. Name of the cluster for the operation.
+    #[prost(string, tag="7")]
+    pub cluster_name: ::prost::alloc::string::String,
+    /// Output only. Cluster UUID for the operation.
+    #[prost(string, tag="8")]
+    pub cluster_uuid: ::prost::alloc::string::String,
+    /// Output only. Current operation status.
+    #[prost(message, optional, tag="9")]
+    pub status: ::core::option::Option<ClusterOperationStatus>,
+    /// Output only. The previous operation status.
+    #[prost(message, repeated, tag="10")]
+    pub status_history: ::prost::alloc::vec::Vec<ClusterOperationStatus>,
+    /// Output only. The operation type.
+    #[prost(string, tag="11")]
+    pub operation_type: ::prost::alloc::string::String,
+    /// Output only. Short description of operation.
+    #[prost(string, tag="12")]
+    pub description: ::prost::alloc::string::String,
+    /// Output only. Labels associated with the operation
+    #[prost(btree_map="string, string", tag="13")]
+    pub labels: ::prost::alloc::collections::BTreeMap<::prost::alloc::string::String, ::prost::alloc::string::String>,
+    /// Output only. Errors encountered during operation execution.
+    #[prost(string, repeated, tag="14")]
+    pub warnings: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
 }
 /// The runtime logging config of the job.
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -4145,540 +4681,4 @@ pub mod workflow_template_service_client {
             self.inner.unary(request.into_request(), path, codec).await
         }
     }
-}
-/// A request to create a batch workload.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct CreateBatchRequest {
-    /// Required. The parent resource where this batch will be created.
-    #[prost(string, tag="1")]
-    pub parent: ::prost::alloc::string::String,
-    /// Required. The batch to create.
-    #[prost(message, optional, tag="2")]
-    pub batch: ::core::option::Option<Batch>,
-    /// Optional. The ID to use for the batch, which will become the final component of
-    /// the batch's resource name.
-    ///
-    /// This value must be 4-63 characters. Valid characters are `/\[a-z][0-9\]-/`.
-    #[prost(string, tag="3")]
-    pub batch_id: ::prost::alloc::string::String,
-    /// Optional. A unique ID used to identify the request. If the service
-    /// receives two
-    /// \[CreateBatchRequest\](<https://cloud.google.com/dataproc/docs/reference/rpc/google.cloud.dataproc.v1#google.cloud.dataproc.v1.CreateBatchRequest>)s
-    /// with the same request_id, the second request is ignored and the
-    /// Operation that corresponds to the first Batch created and stored
-    /// in the backend is returned.
-    ///
-    /// Recommendation: Set this value to a
-    /// \[UUID\](<https://en.wikipedia.org/wiki/Universally_unique_identifier>).
-    ///
-    /// The value must contain only letters (a-z, A-Z), numbers (0-9),
-    /// underscores (_), and hyphens (-). The maximum length is 40 characters.
-    #[prost(string, tag="4")]
-    pub request_id: ::prost::alloc::string::String,
-}
-/// A request to get the resource representation for a batch workload.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct GetBatchRequest {
-    /// Required. The name of the batch to retrieve.
-    #[prost(string, tag="1")]
-    pub name: ::prost::alloc::string::String,
-}
-/// A request to list batch workloads in a project.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ListBatchesRequest {
-    /// Required. The parent, which owns this collection of batches.
-    #[prost(string, tag="1")]
-    pub parent: ::prost::alloc::string::String,
-    /// Optional. The maximum number of batches to return in each response.
-    /// The service may return fewer than this value.
-    /// The default page size is 20; the maximum page size is 1000.
-    #[prost(int32, tag="2")]
-    pub page_size: i32,
-    /// Optional. A page token received from a previous `ListBatches` call.
-    /// Provide this token to retrieve the subsequent page.
-    #[prost(string, tag="3")]
-    pub page_token: ::prost::alloc::string::String,
-}
-/// A list of batch workloads.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ListBatchesResponse {
-    /// The batches from the specified collection.
-    #[prost(message, repeated, tag="1")]
-    pub batches: ::prost::alloc::vec::Vec<Batch>,
-    /// A token, which can be sent as `page_token` to retrieve the next page.
-    /// If this field is omitted, there are no subsequent pages.
-    #[prost(string, tag="2")]
-    pub next_page_token: ::prost::alloc::string::String,
-}
-/// A request to delete a batch workload.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct DeleteBatchRequest {
-    /// Required. The name of the batch resource to delete.
-    #[prost(string, tag="1")]
-    pub name: ::prost::alloc::string::String,
-}
-/// A representation of a batch workload in the service.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct Batch {
-    /// Output only. The resource name of the batch.
-    #[prost(string, tag="1")]
-    pub name: ::prost::alloc::string::String,
-    /// Output only. A batch UUID (Unique Universal Identifier). The service
-    /// generates this value when it creates the batch.
-    #[prost(string, tag="2")]
-    pub uuid: ::prost::alloc::string::String,
-    /// Output only. The time when the batch was created.
-    #[prost(message, optional, tag="3")]
-    pub create_time: ::core::option::Option<::prost_types::Timestamp>,
-    /// Output only. Runtime information about batch execution.
-    #[prost(message, optional, tag="8")]
-    pub runtime_info: ::core::option::Option<RuntimeInfo>,
-    /// Output only. The state of the batch.
-    #[prost(enumeration="batch::State", tag="9")]
-    pub state: i32,
-    /// Output only. Batch state details, such as a failure
-    /// description if the state is `FAILED`.
-    #[prost(string, tag="10")]
-    pub state_message: ::prost::alloc::string::String,
-    /// Output only. The time when the batch entered a current state.
-    #[prost(message, optional, tag="11")]
-    pub state_time: ::core::option::Option<::prost_types::Timestamp>,
-    /// Output only. The email address of the user who created the batch.
-    #[prost(string, tag="12")]
-    pub creator: ::prost::alloc::string::String,
-    /// Optional. The labels to associate with this batch.
-    /// Label **keys** must contain 1 to 63 characters, and must conform to
-    /// [RFC 1035](<https://www.ietf.org/rfc/rfc1035.txt>).
-    /// Label **values** may be empty, but, if present, must contain 1 to 63
-    /// characters, and must conform to [RFC
-    /// 1035](<https://www.ietf.org/rfc/rfc1035.txt>). No more than 32 labels can be
-    /// associated with a batch.
-    #[prost(btree_map="string, string", tag="13")]
-    pub labels: ::prost::alloc::collections::BTreeMap<::prost::alloc::string::String, ::prost::alloc::string::String>,
-    /// Optional. Runtime configuration for the batch execution.
-    #[prost(message, optional, tag="14")]
-    pub runtime_config: ::core::option::Option<RuntimeConfig>,
-    /// Optional. Environment configuration for the batch execution.
-    #[prost(message, optional, tag="15")]
-    pub environment_config: ::core::option::Option<EnvironmentConfig>,
-    /// Output only. The resource name of the operation associated with this batch.
-    #[prost(string, tag="16")]
-    pub operation: ::prost::alloc::string::String,
-    /// Output only. Historical state information for the batch.
-    #[prost(message, repeated, tag="17")]
-    pub state_history: ::prost::alloc::vec::Vec<batch::StateHistory>,
-    /// The application/framework-specific portion of the batch configuration.
-    #[prost(oneof="batch::BatchConfig", tags="4, 5, 6, 7")]
-    pub batch_config: ::core::option::Option<batch::BatchConfig>,
-}
-/// Nested message and enum types in `Batch`.
-pub mod batch {
-    /// Historical state information.
-    #[derive(Clone, PartialEq, ::prost::Message)]
-    pub struct StateHistory {
-        /// Output only. The state of the batch at this point in history.
-        #[prost(enumeration="State", tag="1")]
-        pub state: i32,
-        /// Output only. Details about the state at this point in history.
-        #[prost(string, tag="2")]
-        pub state_message: ::prost::alloc::string::String,
-        /// Output only. The time when the batch entered the historical state.
-        #[prost(message, optional, tag="3")]
-        pub state_start_time: ::core::option::Option<::prost_types::Timestamp>,
-    }
-    /// The batch state.
-    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
-    #[repr(i32)]
-    pub enum State {
-        /// The batch state is unknown.
-        Unspecified = 0,
-        /// The batch is created before running.
-        Pending = 1,
-        /// The batch is running.
-        Running = 2,
-        /// The batch is cancelling.
-        Cancelling = 3,
-        /// The batch cancellation was successful.
-        Cancelled = 4,
-        /// The batch completed successfully.
-        Succeeded = 5,
-        /// The batch is no longer running due to an error.
-        Failed = 6,
-    }
-    /// The application/framework-specific portion of the batch configuration.
-    #[derive(Clone, PartialEq, ::prost::Oneof)]
-    pub enum BatchConfig {
-        /// Optional. PySpark batch config.
-        #[prost(message, tag="4")]
-        PysparkBatch(super::PySparkBatch),
-        /// Optional. Spark batch config.
-        #[prost(message, tag="5")]
-        SparkBatch(super::SparkBatch),
-        /// Optional. SparkR batch config.
-        #[prost(message, tag="6")]
-        SparkRBatch(super::SparkRBatch),
-        /// Optional. SparkSql batch config.
-        #[prost(message, tag="7")]
-        SparkSqlBatch(super::SparkSqlBatch),
-    }
-}
-/// A configuration for running an
-/// [Apache
-/// PySpark](<https://spark.apache.org/docs/latest/api/python/getting_started/quickstart.html>)
-/// batch workload.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct PySparkBatch {
-    /// Required. The HCFS URI of the main Python file to use as the Spark driver. Must
-    /// be a .py file.
-    #[prost(string, tag="1")]
-    pub main_python_file_uri: ::prost::alloc::string::String,
-    /// Optional. The arguments to pass to the driver. Do not include arguments
-    /// that can be set as batch properties, such as `--conf`, since a collision
-    /// can occur that causes an incorrect batch submission.
-    #[prost(string, repeated, tag="2")]
-    pub args: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
-    /// Optional. HCFS file URIs of Python files to pass to the PySpark
-    /// framework. Supported file types: `.py`, `.egg`, and `.zip`.
-    #[prost(string, repeated, tag="3")]
-    pub python_file_uris: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
-    /// Optional. HCFS URIs of jar files to add to the classpath of the
-    /// Spark driver and tasks.
-    #[prost(string, repeated, tag="4")]
-    pub jar_file_uris: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
-    /// Optional. HCFS URIs of files to be placed in the working directory of
-    /// each executor.
-    #[prost(string, repeated, tag="5")]
-    pub file_uris: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
-    /// Optional. HCFS URIs of archives to be extracted into the working directory
-    /// of each executor. Supported file types:
-    /// `.jar`, `.tar`, `.tar.gz`, `.tgz`, and `.zip`.
-    #[prost(string, repeated, tag="6")]
-    pub archive_uris: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
-}
-/// A configuration for running an [Apache Spark](<http://spark.apache.org/>)
-/// batch workload.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct SparkBatch {
-    /// Optional. The arguments to pass to the driver. Do not include arguments
-    /// that can be set as batch properties, such as `--conf`, since a collision
-    /// can occur that causes an incorrect batch submission.
-    #[prost(string, repeated, tag="3")]
-    pub args: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
-    /// Optional. HCFS URIs of jar files to add to the classpath of the
-    /// Spark driver and tasks.
-    #[prost(string, repeated, tag="4")]
-    pub jar_file_uris: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
-    /// Optional. HCFS URIs of files to be placed in the working directory of
-    /// each executor.
-    #[prost(string, repeated, tag="5")]
-    pub file_uris: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
-    /// Optional. HCFS URIs of archives to be extracted into the working directory
-    /// of each executor. Supported file types:
-    /// `.jar`, `.tar`, `.tar.gz`, `.tgz`, and `.zip`.
-    #[prost(string, repeated, tag="6")]
-    pub archive_uris: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
-    /// The specification of the main method to call to drive the Spark
-    /// workload. Specify either the jar file that contains the main class or the
-    /// main class name. To pass both a main jar and a main class in that jar, add
-    /// the jar to `jar_file_uris`, and then specify the main class
-    /// name in `main_class`.
-    #[prost(oneof="spark_batch::Driver", tags="1, 2")]
-    pub driver: ::core::option::Option<spark_batch::Driver>,
-}
-/// Nested message and enum types in `SparkBatch`.
-pub mod spark_batch {
-    /// The specification of the main method to call to drive the Spark
-    /// workload. Specify either the jar file that contains the main class or the
-    /// main class name. To pass both a main jar and a main class in that jar, add
-    /// the jar to `jar_file_uris`, and then specify the main class
-    /// name in `main_class`.
-    #[derive(Clone, PartialEq, ::prost::Oneof)]
-    pub enum Driver {
-        /// Optional. The HCFS URI of the jar file that contains the main class.
-        #[prost(string, tag="1")]
-        MainJarFileUri(::prost::alloc::string::String),
-        /// Optional. The name of the driver main class. The jar file that contains the class
-        /// must be in the classpath or specified in `jar_file_uris`.
-        #[prost(string, tag="2")]
-        MainClass(::prost::alloc::string::String),
-    }
-}
-/// A configuration for running an
-/// [Apache SparkR](<https://spark.apache.org/docs/latest/sparkr.html>)
-/// batch workload.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct SparkRBatch {
-    /// Required. The HCFS URI of the main R file to use as the driver.
-    /// Must be a `.R` or `.r` file.
-    #[prost(string, tag="1")]
-    pub main_r_file_uri: ::prost::alloc::string::String,
-    /// Optional. The arguments to pass to the Spark driver. Do not include arguments
-    /// that can be set as batch properties, such as `--conf`, since a collision
-    /// can occur that causes an incorrect batch submission.
-    #[prost(string, repeated, tag="2")]
-    pub args: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
-    /// Optional. HCFS URIs of files to be placed in the working directory of
-    /// each executor.
-    #[prost(string, repeated, tag="3")]
-    pub file_uris: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
-    /// Optional. HCFS URIs of archives to be extracted into the working directory
-    /// of each executor. Supported file types:
-    /// `.jar`, `.tar`, `.tar.gz`, `.tgz`, and `.zip`.
-    #[prost(string, repeated, tag="4")]
-    pub archive_uris: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
-}
-/// A configuration for running
-/// [Apache Spark SQL](<http://spark.apache.org/sql/>) queries as a batch workload.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct SparkSqlBatch {
-    /// Required. The HCFS URI of the script that contains Spark SQL queries to execute.
-    #[prost(string, tag="1")]
-    pub query_file_uri: ::prost::alloc::string::String,
-    /// Optional. Mapping of query variable names to values (equivalent to the
-    /// Spark SQL command: `SET name="value";`).
-    #[prost(btree_map="string, string", tag="2")]
-    pub query_variables: ::prost::alloc::collections::BTreeMap<::prost::alloc::string::String, ::prost::alloc::string::String>,
-    /// Optional. HCFS URIs of jar files to be added to the Spark CLASSPATH.
-    #[prost(string, repeated, tag="3")]
-    pub jar_file_uris: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
-}
-/// Generated client implementations.
-pub mod batch_controller_client {
-    #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
-    use tonic::codegen::*;
-    /// The BatchController provides methods to manage batch workloads.
-    #[derive(Debug, Clone)]
-    pub struct BatchControllerClient<T> {
-        inner: tonic::client::Grpc<T>,
-    }
-    impl<T> BatchControllerClient<T>
-    where
-        T: tonic::client::GrpcService<tonic::body::BoxBody>,
-        T::Error: Into<StdError>,
-        T::ResponseBody: Body<Data = Bytes> + Send + 'static,
-        <T::ResponseBody as Body>::Error: Into<StdError> + Send,
-    {
-        pub fn new(inner: T) -> Self {
-            let inner = tonic::client::Grpc::new(inner);
-            Self { inner }
-        }
-        pub fn with_interceptor<F>(
-            inner: T,
-            interceptor: F,
-        ) -> BatchControllerClient<InterceptedService<T, F>>
-        where
-            F: tonic::service::Interceptor,
-            T::ResponseBody: Default,
-            T: tonic::codegen::Service<
-                http::Request<tonic::body::BoxBody>,
-                Response = http::Response<
-                    <T as tonic::client::GrpcService<tonic::body::BoxBody>>::ResponseBody,
-                >,
-            >,
-            <T as tonic::codegen::Service<
-                http::Request<tonic::body::BoxBody>,
-            >>::Error: Into<StdError> + Send + Sync,
-        {
-            BatchControllerClient::new(InterceptedService::new(inner, interceptor))
-        }
-        /// Compress requests with `gzip`.
-        ///
-        /// This requires the server to support it otherwise it might respond with an
-        /// error.
-        #[must_use]
-        pub fn send_gzip(mut self) -> Self {
-            self.inner = self.inner.send_gzip();
-            self
-        }
-        /// Enable decompressing responses with `gzip`.
-        #[must_use]
-        pub fn accept_gzip(mut self) -> Self {
-            self.inner = self.inner.accept_gzip();
-            self
-        }
-        /// Creates a batch workload that executes asynchronously.
-        pub async fn create_batch(
-            &mut self,
-            request: impl tonic::IntoRequest<super::CreateBatchRequest>,
-        ) -> Result<
-            tonic::Response<super::super::super::super::longrunning::Operation>,
-            tonic::Status,
-        > {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/google.cloud.dataproc.v1.BatchController/CreateBatch",
-            );
-            self.inner.unary(request.into_request(), path, codec).await
-        }
-        /// Gets the batch workload resource representation.
-        pub async fn get_batch(
-            &mut self,
-            request: impl tonic::IntoRequest<super::GetBatchRequest>,
-        ) -> Result<tonic::Response<super::Batch>, tonic::Status> {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/google.cloud.dataproc.v1.BatchController/GetBatch",
-            );
-            self.inner.unary(request.into_request(), path, codec).await
-        }
-        /// Lists batch workloads.
-        pub async fn list_batches(
-            &mut self,
-            request: impl tonic::IntoRequest<super::ListBatchesRequest>,
-        ) -> Result<tonic::Response<super::ListBatchesResponse>, tonic::Status> {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/google.cloud.dataproc.v1.BatchController/ListBatches",
-            );
-            self.inner.unary(request.into_request(), path, codec).await
-        }
-        /// Deletes the batch workload resource. If the batch is not in terminal state,
-        /// the delete fails and the response returns `FAILED_PRECONDITION`.
-        pub async fn delete_batch(
-            &mut self,
-            request: impl tonic::IntoRequest<super::DeleteBatchRequest>,
-        ) -> Result<tonic::Response<()>, tonic::Status> {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/google.cloud.dataproc.v1.BatchController/DeleteBatch",
-            );
-            self.inner.unary(request.into_request(), path, codec).await
-        }
-    }
-}
-/// Metadata describing the Batch operation.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct BatchOperationMetadata {
-    /// Name of the batch for the operation.
-    #[prost(string, tag="1")]
-    pub batch: ::prost::alloc::string::String,
-    /// Batch UUID for the operation.
-    #[prost(string, tag="2")]
-    pub batch_uuid: ::prost::alloc::string::String,
-    /// The time when the operation was created.
-    #[prost(message, optional, tag="3")]
-    pub create_time: ::core::option::Option<::prost_types::Timestamp>,
-    /// The time when the operation finished.
-    #[prost(message, optional, tag="4")]
-    pub done_time: ::core::option::Option<::prost_types::Timestamp>,
-    /// The operation type.
-    #[prost(enumeration="batch_operation_metadata::BatchOperationType", tag="6")]
-    pub operation_type: i32,
-    /// Short description of the operation.
-    #[prost(string, tag="7")]
-    pub description: ::prost::alloc::string::String,
-    /// Labels associated with the operation.
-    #[prost(btree_map="string, string", tag="8")]
-    pub labels: ::prost::alloc::collections::BTreeMap<::prost::alloc::string::String, ::prost::alloc::string::String>,
-    /// Warnings encountered during operation execution.
-    #[prost(string, repeated, tag="9")]
-    pub warnings: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
-}
-/// Nested message and enum types in `BatchOperationMetadata`.
-pub mod batch_operation_metadata {
-    /// Operation type for Batch resources
-    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
-    #[repr(i32)]
-    pub enum BatchOperationType {
-        /// Batch operation type is unknown.
-        Unspecified = 0,
-        /// Batch operation type.
-        Batch = 1,
-    }
-}
-/// The status of the operation.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ClusterOperationStatus {
-    /// Output only. A message containing the operation state.
-    #[prost(enumeration="cluster_operation_status::State", tag="1")]
-    pub state: i32,
-    /// Output only. A message containing the detailed operation state.
-    #[prost(string, tag="2")]
-    pub inner_state: ::prost::alloc::string::String,
-    /// Output only. A message containing any operation metadata details.
-    #[prost(string, tag="3")]
-    pub details: ::prost::alloc::string::String,
-    /// Output only. The time this state was entered.
-    #[prost(message, optional, tag="4")]
-    pub state_start_time: ::core::option::Option<::prost_types::Timestamp>,
-}
-/// Nested message and enum types in `ClusterOperationStatus`.
-pub mod cluster_operation_status {
-    /// The operation state.
-    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
-    #[repr(i32)]
-    pub enum State {
-        /// Unused.
-        Unknown = 0,
-        /// The operation has been created.
-        Pending = 1,
-        /// The operation is running.
-        Running = 2,
-        /// The operation is done; either cancelled or completed.
-        Done = 3,
-    }
-}
-/// Metadata describing the operation.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ClusterOperationMetadata {
-    /// Output only. Name of the cluster for the operation.
-    #[prost(string, tag="7")]
-    pub cluster_name: ::prost::alloc::string::String,
-    /// Output only. Cluster UUID for the operation.
-    #[prost(string, tag="8")]
-    pub cluster_uuid: ::prost::alloc::string::String,
-    /// Output only. Current operation status.
-    #[prost(message, optional, tag="9")]
-    pub status: ::core::option::Option<ClusterOperationStatus>,
-    /// Output only. The previous operation status.
-    #[prost(message, repeated, tag="10")]
-    pub status_history: ::prost::alloc::vec::Vec<ClusterOperationStatus>,
-    /// Output only. The operation type.
-    #[prost(string, tag="11")]
-    pub operation_type: ::prost::alloc::string::String,
-    /// Output only. Short description of operation.
-    #[prost(string, tag="12")]
-    pub description: ::prost::alloc::string::String,
-    /// Output only. Labels associated with the operation
-    #[prost(btree_map="string, string", tag="13")]
-    pub labels: ::prost::alloc::collections::BTreeMap<::prost::alloc::string::String, ::prost::alloc::string::String>,
-    /// Output only. Errors encountered during operation execution.
-    #[prost(string, repeated, tag="14")]
-    pub warnings: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
 }

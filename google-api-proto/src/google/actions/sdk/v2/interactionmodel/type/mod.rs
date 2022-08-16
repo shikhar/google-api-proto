@@ -23,6 +23,39 @@ pub struct EntityDisplay {
     #[prost(string, tag="2")]
     pub icon_url: ::prost::alloc::string::String,
 }
+/// Type that matches any text if surrounding words context is close to provided
+/// training examples.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct FreeTextType {
+    /// Optional. Elements that will be displayed on the canvas once an entity is extracted
+    /// from a query. Only relevant for canvas enabled apps.
+    #[prost(message, optional, tag="2")]
+    pub display: ::core::option::Option<EntityDisplay>,
+}
+/// Type that matches text by regular expressions.
+/// **This message is localizable.**
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct RegularExpressionType {
+    /// Required. Named map of entities which each contain Regex strings.
+    #[prost(btree_map="string, message", tag="1")]
+    pub entities: ::prost::alloc::collections::BTreeMap<::prost::alloc::string::String, regular_expression_type::Entity>,
+}
+/// Nested message and enum types in `RegularExpressionType`.
+pub mod regular_expression_type {
+    /// Represents an entity object that contains the regular expression that is
+    /// used for comparison.
+    #[derive(Clone, PartialEq, ::prost::Message)]
+    pub struct Entity {
+        /// Optional. Elements that will be displayed on the canvas once an entity is
+        /// extracted from a query. Only relevant for canvas enabled apps.
+        #[prost(message, optional, tag="1")]
+        pub display: ::core::option::Option<super::EntityDisplay>,
+        /// Required. Uses RE2 regex syntax (See
+        /// <https://github.com/google/re2/wiki/Syntax> for more details)
+        #[prost(string, repeated, tag="2")]
+        pub regular_expressions: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
+    }
+}
 /// Type that matches text by set of synonyms.
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct SynonymType {
@@ -66,39 +99,6 @@ pub mod synonym_type {
         /// Looser than `EXACT_MATCH`. Looks for similar matches as well as exact
         /// matches.
         FuzzyMatch = 2,
-    }
-}
-/// Type that matches any text if surrounding words context is close to provided
-/// training examples.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct FreeTextType {
-    /// Optional. Elements that will be displayed on the canvas once an entity is extracted
-    /// from a query. Only relevant for canvas enabled apps.
-    #[prost(message, optional, tag="2")]
-    pub display: ::core::option::Option<EntityDisplay>,
-}
-/// Type that matches text by regular expressions.
-/// **This message is localizable.**
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct RegularExpressionType {
-    /// Required. Named map of entities which each contain Regex strings.
-    #[prost(btree_map="string, message", tag="1")]
-    pub entities: ::prost::alloc::collections::BTreeMap<::prost::alloc::string::String, regular_expression_type::Entity>,
-}
-/// Nested message and enum types in `RegularExpressionType`.
-pub mod regular_expression_type {
-    /// Represents an entity object that contains the regular expression that is
-    /// used for comparison.
-    #[derive(Clone, PartialEq, ::prost::Message)]
-    pub struct Entity {
-        /// Optional. Elements that will be displayed on the canvas once an entity is
-        /// extracted from a query. Only relevant for canvas enabled apps.
-        #[prost(message, optional, tag="1")]
-        pub display: ::core::option::Option<super::EntityDisplay>,
-        /// Required. Uses RE2 regex syntax (See
-        /// <https://github.com/google/re2/wiki/Syntax> for more details)
-        #[prost(string, repeated, tag="2")]
-        pub regular_expressions: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
     }
 }
 /// Declaration of a custom type, as opposed to built-in types. Types can be

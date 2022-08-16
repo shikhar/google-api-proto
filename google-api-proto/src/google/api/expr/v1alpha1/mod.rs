@@ -546,37 +546,6 @@ pub struct SourcePosition {
     #[prost(int32, tag="4")]
     pub column: i32,
 }
-/// Values of intermediate expressions produced when evaluating expression.
-/// Deprecated, use `EvalState` instead.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct Explain {
-    /// All of the observed values.
-    ///
-    /// The field value_index is an index in the values list.
-    /// Separating values from steps is needed to remove redundant values.
-    #[prost(message, repeated, tag="1")]
-    pub values: ::prost::alloc::vec::Vec<Value>,
-    /// List of steps.
-    ///
-    /// Repeated evaluations of the same expression generate new ExprStep
-    /// instances. The order of such ExprStep instances matches the order of
-    /// elements returned by Comprehension.iter_range.
-    #[prost(message, repeated, tag="2")]
-    pub expr_steps: ::prost::alloc::vec::Vec<explain::ExprStep>,
-}
-/// Nested message and enum types in `Explain`.
-pub mod explain {
-    /// ID and value index of one step.
-    #[derive(Clone, PartialEq, ::prost::Message)]
-    pub struct ExprStep {
-        /// ID of corresponding Expr node.
-        #[prost(int64, tag="1")]
-        pub id: i64,
-        /// Index of the value in the values list.
-        #[prost(int32, tag="2")]
-        pub value_index: i32,
-    }
-}
 // Protos for representing CEL declarations and typed checked expressions.
 
 /// A CEL expression which has been successfully type checked.
@@ -908,4 +877,35 @@ pub struct Reference {
     /// constant if known at compile time.
     #[prost(message, optional, tag="4")]
     pub value: ::core::option::Option<Constant>,
+}
+/// Values of intermediate expressions produced when evaluating expression.
+/// Deprecated, use `EvalState` instead.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct Explain {
+    /// All of the observed values.
+    ///
+    /// The field value_index is an index in the values list.
+    /// Separating values from steps is needed to remove redundant values.
+    #[prost(message, repeated, tag="1")]
+    pub values: ::prost::alloc::vec::Vec<Value>,
+    /// List of steps.
+    ///
+    /// Repeated evaluations of the same expression generate new ExprStep
+    /// instances. The order of such ExprStep instances matches the order of
+    /// elements returned by Comprehension.iter_range.
+    #[prost(message, repeated, tag="2")]
+    pub expr_steps: ::prost::alloc::vec::Vec<explain::ExprStep>,
+}
+/// Nested message and enum types in `Explain`.
+pub mod explain {
+    /// ID and value index of one step.
+    #[derive(Clone, PartialEq, ::prost::Message)]
+    pub struct ExprStep {
+        /// ID of corresponding Expr node.
+        #[prost(int64, tag="1")]
+        pub id: i64,
+        /// Index of the value in the values list.
+        #[prost(int32, tag="2")]
+        pub value_index: i32,
+    }
 }

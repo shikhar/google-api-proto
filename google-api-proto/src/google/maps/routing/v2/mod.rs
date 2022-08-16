@@ -1,23 +1,3 @@
-/// A set of values that specify factors to take into consideration when
-/// calculating the route.
-#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
-#[repr(i32)]
-pub enum RoutingPreference {
-    /// No routing preference specified. Default to `TRAFFIC_UNAWARE`.
-    Unspecified = 0,
-    /// Computes routes without taking traffic conditions into consideration.
-    /// Suitable when traffic conditions don't matter. Using this value produces
-    /// the lowest latency.
-    TrafficUnaware = 1,
-    /// Calculates routes taking traffic conditions into consideration. In contrast
-    /// to `TRAFFIC_AWARE_OPTIMAL`, some optimizations are applied to significantly
-    /// reduce latency.
-    TrafficAware = 2,
-    /// Calculates the routes taking traffic conditions into consideration,
-    /// without applying most performance optimizations. Using this value produces
-    /// the highest latency.
-    TrafficAwareOptimal = 3,
-}
 /// A set of values describing the vehicle's emission type.
 /// Applies only to the DRIVE travel mode.
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
@@ -32,49 +12,104 @@ pub enum VehicleEmissionType {
     /// Hybrid fuel (such as gasoline + electric) vehicle.
     Hybrid = 3,
 }
-/// Information related to how and why a fallback result was used. If this field
-/// is set, then it means the server used a different routing mode from your
-/// preferred mode as fallback.
+/// Encapsulates the vehicle information, such as the license plate last
+/// character.
 #[derive(Clone, PartialEq, ::prost::Message)]
-pub struct FallbackInfo {
-    /// Routing mode used for the response. If fallback was triggered, the mode
-    /// may be different from routing preference set in the original client
-    /// request.
-    #[prost(enumeration="FallbackRoutingMode", tag="1")]
-    pub routing_mode: i32,
-    /// The reason why fallback response was used instead of the original response.
-    /// This field is only populated when the fallback mode is triggered and the
-    /// fallback response is returned.
-    #[prost(enumeration="FallbackReason", tag="2")]
-    pub reason: i32,
+pub struct VehicleInfo {
+    /// Describes the vehicle's emission type.
+    /// Applies only to the DRIVE travel mode.
+    #[prost(enumeration="VehicleEmissionType", tag="2")]
+    pub emission_type: i32,
 }
-/// Reasons for using fallback response.
+/// A set of values that specify the navigation action to take for the current
+/// step (e.g., turn left, merge, straight, etc.).
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
 #[repr(i32)]
-pub enum FallbackReason {
-    /// No fallback reason specified.
-    Unspecified = 0,
-    /// A server error happened while calculating routes with your preferred
-    /// routing mode, but we were able to return a result calculated by an
-    /// alternative mode.
-    ServerError = 1,
-    /// We were not able to finish the calculation with your preferred routing mode
-    /// on time, but we were able to return a result calculated by an alternative
-    /// mode.
-    LatencyExceeded = 2,
-}
-/// Actual routing mode used for returned fallback response.
-#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
-#[repr(i32)]
-pub enum FallbackRoutingMode {
+pub enum Maneuver {
     /// Not used.
     Unspecified = 0,
-    /// Indicates the "TRAFFIC_UNAWARE" routing mode was used to compute the
-    /// response.
-    FallbackTrafficUnaware = 1,
-    /// Indicates the "TRAFFIC_AWARE" routing mode was used to compute the
-    /// response.
-    FallbackTrafficAware = 2,
+    /// Turn slightly to the left.
+    TurnSlightLeft = 1,
+    /// Turn sharply to the left.
+    TurnSharpLeft = 2,
+    /// Make a left u-turn.
+    UturnLeft = 3,
+    /// Turn left.
+    TurnLeft = 4,
+    /// Turn slightly to the right.
+    TurnSlightRight = 5,
+    /// Turn sharply to the right.
+    TurnSharpRight = 6,
+    /// Make a right u-turn.
+    UturnRight = 7,
+    /// Turn right.
+    TurnRight = 8,
+    /// Go straight.
+    Straight = 9,
+    /// Take the left ramp.
+    RampLeft = 10,
+    /// Take the right ramp.
+    RampRight = 11,
+    /// Merge into traffic.
+    Merge = 12,
+    /// Take the left fork.
+    ForkLeft = 13,
+    /// Take the right fork.
+    ForkRight = 14,
+    /// Take the ferry.
+    Ferry = 15,
+    /// Take the train leading onto the ferry.
+    FerryTrain = 16,
+    /// Turn left at the roundabout.
+    RoundaboutLeft = 17,
+    /// Turn right at the roundabout.
+    RoundaboutRight = 18,
+}
+/// Traffic density indicator on a contiguous segment of a polyline or path.
+/// Given a path with points P_0, P_1, ... , P_N (zero-based index), the
+/// SpeedReadingInterval defines an interval and describes its traffic using the
+/// following categories.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct SpeedReadingInterval {
+    /// The starting index of this interval in the polyline.
+    /// In JSON, when the index is 0, the field appears to be unpopulated.
+    #[prost(int32, tag="1")]
+    pub start_polyline_point_index: i32,
+    /// The ending index of this interval in the polyline.
+    /// In JSON, when the index is 0, the field appears to be unpopulated.
+    #[prost(int32, tag="2")]
+    pub end_polyline_point_index: i32,
+    /// Traffic speed in this interval.
+    #[prost(enumeration="speed_reading_interval::Speed", tag="3")]
+    pub speed: i32,
+}
+/// Nested message and enum types in `SpeedReadingInterval`.
+pub mod speed_reading_interval {
+    /// The classification of polyline speed based on traffic data.
+    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+    #[repr(i32)]
+    pub enum Speed {
+        /// Default value. This value is unused.
+        Unspecified = 0,
+        /// Normal speed, no slowdown is detected.
+        Normal = 1,
+        /// Slowdown detected, but no traffic jam formed.
+        Slow = 2,
+        /// Traffic jam detected.
+        TrafficJam = 3,
+    }
+}
+/// Encapsulates navigation instructions for a
+/// \[RouteLegStep][google.maps.routing.v2.RouteLegStep\]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct NavigationInstruction {
+    /// Encapsulates the navigation instructions for the current step (e.g., turn
+    /// left, merge, straight, etc.). This field determines which icon to display.
+    #[prost(enumeration="Maneuver", tag="1")]
+    pub maneuver: i32,
+    /// Instructions for navigating this step.
+    #[prost(string, tag="2")]
+    pub instructions: ::prost::alloc::string::String,
 }
 /// Encapsulates an encoded polyline.
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -127,6 +162,34 @@ pub enum PolylineEncoding {
     /// format](<https://tools.ietf.org/html/rfc7946#section-3.1.4>)
     GeoJsonLinestring = 2,
 }
+/// A set of values used to specify the mode of travel.
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+#[repr(i32)]
+pub enum RouteTravelMode {
+    /// No travel mode specified. Defaults to `DRIVE`.
+    TravelModeUnspecified = 0,
+    /// Travel by passenger car.
+    Drive = 1,
+    /// Travel by bicycle.
+    Bicycle = 2,
+    /// Travel by walking.
+    Walk = 3,
+    /// Two-wheeled, motorized vehicle. For example, motorcycle. Note that this
+    /// differs from the `BICYCLE` travel mode which covers human-powered mode.
+    TwoWheeler = 4,
+}
+/// A set of values that specify the unit of measure used in the display.
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+#[repr(i32)]
+pub enum Units {
+    /// Units of measure not specified. Defaults to the unit of measure inferred
+    /// from the request.
+    Unspecified = 0,
+    /// Metric units of measure.
+    Metric = 1,
+    /// Imperial (English) units of measure.
+    Imperial = 2,
+}
 /// Encapsulates a location (a geographic point, and an optional heading).
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct Location {
@@ -140,96 +203,6 @@ pub struct Location {
     /// field only for `DRIVE` and `TWO_WHEELER` travel modes.
     #[prost(message, optional, tag="2")]
     pub heading: ::core::option::Option<i32>,
-}
-/// A set of values that specify the navigation action to take for the current
-/// step (e.g., turn left, merge, straight, etc.).
-#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
-#[repr(i32)]
-pub enum Maneuver {
-    /// Not used.
-    Unspecified = 0,
-    /// Turn slightly to the left.
-    TurnSlightLeft = 1,
-    /// Turn sharply to the left.
-    TurnSharpLeft = 2,
-    /// Make a left u-turn.
-    UturnLeft = 3,
-    /// Turn left.
-    TurnLeft = 4,
-    /// Turn slightly to the right.
-    TurnSlightRight = 5,
-    /// Turn sharply to the right.
-    TurnSharpRight = 6,
-    /// Make a right u-turn.
-    UturnRight = 7,
-    /// Turn right.
-    TurnRight = 8,
-    /// Go straight.
-    Straight = 9,
-    /// Take the left ramp.
-    RampLeft = 10,
-    /// Take the right ramp.
-    RampRight = 11,
-    /// Merge into traffic.
-    Merge = 12,
-    /// Take the left fork.
-    ForkLeft = 13,
-    /// Take the right fork.
-    ForkRight = 14,
-    /// Take the ferry.
-    Ferry = 15,
-    /// Take the train leading onto the ferry.
-    FerryTrain = 16,
-    /// Turn left at the roundabout.
-    RoundaboutLeft = 17,
-    /// Turn right at the roundabout.
-    RoundaboutRight = 18,
-}
-/// Encapsulates navigation instructions for a
-/// \[RouteLegStep][google.maps.routing.v2.RouteLegStep\]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct NavigationInstruction {
-    /// Encapsulates the navigation instructions for the current step (e.g., turn
-    /// left, merge, straight, etc.). This field determines which icon to display.
-    #[prost(enumeration="Maneuver", tag="1")]
-    pub maneuver: i32,
-    /// Instructions for navigating this step.
-    #[prost(string, tag="2")]
-    pub instructions: ::prost::alloc::string::String,
-}
-/// Traffic density indicator on a contiguous segment of a polyline or path.
-/// Given a path with points P_0, P_1, ... , P_N (zero-based index), the
-/// SpeedReadingInterval defines an interval and describes its traffic using the
-/// following categories.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct SpeedReadingInterval {
-    /// The starting index of this interval in the polyline.
-    /// In JSON, when the index is 0, the field appears to be unpopulated.
-    #[prost(int32, tag="1")]
-    pub start_polyline_point_index: i32,
-    /// The ending index of this interval in the polyline.
-    /// In JSON, when the index is 0, the field appears to be unpopulated.
-    #[prost(int32, tag="2")]
-    pub end_polyline_point_index: i32,
-    /// Traffic speed in this interval.
-    #[prost(enumeration="speed_reading_interval::Speed", tag="3")]
-    pub speed: i32,
-}
-/// Nested message and enum types in `SpeedReadingInterval`.
-pub mod speed_reading_interval {
-    /// The classification of polyline speed based on traffic data.
-    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
-    #[repr(i32)]
-    pub enum Speed {
-        /// Default value. This value is unused.
-        Unspecified = 0,
-        /// Normal speed, no slowdown is detected.
-        Normal = 1,
-        /// Slowdown detected, but no traffic jam formed.
-        Slow = 2,
-        /// Traffic jam detected.
-        TrafficJam = 3,
-    }
 }
 /// Encapsulates toll information on a `Route` or on a `RouteLeg`.
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -422,6 +395,26 @@ pub struct RouteLegStep {
     #[prost(message, optional, tag="7")]
     pub travel_advisory: ::core::option::Option<RouteLegStepTravelAdvisory>,
 }
+/// A set of values that specify factors to take into consideration when
+/// calculating the route.
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+#[repr(i32)]
+pub enum RoutingPreference {
+    /// No routing preference specified. Default to `TRAFFIC_UNAWARE`.
+    Unspecified = 0,
+    /// Computes routes without taking traffic conditions into consideration.
+    /// Suitable when traffic conditions don't matter. Using this value produces
+    /// the lowest latency.
+    TrafficUnaware = 1,
+    /// Calculates routes taking traffic conditions into consideration. In contrast
+    /// to `TRAFFIC_AWARE_OPTIMAL`, some optimizations are applied to significantly
+    /// reduce latency.
+    TrafficAware = 2,
+    /// Calculates the routes taking traffic conditions into consideration,
+    /// without applying most performance optimizations. Using this value produces
+    /// the highest latency.
+    TrafficAwareOptimal = 3,
+}
 /// List of toll passes around the world that we support.
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
 #[repr(i32)]
@@ -612,15 +605,6 @@ pub enum TollPass {
     /// WV, USA.
     UsWvNewellTollBridgeTicket = 64,
 }
-/// Encapsulates the vehicle information, such as the license plate last
-/// character.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct VehicleInfo {
-    /// Describes the vehicle's emission type.
-    /// Applies only to the DRIVE travel mode.
-    #[prost(enumeration="VehicleEmissionType", tag="2")]
-    pub emission_type: i32,
-}
 /// Encapsulates a set of optional conditions to satisfy when calculating the
 /// routes.
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -656,33 +640,49 @@ pub struct RouteModifiers {
     #[prost(enumeration="TollPass", repeated, tag="6")]
     pub toll_passes: ::prost::alloc::vec::Vec<i32>,
 }
-/// A set of values used to specify the mode of travel.
-#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
-#[repr(i32)]
-pub enum RouteTravelMode {
-    /// No travel mode specified. Defaults to `DRIVE`.
-    TravelModeUnspecified = 0,
-    /// Travel by passenger car.
-    Drive = 1,
-    /// Travel by bicycle.
-    Bicycle = 2,
-    /// Travel by walking.
-    Walk = 3,
-    /// Two-wheeled, motorized vehicle. For example, motorcycle. Note that this
-    /// differs from the `BICYCLE` travel mode which covers human-powered mode.
-    TwoWheeler = 4,
+/// Information related to how and why a fallback result was used. If this field
+/// is set, then it means the server used a different routing mode from your
+/// preferred mode as fallback.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct FallbackInfo {
+    /// Routing mode used for the response. If fallback was triggered, the mode
+    /// may be different from routing preference set in the original client
+    /// request.
+    #[prost(enumeration="FallbackRoutingMode", tag="1")]
+    pub routing_mode: i32,
+    /// The reason why fallback response was used instead of the original response.
+    /// This field is only populated when the fallback mode is triggered and the
+    /// fallback response is returned.
+    #[prost(enumeration="FallbackReason", tag="2")]
+    pub reason: i32,
 }
-/// A set of values that specify the unit of measure used in the display.
+/// Reasons for using fallback response.
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
 #[repr(i32)]
-pub enum Units {
-    /// Units of measure not specified. Defaults to the unit of measure inferred
-    /// from the request.
+pub enum FallbackReason {
+    /// No fallback reason specified.
     Unspecified = 0,
-    /// Metric units of measure.
-    Metric = 1,
-    /// Imperial (English) units of measure.
-    Imperial = 2,
+    /// A server error happened while calculating routes with your preferred
+    /// routing mode, but we were able to return a result calculated by an
+    /// alternative mode.
+    ServerError = 1,
+    /// We were not able to finish the calculation with your preferred routing mode
+    /// on time, but we were able to return a result calculated by an alternative
+    /// mode.
+    LatencyExceeded = 2,
+}
+/// Actual routing mode used for returned fallback response.
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+#[repr(i32)]
+pub enum FallbackRoutingMode {
+    /// Not used.
+    Unspecified = 0,
+    /// Indicates the "TRAFFIC_UNAWARE" routing mode was used to compute the
+    /// response.
+    FallbackTrafficUnaware = 1,
+    /// Indicates the "TRAFFIC_AWARE" routing mode was used to compute the
+    /// response.
+    FallbackTrafficAware = 2,
 }
 /// Encapsulates a waypoint. Waypoints mark both the beginning and end of a
 /// route, and include intermediate stops along the route.

@@ -1,189 +1,3 @@
-/// A domain serving an App Engine application.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct DomainMapping {
-    /// Full path to the `DomainMapping` resource in the API. Example:
-    /// `apps/myapp/domainMapping/example.com`.
-    ///
-    /// @OutputOnly
-    #[prost(string, tag="1")]
-    pub name: ::prost::alloc::string::String,
-    /// Relative name of the domain serving the application. Example:
-    /// `example.com`.
-    #[prost(string, tag="2")]
-    pub id: ::prost::alloc::string::String,
-    /// SSL configuration for this domain. If unconfigured, this domain will not
-    /// serve with SSL.
-    #[prost(message, optional, tag="3")]
-    pub ssl_settings: ::core::option::Option<SslSettings>,
-    /// The resource records required to configure this domain mapping. These
-    /// records must be added to the domain's DNS configuration in order to
-    /// serve the application via this domain mapping.
-    ///
-    /// @OutputOnly
-    #[prost(message, repeated, tag="4")]
-    pub resource_records: ::prost::alloc::vec::Vec<ResourceRecord>,
-}
-/// SSL configuration for a `DomainMapping` resource.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct SslSettings {
-    /// ID of the `AuthorizedCertificate` resource configuring SSL for the
-    /// application. Clearing this field will remove SSL support.
-    ///
-    /// By default, a managed certificate is automatically created for every
-    /// domain mapping. To omit SSL support or to configure SSL manually, specify
-    /// `SslManagementType.MANUAL` on a `CREATE` or `UPDATE` request. You must
-    /// be authorized to administer the `AuthorizedCertificate` resource to
-    /// manually map it to a `DomainMapping` resource.
-    /// Example: `12345`.
-    #[prost(string, tag="1")]
-    pub certificate_id: ::prost::alloc::string::String,
-    /// SSL management type for this domain. If `AUTOMATIC`, a managed certificate
-    /// is automatically provisioned. If `MANUAL`, `certificate_id` must be
-    /// manually specified in order to configure SSL for this domain.
-    #[prost(enumeration="ssl_settings::SslManagementType", tag="3")]
-    pub ssl_management_type: i32,
-    /// ID of the managed `AuthorizedCertificate` resource currently being
-    /// provisioned, if applicable. Until the new managed certificate has been
-    /// successfully provisioned, the previous SSL state will be preserved. Once
-    /// the provisioning process completes, the `certificate_id` field will reflect
-    /// the new managed certificate and this field will be left empty. To remove
-    /// SSL support while there is still a pending managed certificate, clear the
-    /// `certificate_id` field with an `UpdateDomainMappingRequest`.
-    ///
-    /// @OutputOnly
-    #[prost(string, tag="4")]
-    pub pending_managed_certificate_id: ::prost::alloc::string::String,
-}
-/// Nested message and enum types in `SslSettings`.
-pub mod ssl_settings {
-    /// The SSL management type for this domain.
-    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
-    #[repr(i32)]
-    pub enum SslManagementType {
-        /// SSL support for this domain is configured automatically. The mapped SSL
-        /// certificate will be automatically renewed.
-        Automatic = 0,
-        /// SSL support for this domain is configured manually by the user. Either
-        /// the domain has no SSL support or a user-obtained SSL certificate has been
-        /// explictly mapped to this domain.
-        Manual = 1,
-    }
-}
-/// A DNS resource record.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ResourceRecord {
-    /// Relative name of the object affected by this record. Only applicable for
-    /// `CNAME` records. Example: 'www'.
-    #[prost(string, tag="1")]
-    pub name: ::prost::alloc::string::String,
-    /// Data for this record. Values vary by record type, as defined in RFC 1035
-    /// (section 5) and RFC 1034 (section 3.6.1).
-    #[prost(string, tag="2")]
-    pub rrdata: ::prost::alloc::string::String,
-    /// Resource record type. Example: `AAAA`.
-    #[prost(enumeration="resource_record::RecordType", tag="3")]
-    pub r#type: i32,
-}
-/// Nested message and enum types in `ResourceRecord`.
-pub mod resource_record {
-    /// A resource record type.
-    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
-    #[repr(i32)]
-    pub enum RecordType {
-        /// An A resource record. Data is an IPv4 address.
-        A = 0,
-        /// An AAAA resource record. Data is an IPv6 address.
-        Aaaa = 1,
-        /// A CNAME resource record. Data is a domain name to be aliased.
-        Cname = 2,
-    }
-}
-/// A NetworkSettings resource is a container for ingress settings for a version
-/// or service.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct NetworkSettings {
-    /// The ingress settings for version or service.
-    #[prost(enumeration="network_settings::IngressTrafficAllowed", tag="1")]
-    pub ingress_traffic_allowed: i32,
-}
-/// Nested message and enum types in `NetworkSettings`.
-pub mod network_settings {
-    /// If unspecified, INGRESS_TRAFFIC_ALLOWED_ALL will be used.
-    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
-    #[repr(i32)]
-    pub enum IngressTrafficAllowed {
-        /// Unspecified
-        Unspecified = 0,
-        /// Allow HTTP traffic from public and private sources.
-        All = 1,
-        /// Allow HTTP traffic from only private VPC sources.
-        InternalOnly = 2,
-        /// Allow HTTP traffic from private VPC sources and through load balancers.
-        InternalAndLb = 3,
-    }
-}
-/// Metadata for the given \[google.longrunning.Operation][google.longrunning.Operation\].
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct OperationMetadataV1Beta {
-    /// API method that initiated this operation. Example:
-    /// `google.appengine.v1beta.Versions.CreateVersion`.
-    ///
-    /// @OutputOnly
-    #[prost(string, tag="1")]
-    pub method: ::prost::alloc::string::String,
-    /// Time that this operation was created.
-    ///
-    /// @OutputOnly
-    #[prost(message, optional, tag="2")]
-    pub insert_time: ::core::option::Option<::prost_types::Timestamp>,
-    /// Time that this operation completed.
-    ///
-    /// @OutputOnly
-    #[prost(message, optional, tag="3")]
-    pub end_time: ::core::option::Option<::prost_types::Timestamp>,
-    /// User who requested this operation.
-    ///
-    /// @OutputOnly
-    #[prost(string, tag="4")]
-    pub user: ::prost::alloc::string::String,
-    /// Name of the resource that this operation is acting on. Example:
-    /// `apps/myapp/services/default`.
-    ///
-    /// @OutputOnly
-    #[prost(string, tag="5")]
-    pub target: ::prost::alloc::string::String,
-    /// Ephemeral message that may change every time the operation is polled.
-    /// @OutputOnly
-    #[prost(string, tag="6")]
-    pub ephemeral_message: ::prost::alloc::string::String,
-    /// Durable messages that persist on every operation poll.
-    /// @OutputOnly
-    #[prost(string, repeated, tag="7")]
-    pub warning: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
-    /// Metadata specific to the type of operation in progress.
-    /// @OutputOnly
-    #[prost(oneof="operation_metadata_v1_beta::MethodMetadata", tags="8")]
-    pub method_metadata: ::core::option::Option<operation_metadata_v1_beta::MethodMetadata>,
-}
-/// Nested message and enum types in `OperationMetadataV1Beta`.
-pub mod operation_metadata_v1_beta {
-    /// Metadata specific to the type of operation in progress.
-    /// @OutputOnly
-    #[derive(Clone, PartialEq, ::prost::Oneof)]
-    pub enum MethodMetadata {
-        #[prost(message, tag="8")]
-        CreateVersionMetadata(super::CreateVersionMetadataV1Beta),
-    }
-}
-/// Metadata for the given \[google.longrunning.Operation][google.longrunning.Operation\] during a
-/// \[google.appengine.v1beta.CreateVersionRequest][google.appengine.v1beta.CreateVersionRequest\].
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct CreateVersionMetadataV1Beta {
-    /// The Cloud Build ID if one was created as part of the version create.
-    /// @OutputOnly
-    #[prost(string, tag="1")]
-    pub cloud_build_id: ::prost::alloc::string::String,
-}
 /// An SSL certificate that a user has been authorized to administer. A user
 /// is authorized to administer any certificate that applies to one of their
 /// authorized domains.
@@ -742,6 +556,30 @@ pub struct ZipInfo {
     /// Used for optimizing performance; if not provided, deployment may be slow.
     #[prost(int32, tag="4")]
     pub files_count: i32,
+}
+/// A NetworkSettings resource is a container for ingress settings for a version
+/// or service.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct NetworkSettings {
+    /// The ingress settings for version or service.
+    #[prost(enumeration="network_settings::IngressTrafficAllowed", tag="1")]
+    pub ingress_traffic_allowed: i32,
+}
+/// Nested message and enum types in `NetworkSettings`.
+pub mod network_settings {
+    /// If unspecified, INGRESS_TRAFFIC_ALLOWED_ALL will be used.
+    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+    #[repr(i32)]
+    pub enum IngressTrafficAllowed {
+        /// Unspecified
+        Unspecified = 0,
+        /// Allow HTTP traffic from public and private sources.
+        All = 1,
+        /// Allow HTTP traffic from only private VPC sources.
+        InternalOnly = 2,
+        /// Allow HTTP traffic from private VPC sources and through load balancers.
+        InternalAndLb = 3,
+    }
 }
 /// A Version resource is a specific set of source code and configuration files
 /// that are deployed into a service.
@@ -1536,6 +1374,106 @@ pub struct AuthorizedDomain {
     /// `example.com`.
     #[prost(string, tag="2")]
     pub id: ::prost::alloc::string::String,
+}
+/// A domain serving an App Engine application.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct DomainMapping {
+    /// Full path to the `DomainMapping` resource in the API. Example:
+    /// `apps/myapp/domainMapping/example.com`.
+    ///
+    /// @OutputOnly
+    #[prost(string, tag="1")]
+    pub name: ::prost::alloc::string::String,
+    /// Relative name of the domain serving the application. Example:
+    /// `example.com`.
+    #[prost(string, tag="2")]
+    pub id: ::prost::alloc::string::String,
+    /// SSL configuration for this domain. If unconfigured, this domain will not
+    /// serve with SSL.
+    #[prost(message, optional, tag="3")]
+    pub ssl_settings: ::core::option::Option<SslSettings>,
+    /// The resource records required to configure this domain mapping. These
+    /// records must be added to the domain's DNS configuration in order to
+    /// serve the application via this domain mapping.
+    ///
+    /// @OutputOnly
+    #[prost(message, repeated, tag="4")]
+    pub resource_records: ::prost::alloc::vec::Vec<ResourceRecord>,
+}
+/// SSL configuration for a `DomainMapping` resource.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct SslSettings {
+    /// ID of the `AuthorizedCertificate` resource configuring SSL for the
+    /// application. Clearing this field will remove SSL support.
+    ///
+    /// By default, a managed certificate is automatically created for every
+    /// domain mapping. To omit SSL support or to configure SSL manually, specify
+    /// `SslManagementType.MANUAL` on a `CREATE` or `UPDATE` request. You must
+    /// be authorized to administer the `AuthorizedCertificate` resource to
+    /// manually map it to a `DomainMapping` resource.
+    /// Example: `12345`.
+    #[prost(string, tag="1")]
+    pub certificate_id: ::prost::alloc::string::String,
+    /// SSL management type for this domain. If `AUTOMATIC`, a managed certificate
+    /// is automatically provisioned. If `MANUAL`, `certificate_id` must be
+    /// manually specified in order to configure SSL for this domain.
+    #[prost(enumeration="ssl_settings::SslManagementType", tag="3")]
+    pub ssl_management_type: i32,
+    /// ID of the managed `AuthorizedCertificate` resource currently being
+    /// provisioned, if applicable. Until the new managed certificate has been
+    /// successfully provisioned, the previous SSL state will be preserved. Once
+    /// the provisioning process completes, the `certificate_id` field will reflect
+    /// the new managed certificate and this field will be left empty. To remove
+    /// SSL support while there is still a pending managed certificate, clear the
+    /// `certificate_id` field with an `UpdateDomainMappingRequest`.
+    ///
+    /// @OutputOnly
+    #[prost(string, tag="4")]
+    pub pending_managed_certificate_id: ::prost::alloc::string::String,
+}
+/// Nested message and enum types in `SslSettings`.
+pub mod ssl_settings {
+    /// The SSL management type for this domain.
+    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+    #[repr(i32)]
+    pub enum SslManagementType {
+        /// SSL support for this domain is configured automatically. The mapped SSL
+        /// certificate will be automatically renewed.
+        Automatic = 0,
+        /// SSL support for this domain is configured manually by the user. Either
+        /// the domain has no SSL support or a user-obtained SSL certificate has been
+        /// explictly mapped to this domain.
+        Manual = 1,
+    }
+}
+/// A DNS resource record.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ResourceRecord {
+    /// Relative name of the object affected by this record. Only applicable for
+    /// `CNAME` records. Example: 'www'.
+    #[prost(string, tag="1")]
+    pub name: ::prost::alloc::string::String,
+    /// Data for this record. Values vary by record type, as defined in RFC 1035
+    /// (section 5) and RFC 1034 (section 3.6.1).
+    #[prost(string, tag="2")]
+    pub rrdata: ::prost::alloc::string::String,
+    /// Resource record type. Example: `AAAA`.
+    #[prost(enumeration="resource_record::RecordType", tag="3")]
+    pub r#type: i32,
+}
+/// Nested message and enum types in `ResourceRecord`.
+pub mod resource_record {
+    /// A resource record type.
+    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+    #[repr(i32)]
+    pub enum RecordType {
+        /// An A resource record. Data is an IPv4 address.
+        A = 0,
+        /// An AAAA resource record. Data is an IPv6 address.
+        Aaaa = 1,
+        /// A CNAME resource record. Data is a domain name to be aliased.
+        Cname = 2,
+    }
 }
 /// A single firewall rule that is evaluated against incoming traffic
 /// and provides an action to take on matched requests.
@@ -3572,6 +3510,86 @@ pub mod domain_mappings_client {
         }
     }
 }
+/// Metadata for the given \[google.cloud.location.Location][google.cloud.location.Location\].
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct LocationMetadata {
+    /// App Engine standard environment is available in the given location.
+    ///
+    /// @OutputOnly
+    #[prost(bool, tag="2")]
+    pub standard_environment_available: bool,
+    /// App Engine flexible environment is available in the given location.
+    ///
+    /// @OutputOnly
+    #[prost(bool, tag="4")]
+    pub flexible_environment_available: bool,
+    /// Output only. [Search API](<https://cloud.google.com/appengine/docs/standard/python/search>)
+    /// is available in the given location.
+    #[prost(bool, tag="6")]
+    pub search_api_available: bool,
+}
+/// Metadata for the given \[google.longrunning.Operation][google.longrunning.Operation\].
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct OperationMetadataV1Beta {
+    /// API method that initiated this operation. Example:
+    /// `google.appengine.v1beta.Versions.CreateVersion`.
+    ///
+    /// @OutputOnly
+    #[prost(string, tag="1")]
+    pub method: ::prost::alloc::string::String,
+    /// Time that this operation was created.
+    ///
+    /// @OutputOnly
+    #[prost(message, optional, tag="2")]
+    pub insert_time: ::core::option::Option<::prost_types::Timestamp>,
+    /// Time that this operation completed.
+    ///
+    /// @OutputOnly
+    #[prost(message, optional, tag="3")]
+    pub end_time: ::core::option::Option<::prost_types::Timestamp>,
+    /// User who requested this operation.
+    ///
+    /// @OutputOnly
+    #[prost(string, tag="4")]
+    pub user: ::prost::alloc::string::String,
+    /// Name of the resource that this operation is acting on. Example:
+    /// `apps/myapp/services/default`.
+    ///
+    /// @OutputOnly
+    #[prost(string, tag="5")]
+    pub target: ::prost::alloc::string::String,
+    /// Ephemeral message that may change every time the operation is polled.
+    /// @OutputOnly
+    #[prost(string, tag="6")]
+    pub ephemeral_message: ::prost::alloc::string::String,
+    /// Durable messages that persist on every operation poll.
+    /// @OutputOnly
+    #[prost(string, repeated, tag="7")]
+    pub warning: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
+    /// Metadata specific to the type of operation in progress.
+    /// @OutputOnly
+    #[prost(oneof="operation_metadata_v1_beta::MethodMetadata", tags="8")]
+    pub method_metadata: ::core::option::Option<operation_metadata_v1_beta::MethodMetadata>,
+}
+/// Nested message and enum types in `OperationMetadataV1Beta`.
+pub mod operation_metadata_v1_beta {
+    /// Metadata specific to the type of operation in progress.
+    /// @OutputOnly
+    #[derive(Clone, PartialEq, ::prost::Oneof)]
+    pub enum MethodMetadata {
+        #[prost(message, tag="8")]
+        CreateVersionMetadata(super::CreateVersionMetadataV1Beta),
+    }
+}
+/// Metadata for the given \[google.longrunning.Operation][google.longrunning.Operation\] during a
+/// \[google.appengine.v1beta.CreateVersionRequest][google.appengine.v1beta.CreateVersionRequest\].
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct CreateVersionMetadataV1Beta {
+    /// The Cloud Build ID if one was created as part of the version create.
+    /// @OutputOnly
+    #[prost(string, tag="1")]
+    pub cloud_build_id: ::prost::alloc::string::String,
+}
 /// App Engine admin service audit log.
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct AuditData {
@@ -3611,22 +3629,4 @@ pub struct CreateVersionMethod {
     /// Create version request.
     #[prost(message, optional, tag="1")]
     pub request: ::core::option::Option<CreateVersionRequest>,
-}
-/// Metadata for the given \[google.cloud.location.Location][google.cloud.location.Location\].
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct LocationMetadata {
-    /// App Engine standard environment is available in the given location.
-    ///
-    /// @OutputOnly
-    #[prost(bool, tag="2")]
-    pub standard_environment_available: bool,
-    /// App Engine flexible environment is available in the given location.
-    ///
-    /// @OutputOnly
-    #[prost(bool, tag="4")]
-    pub flexible_environment_available: bool,
-    /// Output only. [Search API](<https://cloud.google.com/appengine/docs/standard/python/search>)
-    /// is available in the given location.
-    #[prost(bool, tag="6")]
-    pub search_api_available: bool,
 }

@@ -1,48 +1,3 @@
-/// ResourceInfo represents the information/status of an app connector resource.
-/// Such as:
-/// - remote_agent
-///   - container
-///     - runtime
-///     - appgateway
-///       - appconnector
-///         - appconnection
-///           - tunnel
-///       - logagent
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ResourceInfo {
-    /// Required. Unique Id for the resource.
-    #[prost(string, tag="1")]
-    pub id: ::prost::alloc::string::String,
-    /// Overall health status. Overall status is derived based on the status of
-    /// each sub level resources.
-    #[prost(enumeration="HealthStatus", tag="2")]
-    pub status: i32,
-    /// Specific details for the resource. This is for internal use only.
-    #[prost(message, optional, tag="3")]
-    pub resource: ::core::option::Option<::prost_types::Any>,
-    /// The timestamp to collect the info. It is suggested to be set by
-    /// the topmost level resource only.
-    #[prost(message, optional, tag="4")]
-    pub time: ::core::option::Option<::prost_types::Timestamp>,
-    /// List of Info for the sub level resources.
-    #[prost(message, repeated, tag="5")]
-    pub sub: ::prost::alloc::vec::Vec<ResourceInfo>,
-}
-/// HealthStatus represents the health status.
-#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
-#[repr(i32)]
-pub enum HealthStatus {
-    /// Health status is unknown: not initialized or failed to retrieve.
-    Unspecified = 0,
-    /// The resource is healthy.
-    Healthy = 1,
-    /// The resource is unhealthy.
-    Unhealthy = 2,
-    /// The resource is unresponsive.
-    Unresponsive = 3,
-    /// Some sub-resources are UNHEALTHY.
-    Degraded = 4,
-}
 /// AppConnectorInstanceConfig defines the instance config of a AppConnector.
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct AppConnectorInstanceConfig {
@@ -96,6 +51,51 @@ pub struct ImageConfig {
     /// fails.
     #[prost(string, tag="2")]
     pub stable_image: ::prost::alloc::string::String,
+}
+/// ResourceInfo represents the information/status of an app connector resource.
+/// Such as:
+/// - remote_agent
+///   - container
+///     - runtime
+///     - appgateway
+///       - appconnector
+///         - appconnection
+///           - tunnel
+///       - logagent
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ResourceInfo {
+    /// Required. Unique Id for the resource.
+    #[prost(string, tag="1")]
+    pub id: ::prost::alloc::string::String,
+    /// Overall health status. Overall status is derived based on the status of
+    /// each sub level resources.
+    #[prost(enumeration="HealthStatus", tag="2")]
+    pub status: i32,
+    /// Specific details for the resource. This is for internal use only.
+    #[prost(message, optional, tag="3")]
+    pub resource: ::core::option::Option<::prost_types::Any>,
+    /// The timestamp to collect the info. It is suggested to be set by
+    /// the topmost level resource only.
+    #[prost(message, optional, tag="4")]
+    pub time: ::core::option::Option<::prost_types::Timestamp>,
+    /// List of Info for the sub level resources.
+    #[prost(message, repeated, tag="5")]
+    pub sub: ::prost::alloc::vec::Vec<ResourceInfo>,
+}
+/// HealthStatus represents the health status.
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+#[repr(i32)]
+pub enum HealthStatus {
+    /// Health status is unknown: not initialized or failed to retrieve.
+    Unspecified = 0,
+    /// The resource is healthy.
+    Healthy = 1,
+    /// The resource is unhealthy.
+    Unhealthy = 2,
+    /// The resource is unresponsive.
+    Unresponsive = 3,
+    /// Some sub-resources are UNHEALTHY.
+    Degraded = 4,
 }
 /// Request message for BeyondCorp.ListAppConnectors.
 #[derive(Clone, PartialEq, ::prost::Message)]

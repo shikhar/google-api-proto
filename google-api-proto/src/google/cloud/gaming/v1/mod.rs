@@ -239,6 +239,579 @@ pub mod deployed_fleet_details {
         pub fleet_autoscaler_spec: ::prost::alloc::string::String,
     }
 }
+/// Request message for GameServerClustersService.ListGameServerClusters.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ListGameServerClustersRequest {
+    /// Required. The parent resource name, in the following form:
+    /// "projects/{project}/locations/{location}/realms/{realm}".
+    #[prost(string, tag="1")]
+    pub parent: ::prost::alloc::string::String,
+    /// Optional. The maximum number of items to return. If unspecified, the server
+    /// will pick an appropriate default. The server may return fewer items than
+    /// requested. A caller should only rely on response's
+    /// \[next_page_token][google.cloud.gaming.v1.ListGameServerClustersResponse.next_page_token\] to
+    /// determine if there are more GameServerClusters left to be queried.
+    #[prost(int32, tag="2")]
+    pub page_size: i32,
+    /// Optional. The next_page_token value returned from a previous List request, if any.
+    #[prost(string, tag="3")]
+    pub page_token: ::prost::alloc::string::String,
+    /// Optional. The filter to apply to list results.
+    #[prost(string, tag="4")]
+    pub filter: ::prost::alloc::string::String,
+    /// Optional. Specifies the ordering of results following syntax at
+    /// <https://cloud.google.com/apis/design/design_patterns#sorting_order.>
+    #[prost(string, tag="5")]
+    pub order_by: ::prost::alloc::string::String,
+    /// Optional. View for the returned GameServerCluster objects. When `FULL` is
+    /// specified, the `cluster_state` field is also returned in the
+    /// GameServerCluster object, which includes the state of the referenced
+    /// Kubernetes cluster such as versions and provider info. The default/unset
+    /// value is GAME_SERVER_CLUSTER_VIEW_UNSPECIFIED, same as BASIC, which does
+    /// not return the `cluster_state` field.
+    #[prost(enumeration="GameServerClusterView", tag="6")]
+    pub view: i32,
+}
+/// Response message for GameServerClustersService.ListGameServerClusters.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ListGameServerClustersResponse {
+    /// The list of game server clusters.
+    #[prost(message, repeated, tag="1")]
+    pub game_server_clusters: ::prost::alloc::vec::Vec<GameServerCluster>,
+    /// Token to retrieve the next page of results, or empty if there are no more
+    /// results in the list.
+    #[prost(string, tag="2")]
+    pub next_page_token: ::prost::alloc::string::String,
+    /// List of locations that could not be reached.
+    #[prost(string, repeated, tag="4")]
+    pub unreachable: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
+}
+/// Request message for GameServerClustersService.GetGameServerCluster.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct GetGameServerClusterRequest {
+    /// Required. The name of the game server cluster to retrieve, in the following form:
+    /// `projects/{project}/locations/{location}/realms/{realm-id}/gameServerClusters/{cluster}`.
+    #[prost(string, tag="1")]
+    pub name: ::prost::alloc::string::String,
+    /// Optional. View for the returned GameServerCluster objects. When `FULL` is
+    /// specified, the `cluster_state` field is also returned in the
+    /// GameServerCluster object, which includes the state of the referenced
+    /// Kubernetes cluster such as versions and provider info. The default/unset
+    /// value is GAME_SERVER_CLUSTER_VIEW_UNSPECIFIED, same as BASIC, which does
+    /// not return the `cluster_state` field.
+    #[prost(enumeration="GameServerClusterView", tag="6")]
+    pub view: i32,
+}
+/// Request message for GameServerClustersService.CreateGameServerCluster.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct CreateGameServerClusterRequest {
+    /// Required. The parent resource name, in the following form:
+    /// `projects/{project}/locations/{location}/realms/{realm-id}`.
+    #[prost(string, tag="1")]
+    pub parent: ::prost::alloc::string::String,
+    /// Required. The ID of the game server cluster resource to be created.
+    #[prost(string, tag="2")]
+    pub game_server_cluster_id: ::prost::alloc::string::String,
+    /// Required. The game server cluster resource to be created.
+    #[prost(message, optional, tag="3")]
+    pub game_server_cluster: ::core::option::Option<GameServerCluster>,
+}
+/// Request message for GameServerClustersService.PreviewCreateGameServerCluster.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct PreviewCreateGameServerClusterRequest {
+    /// Required. The parent resource name, in the following form:
+    /// `projects/{project}/locations/{location}/realms/{realm}`.
+    #[prost(string, tag="1")]
+    pub parent: ::prost::alloc::string::String,
+    /// Required. The ID of the game server cluster resource to be created.
+    #[prost(string, tag="2")]
+    pub game_server_cluster_id: ::prost::alloc::string::String,
+    /// Required. The game server cluster resource to be created.
+    #[prost(message, optional, tag="3")]
+    pub game_server_cluster: ::core::option::Option<GameServerCluster>,
+    /// Optional. The target timestamp to compute the preview.
+    #[prost(message, optional, tag="4")]
+    pub preview_time: ::core::option::Option<::prost_types::Timestamp>,
+    /// Optional. This field is deprecated, preview will always return
+    /// KubernetesClusterState.
+    #[deprecated]
+    #[prost(enumeration="GameServerClusterView", tag="6")]
+    pub view: i32,
+}
+/// Response message for
+/// GameServerClustersService.PreviewCreateGameServerCluster.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct PreviewCreateGameServerClusterResponse {
+    /// The ETag of the game server cluster.
+    #[prost(string, tag="2")]
+    pub etag: ::prost::alloc::string::String,
+    /// The target state.
+    #[prost(message, optional, tag="3")]
+    pub target_state: ::core::option::Option<TargetState>,
+    /// Output only. The state of the Kubernetes cluster in preview, this will be available if
+    /// 'view' is set to `FULL` in the relevant List/Get/Preview request.
+    #[prost(message, optional, tag="4")]
+    pub cluster_state: ::core::option::Option<KubernetesClusterState>,
+}
+/// Request message for GameServerClustersService.DeleteGameServerCluster.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct DeleteGameServerClusterRequest {
+    /// Required. The name of the game server cluster to delete, in the following form:
+    /// `projects/{project}/locations/{location}/gameServerClusters/{cluster}`.
+    #[prost(string, tag="1")]
+    pub name: ::prost::alloc::string::String,
+}
+/// Request message for GameServerClustersService.PreviewDeleteGameServerCluster.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct PreviewDeleteGameServerClusterRequest {
+    /// Required. The name of the game server cluster to delete, in the following form:
+    /// `projects/{project}/locations/{location}/gameServerClusters/{cluster}`.
+    #[prost(string, tag="1")]
+    pub name: ::prost::alloc::string::String,
+    /// Optional. The target timestamp to compute the preview.
+    #[prost(message, optional, tag="2")]
+    pub preview_time: ::core::option::Option<::prost_types::Timestamp>,
+}
+/// Response message for
+/// GameServerClustersService.PreviewDeleteGameServerCluster.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct PreviewDeleteGameServerClusterResponse {
+    /// The ETag of the game server cluster.
+    #[prost(string, tag="2")]
+    pub etag: ::prost::alloc::string::String,
+    /// The target state.
+    #[prost(message, optional, tag="3")]
+    pub target_state: ::core::option::Option<TargetState>,
+}
+/// Request message for GameServerClustersService.UpdateGameServerCluster.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct UpdateGameServerClusterRequest {
+    /// Required. The game server cluster to be updated.
+    /// Only fields specified in update_mask are updated.
+    #[prost(message, optional, tag="1")]
+    pub game_server_cluster: ::core::option::Option<GameServerCluster>,
+    /// Required. Mask of fields to update. At least one path must be supplied in
+    /// this field. For the `FieldMask` definition, see
+    /// <https://developers.google.com/protocol-buffers/docs/reference/google.protobuf#fieldmask>
+    #[prost(message, optional, tag="2")]
+    pub update_mask: ::core::option::Option<::prost_types::FieldMask>,
+}
+/// Request message for GameServerClustersService.UpdateGameServerCluster.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct PreviewUpdateGameServerClusterRequest {
+    /// Required. The game server cluster to be updated.
+    /// Only fields specified in update_mask are updated.
+    #[prost(message, optional, tag="1")]
+    pub game_server_cluster: ::core::option::Option<GameServerCluster>,
+    /// Required. Mask of fields to update. At least one path must be supplied in
+    /// this field. For the `FieldMask` definition, see
+    /// <https://developers.google.com/protocol-buffers/docs/reference/google.protobuf#fieldmask>
+    #[prost(message, optional, tag="2")]
+    pub update_mask: ::core::option::Option<::prost_types::FieldMask>,
+    /// Optional. The target timestamp to compute the preview.
+    #[prost(message, optional, tag="3")]
+    pub preview_time: ::core::option::Option<::prost_types::Timestamp>,
+}
+/// Response message for GameServerClustersService.PreviewUpdateGameServerCluster
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct PreviewUpdateGameServerClusterResponse {
+    /// The ETag of the game server cluster.
+    #[prost(string, tag="2")]
+    pub etag: ::prost::alloc::string::String,
+    /// The target state.
+    #[prost(message, optional, tag="3")]
+    pub target_state: ::core::option::Option<TargetState>,
+}
+/// The game server cluster connection information.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct GameServerClusterConnectionInfo {
+    /// Namespace designated on the game server cluster where the Agones game
+    /// server instances will be created. Existence of the namespace will be
+    /// validated during creation.
+    #[prost(string, tag="5")]
+    pub namespace: ::prost::alloc::string::String,
+    /// The location of the Kubernetes cluster.
+    #[prost(oneof="game_server_cluster_connection_info::ClusterReference", tags="7")]
+    pub cluster_reference: ::core::option::Option<game_server_cluster_connection_info::ClusterReference>,
+}
+/// Nested message and enum types in `GameServerClusterConnectionInfo`.
+pub mod game_server_cluster_connection_info {
+    /// The location of the Kubernetes cluster.
+    #[derive(Clone, PartialEq, ::prost::Oneof)]
+    pub enum ClusterReference {
+        /// Reference to the GKE cluster where the game servers are installed.
+        #[prost(message, tag="7")]
+        GkeClusterReference(super::GkeClusterReference),
+    }
+}
+/// A reference to a GKE cluster.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct GkeClusterReference {
+    /// The full or partial name of a GKE cluster, using one of the following
+    /// forms:
+    ///  * `projects/{project}/locations/{location}/clusters/{cluster}`
+    ///  * `locations/{location}/clusters/{cluster}`
+    ///  * `{cluster}`
+    /// If project and location are not specified, the project and location of the
+    /// GameServerCluster resource are used to generate the full name of the
+    /// GKE cluster.
+    #[prost(string, tag="1")]
+    pub cluster: ::prost::alloc::string::String,
+}
+/// A game server cluster resource.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct GameServerCluster {
+    /// Required. The resource name of the game server cluster, in the following form:
+    /// `projects/{project}/locations/{location}/realms/{realm}/gameServerClusters/{cluster}`.
+    /// For example,
+    /// `projects/my-project/locations/{location}/realms/zanzibar/gameServerClusters/my-onprem-cluster`.
+    #[prost(string, tag="1")]
+    pub name: ::prost::alloc::string::String,
+    /// Output only. The creation time.
+    #[prost(message, optional, tag="2")]
+    pub create_time: ::core::option::Option<::prost_types::Timestamp>,
+    /// Output only. The last-modified time.
+    #[prost(message, optional, tag="3")]
+    pub update_time: ::core::option::Option<::prost_types::Timestamp>,
+    /// The labels associated with this game server cluster. Each label is a
+    /// key-value pair.
+    #[prost(btree_map="string, string", tag="4")]
+    pub labels: ::prost::alloc::collections::BTreeMap<::prost::alloc::string::String, ::prost::alloc::string::String>,
+    /// The game server cluster connection information. This information is used to
+    /// manage game server clusters.
+    #[prost(message, optional, tag="5")]
+    pub connection_info: ::core::option::Option<GameServerClusterConnectionInfo>,
+    /// ETag of the resource.
+    #[prost(string, tag="6")]
+    pub etag: ::prost::alloc::string::String,
+    /// Human readable description of the cluster.
+    #[prost(string, tag="7")]
+    pub description: ::prost::alloc::string::String,
+    /// Output only. The state of the Kubernetes cluster, this will be available if
+    /// 'view' is set to `FULL` in the relevant List/Get/Preview request.
+    #[prost(message, optional, tag="11")]
+    pub cluster_state: ::core::option::Option<KubernetesClusterState>,
+}
+/// The state of the Kubernetes cluster.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct KubernetesClusterState {
+    /// Output only. The version of Agones currently installed in the registered Kubernetes
+    /// cluster.
+    #[prost(string, tag="1")]
+    pub agones_version_installed: ::prost::alloc::string::String,
+    /// Output only. The version of Kubernetes that is currently used in the registered
+    /// Kubernetes cluster (as detected by the Cloud Game Servers service).
+    #[prost(string, tag="2")]
+    pub kubernetes_version_installed: ::prost::alloc::string::String,
+    /// Output only. The state for the installed versions of Agones/Kubernetes.
+    #[prost(enumeration="kubernetes_cluster_state::InstallationState", tag="3")]
+    pub installation_state: i32,
+    /// Output only. The detailed error message for the installed versions of Agones/Kubernetes.
+    #[prost(string, tag="4")]
+    pub version_installed_error_message: ::prost::alloc::string::String,
+    /// Output only. The cloud provider type reported by the first node's providerID in the list
+    /// of nodes on the Kubernetes endpoint. On Kubernetes platforms that support
+    /// zero-node clusters (like GKE-on-GCP), the provider type will be empty.
+    #[prost(string, tag="5")]
+    pub provider: ::prost::alloc::string::String,
+    /// Output only. The version of Agones that is targeted to be installed in the cluster.
+    #[prost(string, tag="6")]
+    pub agones_version_targeted: ::prost::alloc::string::String,
+}
+/// Nested message and enum types in `KubernetesClusterState`.
+pub mod kubernetes_cluster_state {
+    /// The state of the installed versions of Agones/Kubernetes. See also
+    /// <https://cloud.google.com/game-servers/docs/versions-and-upgrades.>
+    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+    #[repr(i32)]
+    pub enum InstallationState {
+        /// The default value. This value is used if the state is omitted.
+        Unspecified = 0,
+        /// The combination of Agones and Kubernetes versions is supported by Google
+        /// Cloud Game Servers.
+        AgonesKubernetesVersionSupported = 1,
+        /// The installed version of Agones is not supported by Google Cloud Game
+        /// Servers.
+        AgonesVersionUnsupported = 2,
+        /// The installed version of Agones is supported by Google Cloud Game
+        /// Servers, but the installed version of Kubernetes is not recommended or
+        /// supported by the version of Agones.
+        AgonesKubernetesVersionUnsupported = 3,
+        /// The installed version of Agones is not recognized because the Agones
+        /// controller's image name does not have a version string reported as
+        /// {major}.{minor}(.{patch}).
+        AgonesVersionUnrecognized = 4,
+        /// The server version of Kubernetes cluster is not recognized because the
+        /// API server didn't return parsable version info on path/version.
+        KubernetesVersionUnrecognized = 5,
+        /// Failed to read or verify the version of Agones or Kubernetes. See
+        /// version_installed_error_message for details.
+        VersionVerificationFailed = 6,
+        /// Agones is not installed.
+        AgonesNotInstalled = 7,
+    }
+}
+/// A view for GameServerCluster objects.
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+#[repr(i32)]
+pub enum GameServerClusterView {
+    /// The default / unset value.
+    /// The API will default to the BASIC view.
+    Unspecified = 0,
+    /// Include basic information of a GameServerCluster resource and omit
+    /// `cluster_state`. This is the default value (for ListGameServerClusters,
+    /// GetGameServerCluster and PreviewCreateGameServerCluster).
+    Basic = 1,
+    /// Include everything.
+    Full = 2,
+}
+/// Generated client implementations.
+pub mod game_server_clusters_service_client {
+    #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
+    use tonic::codegen::*;
+    /// The game server cluster maps to Kubernetes clusters running Agones and is
+    /// used to manage fleets within clusters.
+    #[derive(Debug, Clone)]
+    pub struct GameServerClustersServiceClient<T> {
+        inner: tonic::client::Grpc<T>,
+    }
+    impl<T> GameServerClustersServiceClient<T>
+    where
+        T: tonic::client::GrpcService<tonic::body::BoxBody>,
+        T::Error: Into<StdError>,
+        T::ResponseBody: Body<Data = Bytes> + Send + 'static,
+        <T::ResponseBody as Body>::Error: Into<StdError> + Send,
+    {
+        pub fn new(inner: T) -> Self {
+            let inner = tonic::client::Grpc::new(inner);
+            Self { inner }
+        }
+        pub fn with_interceptor<F>(
+            inner: T,
+            interceptor: F,
+        ) -> GameServerClustersServiceClient<InterceptedService<T, F>>
+        where
+            F: tonic::service::Interceptor,
+            T::ResponseBody: Default,
+            T: tonic::codegen::Service<
+                http::Request<tonic::body::BoxBody>,
+                Response = http::Response<
+                    <T as tonic::client::GrpcService<tonic::body::BoxBody>>::ResponseBody,
+                >,
+            >,
+            <T as tonic::codegen::Service<
+                http::Request<tonic::body::BoxBody>,
+            >>::Error: Into<StdError> + Send + Sync,
+        {
+            GameServerClustersServiceClient::new(
+                InterceptedService::new(inner, interceptor),
+            )
+        }
+        /// Compress requests with `gzip`.
+        ///
+        /// This requires the server to support it otherwise it might respond with an
+        /// error.
+        #[must_use]
+        pub fn send_gzip(mut self) -> Self {
+            self.inner = self.inner.send_gzip();
+            self
+        }
+        /// Enable decompressing responses with `gzip`.
+        #[must_use]
+        pub fn accept_gzip(mut self) -> Self {
+            self.inner = self.inner.accept_gzip();
+            self
+        }
+        /// Lists game server clusters in a given project and location.
+        pub async fn list_game_server_clusters(
+            &mut self,
+            request: impl tonic::IntoRequest<super::ListGameServerClustersRequest>,
+        ) -> Result<
+            tonic::Response<super::ListGameServerClustersResponse>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/google.cloud.gaming.v1.GameServerClustersService/ListGameServerClusters",
+            );
+            self.inner.unary(request.into_request(), path, codec).await
+        }
+        /// Gets details of a single game server cluster.
+        pub async fn get_game_server_cluster(
+            &mut self,
+            request: impl tonic::IntoRequest<super::GetGameServerClusterRequest>,
+        ) -> Result<tonic::Response<super::GameServerCluster>, tonic::Status> {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/google.cloud.gaming.v1.GameServerClustersService/GetGameServerCluster",
+            );
+            self.inner.unary(request.into_request(), path, codec).await
+        }
+        /// Creates a new game server cluster in a given project and location.
+        pub async fn create_game_server_cluster(
+            &mut self,
+            request: impl tonic::IntoRequest<super::CreateGameServerClusterRequest>,
+        ) -> Result<
+            tonic::Response<super::super::super::super::longrunning::Operation>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/google.cloud.gaming.v1.GameServerClustersService/CreateGameServerCluster",
+            );
+            self.inner.unary(request.into_request(), path, codec).await
+        }
+        /// Previews creation of a new game server cluster in a given project and
+        /// location.
+        pub async fn preview_create_game_server_cluster(
+            &mut self,
+            request: impl tonic::IntoRequest<
+                super::PreviewCreateGameServerClusterRequest,
+            >,
+        ) -> Result<
+            tonic::Response<super::PreviewCreateGameServerClusterResponse>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/google.cloud.gaming.v1.GameServerClustersService/PreviewCreateGameServerCluster",
+            );
+            self.inner.unary(request.into_request(), path, codec).await
+        }
+        /// Deletes a single game server cluster.
+        pub async fn delete_game_server_cluster(
+            &mut self,
+            request: impl tonic::IntoRequest<super::DeleteGameServerClusterRequest>,
+        ) -> Result<
+            tonic::Response<super::super::super::super::longrunning::Operation>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/google.cloud.gaming.v1.GameServerClustersService/DeleteGameServerCluster",
+            );
+            self.inner.unary(request.into_request(), path, codec).await
+        }
+        /// Previews deletion of a single game server cluster.
+        pub async fn preview_delete_game_server_cluster(
+            &mut self,
+            request: impl tonic::IntoRequest<
+                super::PreviewDeleteGameServerClusterRequest,
+            >,
+        ) -> Result<
+            tonic::Response<super::PreviewDeleteGameServerClusterResponse>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/google.cloud.gaming.v1.GameServerClustersService/PreviewDeleteGameServerCluster",
+            );
+            self.inner.unary(request.into_request(), path, codec).await
+        }
+        /// Patches a single game server cluster.
+        pub async fn update_game_server_cluster(
+            &mut self,
+            request: impl tonic::IntoRequest<super::UpdateGameServerClusterRequest>,
+        ) -> Result<
+            tonic::Response<super::super::super::super::longrunning::Operation>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/google.cloud.gaming.v1.GameServerClustersService/UpdateGameServerCluster",
+            );
+            self.inner.unary(request.into_request(), path, codec).await
+        }
+        /// Previews updating a GameServerCluster.
+        pub async fn preview_update_game_server_cluster(
+            &mut self,
+            request: impl tonic::IntoRequest<
+                super::PreviewUpdateGameServerClusterRequest,
+            >,
+        ) -> Result<
+            tonic::Response<super::PreviewUpdateGameServerClusterResponse>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/google.cloud.gaming.v1.GameServerClustersService/PreviewUpdateGameServerCluster",
+            );
+            self.inner.unary(request.into_request(), path, codec).await
+        }
+    }
+}
 /// Request message for GameServerConfigsService.ListGameServerConfigs.
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ListGameServerConfigsRequest {
@@ -657,332 +1230,6 @@ pub struct Realm {
     #[prost(string, tag="8")]
     pub description: ::prost::alloc::string::String,
 }
-/// Request message for GameServerClustersService.ListGameServerClusters.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ListGameServerClustersRequest {
-    /// Required. The parent resource name, in the following form:
-    /// "projects/{project}/locations/{location}/realms/{realm}".
-    #[prost(string, tag="1")]
-    pub parent: ::prost::alloc::string::String,
-    /// Optional. The maximum number of items to return. If unspecified, the server
-    /// will pick an appropriate default. The server may return fewer items than
-    /// requested. A caller should only rely on response's
-    /// \[next_page_token][google.cloud.gaming.v1.ListGameServerClustersResponse.next_page_token\] to
-    /// determine if there are more GameServerClusters left to be queried.
-    #[prost(int32, tag="2")]
-    pub page_size: i32,
-    /// Optional. The next_page_token value returned from a previous List request, if any.
-    #[prost(string, tag="3")]
-    pub page_token: ::prost::alloc::string::String,
-    /// Optional. The filter to apply to list results.
-    #[prost(string, tag="4")]
-    pub filter: ::prost::alloc::string::String,
-    /// Optional. Specifies the ordering of results following syntax at
-    /// <https://cloud.google.com/apis/design/design_patterns#sorting_order.>
-    #[prost(string, tag="5")]
-    pub order_by: ::prost::alloc::string::String,
-    /// Optional. View for the returned GameServerCluster objects. When `FULL` is
-    /// specified, the `cluster_state` field is also returned in the
-    /// GameServerCluster object, which includes the state of the referenced
-    /// Kubernetes cluster such as versions and provider info. The default/unset
-    /// value is GAME_SERVER_CLUSTER_VIEW_UNSPECIFIED, same as BASIC, which does
-    /// not return the `cluster_state` field.
-    #[prost(enumeration="GameServerClusterView", tag="6")]
-    pub view: i32,
-}
-/// Response message for GameServerClustersService.ListGameServerClusters.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ListGameServerClustersResponse {
-    /// The list of game server clusters.
-    #[prost(message, repeated, tag="1")]
-    pub game_server_clusters: ::prost::alloc::vec::Vec<GameServerCluster>,
-    /// Token to retrieve the next page of results, or empty if there are no more
-    /// results in the list.
-    #[prost(string, tag="2")]
-    pub next_page_token: ::prost::alloc::string::String,
-    /// List of locations that could not be reached.
-    #[prost(string, repeated, tag="4")]
-    pub unreachable: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
-}
-/// Request message for GameServerClustersService.GetGameServerCluster.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct GetGameServerClusterRequest {
-    /// Required. The name of the game server cluster to retrieve, in the following form:
-    /// `projects/{project}/locations/{location}/realms/{realm-id}/gameServerClusters/{cluster}`.
-    #[prost(string, tag="1")]
-    pub name: ::prost::alloc::string::String,
-    /// Optional. View for the returned GameServerCluster objects. When `FULL` is
-    /// specified, the `cluster_state` field is also returned in the
-    /// GameServerCluster object, which includes the state of the referenced
-    /// Kubernetes cluster such as versions and provider info. The default/unset
-    /// value is GAME_SERVER_CLUSTER_VIEW_UNSPECIFIED, same as BASIC, which does
-    /// not return the `cluster_state` field.
-    #[prost(enumeration="GameServerClusterView", tag="6")]
-    pub view: i32,
-}
-/// Request message for GameServerClustersService.CreateGameServerCluster.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct CreateGameServerClusterRequest {
-    /// Required. The parent resource name, in the following form:
-    /// `projects/{project}/locations/{location}/realms/{realm-id}`.
-    #[prost(string, tag="1")]
-    pub parent: ::prost::alloc::string::String,
-    /// Required. The ID of the game server cluster resource to be created.
-    #[prost(string, tag="2")]
-    pub game_server_cluster_id: ::prost::alloc::string::String,
-    /// Required. The game server cluster resource to be created.
-    #[prost(message, optional, tag="3")]
-    pub game_server_cluster: ::core::option::Option<GameServerCluster>,
-}
-/// Request message for GameServerClustersService.PreviewCreateGameServerCluster.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct PreviewCreateGameServerClusterRequest {
-    /// Required. The parent resource name, in the following form:
-    /// `projects/{project}/locations/{location}/realms/{realm}`.
-    #[prost(string, tag="1")]
-    pub parent: ::prost::alloc::string::String,
-    /// Required. The ID of the game server cluster resource to be created.
-    #[prost(string, tag="2")]
-    pub game_server_cluster_id: ::prost::alloc::string::String,
-    /// Required. The game server cluster resource to be created.
-    #[prost(message, optional, tag="3")]
-    pub game_server_cluster: ::core::option::Option<GameServerCluster>,
-    /// Optional. The target timestamp to compute the preview.
-    #[prost(message, optional, tag="4")]
-    pub preview_time: ::core::option::Option<::prost_types::Timestamp>,
-    /// Optional. This field is deprecated, preview will always return
-    /// KubernetesClusterState.
-    #[deprecated]
-    #[prost(enumeration="GameServerClusterView", tag="6")]
-    pub view: i32,
-}
-/// Response message for
-/// GameServerClustersService.PreviewCreateGameServerCluster.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct PreviewCreateGameServerClusterResponse {
-    /// The ETag of the game server cluster.
-    #[prost(string, tag="2")]
-    pub etag: ::prost::alloc::string::String,
-    /// The target state.
-    #[prost(message, optional, tag="3")]
-    pub target_state: ::core::option::Option<TargetState>,
-    /// Output only. The state of the Kubernetes cluster in preview, this will be available if
-    /// 'view' is set to `FULL` in the relevant List/Get/Preview request.
-    #[prost(message, optional, tag="4")]
-    pub cluster_state: ::core::option::Option<KubernetesClusterState>,
-}
-/// Request message for GameServerClustersService.DeleteGameServerCluster.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct DeleteGameServerClusterRequest {
-    /// Required. The name of the game server cluster to delete, in the following form:
-    /// `projects/{project}/locations/{location}/gameServerClusters/{cluster}`.
-    #[prost(string, tag="1")]
-    pub name: ::prost::alloc::string::String,
-}
-/// Request message for GameServerClustersService.PreviewDeleteGameServerCluster.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct PreviewDeleteGameServerClusterRequest {
-    /// Required. The name of the game server cluster to delete, in the following form:
-    /// `projects/{project}/locations/{location}/gameServerClusters/{cluster}`.
-    #[prost(string, tag="1")]
-    pub name: ::prost::alloc::string::String,
-    /// Optional. The target timestamp to compute the preview.
-    #[prost(message, optional, tag="2")]
-    pub preview_time: ::core::option::Option<::prost_types::Timestamp>,
-}
-/// Response message for
-/// GameServerClustersService.PreviewDeleteGameServerCluster.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct PreviewDeleteGameServerClusterResponse {
-    /// The ETag of the game server cluster.
-    #[prost(string, tag="2")]
-    pub etag: ::prost::alloc::string::String,
-    /// The target state.
-    #[prost(message, optional, tag="3")]
-    pub target_state: ::core::option::Option<TargetState>,
-}
-/// Request message for GameServerClustersService.UpdateGameServerCluster.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct UpdateGameServerClusterRequest {
-    /// Required. The game server cluster to be updated.
-    /// Only fields specified in update_mask are updated.
-    #[prost(message, optional, tag="1")]
-    pub game_server_cluster: ::core::option::Option<GameServerCluster>,
-    /// Required. Mask of fields to update. At least one path must be supplied in
-    /// this field. For the `FieldMask` definition, see
-    /// <https://developers.google.com/protocol-buffers/docs/reference/google.protobuf#fieldmask>
-    #[prost(message, optional, tag="2")]
-    pub update_mask: ::core::option::Option<::prost_types::FieldMask>,
-}
-/// Request message for GameServerClustersService.UpdateGameServerCluster.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct PreviewUpdateGameServerClusterRequest {
-    /// Required. The game server cluster to be updated.
-    /// Only fields specified in update_mask are updated.
-    #[prost(message, optional, tag="1")]
-    pub game_server_cluster: ::core::option::Option<GameServerCluster>,
-    /// Required. Mask of fields to update. At least one path must be supplied in
-    /// this field. For the `FieldMask` definition, see
-    /// <https://developers.google.com/protocol-buffers/docs/reference/google.protobuf#fieldmask>
-    #[prost(message, optional, tag="2")]
-    pub update_mask: ::core::option::Option<::prost_types::FieldMask>,
-    /// Optional. The target timestamp to compute the preview.
-    #[prost(message, optional, tag="3")]
-    pub preview_time: ::core::option::Option<::prost_types::Timestamp>,
-}
-/// Response message for GameServerClustersService.PreviewUpdateGameServerCluster
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct PreviewUpdateGameServerClusterResponse {
-    /// The ETag of the game server cluster.
-    #[prost(string, tag="2")]
-    pub etag: ::prost::alloc::string::String,
-    /// The target state.
-    #[prost(message, optional, tag="3")]
-    pub target_state: ::core::option::Option<TargetState>,
-}
-/// The game server cluster connection information.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct GameServerClusterConnectionInfo {
-    /// Namespace designated on the game server cluster where the Agones game
-    /// server instances will be created. Existence of the namespace will be
-    /// validated during creation.
-    #[prost(string, tag="5")]
-    pub namespace: ::prost::alloc::string::String,
-    /// The location of the Kubernetes cluster.
-    #[prost(oneof="game_server_cluster_connection_info::ClusterReference", tags="7")]
-    pub cluster_reference: ::core::option::Option<game_server_cluster_connection_info::ClusterReference>,
-}
-/// Nested message and enum types in `GameServerClusterConnectionInfo`.
-pub mod game_server_cluster_connection_info {
-    /// The location of the Kubernetes cluster.
-    #[derive(Clone, PartialEq, ::prost::Oneof)]
-    pub enum ClusterReference {
-        /// Reference to the GKE cluster where the game servers are installed.
-        #[prost(message, tag="7")]
-        GkeClusterReference(super::GkeClusterReference),
-    }
-}
-/// A reference to a GKE cluster.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct GkeClusterReference {
-    /// The full or partial name of a GKE cluster, using one of the following
-    /// forms:
-    ///  * `projects/{project}/locations/{location}/clusters/{cluster}`
-    ///  * `locations/{location}/clusters/{cluster}`
-    ///  * `{cluster}`
-    /// If project and location are not specified, the project and location of the
-    /// GameServerCluster resource are used to generate the full name of the
-    /// GKE cluster.
-    #[prost(string, tag="1")]
-    pub cluster: ::prost::alloc::string::String,
-}
-/// A game server cluster resource.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct GameServerCluster {
-    /// Required. The resource name of the game server cluster, in the following form:
-    /// `projects/{project}/locations/{location}/realms/{realm}/gameServerClusters/{cluster}`.
-    /// For example,
-    /// `projects/my-project/locations/{location}/realms/zanzibar/gameServerClusters/my-onprem-cluster`.
-    #[prost(string, tag="1")]
-    pub name: ::prost::alloc::string::String,
-    /// Output only. The creation time.
-    #[prost(message, optional, tag="2")]
-    pub create_time: ::core::option::Option<::prost_types::Timestamp>,
-    /// Output only. The last-modified time.
-    #[prost(message, optional, tag="3")]
-    pub update_time: ::core::option::Option<::prost_types::Timestamp>,
-    /// The labels associated with this game server cluster. Each label is a
-    /// key-value pair.
-    #[prost(btree_map="string, string", tag="4")]
-    pub labels: ::prost::alloc::collections::BTreeMap<::prost::alloc::string::String, ::prost::alloc::string::String>,
-    /// The game server cluster connection information. This information is used to
-    /// manage game server clusters.
-    #[prost(message, optional, tag="5")]
-    pub connection_info: ::core::option::Option<GameServerClusterConnectionInfo>,
-    /// ETag of the resource.
-    #[prost(string, tag="6")]
-    pub etag: ::prost::alloc::string::String,
-    /// Human readable description of the cluster.
-    #[prost(string, tag="7")]
-    pub description: ::prost::alloc::string::String,
-    /// Output only. The state of the Kubernetes cluster, this will be available if
-    /// 'view' is set to `FULL` in the relevant List/Get/Preview request.
-    #[prost(message, optional, tag="11")]
-    pub cluster_state: ::core::option::Option<KubernetesClusterState>,
-}
-/// The state of the Kubernetes cluster.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct KubernetesClusterState {
-    /// Output only. The version of Agones currently installed in the registered Kubernetes
-    /// cluster.
-    #[prost(string, tag="1")]
-    pub agones_version_installed: ::prost::alloc::string::String,
-    /// Output only. The version of Kubernetes that is currently used in the registered
-    /// Kubernetes cluster (as detected by the Cloud Game Servers service).
-    #[prost(string, tag="2")]
-    pub kubernetes_version_installed: ::prost::alloc::string::String,
-    /// Output only. The state for the installed versions of Agones/Kubernetes.
-    #[prost(enumeration="kubernetes_cluster_state::InstallationState", tag="3")]
-    pub installation_state: i32,
-    /// Output only. The detailed error message for the installed versions of Agones/Kubernetes.
-    #[prost(string, tag="4")]
-    pub version_installed_error_message: ::prost::alloc::string::String,
-    /// Output only. The cloud provider type reported by the first node's providerID in the list
-    /// of nodes on the Kubernetes endpoint. On Kubernetes platforms that support
-    /// zero-node clusters (like GKE-on-GCP), the provider type will be empty.
-    #[prost(string, tag="5")]
-    pub provider: ::prost::alloc::string::String,
-    /// Output only. The version of Agones that is targeted to be installed in the cluster.
-    #[prost(string, tag="6")]
-    pub agones_version_targeted: ::prost::alloc::string::String,
-}
-/// Nested message and enum types in `KubernetesClusterState`.
-pub mod kubernetes_cluster_state {
-    /// The state of the installed versions of Agones/Kubernetes. See also
-    /// <https://cloud.google.com/game-servers/docs/versions-and-upgrades.>
-    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
-    #[repr(i32)]
-    pub enum InstallationState {
-        /// The default value. This value is used if the state is omitted.
-        Unspecified = 0,
-        /// The combination of Agones and Kubernetes versions is supported by Google
-        /// Cloud Game Servers.
-        AgonesKubernetesVersionSupported = 1,
-        /// The installed version of Agones is not supported by Google Cloud Game
-        /// Servers.
-        AgonesVersionUnsupported = 2,
-        /// The installed version of Agones is supported by Google Cloud Game
-        /// Servers, but the installed version of Kubernetes is not recommended or
-        /// supported by the version of Agones.
-        AgonesKubernetesVersionUnsupported = 3,
-        /// The installed version of Agones is not recognized because the Agones
-        /// controller's image name does not have a version string reported as
-        /// {major}.{minor}(.{patch}).
-        AgonesVersionUnrecognized = 4,
-        /// The server version of Kubernetes cluster is not recognized because the
-        /// API server didn't return parsable version info on path/version.
-        KubernetesVersionUnrecognized = 5,
-        /// Failed to read or verify the version of Agones or Kubernetes. See
-        /// version_installed_error_message for details.
-        VersionVerificationFailed = 6,
-        /// Agones is not installed.
-        AgonesNotInstalled = 7,
-    }
-}
-/// A view for GameServerCluster objects.
-#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
-#[repr(i32)]
-pub enum GameServerClusterView {
-    /// The default / unset value.
-    /// The API will default to the BASIC view.
-    Unspecified = 0,
-    /// Include basic information of a GameServerCluster resource and omit
-    /// `cluster_state`. This is the default value (for ListGameServerClusters,
-    /// GetGameServerCluster and PreviewCreateGameServerCluster).
-    Basic = 1,
-    /// Include everything.
-    Full = 2,
-}
 /// Generated client implementations.
 pub mod realms_service_client {
     #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
@@ -1164,253 +1411,6 @@ pub mod realms_service_client {
             let codec = tonic::codec::ProstCodec::default();
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.gaming.v1.RealmsService/PreviewRealmUpdate",
-            );
-            self.inner.unary(request.into_request(), path, codec).await
-        }
-    }
-}
-/// Generated client implementations.
-pub mod game_server_clusters_service_client {
-    #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
-    use tonic::codegen::*;
-    /// The game server cluster maps to Kubernetes clusters running Agones and is
-    /// used to manage fleets within clusters.
-    #[derive(Debug, Clone)]
-    pub struct GameServerClustersServiceClient<T> {
-        inner: tonic::client::Grpc<T>,
-    }
-    impl<T> GameServerClustersServiceClient<T>
-    where
-        T: tonic::client::GrpcService<tonic::body::BoxBody>,
-        T::Error: Into<StdError>,
-        T::ResponseBody: Body<Data = Bytes> + Send + 'static,
-        <T::ResponseBody as Body>::Error: Into<StdError> + Send,
-    {
-        pub fn new(inner: T) -> Self {
-            let inner = tonic::client::Grpc::new(inner);
-            Self { inner }
-        }
-        pub fn with_interceptor<F>(
-            inner: T,
-            interceptor: F,
-        ) -> GameServerClustersServiceClient<InterceptedService<T, F>>
-        where
-            F: tonic::service::Interceptor,
-            T::ResponseBody: Default,
-            T: tonic::codegen::Service<
-                http::Request<tonic::body::BoxBody>,
-                Response = http::Response<
-                    <T as tonic::client::GrpcService<tonic::body::BoxBody>>::ResponseBody,
-                >,
-            >,
-            <T as tonic::codegen::Service<
-                http::Request<tonic::body::BoxBody>,
-            >>::Error: Into<StdError> + Send + Sync,
-        {
-            GameServerClustersServiceClient::new(
-                InterceptedService::new(inner, interceptor),
-            )
-        }
-        /// Compress requests with `gzip`.
-        ///
-        /// This requires the server to support it otherwise it might respond with an
-        /// error.
-        #[must_use]
-        pub fn send_gzip(mut self) -> Self {
-            self.inner = self.inner.send_gzip();
-            self
-        }
-        /// Enable decompressing responses with `gzip`.
-        #[must_use]
-        pub fn accept_gzip(mut self) -> Self {
-            self.inner = self.inner.accept_gzip();
-            self
-        }
-        /// Lists game server clusters in a given project and location.
-        pub async fn list_game_server_clusters(
-            &mut self,
-            request: impl tonic::IntoRequest<super::ListGameServerClustersRequest>,
-        ) -> Result<
-            tonic::Response<super::ListGameServerClustersResponse>,
-            tonic::Status,
-        > {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/google.cloud.gaming.v1.GameServerClustersService/ListGameServerClusters",
-            );
-            self.inner.unary(request.into_request(), path, codec).await
-        }
-        /// Gets details of a single game server cluster.
-        pub async fn get_game_server_cluster(
-            &mut self,
-            request: impl tonic::IntoRequest<super::GetGameServerClusterRequest>,
-        ) -> Result<tonic::Response<super::GameServerCluster>, tonic::Status> {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/google.cloud.gaming.v1.GameServerClustersService/GetGameServerCluster",
-            );
-            self.inner.unary(request.into_request(), path, codec).await
-        }
-        /// Creates a new game server cluster in a given project and location.
-        pub async fn create_game_server_cluster(
-            &mut self,
-            request: impl tonic::IntoRequest<super::CreateGameServerClusterRequest>,
-        ) -> Result<
-            tonic::Response<super::super::super::super::longrunning::Operation>,
-            tonic::Status,
-        > {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/google.cloud.gaming.v1.GameServerClustersService/CreateGameServerCluster",
-            );
-            self.inner.unary(request.into_request(), path, codec).await
-        }
-        /// Previews creation of a new game server cluster in a given project and
-        /// location.
-        pub async fn preview_create_game_server_cluster(
-            &mut self,
-            request: impl tonic::IntoRequest<
-                super::PreviewCreateGameServerClusterRequest,
-            >,
-        ) -> Result<
-            tonic::Response<super::PreviewCreateGameServerClusterResponse>,
-            tonic::Status,
-        > {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/google.cloud.gaming.v1.GameServerClustersService/PreviewCreateGameServerCluster",
-            );
-            self.inner.unary(request.into_request(), path, codec).await
-        }
-        /// Deletes a single game server cluster.
-        pub async fn delete_game_server_cluster(
-            &mut self,
-            request: impl tonic::IntoRequest<super::DeleteGameServerClusterRequest>,
-        ) -> Result<
-            tonic::Response<super::super::super::super::longrunning::Operation>,
-            tonic::Status,
-        > {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/google.cloud.gaming.v1.GameServerClustersService/DeleteGameServerCluster",
-            );
-            self.inner.unary(request.into_request(), path, codec).await
-        }
-        /// Previews deletion of a single game server cluster.
-        pub async fn preview_delete_game_server_cluster(
-            &mut self,
-            request: impl tonic::IntoRequest<
-                super::PreviewDeleteGameServerClusterRequest,
-            >,
-        ) -> Result<
-            tonic::Response<super::PreviewDeleteGameServerClusterResponse>,
-            tonic::Status,
-        > {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/google.cloud.gaming.v1.GameServerClustersService/PreviewDeleteGameServerCluster",
-            );
-            self.inner.unary(request.into_request(), path, codec).await
-        }
-        /// Patches a single game server cluster.
-        pub async fn update_game_server_cluster(
-            &mut self,
-            request: impl tonic::IntoRequest<super::UpdateGameServerClusterRequest>,
-        ) -> Result<
-            tonic::Response<super::super::super::super::longrunning::Operation>,
-            tonic::Status,
-        > {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/google.cloud.gaming.v1.GameServerClustersService/UpdateGameServerCluster",
-            );
-            self.inner.unary(request.into_request(), path, codec).await
-        }
-        /// Previews updating a GameServerCluster.
-        pub async fn preview_update_game_server_cluster(
-            &mut self,
-            request: impl tonic::IntoRequest<
-                super::PreviewUpdateGameServerClusterRequest,
-            >,
-        ) -> Result<
-            tonic::Response<super::PreviewUpdateGameServerClusterResponse>,
-            tonic::Status,
-        > {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/google.cloud.gaming.v1.GameServerClustersService/PreviewUpdateGameServerCluster",
             );
             self.inner.unary(request.into_request(), path, codec).await
         }
