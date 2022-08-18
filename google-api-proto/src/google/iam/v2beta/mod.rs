@@ -5,7 +5,7 @@ pub struct DenyRule {
     /// Google Cloud resources. This field can contain the following values:
     ///
     /// * `principalSet://goog/public:all`: A special identifier that represents
-    ///   any user who is on the internet, even if they do not have a Google
+    ///   any principal that is on the internet, even if they do not have a Google
     ///   Account or are not logged in.
     ///
     /// * `principal://goog/subject/{email_id}`: A specific Google Account.
