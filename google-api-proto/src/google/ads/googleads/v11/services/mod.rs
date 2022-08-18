@@ -205,8 +205,8 @@ pub mod ad_group_asset_operation {
 pub struct MutateAdGroupAssetsResponse {
     /// Errors that pertain to operation failures in the partial failure mode.
     /// Returned only when partial_failure = true and all errors occur inside the
-    /// operations. If any errors occur outside the operations (e.g. auth errors),
-    /// we return an RPC level error.
+    /// operations. If any errors occur outside the operations (for example, auth
+    /// errors), we return an RPC level error.
     #[prost(message, optional, tag="1")]
     pub partial_failure_error: ::core::option::Option<super::super::super::super::rpc::Status>,
     /// All results for the mutate.
@@ -320,7 +320,7 @@ pub mod ad_group_asset_service_client {
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct SuggestKeywordThemeConstantsRequest {
     /// The query text of a keyword theme that will be used to map to similar
-    /// keyword themes. E.g. "plumber" or "roofer".
+    /// keyword themes. For example, "plumber" or "roofer".
     #[prost(string, tag="1")]
     pub query_text: ::prost::alloc::string::String,
     /// Upper-case, two-letter country code as defined by ISO-3166. This for
@@ -482,8 +482,8 @@ pub mod campaign_shared_set_operation {
 pub struct MutateCampaignSharedSetsResponse {
     /// Errors that pertain to operation failures in the partial failure mode.
     /// Returned only when partial_failure = true and all errors occur inside the
-    /// operations. If any errors occur outside the operations (e.g. auth errors),
-    /// we return an RPC level error.
+    /// operations. If any errors occur outside the operations (for example, auth
+    /// errors), we return an RPC level error.
     #[prost(message, optional, tag="3")]
     pub partial_failure_error: ::core::option::Option<super::super::super::super::rpc::Status>,
     /// All results for the mutate.
@@ -667,8 +667,8 @@ pub mod customer_asset_operation {
 pub struct MutateCustomerAssetsResponse {
     /// Errors that pertain to operation failures in the partial failure mode.
     /// Returned only when partial_failure = true and all errors occur inside the
-    /// operations. If any errors occur outside the operations (e.g. auth errors),
-    /// we return an RPC level error.
+    /// operations. If any errors occur outside the operations (for example, auth
+    /// errors), we return an RPC level error.
     #[prost(message, optional, tag="1")]
     pub partial_failure_error: ::core::option::Option<super::super::super::super::rpc::Status>,
     /// All results for the mutate.
@@ -838,8 +838,8 @@ pub mod bidding_strategy_operation {
 pub struct MutateBiddingStrategiesResponse {
     /// Errors that pertain to operation failures in the partial failure mode.
     /// Returned only when partial_failure = true and all errors occur inside the
-    /// operations. If any errors occur outside the operations (e.g. auth errors),
-    /// we return an RPC level error.
+    /// operations. If any errors occur outside the operations (for example, auth
+    /// errors), we return an RPC level error.
     #[prost(message, optional, tag="3")]
     pub partial_failure_error: ::core::option::Option<super::super::super::super::rpc::Status>,
     /// All results for the mutate.
@@ -1023,8 +1023,8 @@ pub struct MutateAssetGroupSignalsResponse {
     pub results: ::prost::alloc::vec::Vec<MutateAssetGroupSignalResult>,
     /// Errors that pertain to operation failures in the partial failure mode.
     /// Returned only when partial_failure = true and all errors occur inside the
-    /// operations. If any errors occur outside the operations (e.g. auth errors),
-    /// we return an RPC level error.
+    /// operations. If any errors occur outside the operations (for example, auth
+    /// errors), we return an RPC level error.
     #[prost(message, optional, tag="2")]
     pub partial_failure_error: ::core::option::Option<super::super::super::super::rpc::Status>,
 }
@@ -1181,8 +1181,8 @@ pub mod campaign_feed_operation {
 pub struct MutateCampaignFeedsResponse {
     /// Errors that pertain to operation failures in the partial failure mode.
     /// Returned only when partial_failure = true and all errors occur inside the
-    /// operations. If any errors occur outside the operations (e.g. auth errors),
-    /// we return an RPC level error.
+    /// operations. If any errors occur outside the operations (for example, auth
+    /// errors), we return an RPC level error.
     #[prost(message, optional, tag="3")]
     pub partial_failure_error: ::core::option::Option<super::super::super::super::rpc::Status>,
     /// All results for the mutate.
@@ -1361,8 +1361,8 @@ pub mod ad_group_operation {
 pub struct MutateAdGroupsResponse {
     /// Errors that pertain to operation failures in the partial failure mode.
     /// Returned only when partial_failure = true and all errors occur inside the
-    /// operations. If any errors occur outside the operations (e.g. auth errors),
-    /// we return an RPC level error.
+    /// operations. If any errors occur outside the operations (for example, auth
+    /// errors), we return an RPC level error.
     #[prost(message, optional, tag="3")]
     pub partial_failure_error: ::core::option::Option<super::super::super::super::rpc::Status>,
     /// All results for the mutate.
@@ -1548,8 +1548,8 @@ pub mod ad_group_feed_operation {
 pub struct MutateAdGroupFeedsResponse {
     /// Errors that pertain to operation failures in the partial failure mode.
     /// Returned only when partial_failure = true and all errors occur inside the
-    /// operations. If any errors occur outside the operations (e.g. auth errors),
-    /// we return an RPC level error.
+    /// operations. If any errors occur outside the operations (for example, auth
+    /// errors), we return an RPC level error.
     #[prost(message, optional, tag="3")]
     pub partial_failure_error: ::core::option::Option<super::super::super::super::rpc::Status>,
     /// All results for the mutate.
@@ -1728,8 +1728,8 @@ pub mod customer_feed_operation {
 pub struct MutateCustomerFeedsResponse {
     /// Errors that pertain to operation failures in the partial failure mode.
     /// Returned only when partial_failure = true and all errors occur inside the
-    /// operations. If any errors occur outside the operations (e.g. auth errors),
-    /// we return an RPC level error.
+    /// operations. If any errors occur outside the operations (for example, auth
+    /// errors), we return an RPC level error.
     #[prost(message, optional, tag="3")]
     pub partial_failure_error: ::core::option::Option<super::super::super::super::rpc::Status>,
     /// All results for the mutate.
@@ -1908,8 +1908,8 @@ pub mod feed_item_operation {
 pub struct MutateFeedItemsResponse {
     /// Errors that pertain to operation failures in the partial failure mode.
     /// Returned only when partial_failure = true and all errors occur inside the
-    /// operations. If any errors occur outside the operations (e.g. auth errors),
-    /// we return an RPC level error.
+    /// operations. If any errors occur outside the operations (for example, auth
+    /// errors), we return an RPC level error.
     #[prost(message, optional, tag="3")]
     pub partial_failure_error: ::core::option::Option<super::super::super::super::rpc::Status>,
     /// All results for the mutate.
@@ -2235,8 +2235,8 @@ pub mod campaign_budget_operation {
 pub struct MutateCampaignBudgetsResponse {
     /// Errors that pertain to operation failures in the partial failure mode.
     /// Returned only when partial_failure = true and all errors occur inside the
-    /// operations. If any errors occur outside the operations (e.g. auth errors),
-    /// we return an RPC level error.
+    /// operations. If any errors occur outside the operations (for example, auth
+    /// errors), we return an RPC level error.
     #[prost(message, optional, tag="3")]
     pub partial_failure_error: ::core::option::Option<super::super::super::super::rpc::Status>,
     /// All results for the mutate.
@@ -2412,16 +2412,16 @@ pub mod generate_keyword_ideas_request {
     #[derive(Clone, PartialEq, ::prost::Oneof)]
     pub enum Seed {
         /// A Keyword and a specific Url to generate ideas from
-        /// e.g. cars, www.example.com/cars.
+        /// for example, cars, www.example.com/cars.
         #[prost(message, tag="2")]
         KeywordAndUrlSeed(super::KeywordAndUrlSeed),
-        /// A Keyword or phrase to generate ideas from, e.g. cars.
+        /// A Keyword or phrase to generate ideas from, for example, cars.
         #[prost(message, tag="3")]
         KeywordSeed(super::KeywordSeed),
-        /// A specific url to generate ideas from, e.g. www.example.com/cars.
+        /// A specific url to generate ideas from, for example, www.example.com/cars.
         #[prost(message, tag="5")]
         UrlSeed(super::UrlSeed),
-        /// The site to generate ideas from, e.g. www.example.com.
+        /// The site to generate ideas from, for example, www.example.com.
         #[prost(message, tag="11")]
         SiteSeed(super::SiteSeed),
     }
@@ -2843,8 +2843,8 @@ pub struct MutateAdGroupCustomizersResponse {
     pub results: ::prost::alloc::vec::Vec<MutateAdGroupCustomizerResult>,
     /// Errors that pertain to operation failures in the partial failure mode.
     /// Returned only when partial_failure = true and all errors occur inside the
-    /// operations. If any errors occur outside the operations (e.g. auth errors),
-    /// we return an RPC level error.
+    /// operations. If any errors occur outside the operations (for example, auth
+    /// errors), we return an RPC level error.
     #[prost(message, optional, tag="2")]
     pub partial_failure_error: ::core::option::Option<super::super::super::super::rpc::Status>,
 }
@@ -2995,8 +2995,8 @@ pub mod shared_criterion_operation {
 pub struct MutateSharedCriteriaResponse {
     /// Errors that pertain to operation failures in the partial failure mode.
     /// Returned only when partial_failure = true and all errors occur inside the
-    /// operations. If any errors occur outside the operations (e.g. auth errors),
-    /// we return an RPC level error.
+    /// operations. If any errors occur outside the operations (for example, auth
+    /// errors), we return an RPC level error.
     #[prost(message, optional, tag="3")]
     pub partial_failure_error: ::core::option::Option<super::super::super::super::rpc::Status>,
     /// All results for the mutate.
@@ -3176,8 +3176,8 @@ pub mod conversion_custom_variable_operation {
 pub struct MutateConversionCustomVariablesResponse {
     /// Errors that pertain to operation failures in the partial failure mode.
     /// Returned only when partial_failure = true and all errors occur inside the
-    /// operations. If any errors occur outside the operations (e.g. auth errors),
-    /// we return an RPC level error.
+    /// operations. If any errors occur outside the operations (for example, auth
+    /// errors), we return an RPC level error.
     #[prost(message, optional, tag="1")]
     pub partial_failure_error: ::core::option::Option<super::super::super::super::rpc::Status>,
     /// All results for the mutate.
@@ -3342,8 +3342,8 @@ pub mod feed_mapping_operation {
 pub struct MutateFeedMappingsResponse {
     /// Errors that pertain to operation failures in the partial failure mode.
     /// Returned only when partial_failure = true and all errors occur inside the
-    /// operations. If any errors occur outside the operations (e.g. auth errors),
-    /// we return an RPC level error.
+    /// operations. If any errors occur outside the operations (for example, auth
+    /// errors), we return an RPC level error.
     #[prost(message, optional, tag="3")]
     pub partial_failure_error: ::core::option::Option<super::super::super::super::rpc::Status>,
     /// All results for the mutate.
@@ -3523,8 +3523,8 @@ pub mod ad_group_extension_setting_operation {
 pub struct MutateAdGroupExtensionSettingsResponse {
     /// Errors that pertain to operation failures in the partial failure mode.
     /// Returned only when partial_failure = true and all errors occur inside the
-    /// operations. If any errors occur outside the operations (e.g. auth errors),
-    /// we return an RPC level error.
+    /// operations. If any errors occur outside the operations (for example, auth
+    /// errors), we return an RPC level error.
     #[prost(message, optional, tag="3")]
     pub partial_failure_error: ::core::option::Option<super::super::super::super::rpc::Status>,
     /// All results for the mutate.
@@ -3720,8 +3720,8 @@ pub mod customer_extension_setting_operation {
 pub struct MutateCustomerExtensionSettingsResponse {
     /// Errors that pertain to operation failures in the partial failure mode.
     /// Returned only when partial_failure = true and all errors occur inside the
-    /// operations. If any errors occur outside the operations (e.g. auth errors),
-    /// we return an RPC level error.
+    /// operations. If any errors occur outside the operations (for example, auth
+    /// errors), we return an RPC level error.
     #[prost(message, optional, tag="3")]
     pub partial_failure_error: ::core::option::Option<super::super::super::super::rpc::Status>,
     /// All results for the mutate.
@@ -4026,7 +4026,7 @@ pub mod customer_manager_link_service_client {
         }
         /// Moves a client customer to a new manager customer.
         /// This simplifies the complex request that requires two operations to move
-        /// a client customer to a new manager. i.e:
+        /// a client customer to a new manager, for example:
         /// 1. Update operation with Status INACTIVE (previous manager) and,
         /// 2. Update operation with Status ACTIVE (new manager).
         ///
@@ -4266,8 +4266,8 @@ pub struct MutateFeedItemSetLinksResponse {
     pub results: ::prost::alloc::vec::Vec<MutateFeedItemSetLinkResult>,
     /// Errors that pertain to operation failures in the partial failure mode.
     /// Returned only when partial_failure = true and all errors occur inside the
-    /// operations. If any errors occur outside the operations (e.g. auth errors),
-    /// we return an RPC level error.
+    /// operations. If any errors occur outside the operations (for example, auth
+    /// errors), we return an RPC level error.
     #[prost(message, optional, tag="2")]
     pub partial_failure_error: ::core::option::Option<super::super::super::super::rpc::Status>,
 }
@@ -4416,8 +4416,8 @@ pub mod ad_group_ad_label_operation {
 pub struct MutateAdGroupAdLabelsResponse {
     /// Errors that pertain to operation failures in the partial failure mode.
     /// Returned only when partial_failure = true and all errors occur inside the
-    /// operations. If any errors occur outside the operations (e.g. auth errors),
-    /// we return an RPC level error.
+    /// operations. If any errors occur outside the operations (for example, auth
+    /// errors), we return an RPC level error.
     #[prost(message, optional, tag="3")]
     pub partial_failure_error: ::core::option::Option<super::super::super::super::rpc::Status>,
     /// All results for the mutate.
@@ -4832,8 +4832,8 @@ pub mod campaign_bid_modifier_operation {
 pub struct MutateCampaignBidModifiersResponse {
     /// Errors that pertain to operation failures in the partial failure mode.
     /// Returned only when partial_failure = true and all errors occur inside the
-    /// operations. If any errors occur outside the operations (e.g. auth errors),
-    /// we return an RPC level error.
+    /// operations. If any errors occur outside the operations (for example, auth
+    /// errors), we return an RPC level error.
     #[prost(message, optional, tag="3")]
     pub partial_failure_error: ::core::option::Option<super::super::super::super::rpc::Status>,
     /// All results for the mutate.
@@ -5019,8 +5019,8 @@ pub mod ad_group_ad_operation {
 pub struct MutateAdGroupAdsResponse {
     /// Errors that pertain to operation failures in the partial failure mode.
     /// Returned only when partial_failure = true and all errors occur inside the
-    /// operations. If any errors occur outside the operations (e.g. auth errors),
-    /// we return an RPC level error.
+    /// operations. If any errors occur outside the operations (for example, auth
+    /// errors), we return an RPC level error.
     #[prost(message, optional, tag="3")]
     pub partial_failure_error: ::core::option::Option<super::super::super::super::rpc::Status>,
     /// All results for the mutate.
@@ -5220,8 +5220,8 @@ pub mod ad_group_bid_modifier_operation {
 pub struct MutateAdGroupBidModifiersResponse {
     /// Errors that pertain to operation failures in the partial failure mode.
     /// Returned only when partial_failure = true and all errors occur inside the
-    /// operations. If any errors occur outside the operations (e.g. auth errors),
-    /// we return an RPC level error.
+    /// operations. If any errors occur outside the operations (for example, auth
+    /// errors), we return an RPC level error.
     #[prost(message, optional, tag="3")]
     pub partial_failure_error: ::core::option::Option<super::super::super::super::rpc::Status>,
     /// All results for the mutate.
@@ -5406,8 +5406,8 @@ pub struct MutateAdGroupCriterionCustomizersResponse {
     pub results: ::prost::alloc::vec::Vec<MutateAdGroupCriterionCustomizerResult>,
     /// Errors that pertain to operation failures in the partial failure mode.
     /// Returned only when partial_failure = true and all errors occur inside the
-    /// operations. If any errors occur outside the operations (e.g. auth errors),
-    /// we return an RPC level error.
+    /// operations. If any errors occur outside the operations (for example, auth
+    /// errors), we return an RPC level error.
     #[prost(message, optional, tag="2")]
     pub partial_failure_error: ::core::option::Option<super::super::super::super::rpc::Status>,
 }
@@ -5557,8 +5557,8 @@ pub mod ad_group_criterion_label_operation {
 pub struct MutateAdGroupCriterionLabelsResponse {
     /// Errors that pertain to operation failures in the partial failure mode.
     /// Returned only when partial_failure = true and all errors occur inside the
-    /// operations. If any errors occur outside the operations (e.g. auth errors),
-    /// we return an RPC level error.
+    /// operations. If any errors occur outside the operations (for example, auth
+    /// errors), we return an RPC level error.
     #[prost(message, optional, tag="3")]
     pub partial_failure_error: ::core::option::Option<super::super::super::super::rpc::Status>,
     /// All results for the mutate.
@@ -5696,7 +5696,7 @@ pub struct AdGroupCriterionOperation {
     pub update_mask: ::core::option::Option<::prost_types::FieldMask>,
     /// The list of policy violation keys that should not cause a
     /// PolicyViolationError to be reported. Not all policy violations are
-    /// exemptable, please refer to the is_exemptible field in the returned
+    /// exemptable, refer to the is_exemptible field in the returned
     /// PolicyViolationError.
     ///
     /// Resources violating these polices will be saved, but will not be eligible
@@ -5734,8 +5734,8 @@ pub mod ad_group_criterion_operation {
 pub struct MutateAdGroupCriteriaResponse {
     /// Errors that pertain to operation failures in the partial failure mode.
     /// Returned only when partial_failure = true and all errors occur inside the
-    /// operations. If any errors occur outside the operations (e.g. auth errors),
-    /// we return an RPC level error.
+    /// operations. If any errors occur outside the operations (for example, auth
+    /// errors), we return an RPC level error.
     #[prost(message, optional, tag="3")]
     pub partial_failure_error: ::core::option::Option<super::super::super::super::rpc::Status>,
     /// All results for the mutate.
@@ -5919,8 +5919,8 @@ pub mod ad_group_label_operation {
 pub struct MutateAdGroupLabelsResponse {
     /// Errors that pertain to operation failures in the partial failure mode.
     /// Returned only when partial_failure = true and all errors occur inside the
-    /// operations. If any errors occur outside the operations (e.g. auth errors),
-    /// we return an RPC level error.
+    /// operations. If any errors occur outside the operations (for example, auth
+    /// errors), we return an RPC level error.
     #[prost(message, optional, tag="3")]
     pub partial_failure_error: ::core::option::Option<super::super::super::super::rpc::Status>,
     /// All results for the mutate.
@@ -6083,8 +6083,8 @@ pub mod ad_parameter_operation {
 pub struct MutateAdParametersResponse {
     /// Errors that pertain to operation failures in the partial failure mode.
     /// Returned only when partial_failure = true and all errors occur inside the
-    /// operations. If any errors occur outside the operations (e.g. auth errors),
-    /// we return an RPC level error.
+    /// operations. If any errors occur outside the operations (for example, auth
+    /// errors), we return an RPC level error.
     #[prost(message, optional, tag="3")]
     pub partial_failure_error: ::core::option::Option<super::super::super::super::rpc::Status>,
     /// All results for the mutate.
@@ -6256,8 +6256,8 @@ pub mod ad_operation {
 pub struct MutateAdsResponse {
     /// Errors that pertain to operation failures in the partial failure mode.
     /// Returned only when partial_failure = true and all errors occur inside the
-    /// operations. If any errors occur outside the operations (e.g. auth errors),
-    /// we return an RPC level error.
+    /// operations. If any errors occur outside the operations (for example, auth
+    /// errors), we return an RPC level error.
     #[prost(message, optional, tag="3")]
     pub partial_failure_error: ::core::option::Option<super::super::super::super::rpc::Status>,
     /// All results for the mutate.
@@ -6478,8 +6478,8 @@ pub struct MutateAssetGroupAssetsResponse {
     pub results: ::prost::alloc::vec::Vec<MutateAssetGroupAssetResult>,
     /// Errors that pertain to operation failures in the partial failure mode.
     /// Returned only when partial_failure = true and all errors occur inside the
-    /// operations. If any errors occur outside the operations (e.g. auth errors),
-    /// we return an RPC level error.
+    /// operations. If any errors occur outside the operations (for example, auth
+    /// errors), we return an RPC level error.
     #[prost(message, optional, tag="2")]
     pub partial_failure_error: ::core::option::Option<super::super::super::super::rpc::Status>,
 }
@@ -6782,8 +6782,8 @@ pub struct MutateAssetGroupsResponse {
     pub results: ::prost::alloc::vec::Vec<MutateAssetGroupResult>,
     /// Errors that pertain to operation failures in the partial failure mode.
     /// Returned only when partial_failure = true and all errors occur inside the
-    /// operations. If any errors occur outside the operations (e.g. auth errors),
-    /// we return an RPC level error.
+    /// operations. If any errors occur outside the operations (for example, auth
+    /// errors), we return an RPC level error.
     #[prost(message, optional, tag="2")]
     pub partial_failure_error: ::core::option::Option<super::super::super::super::rpc::Status>,
 }
@@ -6928,8 +6928,8 @@ pub mod asset_operation {
 pub struct MutateAssetsResponse {
     /// Errors that pertain to operation failures in the partial failure mode.
     /// Returned only when partial_failure = true and all errors occur inside the
-    /// operations. If any errors occur outside the operations (e.g. auth errors),
-    /// we return an RPC level error.
+    /// operations. If any errors occur outside the operations (for example, auth
+    /// errors), we return an RPC level error.
     #[prost(message, optional, tag="3")]
     pub partial_failure_error: ::core::option::Option<super::super::super::super::rpc::Status>,
     /// All results for the mutate.
@@ -7109,8 +7109,8 @@ pub struct MutateAssetSetAssetsResponse {
     pub results: ::prost::alloc::vec::Vec<MutateAssetSetAssetResult>,
     /// Errors that pertain to operation failures in the partial failure mode.
     /// Returned only when partial_failure = true and all errors occur inside the
-    /// operations. If any errors occur outside the operations (e.g. auth errors),
-    /// we return an RPC level error.
+    /// operations. If any errors occur outside the operations (for example, auth
+    /// errors), we return an RPC level error.
     #[prost(message, optional, tag="2")]
     pub partial_failure_error: ::core::option::Option<super::super::super::super::rpc::Status>,
 }
@@ -7267,8 +7267,8 @@ pub struct MutateAssetSetsResponse {
     pub results: ::prost::alloc::vec::Vec<MutateAssetSetResult>,
     /// Errors that pertain to operation failures in the partial failure mode.
     /// Returned only when partial_failure = true and all errors occur inside the
-    /// operations. If any errors occur outside the operations (e.g. auth errors),
-    /// we return an RPC level error.
+    /// operations. If any errors occur outside the operations (for example, auth
+    /// errors), we return an RPC level error.
     #[prost(message, optional, tag="2")]
     pub partial_failure_error: ::core::option::Option<super::super::super::super::rpc::Status>,
 }
@@ -7391,8 +7391,8 @@ pub struct MutateAudiencesResponse {
     pub results: ::prost::alloc::vec::Vec<MutateAudienceResult>,
     /// Errors that pertain to operation failures in the partial failure mode.
     /// Returned only when partial_failure = true and all errors occur inside the
-    /// operations. If any errors occur outside the operations (e.g. auth errors),
-    /// we return an RPC level error.
+    /// operations. If any errors occur outside the operations (for example, auth
+    /// errors), we return an RPC level error.
     #[prost(message, optional, tag="2")]
     pub partial_failure_error: ::core::option::Option<super::super::super::super::rpc::Status>,
 }
@@ -7572,8 +7572,8 @@ pub mod bidding_data_exclusion_operation {
 pub struct MutateBiddingDataExclusionsResponse {
     /// Errors that pertain to operation failures in the partial failure mode.
     /// Returned only when partial_failure = true and all errors occur inside the
-    /// operations. If any errors occur outside the operations (e.g. auth errors),
-    /// we return an RPC level error.
+    /// operations. If any errors occur outside the operations (for example, auth
+    /// errors), we return an RPC level error.
     #[prost(message, optional, tag="3")]
     pub partial_failure_error: ::core::option::Option<super::super::super::super::rpc::Status>,
     /// All results for the mutate.
@@ -7735,8 +7735,8 @@ pub mod bidding_seasonality_adjustment_operation {
 pub struct MutateBiddingSeasonalityAdjustmentsResponse {
     /// Errors that pertain to operation failures in the partial failure mode.
     /// Returned only when partial_failure = true and all errors occur inside the
-    /// operations. If any errors occur outside the operations (e.g. auth errors),
-    /// we return an RPC level error.
+    /// operations. If any errors occur outside the operations (for example, auth
+    /// errors), we return an RPC level error.
     #[prost(message, optional, tag="3")]
     pub partial_failure_error: ::core::option::Option<super::super::super::super::rpc::Status>,
     /// All results for the mutate.
@@ -7899,8 +7899,8 @@ pub mod campaign_asset_operation {
 pub struct MutateCampaignAssetsResponse {
     /// Errors that pertain to operation failures in the partial failure mode.
     /// Returned only when partial_failure = true and all errors occur inside the
-    /// operations. If any errors occur outside the operations (e.g. auth errors),
-    /// we return an RPC level error.
+    /// operations. If any errors occur outside the operations (for example, auth
+    /// errors), we return an RPC level error.
     #[prost(message, optional, tag="1")]
     pub partial_failure_error: ::core::option::Option<super::super::super::super::rpc::Status>,
     /// All results for the mutate.
@@ -8068,8 +8068,8 @@ pub struct MutateCampaignAssetSetsResponse {
     pub results: ::prost::alloc::vec::Vec<MutateCampaignAssetSetResult>,
     /// Errors that pertain to operation failures in the partial failure mode.
     /// Returned only when partial_failure = true and all errors occur inside the
-    /// operations. If any errors occur outside the operations (e.g. auth errors),
-    /// we return an RPC level error.
+    /// operations. If any errors occur outside the operations (for example, auth
+    /// errors), we return an RPC level error.
     #[prost(message, optional, tag="2")]
     pub partial_failure_error: ::core::option::Option<super::super::super::super::rpc::Status>,
 }
@@ -8358,8 +8358,8 @@ pub mod campaign_criterion_operation {
 pub struct MutateCampaignCriteriaResponse {
     /// Errors that pertain to operation failures in the partial failure mode.
     /// Returned only when partial_failure = true and all errors occur inside the
-    /// operations. If any errors occur outside the operations (e.g. auth errors),
-    /// we return an RPC level error.
+    /// operations. If any errors occur outside the operations (for example, auth
+    /// errors), we return an RPC level error.
     #[prost(message, optional, tag="3")]
     pub partial_failure_error: ::core::option::Option<super::super::super::super::rpc::Status>,
     /// All results for the mutate.
@@ -8546,8 +8546,8 @@ pub struct MutateCampaignCustomizersResponse {
     pub results: ::prost::alloc::vec::Vec<MutateCampaignCustomizerResult>,
     /// Errors that pertain to operation failures in the partial failure mode.
     /// Returned only when partial_failure = true and all errors occur inside the
-    /// operations. If any errors occur outside the operations (e.g. auth errors),
-    /// we return an RPC level error.
+    /// operations. If any errors occur outside the operations (for example, auth
+    /// errors), we return an RPC level error.
     #[prost(message, optional, tag="2")]
     pub partial_failure_error: ::core::option::Option<super::super::super::super::rpc::Status>,
 }
@@ -8716,8 +8716,8 @@ pub mod campaign_draft_operation {
 pub struct MutateCampaignDraftsResponse {
     /// Errors that pertain to operation failures in the partial failure mode.
     /// Returned only when partial_failure = true and all errors occur inside the
-    /// operations. If any errors occur outside the operations (e.g. auth errors),
-    /// we return an RPC level error.
+    /// operations. If any errors occur outside the operations (for example, auth
+    /// errors), we return an RPC level error.
     #[prost(message, optional, tag="3")]
     pub partial_failure_error: ::core::option::Option<super::super::super::super::rpc::Status>,
     /// All results for the mutate.
@@ -8988,8 +8988,8 @@ pub mod campaign_experiment_operation {
 pub struct MutateCampaignExperimentsResponse {
     /// Errors that pertain to operation failures in the partial failure mode.
     /// Returned only when partial_failure = true and all errors occur inside the
-    /// operations. If any errors occur outside the operations (e.g. auth errors),
-    /// we return an RPC level error.
+    /// operations. If any errors occur outside the operations (for example, auth
+    /// errors), we return an RPC level error.
     #[prost(message, optional, tag="3")]
     pub partial_failure_error: ::core::option::Option<super::super::super::super::rpc::Status>,
     /// All results for the mutate.
@@ -9453,8 +9453,8 @@ pub mod campaign_extension_setting_operation {
 pub struct MutateCampaignExtensionSettingsResponse {
     /// Errors that pertain to operation failures in the partial failure mode.
     /// Returned only when partial_failure = true and all errors occur inside the
-    /// operations. If any errors occur outside the operations (e.g. auth errors),
-    /// we return an RPC level error.
+    /// operations. If any errors occur outside the operations (for example, auth
+    /// errors), we return an RPC level error.
     #[prost(message, optional, tag="3")]
     pub partial_failure_error: ::core::option::Option<super::super::super::super::rpc::Status>,
     /// All results for the mutate.
@@ -9649,8 +9649,8 @@ pub struct MutateCampaignGroupsResponse {
     pub results: ::prost::alloc::vec::Vec<MutateCampaignGroupResult>,
     /// Errors that pertain to operation failures in the partial failure mode.
     /// Returned only when partial_failure = true and all errors occur inside the
-    /// operations. If any errors occur outside the operations (e.g. auth errors),
-    /// we return an RPC level error.
+    /// operations. If any errors occur outside the operations (for example, auth
+    /// errors), we return an RPC level error.
     #[prost(message, optional, tag="3")]
     pub partial_failure_error: ::core::option::Option<super::super::super::super::rpc::Status>,
 }
@@ -9795,8 +9795,8 @@ pub mod campaign_label_operation {
 pub struct MutateCampaignLabelsResponse {
     /// Errors that pertain to operation failures in the partial failure mode.
     /// Returned only when partial_failure = true and all errors occur inside the
-    /// operations. If any errors occur outside the operations (e.g. auth errors),
-    /// we return an RPC level error.
+    /// operations. If any errors occur outside the operations (for example, auth
+    /// errors), we return an RPC level error.
     #[prost(message, optional, tag="3")]
     pub partial_failure_error: ::core::option::Option<super::super::super::super::rpc::Status>,
     /// All results for the mutate.
@@ -9962,8 +9962,8 @@ pub mod campaign_operation {
 pub struct MutateCampaignsResponse {
     /// Errors that pertain to operation failures in the partial failure mode.
     /// Returned only when partial_failure = true and all errors occur inside the
-    /// operations. If any errors occur outside the operations (e.g. auth errors),
-    /// we return an RPC level error.
+    /// operations. If any errors occur outside the operations (for example, auth
+    /// errors), we return an RPC level error.
     #[prost(message, optional, tag="3")]
     pub partial_failure_error: ::core::option::Option<super::super::super::super::rpc::Status>,
     /// All results for the mutate.
@@ -10154,8 +10154,8 @@ pub mod conversion_action_operation {
 pub struct MutateConversionActionsResponse {
     /// Errors that pertain to operation failures in the partial failure mode.
     /// Returned only when partial_failure = true and all errors occur inside the
-    /// operations. If any errors occur outside the operations (e.g. auth errors),
-    /// we return an RPC level error.
+    /// operations. If any errors occur outside the operations (for example, auth
+    /// errors), we return an RPC level error.
     #[prost(message, optional, tag="3")]
     pub partial_failure_error: ::core::option::Option<super::super::super::super::rpc::Status>,
     /// All results for the mutate.
@@ -10483,8 +10483,8 @@ pub struct MutateConversionValueRulesResponse {
     pub results: ::prost::alloc::vec::Vec<MutateConversionValueRuleResult>,
     /// Errors that pertain to operation failures in the partial failure mode.
     /// Returned only when partial_failure = true and all errors occur inside the
-    /// operations. If any errors occur outside the operations (e.g. auth errors),
-    /// we return an RPC level error.
+    /// operations. If any errors occur outside the operations (for example, auth
+    /// errors), we return an RPC level error.
     #[prost(message, optional, tag="3")]
     pub partial_failure_error: ::core::option::Option<super::super::super::super::rpc::Status>,
 }
@@ -10647,8 +10647,8 @@ pub struct MutateConversionValueRuleSetsResponse {
     pub results: ::prost::alloc::vec::Vec<MutateConversionValueRuleSetResult>,
     /// Errors that pertain to operation failures in the partial failure mode.
     /// Returned only when partial_failure = true and all errors occur inside the
-    /// operations. If any errors occur outside the operations (e.g. auth errors),
-    /// we return an RPC level error.
+    /// operations. If any errors occur outside the operations (for example, auth
+    /// errors), we return an RPC level error.
     #[prost(message, optional, tag="2")]
     pub partial_failure_error: ::core::option::Option<super::super::super::super::rpc::Status>,
 }
@@ -11085,8 +11085,8 @@ pub struct MutateCustomerCustomizersResponse {
     pub results: ::prost::alloc::vec::Vec<MutateCustomerCustomizerResult>,
     /// Errors that pertain to operation failures in the partial failure mode.
     /// Returned only when partial_failure = true and all errors occur inside the
-    /// operations. If any errors occur outside the operations (e.g. auth errors),
-    /// we return an RPC level error.
+    /// operations. If any errors occur outside the operations (for example, auth
+    /// errors), we return an RPC level error.
     #[prost(message, optional, tag="2")]
     pub partial_failure_error: ::core::option::Option<super::super::super::super::rpc::Status>,
 }
@@ -11233,8 +11233,8 @@ pub mod customer_label_operation {
 pub struct MutateCustomerLabelsResponse {
     /// Errors that pertain to operation failures in the partial failure mode.
     /// Returned only when partial_failure = true and all errors occur inside the
-    /// operations. If any errors occur outside the operations (e.g. auth errors),
-    /// we return an RPC level error.
+    /// operations. If any errors occur outside the operations (for example, auth
+    /// errors), we return an RPC level error.
     #[prost(message, optional, tag="3")]
     pub partial_failure_error: ::core::option::Option<super::super::super::super::rpc::Status>,
     /// All results for the mutate.
@@ -11392,8 +11392,8 @@ pub mod customer_negative_criterion_operation {
 pub struct MutateCustomerNegativeCriteriaResponse {
     /// Errors that pertain to operation failures in the partial failure mode.
     /// Returned only when partial_failure = true and all errors occur inside the
-    /// operations. If any errors occur outside the operations (e.g. auth errors),
-    /// we return an RPC level error.
+    /// operations. If any errors occur outside the operations (for example, auth
+    /// errors), we return an RPC level error.
     #[prost(message, optional, tag="3")]
     pub partial_failure_error: ::core::option::Option<super::super::super::super::rpc::Status>,
     /// All results for the mutate.
@@ -11565,8 +11565,8 @@ pub struct MutateCustomizerAttributesResponse {
     pub results: ::prost::alloc::vec::Vec<MutateCustomizerAttributeResult>,
     /// Errors that pertain to operation failures in the partial failure mode.
     /// Returned only when partial_failure = true and all errors occur inside the
-    /// operations. If any errors occur outside the operations (e.g. auth errors),
-    /// we return an RPC level error.
+    /// operations. If any errors occur outside the operations (for example, auth
+    /// errors), we return an RPC level error.
     #[prost(message, optional, tag="2")]
     pub partial_failure_error: ::core::option::Option<super::super::super::super::rpc::Status>,
 }
@@ -11723,8 +11723,8 @@ pub mod experiment_arm_operation {
 pub struct MutateExperimentArmsResponse {
     /// Errors that pertain to operation failures in the partial failure mode.
     /// Returned only when partial_failure = true and all errors occur inside the
-    /// operations. If any errors occur outside the operations (e.g. auth errors),
-    /// we return an RPC level error.
+    /// operations. If any errors occur outside the operations (for example, auth
+    /// errors), we return an RPC level error.
     #[prost(message, optional, tag="1")]
     pub partial_failure_error: ::core::option::Option<super::super::super::super::rpc::Status>,
     /// All results for the mutate.
@@ -11887,8 +11887,8 @@ pub mod experiment_operation {
 pub struct MutateExperimentsResponse {
     /// Errors that pertain to operation failures in the partial failure mode.
     /// Returned only when partial_failure = true and all errors occur inside the
-    /// operations. If any errors occur outside the operations (e.g. auth errors),
-    /// we return an RPC level error.
+    /// operations. If any errors occur outside the operations (for example, auth
+    /// errors), we return an RPC level error.
     #[prost(message, optional, tag="1")]
     pub partial_failure_error: ::core::option::Option<super::super::super::super::rpc::Status>,
     /// All results for the mutate.
@@ -12334,8 +12334,8 @@ pub mod extension_feed_item_operation {
 pub struct MutateExtensionFeedItemsResponse {
     /// Errors that pertain to operation failures in the partial failure mode.
     /// Returned only when partial_failure = true and all errors occur inside the
-    /// operations. If any errors occur outside the operations (e.g. auth errors),
-    /// we return an RPC level error.
+    /// operations. If any errors occur outside the operations (for example, auth
+    /// errors), we return an RPC level error.
     #[prost(message, optional, tag="3")]
     pub partial_failure_error: ::core::option::Option<super::super::super::super::rpc::Status>,
     /// All results for the mutate.
@@ -12518,8 +12518,8 @@ pub struct MutateFeedItemSetsResponse {
     pub results: ::prost::alloc::vec::Vec<MutateFeedItemSetResult>,
     /// Errors that pertain to operation failures in the partial failure mode.
     /// Returned only when partial_failure = true and all errors occur inside the
-    /// operations. If any errors occur outside the operations (e.g. auth errors),
-    /// we return an RPC level error.
+    /// operations. If any errors occur outside the operations (for example, auth
+    /// errors), we return an RPC level error.
     #[prost(message, optional, tag="2")]
     pub partial_failure_error: ::core::option::Option<super::super::super::super::rpc::Status>,
 }
@@ -12669,8 +12669,8 @@ pub mod feed_item_target_operation {
 pub struct MutateFeedItemTargetsResponse {
     /// Errors that pertain to operation failures in the partial failure mode.
     /// Returned only when partial_failure = true and all errors occur inside the
-    /// operations. If any errors occur outside the operations (e.g. auth errors),
-    /// we return an RPC level error.
+    /// operations. If any errors occur outside the operations (for example, auth
+    /// errors), we return an RPC level error.
     #[prost(message, optional, tag="3")]
     pub partial_failure_error: ::core::option::Option<super::super::super::super::rpc::Status>,
     /// All results for the mutate.
@@ -12848,8 +12848,8 @@ pub mod feed_operation {
 pub struct MutateFeedsResponse {
     /// Errors that pertain to operation failures in the partial failure mode.
     /// Returned only when partial_failure = true and all errors occur inside the
-    /// operations. If any errors occur outside the operations (e.g. auth errors),
-    /// we return an RPC level error.
+    /// operations. If any errors occur outside the operations (for example, auth
+    /// errors), we return an RPC level error.
     #[prost(message, optional, tag="3")]
     pub partial_failure_error: ::core::option::Option<super::super::super::super::rpc::Status>,
     /// All results for the mutate.
@@ -13031,8 +13031,8 @@ pub mod keyword_plan_ad_group_keyword_operation {
 pub struct MutateKeywordPlanAdGroupKeywordsResponse {
     /// Errors that pertain to operation failures in the partial failure mode.
     /// Returned only when partial_failure = true and all errors occur inside the
-    /// operations. If any errors occur outside the operations (e.g. auth errors),
-    /// we return an RPC level error.
+    /// operations. If any errors occur outside the operations (for example, auth
+    /// errors), we return an RPC level error.
     #[prost(message, optional, tag="3")]
     pub partial_failure_error: ::core::option::Option<super::super::super::super::rpc::Status>,
     /// All results for the mutate.
@@ -13205,8 +13205,8 @@ pub mod keyword_plan_ad_group_operation {
 pub struct MutateKeywordPlanAdGroupsResponse {
     /// Errors that pertain to operation failures in the partial failure mode.
     /// Returned only when partial_failure = true and all errors occur inside the
-    /// operations. If any errors occur outside the operations (e.g. auth errors),
-    /// we return an RPC level error.
+    /// operations. If any errors occur outside the operations (for example, auth
+    /// errors), we return an RPC level error.
     #[prost(message, optional, tag="3")]
     pub partial_failure_error: ::core::option::Option<super::super::super::super::rpc::Status>,
     /// All results for the mutate. The order of the results is determined by the
@@ -13379,8 +13379,8 @@ pub mod keyword_plan_campaign_keyword_operation {
 pub struct MutateKeywordPlanCampaignKeywordsResponse {
     /// Errors that pertain to operation failures in the partial failure mode.
     /// Returned only when partial_failure = true and all errors occur inside the
-    /// operations. If any errors occur outside the operations (e.g. auth errors),
-    /// we return an RPC level error.
+    /// operations. If any errors occur outside the operations (for example, auth
+    /// errors), we return an RPC level error.
     #[prost(message, optional, tag="3")]
     pub partial_failure_error: ::core::option::Option<super::super::super::super::rpc::Status>,
     /// All results for the mutate.
@@ -13552,8 +13552,8 @@ pub mod keyword_plan_campaign_operation {
 pub struct MutateKeywordPlanCampaignsResponse {
     /// Errors that pertain to operation failures in the partial failure mode.
     /// Returned only when partial_failure = true and all errors occur inside the
-    /// operations. If any errors occur outside the operations (e.g. auth errors),
-    /// we return an RPC level error.
+    /// operations. If any errors occur outside the operations (for example, auth
+    /// errors), we return an RPC level error.
     #[prost(message, optional, tag="3")]
     pub partial_failure_error: ::core::option::Option<super::super::super::super::rpc::Status>,
     /// All results for the mutate.
@@ -13722,8 +13722,8 @@ pub mod keyword_plan_operation {
 pub struct MutateKeywordPlansResponse {
     /// Errors that pertain to operation failures in the partial failure mode.
     /// Returned only when partial_failure = true and all errors occur inside the
-    /// operations. If any errors occur outside the operations (e.g. auth errors),
-    /// we return an RPC level error.
+    /// operations. If any errors occur outside the operations (for example, auth
+    /// errors), we return an RPC level error.
     #[prost(message, optional, tag="3")]
     pub partial_failure_error: ::core::option::Option<super::super::super::super::rpc::Status>,
     /// All results for the mutate.
@@ -14230,8 +14230,8 @@ pub mod label_operation {
 pub struct MutateLabelsResponse {
     /// Errors that pertain to operation failures in the partial failure mode.
     /// Returned only when partial_failure = true and all errors occur inside the
-    /// operations. If any errors occur outside the operations (e.g. auth errors),
-    /// we return an RPC level error.
+    /// operations. If any errors occur outside the operations (for example, auth
+    /// errors), we return an RPC level error.
     #[prost(message, optional, tag="3")]
     pub partial_failure_error: ::core::option::Option<super::super::super::super::rpc::Status>,
     /// All results for the mutate.
@@ -14396,8 +14396,8 @@ pub mod media_file_operation {
 pub struct MutateMediaFilesResponse {
     /// Errors that pertain to operation failures in the partial failure mode.
     /// Returned only when partial_failure = true and all errors occur inside the
-    /// operations. If any errors occur outside the operations (e.g. auth errors),
-    /// we return an RPC level error.
+    /// operations. If any errors occur outside the operations (for example, auth
+    /// errors), we return an RPC level error.
     #[prost(message, optional, tag="3")]
     pub partial_failure_error: ::core::option::Option<super::super::super::super::rpc::Status>,
     /// All results for the mutate.
@@ -14565,8 +14565,8 @@ pub mod remarketing_action_operation {
 pub struct MutateRemarketingActionsResponse {
     /// Errors that pertain to operation failures in the partial failure mode.
     /// Returned only when partial_failure = true and all errors occur inside the
-    /// operations. If any errors occur outside the operations (e.g. auth errors),
-    /// we return an RPC level error.
+    /// operations. If any errors occur outside the operations (for example, auth
+    /// errors), we return an RPC level error.
     #[prost(message, optional, tag="3")]
     pub partial_failure_error: ::core::option::Option<super::super::super::super::rpc::Status>,
     /// All results for the mutate.
@@ -14729,8 +14729,8 @@ pub mod shared_set_operation {
 pub struct MutateSharedSetsResponse {
     /// Errors that pertain to operation failures in the partial failure mode.
     /// Returned only when partial_failure = true and all errors occur inside the
-    /// operations. If any errors occur outside the operations (e.g. auth errors),
-    /// we return an RPC level error.
+    /// operations. If any errors occur outside the operations (for example, auth
+    /// errors), we return an RPC level error.
     #[prost(message, optional, tag="3")]
     pub partial_failure_error: ::core::option::Option<super::super::super::super::rpc::Status>,
     /// All results for the mutate.
@@ -14891,8 +14891,8 @@ pub struct SmartCampaignSettingOperation {
 pub struct MutateSmartCampaignSettingsResponse {
     /// Errors that pertain to operation failures in the partial failure mode.
     /// Returned only when partial_failure = true and all errors occur inside the
-    /// operations. If any errors occur outside the operations (e.g. auth errors),
-    /// we return an RPC level error.
+    /// operations. If any errors occur outside the operations (for example, auth
+    /// errors), we return an RPC level error.
     #[prost(message, optional, tag="1")]
     pub partial_failure_error: ::core::option::Option<super::super::super::super::rpc::Status>,
     /// All results for the mutate.
@@ -15047,8 +15047,8 @@ pub mod user_list_operation {
 pub struct MutateUserListsResponse {
     /// Errors that pertain to operation failures in the partial failure mode.
     /// Returned only when partial_failure = true and all errors occur inside the
-    /// operations. If any errors occur outside the operations (e.g. auth errors),
-    /// we return an RPC level error.
+    /// operations. If any errors occur outside the operations (for example, auth
+    /// errors), we return an RPC level error.
     #[prost(message, optional, tag="3")]
     pub partial_failure_error: ::core::option::Option<super::super::super::super::rpc::Status>,
     /// All results for the mutate.
@@ -15737,7 +15737,7 @@ pub struct MutateGoogleAdsRequest {
     /// The response content type setting. Determines whether the mutable resource
     /// or just the resource name should be returned post mutation. The mutable
     /// resource will only be returned if the resource has the appropriate response
-    /// field. E.g. MutateCampaignResult.campaign.
+    /// field. For example, MutateCampaignResult.campaign.
     #[prost(enumeration="super::enums::response_content_type_enum::ResponseContentType", tag="5")]
     pub response_content_type: i32,
 }
@@ -15746,8 +15746,8 @@ pub struct MutateGoogleAdsRequest {
 pub struct MutateGoogleAdsResponse {
     /// Errors that pertain to operation failures in the partial failure mode.
     /// Returned only when partial_failure = true and all errors occur inside the
-    /// operations. If any errors occur outside the operations (e.g., auth errors),
-    /// we return an RPC level error.
+    /// operations. If any errors occur outside the operations (for example, auth
+    /// errors), we return an RPC level error.
     #[prost(message, optional, tag="3")]
     pub partial_failure_error: ::core::option::Option<super::super::super::super::rpc::Status>,
     /// All responses for the mutate.
@@ -16000,7 +16000,7 @@ pub mod mutate_operation {
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct MutateOperationResponse {
     /// The mutate response.
-    #[prost(oneof="mutate_operation_response::Response", tags="17, 1, 56, 2, 77, 18, 3, 75, 19, 20, 21, 5, 22, 49, 23, 65, 78, 79, 62, 71, 72, 80, 58, 59, 6, 52, 73, 7, 8, 67, 13, 76, 24, 25, 26, 27, 9, 28, 10, 11, 12, 55, 69, 63, 64, 68, 57, 66, 74, 30, 31, 32, 34, 35, 70, 36, 37, 53, 54, 38, 39, 40, 44, 45, 50, 51, 48, 41, 42, 43, 14, 15, 61, 16")]
+    #[prost(oneof="mutate_operation_response::Response", tags="17, 1, 56, 2, 77, 18, 3, 75, 19, 20, 21, 5, 22, 49, 23, 65, 78, 79, 62, 71, 72, 80, 58, 59, 6, 52, 73, 7, 8, 67, 13, 76, 24, 25, 26, 27, 9, 28, 10, 11, 12, 55, 69, 63, 64, 68, 57, 66, 74, 30, 31, 32, 34, 35, 70, 81, 82, 36, 37, 53, 54, 38, 39, 40, 44, 45, 50, 51, 48, 41, 42, 43, 14, 15, 61, 16")]
     pub response: ::core::option::Option<mutate_operation_response::Response>,
 }
 /// Nested message and enum types in `MutateOperationResponse`.
@@ -16173,6 +16173,12 @@ pub mod mutate_operation_response {
         /// The result for the customizer attribute mutate.
         #[prost(message, tag="70")]
         CustomizerAttributeResult(super::MutateCustomizerAttributeResult),
+        /// The result for the experiment mutate.
+        #[prost(message, tag="81")]
+        ExperimentResult(super::MutateExperimentResult),
+        /// The result for the experiment arm mutate.
+        #[prost(message, tag="82")]
+        ExperimentArmResult(super::MutateExperimentArmResult),
         /// The result for the extension feed item mutate.
         #[prost(message, tag="36")]
         ExtensionFeedItemResult(super::MutateExtensionFeedItemResult),
@@ -16374,7 +16380,7 @@ pub mod google_ads_service_client {
         ///
         /// Atomicity makes error handling much easier. If you're making a series of
         /// changes and one fails, it can leave your account in an inconsistent state.
-        /// With atomicity, you either reach the desired state directly, or the request
+        /// With atomicity, you either reach the chosen state directly, or the request
         /// fails and you can retry.
         ///
         /// ## Temp Resource Names
@@ -16517,6 +16523,38 @@ pub struct GenerateInsightsFinderReportResponse {
     pub saved_report_url: ::prost::alloc::string::String,
 }
 /// Request message for
+/// \[AudienceInsightsService.GenerateAudienceCompositionInsights][google.ads.googleads.v11.services.AudienceInsightsService.GenerateAudienceCompositionInsights\].
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct GenerateAudienceCompositionInsightsRequest {
+    /// Required. The ID of the customer.
+    #[prost(string, tag="1")]
+    pub customer_id: ::prost::alloc::string::String,
+    /// Required. The audience of interest for which insights are being requested.
+    #[prost(message, optional, tag="2")]
+    pub audience: ::core::option::Option<InsightsAudience>,
+    /// The one-month range of historical data to use for insights, in the format
+    /// "yyyy-mm". If unset, insights will be returned for the last thirty days of
+    /// data.
+    #[prost(string, tag="3")]
+    pub data_month: ::prost::alloc::string::String,
+    /// Required. The audience dimensions for which composition insights should be returned.
+    #[prost(enumeration="super::enums::audience_insights_dimension_enum::AudienceInsightsDimension", repeated, packed="false", tag="4")]
+    pub dimensions: ::prost::alloc::vec::Vec<i32>,
+    /// The name of the customer being planned for.  This is a user-defined value.
+    #[prost(string, tag="5")]
+    pub customer_insights_group: ::prost::alloc::string::String,
+}
+/// Response message for
+/// \[AudienceInsightsService.GenerateAudienceCompositionInsights][google.ads.googleads.v11.services.AudienceInsightsService.GenerateAudienceCompositionInsights\].
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct GenerateAudienceCompositionInsightsResponse {
+    /// The contents of the insights report, organized into sections.
+    /// Each section is associated with one of the AudienceInsightsDimension values
+    /// in the request. There may be more than one section per dimension.
+    #[prost(message, repeated, tag="1")]
+    pub sections: ::prost::alloc::vec::Vec<AudienceCompositionSection>,
+}
+/// Request message for
 /// \[AudienceInsightsService.ListAudienceInsightsAttributes][google.ads.googleads.v11.services.AudienceInsightsService.ListAudienceInsightsAttributes\].
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ListAudienceInsightsAttributesRequest {
@@ -16547,7 +16585,7 @@ pub struct ListAudienceInsightsAttributesResponse {
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct AudienceInsightsAttribute {
     /// An audience attribute.
-    #[prost(oneof="audience_insights_attribute::Attribute", tags="1, 2, 3, 4, 5, 6")]
+    #[prost(oneof="audience_insights_attribute::Attribute", tags="1, 2, 3, 4, 5, 6, 7, 8, 9, 10")]
     pub attribute: ::core::option::Option<audience_insights_attribute::Attribute>,
 }
 /// Nested message and enum types in `AudienceInsightsAttribute`.
@@ -16575,6 +16613,18 @@ pub mod audience_insights_attribute {
         /// category.
         #[prost(message, tag="6")]
         Category(super::AudienceInsightsCategory),
+        /// A YouTube Dynamic Lineup
+        #[prost(message, tag="7")]
+        DynamicLineup(super::AudienceInsightsDynamicLineup),
+        /// A Parental Status value (parent, or not a parent).
+        #[prost(message, tag="8")]
+        ParentalStatus(super::super::common::ParentalStatusInfo),
+        /// A household income percentile range.
+        #[prost(message, tag="9")]
+        IncomeRange(super::super::common::IncomeRangeInfo),
+        /// A YouTube channel.
+        #[prost(message, tag="10")]
+        YoutubeChannel(super::super::common::YouTubeChannelInfo),
     }
 }
 /// An entity or category representing a topic that defines an audience.
@@ -16610,6 +16660,13 @@ pub struct AudienceInsightsCategory {
     /// Required. The criterion id of the category.
     #[prost(string, tag="1")]
     pub category_id: ::prost::alloc::string::String,
+}
+/// A YouTube Dynamic Lineup.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct AudienceInsightsDynamicLineup {
+    /// Required. The numeric ID of the dynamic lineup.
+    #[prost(string, tag="1")]
+    pub dynamic_lineup_id: ::prost::alloc::string::String,
 }
 /// A description of an audience used for requesting insights.
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -16662,6 +16719,159 @@ pub struct AudienceInsightsAttributeMetadata {
     /// "/Apparel/Clothing/Outerwear".
     #[prost(string, tag="5")]
     pub display_info: ::prost::alloc::string::String,
+    /// Metadata specific to the dimension of this attribute.
+    #[prost(oneof="audience_insights_attribute_metadata::DimensionMetadata", tags="6, 7")]
+    pub dimension_metadata: ::core::option::Option<audience_insights_attribute_metadata::DimensionMetadata>,
+}
+/// Nested message and enum types in `AudienceInsightsAttributeMetadata`.
+pub mod audience_insights_attribute_metadata {
+    /// Metadata specific to the dimension of this attribute.
+    #[derive(Clone, PartialEq, ::prost::Oneof)]
+    pub enum DimensionMetadata {
+        /// Special metadata for a YouTube channel.
+        #[prost(message, tag="6")]
+        YoutubeChannelMetadata(super::YouTubeChannelAttributeMetadata),
+        /// Special metadata for a YouTube Dynamic Lineup.
+        #[prost(message, tag="7")]
+        DynamicAttributeMetadata(super::DynamicLineupAttributeMetadata),
+    }
+}
+/// Metadata associated with a YouTube channel attribute.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct YouTubeChannelAttributeMetadata {
+    /// The approximate number of subscribers to the YouTube channel.
+    #[prost(int64, tag="1")]
+    pub subscriber_count: i64,
+}
+/// Metadata associated with a Dynamic Lineup attribute.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct DynamicLineupAttributeMetadata {
+    /// The national market associated with the lineup.
+    #[prost(message, optional, tag="1")]
+    pub inventory_country: ::core::option::Option<super::common::LocationInfo>,
+    /// The median number of impressions per month on this lineup.
+    #[prost(int64, optional, tag="2")]
+    pub median_monthly_inventory: ::core::option::Option<i64>,
+    /// The lower end of a range containing the number of channels in the lineup.
+    #[prost(int64, optional, tag="3")]
+    pub channel_count_lower_bound: ::core::option::Option<i64>,
+    /// The upper end of a range containing the number of channels in the lineup.
+    #[prost(int64, optional, tag="4")]
+    pub channel_count_upper_bound: ::core::option::Option<i64>,
+}
+/// A set of users, defined by various characteristics, for which insights can
+/// be requested in AudienceInsightsService.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct InsightsAudience {
+    /// Required. The countries for the audience.
+    #[prost(message, repeated, tag="1")]
+    pub country_locations: ::prost::alloc::vec::Vec<super::common::LocationInfo>,
+    /// Sub-country geographic location attributes.  If present, each of these
+    /// must be contained in one of the countries in this audience.  If absent, the
+    /// audience is geographically to the country_locations and no further.
+    #[prost(message, repeated, tag="2")]
+    pub sub_country_locations: ::prost::alloc::vec::Vec<super::common::LocationInfo>,
+    /// Gender for the audience.  If absent, the audience does not restrict by
+    /// gender.
+    #[prost(message, optional, tag="3")]
+    pub gender: ::core::option::Option<super::common::GenderInfo>,
+    /// Age ranges for the audience.  If absent, the audience represents all people
+    /// over 18 that match the other attributes.
+    #[prost(message, repeated, tag="4")]
+    pub age_ranges: ::prost::alloc::vec::Vec<super::common::AgeRangeInfo>,
+    /// Parental status for the audience.  If absent, the audience does not
+    /// restrict by parental status.
+    #[prost(message, optional, tag="5")]
+    pub parental_status: ::core::option::Option<super::common::ParentalStatusInfo>,
+    /// Household income percentile ranges for the audience.  If absent, the
+    /// audience does not restrict by household income range.
+    #[prost(message, repeated, tag="6")]
+    pub income_ranges: ::prost::alloc::vec::Vec<super::common::IncomeRangeInfo>,
+    /// Dynamic lineups representing the YouTube content viewed by the audience.
+    #[prost(message, repeated, tag="7")]
+    pub dynamic_lineups: ::prost::alloc::vec::Vec<AudienceInsightsDynamicLineup>,
+    /// A combination of entity, category and user interest attributes defining the
+    /// audience. The combination has a logical AND-of-ORs structure: Attributes
+    /// within each InsightsAudienceAttributeGroup are combined with OR, and
+    /// the combinations themselves are combined together with AND.  For example,
+    /// the expression (Entity OR Affinity) AND (In-Market OR Category) can be
+    /// formed using two InsightsAudienceAttributeGroups with two Attributes
+    /// each.
+    #[prost(message, repeated, tag="8")]
+    pub topic_audience_combinations: ::prost::alloc::vec::Vec<InsightsAudienceAttributeGroup>,
+}
+/// A list of AudienceInsightsAttributes.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct InsightsAudienceAttributeGroup {
+    /// Required. A collection of audience attributes to be combined with logical OR.
+    /// Attributes need not all be the same dimension.  Only Knowledge Graph
+    /// entities, Product & Service Categories, and Affinity and In-Market
+    /// audiences are supported in this context.
+    #[prost(message, repeated, tag="1")]
+    pub attributes: ::prost::alloc::vec::Vec<AudienceInsightsAttribute>,
+}
+/// A collection of related attributes of the same type in an audience
+/// composition insights report.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct AudienceCompositionSection {
+    /// The type of the attributes in this section.
+    #[prost(enumeration="super::enums::audience_insights_dimension_enum::AudienceInsightsDimension", tag="1")]
+    pub dimension: i32,
+    /// The most relevant segments for this audience.  If dimension is GENDER,
+    /// AGE_RANGE or PARENTAL_STATUS, then this list of attributes is exhaustive.
+    #[prost(message, repeated, tag="3")]
+    pub top_attributes: ::prost::alloc::vec::Vec<AudienceCompositionAttribute>,
+    /// Additional attributes for this audience, grouped into clusters.  Only
+    /// populated if dimension is YOUTUBE_CHANNEL.
+    #[prost(message, repeated, tag="4")]
+    pub clustered_attributes: ::prost::alloc::vec::Vec<AudienceCompositionAttributeCluster>,
+}
+/// A collection of related attributes, with metadata and metrics, in an audience
+/// composition insights report.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct AudienceCompositionAttributeCluster {
+    /// The name of this cluster of attributes
+    #[prost(string, tag="1")]
+    pub cluster_display_name: ::prost::alloc::string::String,
+    /// If the dimension associated with this cluster is YOUTUBE_CHANNEL, then
+    /// cluster_metrics are metrics associated with the cluster as a whole.
+    /// For other dimensions, this field is unset.
+    #[prost(message, optional, tag="3")]
+    pub cluster_metrics: ::core::option::Option<AudienceCompositionMetrics>,
+    /// The individual attributes that make up this cluster, with metadata and
+    /// metrics.
+    #[prost(message, repeated, tag="4")]
+    pub attributes: ::prost::alloc::vec::Vec<AudienceCompositionAttribute>,
+}
+/// The share and index metrics associated with an attribute in an audience
+/// composition insights report.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct AudienceCompositionMetrics {
+    /// The fraction (from 0 to 1 inclusive) of the baseline audience that match
+    /// the attribute.
+    #[prost(double, tag="1")]
+    pub baseline_audience_share: f64,
+    /// The fraction (from 0 to 1 inclusive) of the specific audience that match
+    /// the attribute.
+    #[prost(double, tag="2")]
+    pub audience_share: f64,
+    /// The ratio of audience_share to baseline_audience_share, or zero if this
+    /// ratio is undefined or is not meaningful.
+    #[prost(double, tag="3")]
+    pub index: f64,
+    /// A relevance score from 0 to 1 inclusive.
+    #[prost(double, tag="4")]
+    pub score: f64,
+}
+/// An audience attribute with metadata and metrics.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct AudienceCompositionAttribute {
+    /// The attribute with its metadata.
+    #[prost(message, optional, tag="1")]
+    pub attribute_metadata: ::core::option::Option<AudienceInsightsAttributeMetadata>,
+    /// Share and index metrics for the attribute.
+    #[prost(message, optional, tag="2")]
+    pub metrics: ::core::option::Option<AudienceCompositionMetrics>,
 }
 /// Generated client implementations.
 pub mod audience_insights_service_client {
@@ -16785,6 +16995,44 @@ pub mod audience_insights_service_client {
             let codec = tonic::codec::ProstCodec::default();
             let path = http::uri::PathAndQuery::from_static(
                 "/google.ads.googleads.v11.services.AudienceInsightsService/ListAudienceInsightsAttributes",
+            );
+            self.inner.unary(request.into_request(), path, codec).await
+        }
+        /// Returns a collection of attributes that are represented in an audience of
+        /// interest, with metrics that compare each attribute's share of the audience
+        /// with its share of a baseline audience.
+        ///
+        /// List of thrown errors:
+        ///   [AudienceInsightsError]()
+        ///   [AuthenticationError]()
+        ///   [AuthorizationError]()
+        ///   [FieldError]()
+        ///   [HeaderError]()
+        ///   [InternalError]()
+        ///   [QuotaError]()
+        ///   [RangeError]()
+        ///   [RequestError]()
+        pub async fn generate_audience_composition_insights(
+            &mut self,
+            request: impl tonic::IntoRequest<
+                super::GenerateAudienceCompositionInsightsRequest,
+            >,
+        ) -> Result<
+            tonic::Response<super::GenerateAudienceCompositionInsightsResponse>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/google.ads.googleads.v11.services.AudienceInsightsService/GenerateAudienceCompositionInsights",
             );
             self.inner.unary(request.into_request(), path, codec).await
         }
@@ -17315,8 +17563,8 @@ pub struct ApplyRecommendationResponse {
     pub results: ::prost::alloc::vec::Vec<ApplyRecommendationResult>,
     /// Errors that pertain to operation failures in the partial failure mode.
     /// Returned only when partial_failure = true and all errors occur inside the
-    /// operations. If any errors occur outside the operations (e.g. auth errors)
-    /// we return the RPC level error.
+    /// operations. If any errors occur outside the operations (for example, auth
+    /// errors) we return the RPC level error.
     #[prost(message, optional, tag="2")]
     pub partial_failure_error: ::core::option::Option<super::super::super::super::rpc::Status>,
 }
@@ -17363,8 +17611,8 @@ pub struct DismissRecommendationResponse {
     pub results: ::prost::alloc::vec::Vec<dismiss_recommendation_response::DismissRecommendationResult>,
     /// Errors that pertain to operation failures in the partial failure mode.
     /// Returned only when partial_failure = true and all errors occur inside the
-    /// operations. If any errors occur outside the operations (e.g. auth errors)
-    /// we return the RPC level error.
+    /// operations. If any errors occur outside the operations (for example, auth
+    /// errors) we return the RPC level error.
     #[prost(message, optional, tag="2")]
     pub partial_failure_error: ::core::option::Option<super::super::super::super::rpc::Status>,
 }
@@ -17580,8 +17828,8 @@ pub mod smart_campaign_suggestion_info {
         #[prost(message, tag="8")]
         BusinessContext(BusinessContext),
         /// Optional. The resource name of a Business Profile location.
-        /// Business Profile location resource names can be fetched via the Business
-        /// Profile API and adhere to the following format:
+        /// Business Profile location resource names can be fetched through the
+        /// Business Profile API and adhere to the following format:
         /// `locations/{locationId}`.
         ///
         /// See the [Business Profile API]
@@ -17994,9 +18242,8 @@ pub struct UploadConversionAdjustmentsRequest {
 pub struct UploadConversionAdjustmentsResponse {
     /// Errors that pertain to conversion adjustment failures in the partial
     /// failure mode. Returned when all errors occur inside the adjustments. If any
-    /// errors occur outside the adjustments (e.g. auth errors), we return an RPC
-    /// level error.
-    /// See
+    /// errors occur outside the adjustments (for example, auth errors), we return
+    /// an RPC level error. See
     /// <https://developers.google.com/google-ads/api/docs/best-practices/partial-failures>
     /// for more information about partial failure.
     #[prost(message, optional, tag="1")]
@@ -18028,7 +18275,7 @@ pub struct ConversionAdjustment {
     pub conversion_action: ::core::option::Option<::prost::alloc::string::String>,
     /// The date time at which the adjustment occurred. Must be after the
     /// conversion_date_time. The timezone must be specified. The format is
-    /// "yyyy-mm-dd hh:mm:ss+|-hh:mm", e.g. "2019-01-01 12:32:45-08:00".
+    /// "yyyy-mm-dd hh:mm:ss+|-hh:mm", for example, "2019-01-01 12:32:45-08:00".
     #[prost(string, optional, tag="9")]
     pub adjustment_date_time: ::core::option::Option<::prost::alloc::string::String>,
     /// The adjustment type.
@@ -18074,7 +18321,7 @@ pub struct RestatementValue {
     /// The currency of the restated value. If not provided, then the default
     /// currency from the conversion action is used, and if that is not set then
     /// the account currency is used. This is the ISO 4217 3-character currency
-    /// code e.g. USD or EUR.
+    /// code for example, USD or EUR.
     #[prost(string, optional, tag="4")]
     pub currency_code: ::core::option::Option<::prost::alloc::string::String>,
 }
@@ -18088,7 +18335,7 @@ pub struct GclidDateTimePair {
     pub gclid: ::core::option::Option<::prost::alloc::string::String>,
     /// The date time at which the original conversion for this adjustment
     /// occurred. The timezone must be specified. The format is "yyyy-mm-dd
-    /// hh:mm:ss+|-hh:mm", e.g. "2019-01-01 12:32:45-08:00".
+    /// hh:mm:ss+|-hh:mm", for example, "2019-01-01 12:32:45-08:00".
     #[prost(string, optional, tag="4")]
     pub conversion_date_time: ::core::option::Option<::prost::alloc::string::String>,
 }
@@ -18106,7 +18353,7 @@ pub struct ConversionAdjustmentResult {
     #[prost(string, optional, tag="7")]
     pub conversion_action: ::core::option::Option<::prost::alloc::string::String>,
     /// The date time at which the adjustment occurred. The format is
-    /// "yyyy-mm-dd hh:mm:ss+|-hh:mm", e.g. "2019-01-01 12:32:45-08:00".
+    /// "yyyy-mm-dd hh:mm:ss+|-hh:mm", for example, "2019-01-01 12:32:45-08:00".
     #[prost(string, optional, tag="8")]
     pub adjustment_date_time: ::core::option::Option<::prost::alloc::string::String>,
     /// The adjustment type.
@@ -18272,7 +18519,7 @@ pub struct MutateAccountBudgetProposalResult {
 pub mod account_budget_proposal_service_client {
     #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
     use tonic::codegen::*;
-    /// A service for managing account-level budgets via proposals.
+    /// A service for managing account-level budgets through proposals.
     ///
     /// A proposal is a request to create a new budget or make changes to an
     /// existing one.
@@ -18417,12 +18664,12 @@ pub mod user_data_operation {
     }
 }
 /// Response message for \[UserDataService.UploadUserData][google.ads.googleads.v11.services.UserDataService.UploadUserData\]
-/// Uploads made via this service will not be visible under the 'Segment members'
-/// section for the Customer Match List in the Google Ads UI.
+/// Uploads made through this service will not be visible under the 'Segment
+/// members' section for the Customer Match List in the Google Ads UI.
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct UploadUserDataResponse {
     /// The date time at which the request was received by API, formatted as
-    /// "yyyy-mm-dd hh:mm:ss+|-hh:mm", e.g. "2019-01-01 12:32:45-08:00".
+    /// "yyyy-mm-dd hh:mm:ss+|-hh:mm", for example, "2019-01-01 12:32:45-08:00".
     #[prost(string, optional, tag="3")]
     pub upload_date_time: ::core::option::Option<::prost::alloc::string::String>,
     /// Number of upload data operations received by API.
@@ -18434,11 +18681,11 @@ pub mod user_data_service_client {
     #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
     use tonic::codegen::*;
     /// Service to manage user data uploads.
-    /// Any uploads made to a Customer Match list via this service will be eligible
-    /// for matching as per the customer matching process. Please see
+    /// Any uploads made to a Customer Match list through this service will be
+    /// eligible for matching as per the customer matching process. See
     /// https://support.google.com/google-ads/answer/7474263. However, the uploads
-    /// made via this service will not be visible under the 'Segment members' section
-    /// for the Customer Match List in the Google Ads UI.
+    /// made through this service will not be visible under the 'Segment members'
+    /// section for the Customer Match List in the Google Ads UI.
     #[derive(Debug, Clone)]
     pub struct UserDataServiceClient<T> {
         inner: tonic::client::Grpc<T>,
@@ -19034,6 +19281,9 @@ pub struct PlannableTargeting {
     /// Targetable networks for the ad product.
     #[prost(enumeration="super::enums::reach_plan_network_enum::ReachPlanNetwork", repeated, tag="4")]
     pub networks: ::prost::alloc::vec::Vec<i32>,
+    /// Targetable YouTube Select Lineups for the ad product.
+    #[prost(message, repeated, tag="5")]
+    pub youtube_select_lineups: ::prost::alloc::vec::Vec<YouTubeSelectLineUp>,
 }
 /// Request message for \[ReachPlanService.GenerateProductMixIdeas][google.ads.googleads.v11.services.ReachPlanService.GenerateProductMixIdeas\].
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -19117,17 +19367,17 @@ pub struct GenerateReachForecastRequest {
     /// Required. Campaign duration.
     #[prost(message, optional, tag="3")]
     pub campaign_duration: ::core::option::Option<CampaignDuration>,
-    /// Desired cookie frequency cap to be applied to each planned product.
+    /// Chosen cookie frequency cap to be applied to each planned product.
     /// This is equivalent to the frequency cap exposed in Google Ads when creating
     /// a campaign, it represents the maximum number of times an ad can be shown to
     /// the same user.
     /// If not specified, no cap is applied.
     ///
     /// This field is deprecated in v4 and will eventually be removed.
-    /// Please use cookie_frequency_cap_setting instead.
+    /// Use cookie_frequency_cap_setting instead.
     #[prost(int32, optional, tag="10")]
     pub cookie_frequency_cap: ::core::option::Option<i32>,
-    /// Desired cookie frequency cap to be applied to each planned product.
+    /// Chosen cookie frequency cap to be applied to each planned product.
     /// This is equivalent to the frequency cap exposed in Google Ads when creating
     /// a campaign, it represents the maximum number of times an ad can be shown to
     /// the same user during a specified time interval.
@@ -19136,7 +19386,7 @@ pub struct GenerateReachForecastRequest {
     /// This field replaces the deprecated cookie_frequency_cap field.
     #[prost(message, optional, tag="8")]
     pub cookie_frequency_cap_setting: ::core::option::Option<FrequencyCap>,
-    /// Desired minimum effective frequency (the number of times a person was
+    /// Chosen minimum effective frequency (the number of times a person was
     /// exposed to the ad) for the reported reach metrics \[1-10\].
     /// This won't affect the targeting, but just the reporting.
     /// If not specified, a default of 1 is applied.
@@ -19159,7 +19409,7 @@ pub struct GenerateReachForecastRequest {
     /// The targeting to be applied to all products selected in the product mix.
     ///
     /// This is planned targeting: execution details might vary based on the
-    /// advertising product, please consult an implementation specialist.
+    /// advertising product, consult an implementation specialist.
     ///
     /// See specific metrics for details on how targeting affects them.
     #[prost(message, optional, tag="6")]
@@ -19171,6 +19421,10 @@ pub struct GenerateReachForecastRequest {
     /// Controls the forecast metrics returned in the response.
     #[prost(message, optional, tag="13")]
     pub forecast_metric_options: ::core::option::Option<ForecastMetricOptions>,
+    /// The name of the customer being planned for. This is a user-defined value.
+    /// Required if targeting.audience_targeting is set.
+    #[prost(string, optional, tag="14")]
+    pub customer_reach_group: ::core::option::Option<::prost::alloc::string::String>,
 }
 /// Effective frequency limit.
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -19219,6 +19473,10 @@ pub struct Targeting {
     /// \[ReachPlanService.ListPlannableProducts][google.ads.googleads.v11.services.ReachPlanService.ListPlannableProducts\].
     #[prost(enumeration="super::enums::reach_plan_network_enum::ReachPlanNetwork", tag="5")]
     pub network: i32,
+    /// Targeted audiences.
+    /// If not specified, does not target any specific audience.
+    #[prost(message, optional, tag="7")]
+    pub audience_targeting: ::core::option::Option<AudienceTargeting>,
 }
 /// The duration of a planned campaign.
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -19251,6 +19509,11 @@ pub struct PlannedProduct {
     /// For example: 1 000 000$ = 1 000 000 000 000 micros.
     #[prost(int64, optional, tag="4")]
     pub budget_micros: ::core::option::Option<i64>,
+    /// Targeting settings for the selected product.
+    /// To list the available targeting for each product use
+    /// \[ReachPlanService.ListPlannableProducts][google.ads.googleads.v11.services.ReachPlanService.ListPlannableProducts\].
+    #[prost(message, optional, tag="5")]
+    pub advanced_product_targeting: ::core::option::Option<AdvancedProductTargeting>,
 }
 /// Response message containing the generated reach curve.
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -19465,6 +19728,47 @@ pub struct ForecastMetricOptions {
     /// Indicates whether to include co-view metrics in the response forecast.
     #[prost(bool, tag="1")]
     pub include_coview: bool,
+}
+/// Audience targeting for reach forecast.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct AudienceTargeting {
+    /// List of audiences based on user interests to be targeted.
+    #[prost(message, repeated, tag="1")]
+    pub user_interest: ::prost::alloc::vec::Vec<super::common::UserInterestInfo>,
+}
+/// Advanced targeting settings for products.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct AdvancedProductTargeting {
+    /// Targeting options for this product.
+    #[prost(oneof="advanced_product_targeting::AdvancedTargeting", tags="1")]
+    pub advanced_targeting: ::core::option::Option<advanced_product_targeting::AdvancedTargeting>,
+}
+/// Nested message and enum types in `AdvancedProductTargeting`.
+pub mod advanced_product_targeting {
+    /// Targeting options for this product.
+    #[derive(Clone, PartialEq, ::prost::Oneof)]
+    pub enum AdvancedTargeting {
+        /// Settings for YouTube Select targeting.
+        #[prost(message, tag="1")]
+        YoutubeSelectSettings(super::YouTubeSelectSettings),
+    }
+}
+/// Request settings for YouTube Select Lineups
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct YouTubeSelectSettings {
+    /// Lineup for YouTube Select Targeting.
+    #[prost(int64, tag="1")]
+    pub lineup_id: i64,
+}
+/// A Plannable YouTube Select Lineup for product targeting.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct YouTubeSelectLineUp {
+    /// The ID of the YouTube Select Lineup.
+    #[prost(int64, tag="1")]
+    pub lineup_id: i64,
+    /// The unique name of the YouTube Select Lineup.
+    #[prost(string, tag="2")]
+    pub lineup_name: ::prost::alloc::string::String,
 }
 /// Generated client implementations.
 pub mod reach_plan_service_client {
@@ -19889,8 +20193,8 @@ pub struct MutateAccountLinkResponse {
     pub result: ::core::option::Option<MutateAccountLinkResult>,
     /// Errors that pertain to operation failures in the partial failure mode.
     /// Returned only when partial_failure = true and all errors occur inside the
-    /// operations. If any errors occur outside the operations (e.g. auth errors),
-    /// we return an RPC level error.
+    /// operations. If any errors occur outside the operations (for example, auth
+    /// errors), we return an RPC level error.
     #[prost(message, optional, tag="2")]
     pub partial_failure_error: ::core::option::Option<super::super::super::super::rpc::Status>,
 }
@@ -19990,7 +20294,7 @@ pub mod account_link_service_client {
         }
         /// Creates or removes an account link.
         /// From V5, create is not supported through
-        /// AccountLinkService.MutateAccountLink. Please use
+        /// AccountLinkService.MutateAccountLink. Use
         /// AccountLinkService.CreateAccountLink instead.
         ///
         /// List of thrown errors:
@@ -20282,8 +20586,8 @@ pub struct UploadClickConversionsRequest {
 pub struct UploadClickConversionsResponse {
     /// Errors that pertain to conversion failures in the partial failure mode.
     /// Returned when all errors occur inside the conversions. If any errors occur
-    /// outside the conversions (e.g. auth errors), we return an RPC level error.
-    /// See
+    /// outside the conversions (for example, auth errors), we return an RPC level
+    /// error. See
     /// <https://developers.google.com/google-ads/api/docs/best-practices/partial-failures>
     /// for more information about partial failure.
     #[prost(message, optional, tag="1")]
@@ -20322,8 +20626,8 @@ pub struct UploadCallConversionsRequest {
 pub struct UploadCallConversionsResponse {
     /// Errors that pertain to conversion failures in the partial failure mode.
     /// Returned when all errors occur inside the conversions. If any errors occur
-    /// outside the conversions (e.g. auth errors), we return an RPC level error.
-    /// See
+    /// outside the conversions (for example, auth errors), we return an RPC level
+    /// error. See
     /// <https://developers.google.com/google-ads/api/docs/best-practices/partial-failures>
     /// for more information about partial failure.
     #[prost(message, optional, tag="1")]
@@ -20356,7 +20660,7 @@ pub struct ClickConversion {
     pub conversion_action: ::core::option::Option<::prost::alloc::string::String>,
     /// The date time at which the conversion occurred. Must be after
     /// the click time. The timezone must be specified. The format is
-    /// "yyyy-mm-dd hh:mm:ss+|-hh:mm", e.g. "2019-01-01 12:32:45-08:00".
+    /// "yyyy-mm-dd hh:mm:ss+|-hh:mm", for example, "2019-01-01 12:32:45-08:00".
     #[prost(string, optional, tag="11")]
     pub conversion_date_time: ::core::option::Option<::prost::alloc::string::String>,
     /// The value of the conversion for the advertiser.
@@ -20386,7 +20690,7 @@ pub struct ClickConversion {
     /// number of user identifiers for each conversion is 5.
     #[prost(message, repeated, tag="17")]
     pub user_identifiers: ::prost::alloc::vec::Vec<super::common::UserIdentifier>,
-    /// The environment this conversion was recorded on. e.g. App or Web.
+    /// The environment this conversion was recorded on, for example, App or Web.
     #[prost(enumeration="super::enums::conversion_environment_enum::ConversionEnvironment", tag="20")]
     pub conversion_environment: i32,
 }
@@ -20394,12 +20698,12 @@ pub struct ClickConversion {
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct CallConversion {
     /// The caller id from which this call was placed. Caller id is expected to be
-    /// in E.164 format with preceding '+' sign. e.g. "+16502531234".
+    /// in E.164 format with preceding '+' sign, for example, "+16502531234".
     #[prost(string, optional, tag="7")]
     pub caller_id: ::core::option::Option<::prost::alloc::string::String>,
     /// The date time at which the call occurred. The timezone must be specified.
     /// The format is "yyyy-mm-dd hh:mm:ss+|-hh:mm",
-    /// e.g. "2019-01-01 12:32:45-08:00".
+    /// for example, "2019-01-01 12:32:45-08:00".
     #[prost(string, optional, tag="8")]
     pub call_start_date_time: ::core::option::Option<::prost::alloc::string::String>,
     /// Resource name of the conversion action associated with this conversion.
@@ -20410,7 +20714,7 @@ pub struct CallConversion {
     pub conversion_action: ::core::option::Option<::prost::alloc::string::String>,
     /// The date time at which the conversion occurred. Must be after the call
     /// time. The timezone must be specified. The format is
-    /// "yyyy-mm-dd hh:mm:ss+|-hh:mm", e.g. "2019-01-01 12:32:45-08:00".
+    /// "yyyy-mm-dd hh:mm:ss+|-hh:mm", for example, "2019-01-01 12:32:45-08:00".
     #[prost(string, optional, tag="10")]
     pub conversion_date_time: ::core::option::Option<::prost::alloc::string::String>,
     /// The value of the conversion for the advertiser.
@@ -20453,7 +20757,7 @@ pub struct ClickConversionResult {
     #[prost(string, optional, tag="5")]
     pub conversion_action: ::core::option::Option<::prost::alloc::string::String>,
     /// The date time at which the conversion occurred. The format is
-    /// "yyyy-mm-dd hh:mm:ss+|-hh:mm", e.g. "2019-01-01 12:32:45-08:00".
+    /// "yyyy-mm-dd hh:mm:ss+|-hh:mm", for example, "2019-01-01 12:32:45-08:00".
     #[prost(string, optional, tag="6")]
     pub conversion_date_time: ::core::option::Option<::prost::alloc::string::String>,
     /// The user identifiers associated with this conversion. Only hashed_email and
@@ -20470,14 +20774,14 @@ pub struct CallConversionResult {
     #[prost(string, optional, tag="5")]
     pub caller_id: ::core::option::Option<::prost::alloc::string::String>,
     /// The date time at which the call occurred. The format is
-    /// "yyyy-mm-dd hh:mm:ss+|-hh:mm", e.g. "2019-01-01 12:32:45-08:00".
+    /// "yyyy-mm-dd hh:mm:ss+|-hh:mm", for example, "2019-01-01 12:32:45-08:00".
     #[prost(string, optional, tag="6")]
     pub call_start_date_time: ::core::option::Option<::prost::alloc::string::String>,
     /// Resource name of the conversion action associated with this conversion.
     #[prost(string, optional, tag="7")]
     pub conversion_action: ::core::option::Option<::prost::alloc::string::String>,
     /// The date time at which the conversion occurred. The format is
-    /// "yyyy-mm-dd hh:mm:ss+|-hh:mm", e.g. "2019-01-01 12:32:45-08:00".
+    /// "yyyy-mm-dd hh:mm:ss+|-hh:mm", for example, "2019-01-01 12:32:45-08:00".
     #[prost(string, optional, tag="8")]
     pub conversion_date_time: ::core::option::Option<::prost::alloc::string::String>,
 }
@@ -20899,8 +21203,8 @@ pub mod offline_user_data_job_operation {
 pub struct AddOfflineUserDataJobOperationsResponse {
     /// Errors that pertain to operation failures in the partial failure mode.
     /// Returned only when partial_failure = true and all errors occur inside the
-    /// operations. If any errors occur outside the operations (e.g. auth errors),
-    /// we return an RPC level error.
+    /// operations. If any errors occur outside the operations (for example, auth
+    /// errors), we return an RPC level error.
     #[prost(message, optional, tag="1")]
     pub partial_failure_error: ::core::option::Option<super::super::super::super::rpc::Status>,
     /// Non blocking errors that pertain to operation failures in the warnings

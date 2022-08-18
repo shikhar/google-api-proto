@@ -75,8 +75,8 @@ pub struct ExpandedLandingPageView {
 /// SEARCH - BUDGET - UNIFORM
 /// SHOPPING - BUDGET - UNIFORM
 /// SHOPPING - TARGET_ROAS - UNIFORM
-/// MULTIPLE - TARGET_CPA - UNIFORM
-/// OWNED_AND_OPERATED - TARGET_CPA - DEFAULT
+/// MULTI_CHANNEL - TARGET_CPA - UNIFORM
+/// DISCOVERY - TARGET_CPA - DEFAULT
 /// DISPLAY - TARGET_CPA - UNIFORM
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct CampaignSimulation {
@@ -432,7 +432,7 @@ pub mod ad_group_bid_modifier {
     /// Required in create operations starting in V5.
     #[derive(Clone, PartialEq, ::prost::Oneof)]
     pub enum Criterion {
-        /// Immutable. Criterion for hotel date selection (default dates vs. user selected).
+        /// Immutable. Criterion for hotel date selection (default dates versus user selected).
         #[prost(message, tag="5")]
         HotelDateSelectionType(super::super::common::HotelDateSelectionTypeInfo),
         /// Immutable. Criterion for number of days prior to the stay the booking is being made.
@@ -500,12 +500,13 @@ pub struct DomainCategory {
     /// Output only. The campaign this category is recommended for.
     #[prost(string, optional, tag="10")]
     pub campaign: ::core::option::Option<::prost::alloc::string::String>,
-    /// Output only. Recommended category for the website domain. e.g. if you have a website
-    /// about electronics, the categories could be "cameras", "televisions", etc.
+    /// Output only. Recommended category for the website domain, for example, if you have a
+    /// website about electronics, the categories could be "cameras",
+    /// "televisions", etc.
     #[prost(string, optional, tag="11")]
     pub category: ::core::option::Option<::prost::alloc::string::String>,
-    /// Output only. The language code specifying the language of the website. e.g. "en" for
-    /// English. The language can be specified in the DynamicSearchAdsSetting
+    /// Output only. The language code specifying the language of the website, for example, "en"
+    /// for English. The language can be specified in the DynamicSearchAdsSetting
     /// required for dynamic search ads. This is the language of the pages from
     /// your website that you want Google Ads to find, create ads for,
     /// and match searches with.
@@ -875,13 +876,13 @@ pub struct Invoice {
     #[prost(string, optional, tag="26")]
     pub billing_setup: ::core::option::Option<::prost::alloc::string::String>,
     /// Output only. A 16 digit ID used to identify the payments account associated with the
-    /// billing setup, e.g. "1234-5678-9012-3456". It appears on the invoice PDF as
-    /// "Billing Account Number".
+    /// billing setup, for example, "1234-5678-9012-3456". It appears on the
+    /// invoice PDF as "Billing Account Number".
     #[prost(string, optional, tag="27")]
     pub payments_account_id: ::core::option::Option<::prost::alloc::string::String>,
     /// Output only. A 12 digit ID used to identify the payments profile associated with the
-    /// billing setup, e.g. "1234-5678-9012". It appears on the invoice PDF as
-    /// "Billing ID".
+    /// billing setup, for example, "1234-5678-9012". It appears on the invoice PDF
+    /// as "Billing ID".
     #[prost(string, optional, tag="28")]
     pub payments_profile_id: ::core::option::Option<::prost::alloc::string::String>,
     /// Output only. The issue date in yyyy-mm-dd format. It appears on the invoice PDF as
@@ -1048,7 +1049,7 @@ pub struct LeadFormSubmissionData {
     #[prost(string, tag="8")]
     pub gclid: ::prost::alloc::string::String,
     /// Output only. The date and time at which the lead form was submitted. The format is
-    /// "yyyy-mm-dd hh:mm:ss+|-hh:mm", e.g. "2019-01-01 12:32:45-08:00".
+    /// "yyyy-mm-dd hh:mm:ss+|-hh:mm", for example, "2019-01-01 12:32:45-08:00".
     #[prost(string, tag="9")]
     pub submission_date_time: ::prost::alloc::string::String,
 }
@@ -1318,7 +1319,7 @@ pub struct CallView {
 }
 // Proto file describing the Audience resource.
 
-/// Audience is an effective targeting option that allows you to
+/// Audience is an effective targeting option that lets you
 /// intersect different segment attributes, such as detailed demographics and
 /// affinities, to create audiences that represent sections of your target
 /// segments.
@@ -1426,7 +1427,7 @@ pub struct MediaBundle {
     #[prost(bytes="bytes", optional, tag="3")]
     pub data: ::core::option::Option<::prost::bytes::Bytes>,
     /// Output only. The url to access the uploaded zipped data.
-    /// E.g. <https://tpc.googlesyndication.com/simgad/123>
+    /// For example, <https://tpc.googlesyndication.com/simgad/123>
     /// This field is read-only.
     #[prost(string, optional, tag="2")]
     pub url: ::core::option::Option<::prost::alloc::string::String>,
@@ -1593,11 +1594,12 @@ pub struct GroupPlacementView {
     /// Output only. Domain name for websites and YouTube channel name for YouTube channels.
     #[prost(string, optional, tag="7")]
     pub display_name: ::core::option::Option<::prost::alloc::string::String>,
-    /// Output only. URL of the group placement, e.g. domain, link to the mobile application in
-    /// app store, or a YouTube channel URL.
+    /// Output only. URL of the group placement, for example, domain, link to the mobile
+    /// application in app store, or a YouTube channel URL.
     #[prost(string, optional, tag="8")]
     pub target_url: ::core::option::Option<::prost::alloc::string::String>,
-    /// Output only. Type of the placement, e.g. Website, YouTube Channel, Mobile Application.
+    /// Output only. Type of the placement, for example, Website, YouTube Channel, Mobile
+    /// Application.
     #[prost(enumeration="super::enums::placement_type_enum::PlacementType", tag="5")]
     pub placement_type: i32,
 }
@@ -1723,7 +1725,7 @@ pub mod bidding_strategy {
         /// possible at the target cost-per-acquisition (CPA) you set.
         #[prost(message, tag="9")]
         TargetCpa(super::super::common::TargetCpa),
-        /// A bidding strategy that automatically optimizes towards a desired
+        /// A bidding strategy that automatically optimizes towards a chosen
         /// percentage of impressions.
         #[prost(message, tag="48")]
         TargetImpressionShare(super::super::common::TargetImpressionShare),
@@ -1904,11 +1906,10 @@ pub struct KeywordPlanAdGroupKeyword {
     /// The keyword match type.
     #[prost(enumeration="super::enums::keyword_match_type_enum::KeywordMatchType", tag="5")]
     pub match_type: i32,
-    /// A keyword level max cpc bid in micros (e.g. $1 = 1mm). The currency is the
-    /// same as the account currency code. This will override any CPC bid set at
-    /// the keyword plan ad group level.
-    /// Not applicable for negative keywords. (negative = true)
-    /// This field is Optional.
+    /// A keyword level max cpc bid in micros (for example, $1 = 1mm). The currency
+    /// is the same as the account currency code. This will override any CPC bid
+    /// set at the keyword plan ad group level. Not applicable for negative
+    /// keywords. (negative = true) This field is Optional.
     #[prost(int64, optional, tag="11")]
     pub cpc_bid_micros: ::core::option::Option<i64>,
     /// Immutable. If true, the keyword is negative.
@@ -1922,9 +1923,9 @@ pub struct KeywordPlanAdGroupKeyword {
 /// All fields prefixed with 'proposed' may not necessarily be applied directly.
 /// For example, proposed spending limits may be adjusted before their
 /// application.  This is true if the 'proposed' field has an 'approved'
-/// counterpart, e.g. spending limits.
+/// counterpart, for example, spending limits.
 ///
-/// Please note that the proposal type (proposal_type) changes which fields are
+/// Note that the proposal type (proposal_type) changes which fields are
 /// required and which must remain empty.
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct AccountBudgetProposal {
@@ -1944,8 +1945,8 @@ pub struct AccountBudgetProposal {
     /// proposal.
     #[prost(string, optional, tag="27")]
     pub account_budget: ::core::option::Option<::prost::alloc::string::String>,
-    /// Immutable. The type of this proposal, e.g. END to end the budget associated with this
-    /// proposal.
+    /// Immutable. The type of this proposal, for example, END to end the budget associated
+    /// with this proposal.
     #[prost(enumeration="super::enums::account_budget_proposal_type_enum::AccountBudgetProposalType", tag="4")]
     pub proposal_type: i32,
     /// Output only. The status of this proposal.
@@ -1999,7 +2000,7 @@ pub mod account_budget_proposal {
         /// Immutable. The proposed start date time in yyyy-mm-dd hh:mm:ss format.
         #[prost(string, tag="29")]
         ProposedStartDateTime(::prost::alloc::string::String),
-        /// Immutable. The proposed start date time as a well-defined type, e.g. NOW.
+        /// Immutable. The proposed start date time as a well-defined type, for example, NOW.
         #[prost(enumeration="super::super::enums::time_type_enum::TimeType", tag="7")]
         ProposedStartTimeType(i32),
     }
@@ -2010,7 +2011,7 @@ pub mod account_budget_proposal {
         /// Immutable. The proposed end date time in yyyy-mm-dd hh:mm:ss format.
         #[prost(string, tag="31")]
         ProposedEndDateTime(::prost::alloc::string::String),
-        /// Immutable. The proposed end date time as a well-defined type, e.g. FOREVER.
+        /// Immutable. The proposed end date time as a well-defined type, for example, FOREVER.
         #[prost(enumeration="super::super::enums::time_type_enum::TimeType", tag="9")]
         ProposedEndTimeType(i32),
     }
@@ -2020,7 +2021,7 @@ pub mod account_budget_proposal {
         /// Output only. The approved end date time in yyyy-mm-dd hh:mm:ss format.
         #[prost(string, tag="32")]
         ApprovedEndDateTime(::prost::alloc::string::String),
-        /// Output only. The approved end date time as a well-defined type, e.g. FOREVER.
+        /// Output only. The approved end date time as a well-defined type, for example, FOREVER.
         #[prost(enumeration="super::super::enums::time_type_enum::TimeType", tag="22")]
         ApprovedEndTimeType(i32),
     }
@@ -2031,7 +2032,8 @@ pub mod account_budget_proposal {
         /// one unit.
         #[prost(int64, tag="33")]
         ProposedSpendingLimitMicros(i64),
-        /// Immutable. The proposed spending limit as a well-defined type, e.g. INFINITE.
+        /// Immutable. The proposed spending limit as a well-defined type, for example,
+        /// INFINITE.
         #[prost(enumeration="super::super::enums::spending_limit_type_enum::SpendingLimitType", tag="11")]
         ProposedSpendingLimitType(i32),
     }
@@ -2042,7 +2044,8 @@ pub mod account_budget_proposal {
         /// one unit.
         #[prost(int64, tag="34")]
         ApprovedSpendingLimitMicros(i64),
-        /// Output only. The approved spending limit as a well-defined type, e.g. INFINITE.
+        /// Output only. The approved spending limit as a well-defined type, for example,
+        /// INFINITE.
         #[prost(enumeration="super::super::enums::spending_limit_type_enum::SpendingLimitType", tag="24")]
         ApprovedSpendingLimitType(i32),
     }
@@ -2093,10 +2096,10 @@ pub struct FeedItem {
     pub status: i32,
     /// Output only. List of info about a feed item's validation and approval state for active
     /// feed mappings. There will be an entry in the list for each type of feed
-    /// mapping associated with the feed, e.g. a feed with a sitelink and a call
-    /// feed mapping would cause every feed item associated with that feed to have
-    /// an entry in this list for both sitelink and call.
-    /// This field is read-only.
+    /// mapping associated with the feed, for example, a feed with a sitelink and a
+    /// call feed mapping would cause every feed item associated with that feed to
+    /// have an entry in this list for both sitelink and call. This field is
+    /// read-only.
     #[prost(message, repeated, tag="10")]
     pub policy_infos: ::prost::alloc::vec::Vec<FeedItemPlaceholderPolicyInfo>,
 }
@@ -2199,12 +2202,13 @@ pub struct FeedItemValidationError {
     pub description: ::core::option::Option<::prost::alloc::string::String>,
     /// Output only. Set of feed attributes in the feed item flagged during validation. If
     /// empty, no specific feed attributes can be associated with the error
-    /// (e.g. error across the entire feed item).
+    /// (for example, error across the entire feed item).
     #[prost(int64, repeated, packed="false", tag="7")]
     pub feed_attribute_ids: ::prost::alloc::vec::Vec<i64>,
     /// Output only. Any extra information related to this error which is not captured by
-    /// validation_error and feed_attribute_id (e.g. placeholder field IDs when
-    /// feed_attribute_id is not mapped). Note that extra_info is not localized.
+    /// validation_error and feed_attribute_id (for example, placeholder field IDs
+    /// when feed_attribute_id is not mapped). Note that extra_info is not
+    /// localized.
     #[prost(string, optional, tag="8")]
     pub extra_info: ::core::option::Option<::prost::alloc::string::String>,
 }
@@ -2254,7 +2258,7 @@ pub struct CustomerClient {
     #[prost(int64, optional, tag="14")]
     pub level: ::core::option::Option<i64>,
     /// Output only. Common Locale Data Repository (CLDR) string representation of the
-    /// time zone of the client, e.g. America/Los_Angeles. Read only.
+    /// time zone of the client, for example, America/Los_Angeles. Read only.
     #[prost(string, optional, tag="15")]
     pub time_zone: ::core::option::Option<::prost::alloc::string::String>,
     /// Output only. Identifies if the client is a test account. Read only.
@@ -2266,7 +2270,7 @@ pub struct CustomerClient {
     /// Output only. Descriptive name for the client. Read only.
     #[prost(string, optional, tag="18")]
     pub descriptive_name: ::core::option::Option<::prost::alloc::string::String>,
-    /// Output only. Currency code (e.g. 'USD', 'EUR') for the client. Read only.
+    /// Output only. Currency code (for example, 'USD', 'EUR') for the client. Read only.
     #[prost(string, optional, tag="19")]
     pub currency_code: ::core::option::Option<::prost::alloc::string::String>,
     /// Output only. The ID of the client customer. Read only.
@@ -2495,6 +2499,9 @@ pub struct AssetGroup {
     /// the ad. This field can only be set when path1 is set.
     #[prost(string, tag="8")]
     pub path2: ::prost::alloc::string::String,
+    /// Output only. Overall ad strength of this asset group.
+    #[prost(enumeration="super::enums::ad_strength_enum::AdStrength", tag="10")]
+    pub ad_strength: i32,
 }
 // Proto file describing the Change Status resource.
 
@@ -2624,7 +2631,7 @@ pub mod feed_item_target {
 
 /// A hotel reconciliation. It contains conversion information from Hotel
 /// bookings to reconcile with advertiser records. These rows may be updated
-/// or canceled before billing via Bulk Uploads.
+/// or canceled before billing through Bulk Uploads.
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct HotelReconciliation {
     /// Immutable. The resource name of the hotel reconciliation.
@@ -2860,7 +2867,7 @@ pub struct Ad {
     pub final_url_suffix: ::core::option::Option<::prost::alloc::string::String>,
     /// The list of mappings that can be used to substitute custom parameter tags
     /// in a `tracking_url_template`, `final_urls`, or `mobile_final_urls`.
-    /// For mutates, please use url custom parameter operations.
+    /// For mutates, use url custom parameter operations.
     #[prost(message, repeated, tag="10")]
     pub url_custom_parameters: ::prost::alloc::vec::Vec<super::common::CustomParameter>,
     /// The URL that appears in the ad description for some ad formats.
@@ -2878,8 +2885,8 @@ pub struct Ad {
     /// The device preference for the ad. You can only specify a preference for
     /// mobile devices. When this preference is set the ad will be preferred over
     /// other ads when being displayed on a mobile device. The ad can still be
-    /// displayed on other device types, e.g. if no other ads are available.
-    /// If unspecified (no device preference), all devices are targeted.
+    /// displayed on other device types, for example, if no other ads are
+    /// available. If unspecified (no device preference), all devices are targeted.
     /// This is only supported by some ad types.
     #[prost(enumeration="super::enums::device_enum::Device", tag="20")]
     pub device_preference: i32,
@@ -3015,10 +3022,14 @@ pub struct Recommendation {
     /// This field will be set for the following recommendation types:
     /// CALL_EXTENSION, CALLOUT_EXTENSION, ENHANCED_CPC_OPT_IN,
     /// USE_BROAD_MATCH_KEYWORD, KEYWORD, KEYWORD_MATCH_TYPE,
-    /// MAXIMIZE_CLICKS_OPT_IN, MAXIMIZE_CONVERSIONS_OPT_IN, OPTIMIZE_AD_ROTATION,
-    /// RESPONSIVE_SEARCH_AD, RESPONSIVE_SEARCH_AD_ASSET, SEARCH_PARTNERS_OPT_IN,
-    /// SITELINK_EXTENSION, TARGET_CPA_OPT_IN, TARGET_ROAS_OPT_IN,
-    /// TEXT_AD, UPGRADE_SMART_SHOPPING_CAMPAIGN_TO_PERFORMANCE_MAX
+    /// UPGRADE_LOCAL_CAMPAIGN_TO_PERFORMANCE_MAX, MAXIMIZE_CLICKS_OPT_IN,
+    /// MAXIMIZE_CONVERSIONS_OPT_IN, OPTIMIZE_AD_ROTATION,
+    /// RESPONSIVE_SEARCH_AD,
+    /// RESPONSIVE_SEARCH_AD_ASSET,
+    /// SEARCH_PARTNERS_OPT_IN,
+    /// DISPLAY_EXPANSION_OPT_IN, SITELINK_EXTENSION, TARGET_CPA_OPT_IN,
+    /// TARGET_ROAS_OPT_IN, TEXT_AD,
+    /// UPGRADE_SMART_SHOPPING_CAMPAIGN_TO_PERFORMANCE_MAX
     #[prost(string, optional, tag="25")]
     pub campaign: ::core::option::Option<::prost::alloc::string::String>,
     /// Output only. The ad group targeted by this recommendation. This will be set only when
@@ -3033,7 +3044,7 @@ pub struct Recommendation {
     #[prost(bool, optional, tag="27")]
     pub dismissed: ::core::option::Option<bool>,
     /// The details of recommendation.
-    #[prost(oneof="recommendation::Recommendation", tags="4, 22, 8, 9, 10, 11, 12, 14, 15, 16, 17, 18, 19, 20, 21, 23, 28, 29, 30, 31, 32, 33")]
+    #[prost(oneof="recommendation::Recommendation", tags="4, 22, 8, 9, 10, 11, 12, 14, 15, 16, 17, 18, 19, 20, 21, 23, 28, 29, 30, 31, 32, 33, 34, 35")]
     pub recommendation: ::core::option::Option<recommendation::Recommendation>,
 }
 /// Nested message and enum types in `Recommendation`.
@@ -3114,12 +3125,12 @@ pub mod recommendation {
         #[prost(message, optional, tag="1")]
         pub ad: ::core::option::Option<super::Ad>,
         /// Output only. Creation date of the recommended ad.
-        /// YYYY-MM-DD format, e.g., 2018-04-17.
+        /// YYYY-MM-DD format, for example, 2018-04-17.
         #[prost(string, optional, tag="4")]
         pub creation_date: ::core::option::Option<::prost::alloc::string::String>,
         /// Output only. Date, if present, is the earliest when the recommendation will be auto
         /// applied.
-        /// YYYY-MM-DD format, e.g., 2018-04-17.
+        /// YYYY-MM-DD format, for example, 2018-04-17.
         #[prost(string, optional, tag="5")]
         pub auto_apply_date: ::core::option::Option<::prost::alloc::string::String>,
     }
@@ -3297,6 +3308,14 @@ pub mod recommendation {
         #[prost(string, tag="2")]
         pub sales_country_code: ::prost::alloc::string::String,
     }
+    /// The Display Expansion opt-in recommendation.
+    #[derive(Clone, PartialEq, ::prost::Message)]
+    pub struct DisplayExpansionOptInRecommendation {
+    }
+    /// The Upgrade Local campaign to Performance Max campaign recommendation.
+    #[derive(Clone, PartialEq, ::prost::Message)]
+    pub struct UpgradeLocalCampaignToPerformanceMaxRecommendation {
+    }
     /// The details of recommendation.
     #[derive(Clone, PartialEq, ::prost::Oneof)]
     pub enum Recommendation {
@@ -3367,6 +3386,13 @@ pub mod recommendation {
         /// Output only. The responsive search ad improve ad strength recommendation.
         #[prost(message, tag="33")]
         ResponsiveSearchAdImproveAdStrengthRecommendation(ResponsiveSearchAdImproveAdStrengthRecommendation),
+        /// Output only. The Display Expansion opt-in recommendation.
+        #[prost(message, tag="34")]
+        DisplayExpansionOptInRecommendation(DisplayExpansionOptInRecommendation),
+        /// Output only. The upgrade a Local campaign to a Performance Max campaign
+        /// recommendation.
+        #[prost(message, tag="35")]
+        UpgradeLocalCampaignToPerformanceMaxRecommendation(UpgradeLocalCampaignToPerformanceMaxRecommendation),
     }
 }
 // Proto file describing the Combined Audience resource.
@@ -3486,7 +3512,7 @@ pub struct Customer {
 /// Call reporting setting for a customer. Only mutable in an `update` operation.
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct CallReportingSetting {
-    /// Enable reporting of phone call events by redirecting them via Google
+    /// Enable reporting of phone call events by redirecting them through Google
     /// System.
     #[prost(bool, optional, tag="10")]
     pub call_reporting_enabled: ::core::option::Option<bool>,
@@ -3503,9 +3529,9 @@ pub struct CallReportingSetting {
 /// Tracking.
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ConversionTrackingSetting {
-    /// Output only. The conversion tracking id used for this account. This id is automatically
-    /// assigned after any conversion tracking feature is used. If the customer
-    /// doesn't use conversion tracking, this is 0. This field is read-only.
+    /// Output only. The conversion tracking id used for this account. This id doesn't indicate
+    /// whether the customer uses conversion tracking (conversion_tracking_status
+    /// does). This field is read-only.
     #[prost(int64, optional, tag="3")]
     pub conversion_tracking_id: ::core::option::Option<i64>,
     /// Output only. The conversion tracking id of the customer's manager. This is set when the
@@ -3560,8 +3586,8 @@ pub struct AssetGroupAsset {
     /// Immutable. The asset which this asset group asset is linking.
     #[prost(string, tag="3")]
     pub asset: ::prost::alloc::string::String,
-    /// The description of the placement of the asset within the asset group. E.g.:
-    /// HEADLINE, YOUTUBE_VIDEO etc
+    /// The description of the placement of the asset within the asset group. For
+    /// example: HEADLINE, YOUTUBE_VIDEO etc
     #[prost(enumeration="super::enums::asset_field_type_enum::AssetFieldType", tag="4")]
     pub field_type: i32,
     /// The status of the link between an asset and asset group.
@@ -3718,7 +3744,7 @@ pub struct ProductBiddingCategoryConstant {
 /// be a maximum of two AdParameters per ad group criterion. (One with
 /// parameter_index = 1 and one with parameter_index = 2.)
 /// In the ad the parameters are referenced by a placeholder of the form
-/// "{param#:value}". E.g. "{param1:$17}"
+/// "{param#:value}". For example, "{param1:$17}"
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct AdParameter {
     /// Immutable. The resource name of the ad parameter.
@@ -4210,7 +4236,7 @@ pub struct UserList {
     /// Output only. Id of the user list.
     #[prost(int64, optional, tag="25")]
     pub id: ::core::option::Option<i64>,
-    /// Output only. A flag that indicates if a user may edit a list. Depends on the list
+    /// Output only. An option that indicates if a user may edit a list. Depends on the list
     /// ownership and list type. For example, external remarketing user lists are
     /// not editable.
     ///
@@ -4218,7 +4244,7 @@ pub struct UserList {
     #[prost(bool, optional, tag="26")]
     pub read_only: ::core::option::Option<bool>,
     /// Name of this user list. Depending on its access_reason, the user list name
-    /// may not be unique (e.g. if access_reason=SHARED)
+    /// may not be unique (for example, if access_reason=SHARED)
     #[prost(string, optional, tag="27")]
     pub name: ::core::option::Option<::prost::alloc::string::String>,
     /// Description of this user list.
@@ -4364,6 +4390,9 @@ pub struct Campaign {
     /// Output only. The ad serving status of the campaign.
     #[prost(enumeration="super::enums::campaign_serving_status_enum::CampaignServingStatus", tag="21")]
     pub serving_status: i32,
+    /// Output only. The system status of the campaign's bidding strategy.
+    #[prost(enumeration="super::enums::bidding_strategy_system_status_enum::BiddingStrategySystemStatus", tag="78")]
+    pub bidding_strategy_system_status: i32,
     /// The ad serving optimization status of the campaign.
     #[prost(enumeration="super::enums::ad_serving_optimization_status_enum::AdServingOptimizationStatus", tag="8")]
     pub ad_serving_optimization_status: i32,
@@ -4529,7 +4558,7 @@ pub struct Campaign {
     pub performance_max_upgrade: ::core::option::Option<campaign::PerformanceMaxUpgrade>,
     /// The bidding strategy for the campaign.
     ///
-    /// Must be either portfolio (created via BiddingStrategy service) or
+    /// Must be either portfolio (created through BiddingStrategy service) or
     /// standard, that is embedded into the campaign.
     #[prost(oneof="campaign::CampaignBiddingStrategy", tags="67, 49, 74, 24, 25, 37, 30, 31, 26, 48, 29, 27, 34, 41")]
     pub campaign_bidding_strategy: ::core::option::Option<campaign::CampaignBiddingStrategy>,
@@ -4579,11 +4608,12 @@ pub mod campaign {
     /// The setting for controlling Dynamic Search Ads (DSA).
     #[derive(Clone, PartialEq, ::prost::Message)]
     pub struct DynamicSearchAdsSetting {
-        /// Required. The Internet domain name that this setting represents, e.g., "google.com"
-        /// or "www.google.com".
+        /// Required. The Internet domain name that this setting represents, for example,
+        /// "google.com" or "www.google.com".
         #[prost(string, tag="6")]
         pub domain_name: ::prost::alloc::string::String,
-        /// Required. The language code specifying the language of the domain, e.g., "en".
+        /// Required. The language code specifying the language of the domain, for example,
+        /// "en".
         #[prost(string, tag="7")]
         pub language_code: ::prost::alloc::string::String,
         /// Whether the campaign uses advertiser supplied URLs exclusively.
@@ -4607,13 +4637,13 @@ pub mod campaign {
         /// Only one of feed_label or sales_country can be set.
         /// Field is immutable except for clearing.
         /// Once this field is cleared, you must use feed_label if you
-        /// wish to set the sales country.
+        /// want to set the sales country.
         #[prost(string, optional, tag="6")]
         pub sales_country: ::core::option::Option<::prost::alloc::string::String>,
         /// Feed label of products to include in the campaign.
         /// Only one of feed_label or sales_country can be set.
         /// If used instead of sales_country, the feed_label field accepts country
-        /// codes in the same format i.e. 'XX'.
+        /// codes in the same format for example: 'XX'.
         /// Otherwise can be any string used for feed label in Google Merchant
         /// Center.
         #[prost(string, tag="10")]
@@ -4728,7 +4758,7 @@ pub mod campaign {
     }
     /// The bidding strategy for the campaign.
     ///
-    /// Must be either portfolio (created via BiddingStrategy service) or
+    /// Must be either portfolio (created through BiddingStrategy service) or
     /// standard, that is embedded into the campaign.
     #[derive(Clone, PartialEq, ::prost::Oneof)]
     pub enum CampaignBiddingStrategy {
@@ -4770,7 +4800,7 @@ pub mod campaign {
         #[prost(message, tag="26")]
         TargetCpa(super::super::common::TargetCpa),
         /// Target Impression Share bidding strategy. An automated bidding strategy
-        /// that sets bids to achieve a desired percentage of impressions.
+        /// that sets bids to achieve a chosen percentage of impressions.
         #[prost(message, tag="48")]
         TargetImpressionShare(super::super::common::TargetImpressionShare),
         /// Standard Target ROAS bidding strategy that automatically maximizes
@@ -5821,8 +5851,8 @@ pub mod accessible_bidding_strategy {
         /// Output only. The targeted location on the search results page.
         #[prost(enumeration="super::super::enums::target_impression_share_location_enum::TargetImpressionShareLocation", tag="1")]
         pub location: i32,
-        /// The desired fraction of ads to be shown in the targeted location in
-        /// micros. E.g. 1% equals 10,000.
+        /// The chosen fraction of ads to be shown in the targeted location in
+        /// micros. For example, 1% equals 10,000.
         #[prost(int64, optional, tag="2")]
         pub location_fraction_micros: ::core::option::Option<i64>,
         /// Output only. The highest CPC bid the automated bidding system is permitted to specify.
@@ -5835,7 +5865,7 @@ pub mod accessible_bidding_strategy {
     /// averaging a specific target return on ad spend (ROAS).
     #[derive(Clone, PartialEq, ::prost::Message)]
     pub struct TargetRoas {
-        /// Output only. The desired revenue (based on conversion data) per unit of spend.
+        /// Output only. The chosen revenue (based on conversion data) per unit of spend.
         #[prost(double, optional, tag="1")]
         pub target_roas: ::core::option::Option<f64>,
     }
@@ -5875,7 +5905,7 @@ pub mod accessible_bidding_strategy {
         /// possible at the target cost-per-acquisition (CPA) you set.
         #[prost(message, tag="9")]
         TargetCpa(TargetCpa),
-        /// Output only. A bidding strategy that automatically optimizes towards a desired
+        /// Output only. A bidding strategy that automatically optimizes towards a chosen
         /// percentage of impressions.
         #[prost(message, tag="10")]
         TargetImpressionShare(TargetImpressionShare),
@@ -6242,7 +6272,8 @@ pub mod billing_setup {
         /// Output only. A 16 digit id used to identify the payments account associated with the
         /// billing setup.
         ///
-        /// This must be passed as a string with dashes, e.g. "1234-5678-9012-3456".
+        /// This must be passed as a string with dashes, for example,
+        /// "1234-5678-9012-3456".
         #[prost(string, optional, tag="6")]
         pub payments_account_id: ::core::option::Option<::prost::alloc::string::String>,
         /// Immutable. The name of the payments account associated with the billing setup.
@@ -6256,14 +6287,15 @@ pub mod billing_setup {
         /// Immutable. A 12 digit id used to identify the payments profile associated with the
         /// billing setup.
         ///
-        /// This must be passed in as a string with dashes, e.g. "1234-5678-9012".
+        /// This must be passed in as a string with dashes, for example,
+        /// "1234-5678-9012".
         #[prost(string, optional, tag="8")]
         pub payments_profile_id: ::core::option::Option<::prost::alloc::string::String>,
         /// Output only. The name of the payments profile associated with the billing setup.
         #[prost(string, optional, tag="9")]
         pub payments_profile_name: ::core::option::Option<::prost::alloc::string::String>,
-        /// Output only. A secondary payments profile id present in uncommon situations, e.g.
-        /// when a sequential liability agreement has been arranged.
+        /// Output only. A secondary payments profile id present in uncommon situations, for
+        /// example, when a sequential liability agreement has been arranged.
         #[prost(string, optional, tag="10")]
         pub secondary_payments_profile_id: ::core::option::Option<::prost::alloc::string::String>,
     }
@@ -6459,13 +6491,14 @@ pub struct CurrencyConstant {
     /// `currencyConstants/{code}`
     #[prost(string, tag="1")]
     pub resource_name: ::prost::alloc::string::String,
-    /// Output only. ISO 4217 three-letter currency code, e.g. "USD"
+    /// Output only. ISO 4217 three-letter currency code, for example, "USD"
     #[prost(string, optional, tag="6")]
     pub code: ::core::option::Option<::prost::alloc::string::String>,
     /// Output only. Full English name of the currency.
     #[prost(string, optional, tag="7")]
     pub name: ::core::option::Option<::prost::alloc::string::String>,
-    /// Output only. Standard symbol for describing this currency, e.g. '$' for US Dollars.
+    /// Output only. Standard symbol for describing this currency, for example, '$' for US
+    /// Dollars.
     #[prost(string, optional, tag="8")]
     pub symbol: ::core::option::Option<::prost::alloc::string::String>,
     /// Output only. The billable unit for this currency. Billed amounts should be multiples of
@@ -6585,8 +6618,8 @@ pub struct PaymentsAccount {
     /// payments account.
     #[prost(string, optional, tag="11")]
     pub payments_profile_id: ::core::option::Option<::prost::alloc::string::String>,
-    /// Output only. A secondary payments profile ID present in uncommon situations, e.g.
-    /// when a sequential liability agreement has been arranged.
+    /// Output only. A secondary payments profile ID present in uncommon situations, for
+    /// example, when a sequential liability agreement has been arranged.
     #[prost(string, optional, tag="12")]
     pub secondary_payments_profile_id: ::core::option::Option<::prost::alloc::string::String>,
     /// Output only. Paying manager of this payment account.
@@ -6832,15 +6865,16 @@ pub struct DetailPlacementView {
     /// videos, and translated mobile app name for mobile apps.
     #[prost(string, optional, tag="8")]
     pub display_name: ::core::option::Option<::prost::alloc::string::String>,
-    /// Output only. URL of the group placement, e.g. domain, link to the mobile application in
-    /// app store, or a YouTube channel URL.
+    /// Output only. URL of the group placement, for example, domain, link to the mobile
+    /// application in app store, or a YouTube channel URL.
     #[prost(string, optional, tag="9")]
     pub group_placement_target_url: ::core::option::Option<::prost::alloc::string::String>,
-    /// Output only. URL of the placement, e.g. website, link to the mobile application in app
-    /// store, or a YouTube video URL.
+    /// Output only. URL of the placement, for example, website, link to the mobile application
+    /// in app store, or a YouTube video URL.
     #[prost(string, optional, tag="10")]
     pub target_url: ::core::option::Option<::prost::alloc::string::String>,
-    /// Output only. Type of the placement, e.g. Website, YouTube Video, and Mobile Application.
+    /// Output only. Type of the placement, for example, Website, YouTube Video, and Mobile
+    /// Application.
     #[prost(enumeration="super::enums::placement_type_enum::PlacementType", tag="6")]
     pub placement_type: i32,
 }
@@ -6952,8 +6986,8 @@ pub struct ConversionAction {
     /// primary_for_goal = false conversion action, that conversion action is
     /// still biddable.
     /// By default, primary_for_goal will be true if not set. In V9,
-    /// primary_for_goal can only be set to false after creation via an 'update'
-    /// operation because it's not declared as optional.
+    /// primary_for_goal can only be set to false after creation through an
+    /// 'update' operation because it's not declared as optional.
     #[prost(bool, optional, tag="31")]
     pub primary_for_goal: ::core::option::Option<bool>,
     /// The category of conversions reported for this conversion action.
@@ -6968,7 +7002,7 @@ pub struct ConversionAction {
     #[prost(bool, optional, tag="24")]
     pub include_in_conversions_metric: ::core::option::Option<bool>,
     /// The maximum number of days that may elapse between an interaction
-    /// (e.g., a click) and a conversion event.
+    /// (for example, a click) and a conversion event.
     #[prost(int64, optional, tag="25")]
     pub click_through_lookback_window_days: ::core::option::Option<i64>,
     /// The maximum number of days which may elapse between an impression and a
@@ -7115,11 +7149,11 @@ pub mod feed_mapping {
     /// given feed, the active FeedMappings must have unique targets. Required.
     #[derive(Clone, PartialEq, ::prost::Oneof)]
     pub enum Target {
-        /// Immutable. The placeholder type of this mapping (i.e., if the mapping maps feed
-        /// attributes to placeholder fields).
+        /// Immutable. The placeholder type of this mapping (for example, if the mapping maps
+        /// feed attributes to placeholder fields).
         #[prost(enumeration="super::super::enums::placeholder_type_enum::PlaceholderType", tag="3")]
         PlaceholderType(i32),
-        /// Immutable. The criterion type of this mapping (i.e., if the mapping maps feed
+        /// Immutable. The criterion type of this mapping (for example, if the mapping maps feed
         /// attributes to criterion fields).
         #[prost(enumeration="super::super::enums::feed_mapping_criterion_type_enum::FeedMappingCriterionType", tag="4")]
         CriterionType(i32),
@@ -7536,10 +7570,10 @@ pub struct ThirdPartyAppAnalyticsLinkIdentifier {
     pub app_analytics_provider_id: ::core::option::Option<i64>,
     /// Immutable. A string that uniquely identifies a mobile application from which the data
     /// was collected to the Google Ads API. For iOS, the ID string is the 9 digit
-    /// string that appears at the end of an App Store URL (e.g., "422689480" for
-    /// "Gmail" whose App Store link is
+    /// string that appears at the end of an App Store URL (for example,
+    /// "422689480" for "Gmail" whose App Store link is
     /// <https://apps.apple.com/us/app/gmail-email-by-google/id422689480>). For
-    /// Android, the ID string is the application's package name (e.g.,
+    /// Android, the ID string is the application's package name (for example,
     /// "com.google.android.gm" for "Gmail" given Google Play link
     /// <https://play.google.com/store/apps/details?id=com.google.android.gm>)
     /// This field should not be empty when creating a new third
@@ -7673,8 +7707,8 @@ pub mod customer_negative_criterion {
 /// approval, if any, are found in 'pending_proposal'.  Effective details about
 /// the budget are found in fields prefixed 'approved_', 'adjusted_' and those
 /// without a prefix.  Since some effective details may differ from what the user
-/// had originally requested (e.g. spending limit), these differences are
-/// juxtaposed via 'proposed_', 'approved_', and possibly 'adjusted_' fields.
+/// had originally requested (for example, spending limit), these differences are
+/// juxtaposed through 'proposed_', 'approved_', and possibly 'adjusted_' fields.
 ///
 /// This resource is mutated using AccountBudgetProposal and cannot be mutated
 /// directly. A budget may have at most one pending proposal at any given time.
@@ -7777,7 +7811,7 @@ pub mod account_budget {
         /// `customers/{customer_id}/accountBudgetProposals/{account_budget_proposal_id}`
         #[prost(string, optional, tag="12")]
         pub account_budget_proposal: ::core::option::Option<::prost::alloc::string::String>,
-        /// Output only. The type of this proposal, e.g. END to end the budget associated
+        /// Output only. The type of this proposal, for example, END to end the budget associated
         /// with this proposal.
         #[prost(enumeration="super::super::enums::account_budget_proposal_type_enum::AccountBudgetProposalType", tag="2")]
         pub proposal_type: i32,
@@ -7813,7 +7847,7 @@ pub mod account_budget {
             /// Output only. The end time in yyyy-MM-dd HH:mm:ss format.
             #[prost(string, tag="15")]
             EndDateTime(::prost::alloc::string::String),
-            /// Output only. The end time as a well-defined type, e.g. FOREVER.
+            /// Output only. The end time as a well-defined type, for example, FOREVER.
             #[prost(enumeration="super::super::super::enums::time_type_enum::TimeType", tag="6")]
             EndTimeType(i32),
         }
@@ -7824,7 +7858,7 @@ pub mod account_budget {
             /// one unit.
             #[prost(int64, tag="16")]
             SpendingLimitMicros(i64),
-            /// Output only. The spending limit as a well-defined type, e.g. INFINITE.
+            /// Output only. The spending limit as a well-defined type, for example, INFINITE.
             #[prost(enumeration="super::super::super::enums::spending_limit_type_enum::SpendingLimitType", tag="8")]
             SpendingLimitType(i32),
         }
@@ -7835,7 +7869,7 @@ pub mod account_budget {
         /// Output only. The proposed end time in yyyy-MM-dd HH:mm:ss format.
         #[prost(string, tag="28")]
         ProposedEndDateTime(::prost::alloc::string::String),
-        /// Output only. The proposed end time as a well-defined type, e.g. FOREVER.
+        /// Output only. The proposed end time as a well-defined type, for example, FOREVER.
         #[prost(enumeration="super::super::enums::time_type_enum::TimeType", tag="9")]
         ProposedEndTimeType(i32),
     }
@@ -7848,7 +7882,7 @@ pub mod account_budget {
         /// Output only. The approved end time in yyyy-MM-dd HH:mm:ss format.
         #[prost(string, tag="29")]
         ApprovedEndDateTime(::prost::alloc::string::String),
-        /// Output only. The approved end time as a well-defined type, e.g. FOREVER.
+        /// Output only. The approved end time as a well-defined type, for example, FOREVER.
         #[prost(enumeration="super::super::enums::time_type_enum::TimeType", tag="11")]
         ApprovedEndTimeType(i32),
     }
@@ -7859,7 +7893,8 @@ pub mod account_budget {
         /// one unit.
         #[prost(int64, tag="30")]
         ProposedSpendingLimitMicros(i64),
-        /// Output only. The proposed spending limit as a well-defined type, e.g. INFINITE.
+        /// Output only. The proposed spending limit as a well-defined type, for example,
+        /// INFINITE.
         #[prost(enumeration="super::super::enums::spending_limit_type_enum::SpendingLimitType", tag="13")]
         ProposedSpendingLimitType(i32),
     }
@@ -7876,8 +7911,9 @@ pub mod account_budget {
         /// proposed spending limit.
         #[prost(int64, tag="31")]
         ApprovedSpendingLimitMicros(i64),
-        /// Output only. The approved spending limit as a well-defined type, e.g. INFINITE.  This
-        /// will only be populated if the approved spending limit is INFINITE.
+        /// Output only. The approved spending limit as a well-defined type, for example,
+        /// INFINITE.  This will only be populated if the approved spending limit is
+        /// INFINITE.
         #[prost(enumeration="super::super::enums::spending_limit_type_enum::SpendingLimitType", tag="15")]
         ApprovedSpendingLimitType(i32),
     }
@@ -7901,10 +7937,10 @@ pub mod account_budget {
         /// allowed to spend.
         #[prost(int64, tag="32")]
         AdjustedSpendingLimitMicros(i64),
-        /// Output only. The adjusted spending limit as a well-defined type, e.g. INFINITE.
-        /// This will only be populated if the adjusted spending limit is INFINITE,
-        /// which is guaranteed to be true if the approved spending limit is
-        /// INFINITE.
+        /// Output only. The adjusted spending limit as a well-defined type, for example,
+        /// INFINITE. This will only be populated if the adjusted spending limit is
+        /// INFINITE, which is guaranteed to be true if the approved spending limit
+        /// is INFINITE.
         #[prost(enumeration="super::super::enums::spending_limit_type_enum::SpendingLimitType", tag="17")]
         AdjustedSpendingLimitType(i32),
     }
@@ -8028,8 +8064,8 @@ pub struct DetailedDemographic {
     /// Output only. The ID of the detailed demographic.
     #[prost(int64, tag="2")]
     pub id: i64,
-    /// Output only. The name of the detailed demographic. E.g."Highest Level of Educational
-    /// Attainment"
+    /// Output only. The name of the detailed demographic. For example,"Highest Level of
+    /// Educational Attainment"
     #[prost(string, tag="3")]
     pub name: ::prost::alloc::string::String,
     /// Output only. The parent of the detailed_demographic.
@@ -8106,8 +8142,8 @@ pub struct CarrierConstant {
     /// Output only. The full name of the carrier in English.
     #[prost(string, optional, tag="6")]
     pub name: ::core::option::Option<::prost::alloc::string::String>,
-    /// Output only. The country code of the country where the carrier is located, e.g., "AR",
-    /// "FR", etc.
+    /// Output only. The country code of the country where the carrier is located, for example,
+    /// "AR", "FR", etc.
     #[prost(string, optional, tag="7")]
     pub country_code: ::core::option::Option<::prost::alloc::string::String>,
 }
@@ -8126,7 +8162,7 @@ pub struct LifeEvent {
     /// Output only. The ID of the life event.
     #[prost(int64, tag="2")]
     pub id: i64,
-    /// Output only. The name of the life event. E.g.,"Recently Moved"
+    /// Output only. The name of the life event, for example,"Recently Moved"
     #[prost(string, tag="3")]
     pub name: ::prost::alloc::string::String,
     /// Output only. The parent of the life_event.
@@ -8238,7 +8274,7 @@ pub struct Experiment {
     /// The product/feature that uses this experiment.
     #[prost(enumeration="super::enums::experiment_type_enum::ExperimentType", tag="13")]
     pub r#type: i32,
-    /// The Advertiser-desired status of this experiment.
+    /// The Advertiser-chosen status of this experiment.
     #[prost(enumeration="super::enums::experiment_status_enum::ExperimentStatus", tag="14")]
     pub status: i32,
     /// Date when the experiment starts. By default, the experiment starts
@@ -8299,11 +8335,11 @@ pub struct LanguageConstant {
     /// Output only. The ID of the language constant.
     #[prost(int64, optional, tag="6")]
     pub id: ::core::option::Option<i64>,
-    /// Output only. The language code, e.g. "en_US", "en_AU", "es", "fr", etc.
+    /// Output only. The language code, for example, "en_US", "en_AU", "es", "fr", etc.
     #[prost(string, optional, tag="7")]
     pub code: ::core::option::Option<::prost::alloc::string::String>,
-    /// Output only. The full name of the language in English, e.g., "English (US)", "Spanish",
-    /// etc.
+    /// Output only. The full name of the language in English, for example, "English (US)",
+    /// "Spanish", etc.
     #[prost(string, optional, tag="8")]
     pub name: ::core::option::Option<::prost::alloc::string::String>,
     /// Output only. Whether the language is targetable.
@@ -8380,7 +8416,7 @@ pub mod smart_campaign_setting {
     pub struct AdOptimizedBusinessProfileSetting {
         /// Enabling a lead form on your business profile enables prospective
         /// customers to contact your business by filling out a simple form,
-        /// and you'll receive their information via email.
+        /// and you'll receive their information through email.
         #[prost(bool, tag="1")]
         pub include_lead_form: bool,
     }
@@ -8392,7 +8428,7 @@ pub mod smart_campaign_setting {
         FinalUrl(::prost::alloc::string::String),
         /// Settings for configuring a business profile optimized for ads as this
         /// campaign's landing page.  This campaign must be linked to a business
-        /// profile to use this option.  For more information on this feature, please
+        /// profile to use this option.  For more information on this feature,
         /// consult <https://support.google.com/google-ads/answer/9827068.>
         #[prost(message, tag="9")]
         AdOptimizedBusinessProfileSetting(AdOptimizedBusinessProfileSetting),
@@ -8404,8 +8440,8 @@ pub mod smart_campaign_setting {
         #[prost(string, tag="5")]
         BusinessName(::prost::alloc::string::String),
         /// The resource name of a Business Profile location.
-        /// Business Profile location resource names can be fetched via the Business
-        /// Profile API and adhere to the following format:
+        /// Business Profile location resource names can be fetched through the
+        /// Business Profile API and adhere to the following format:
         /// `locations/{locationId}`.
         ///
         /// See the [Business Profile API]
