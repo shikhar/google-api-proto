@@ -29,6 +29,9 @@ pub struct Indicator {
     /// process is present in the environment.
     #[prost(message, repeated, tag="3")]
     pub signatures: ::prost::alloc::vec::Vec<indicator::ProcessSignature>,
+    /// The list of URIs associated to the Findings.
+    #[prost(string, repeated, tag="4")]
+    pub uris: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
 }
 /// Nested message and enum types in `Indicator`.
 pub mod indicator {
@@ -407,6 +410,10 @@ pub mod mitre_attack {
         ImpairDefenses = 31,
         /// T1046
         NetworkServiceDiscovery = 32,
+        /// T1134
+        AccessTokenManipulation = 33,
+        /// T1548
+        AbuseElevationControlMechanism = 34,
     }
 }
 /// Represents an access event.
