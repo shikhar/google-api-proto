@@ -1,5 +1,5 @@
-/// An Api is a top-level description of an API.
-/// Apis are produced by producers and are commitments to provide services.
+/// A top-level description of an API.
+/// Produced by producers and are commitments to provide services.
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct Api {
     /// Resource name.
@@ -19,15 +19,15 @@ pub struct Api {
     pub update_time: ::core::option::Option<::prost_types::Timestamp>,
     /// A user-definable description of the availability of this service.
     /// Format: free-form, but we expect single words that describe availability,
-    /// e.g. "NONE", "TESTING", "PREVIEW", "GENERAL", "DEPRECATED", "SHUTDOWN".
+    /// e.g., "NONE", "TESTING", "PREVIEW", "GENERAL", "DEPRECATED", "SHUTDOWN".
     #[prost(string, tag="6")]
     pub availability: ::prost::alloc::string::String,
     /// The recommended version of the API.
-    /// Format: apis/{api}/versions/{version}
+    /// Format: `apis/{api}/versions/{version}`
     #[prost(string, tag="7")]
     pub recommended_version: ::prost::alloc::string::String,
     /// The recommended deployment of the API.
-    /// Format: apis/{api}/deployments/{deployment}
+    /// Format: `apis/{api}/deployments/{deployment}`
     #[prost(string, tag="8")]
     pub recommended_deployment: ::prost::alloc::string::String,
     /// Labels attach identifying metadata to resources. Identifying metadata can
@@ -35,13 +35,13 @@ pub struct Api {
     ///
     /// Label keys and values can be no longer than 64 characters
     /// (Unicode codepoints), can only contain lowercase letters, numeric
-    /// characters, underscores and dashes. International characters are allowed.
+    /// characters, underscores, and dashes. International characters are allowed.
     /// No more than 64 user labels can be associated with one resource (System
     /// labels are excluded).
     ///
     /// See <https://goo.gl/xmQnxf> for more information and examples of labels.
     /// System reserved label keys are prefixed with
-    /// "apigeeregistry.googleapis.com/" and cannot be changed.
+    /// `apigeeregistry.googleapis.com/` and cannot be changed.
     #[prost(btree_map="string, string", tag="9")]
     pub labels: ::prost::alloc::collections::BTreeMap<::prost::alloc::string::String, ::prost::alloc::string::String>,
     /// Annotations attach non-identifying metadata to resources.
@@ -52,7 +52,7 @@ pub struct Api {
     #[prost(btree_map="string, string", tag="10")]
     pub annotations: ::prost::alloc::collections::BTreeMap<::prost::alloc::string::String, ::prost::alloc::string::String>,
 }
-/// An ApiVersion describes a particular version of an API.
+/// Describes a particular version of an API.
 /// ApiVersions are what consumers actually use.
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ApiVersion {
@@ -73,7 +73,7 @@ pub struct ApiVersion {
     pub update_time: ::core::option::Option<::prost_types::Timestamp>,
     /// A user-definable description of the lifecycle phase of this API version.
     /// Format: free-form, but we expect single words that describe API maturity,
-    /// e.g. "CONCEPT", "DESIGN", "DEVELOPMENT", "STAGING", "PRODUCTION",
+    /// e.g., "CONCEPT", "DESIGN", "DEVELOPMENT", "STAGING", "PRODUCTION",
     /// "DEPRECATED", "RETIRED".
     #[prost(string, tag="6")]
     pub state: ::prost::alloc::string::String,
@@ -88,7 +88,7 @@ pub struct ApiVersion {
     ///
     /// See <https://goo.gl/xmQnxf> for more information and examples of labels.
     /// System reserved label keys are prefixed with
-    /// "apigeeregistry.googleapis.com/" and cannot be changed.
+    /// `apigeeregistry.googleapis.com/` and cannot be changed.
     #[prost(btree_map="string, string", tag="7")]
     pub labels: ::prost::alloc::collections::BTreeMap<::prost::alloc::string::String, ::prost::alloc::string::String>,
     /// Annotations attach non-identifying metadata to resources.
@@ -99,11 +99,11 @@ pub struct ApiVersion {
     #[prost(btree_map="string, string", tag="8")]
     pub annotations: ::prost::alloc::collections::BTreeMap<::prost::alloc::string::String, ::prost::alloc::string::String>,
 }
-/// An ApiSpec describes a version of an API in a structured way.
+/// Describes a version of an API in a structured way.
 /// ApiSpecs provide formal descriptions that consumers can use to use a version.
 /// ApiSpec resources are intended to be fully-resolved descriptions of an
 /// ApiVersion. When specs consist of multiple files, these should be bundled
-/// together (e.g. in a zip archive) and stored as a unit. Multiple specs can
+/// together (e.g., in a zip archive) and stored as a unit. Multiple specs can
 /// exist to provide representations in different API description formats.
 /// Synchronization of these representations would be provided by tooling and
 /// background services.
@@ -134,8 +134,8 @@ pub struct ApiSpec {
     pub revision_update_time: ::core::option::Option<::prost_types::Timestamp>,
     /// A style (format) descriptor for this spec that is specified as a Media Type
     /// (<https://en.wikipedia.org/wiki/Media_type>). Possible values include
-    /// "application/vnd.apigee.proto", "application/vnd.apigee.openapi", and
-    /// "application/vnd.apigee.graphql", with possible suffixes representing
+    /// `application/vnd.apigee.proto`, `application/vnd.apigee.openapi`, and
+    /// `application/vnd.apigee.graphql`, with possible suffixes representing
     /// compression types. These hypothetical names are defined in the vendor tree
     /// defined in RFC6838 (<https://tools.ietf.org/html/rfc6838>) and are not final.
     /// Content types can specify compression. Currently only GZip compression is
@@ -172,7 +172,7 @@ pub struct ApiSpec {
     ///
     /// See <https://goo.gl/xmQnxf> for more information and examples of labels.
     /// System reserved label keys are prefixed with
-    /// "apigeeregistry.googleapis.com/" and cannot be changed.
+    /// `apigeeregistry.googleapis.com/` and cannot be changed.
     #[prost(btree_map="string, string", tag="14")]
     pub labels: ::prost::alloc::collections::BTreeMap<::prost::alloc::string::String, ::prost::alloc::string::String>,
     /// Annotations attach non-identifying metadata to resources.
@@ -183,7 +183,7 @@ pub struct ApiSpec {
     #[prost(btree_map="string, string", tag="15")]
     pub annotations: ::prost::alloc::collections::BTreeMap<::prost::alloc::string::String, ::prost::alloc::string::String>,
 }
-/// An ApiDeployment describes a service running at particular address that
+/// Describes a service running at particular address that
 /// provides a particular version of an API. ApiDeployments have revisions which
 /// correspond to different configurations of a single deployment in time.
 /// Revision identifiers should be updated whenever the served API spec or
@@ -213,16 +213,16 @@ pub struct ApiDeployment {
     /// Output only. Last update timestamp: when the represented revision was last modified.
     #[prost(message, optional, tag="7")]
     pub revision_update_time: ::core::option::Option<::prost_types::Timestamp>,
-    /// The full resource name (including revision id) of the spec of the API being
+    /// The full resource name (including revision ID) of the spec of the API being
     /// served by the deployment. Changes to this value will update the revision.
-    /// Format: apis/{api}/deployments/{deployment}
+    /// Format: `apis/{api}/deployments/{deployment}`
     #[prost(string, tag="8")]
     pub api_spec_revision: ::prost::alloc::string::String,
     /// The address where the deployment is serving. Changes to this value will
     /// update the revision.
     #[prost(string, tag="9")]
     pub endpoint_uri: ::prost::alloc::string::String,
-    /// The address of the external channel of the API (e.g. the Developer
+    /// The address of the external channel of the API (e.g., the Developer
     /// Portal). Changes to this value will not affect the revision.
     #[prost(string, tag="10")]
     pub external_channel_uri: ::prost::alloc::string::String,
@@ -245,7 +245,7 @@ pub struct ApiDeployment {
     ///
     /// See <https://goo.gl/xmQnxf> for more information and examples of labels.
     /// System reserved label keys are prefixed with
-    /// "apigeeregistry.googleapis.com/" and cannot be changed.
+    /// `apigeeregistry.googleapis.com/` and cannot be changed.
     #[prost(btree_map="string, string", tag="14")]
     pub labels: ::prost::alloc::collections::BTreeMap<::prost::alloc::string::String, ::prost::alloc::string::String>,
     /// Annotations attach non-identifying metadata to resources.
@@ -260,8 +260,8 @@ pub struct ApiDeployment {
 /// and are used to store metadata that is too large or numerous to be stored
 /// directly on the resource. Since artifacts are stored separately from parent
 /// resources, they should generally be used for metadata that is needed
-/// infrequently, i.e. not for display in primary views of the resource but
-/// perhaps displayed or downloaded upon request. The ListArtifacts method
+/// infrequently, i.e., not for display in primary views of the resource but
+/// perhaps displayed or downloaded upon request. The `ListArtifacts` method
 /// allows artifacts to be quickly enumerated and checked for presence without
 /// downloading their (potentially-large) contents.
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -360,7 +360,7 @@ pub struct OperationMetadata {
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct Instance {
     /// Format: `projects/*/locations/*/instance`.
-    /// Currently only locations/global is supported.
+    /// Currently only `locations/global` is supported.
     #[prost(string, tag="1")]
     pub name: ::prost::alloc::string::String,
     /// Output only. Creation timestamp.
@@ -541,7 +541,7 @@ pub mod provisioning_client {
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ListApisRequest {
     /// Required. The parent, which owns this collection of APIs.
-    /// Format: projects/*/locations/*
+    /// Format: `projects/*/locations/*`
     #[prost(string, tag="1")]
     pub parent: ::prost::alloc::string::String,
     /// The maximum number of APIs to return.
@@ -577,7 +577,7 @@ pub struct ListApisResponse {
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct GetApiRequest {
     /// Required. The name of the API to retrieve.
-    /// Format: projects/*/locations/*/apis/*
+    /// Format: `projects/*/locations/*/apis/*`
     #[prost(string, tag="1")]
     pub name: ::prost::alloc::string::String,
 }
@@ -585,14 +585,14 @@ pub struct GetApiRequest {
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct CreateApiRequest {
     /// Required. The parent, which owns this collection of APIs.
-    /// Format: projects/*/locations/*
+    /// Format: `projects/*/locations/*`
     #[prost(string, tag="1")]
     pub parent: ::prost::alloc::string::String,
     /// Required. The API to create.
     #[prost(message, optional, tag="2")]
     pub api: ::core::option::Option<Api>,
-    /// Required. The ID to use for the api, which will become the final component of
-    /// the api's resource name.
+    /// Required. The ID to use for the API, which will become the final component of
+    /// the API's resource name.
     ///
     /// This value should be 4-63 characters, and valid characters
     /// are /\[a-z][0-9\]-/.
@@ -607,16 +607,16 @@ pub struct UpdateApiRequest {
     /// Required. The API to update.
     ///
     /// The `name` field is used to identify the API to update.
-    /// Format: projects/*/locations/*/apis/*
+    /// Format: `projects/*/locations/*/apis/*`
     #[prost(message, optional, tag="1")]
     pub api: ::core::option::Option<Api>,
     /// The list of fields to be updated. If omitted, all fields are updated that
     /// are set in the request message (fields set to default values are ignored).
-    /// If a "*" is specified, all fields are updated, including fields that are
-    /// unspecified/default in the request.
+    /// If an asterisk "*" is specified, all fields are updated, including fields
+    /// that are unspecified/default in the request.
     #[prost(message, optional, tag="2")]
     pub update_mask: ::core::option::Option<::prost_types::FieldMask>,
-    /// If set to true, and the api is not found, a new api will be created.
+    /// If set to true, and the API is not found, a new API will be created.
     /// In this situation, `update_mask` is ignored.
     #[prost(bool, tag="3")]
     pub allow_missing: bool,
@@ -625,15 +625,19 @@ pub struct UpdateApiRequest {
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct DeleteApiRequest {
     /// Required. The name of the API to delete.
-    /// Format: projects/*/locations/*/apis/*
+    /// Format: `projects/*/locations/*/apis/*`
     #[prost(string, tag="1")]
     pub name: ::prost::alloc::string::String,
+    /// If set to true, any child resources will also be deleted.
+    /// (Otherwise, the request will only work if there are no child resources.)
+    #[prost(bool, tag="2")]
+    pub force: bool,
 }
 /// Request message for ListApiVersions.
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ListApiVersionsRequest {
     /// Required. The parent, which owns this collection of versions.
-    /// Format: projects/*/locations/*/apis/*
+    /// Format: `projects/*/locations/*/apis/*`
     #[prost(string, tag="1")]
     pub parent: ::prost::alloc::string::String,
     /// The maximum number of versions to return.
@@ -669,7 +673,7 @@ pub struct ListApiVersionsResponse {
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct GetApiVersionRequest {
     /// Required. The name of the version to retrieve.
-    /// Format: projects/*/locations/*/apis/*/versions/*
+    /// Format: `projects/*/locations/*/apis/*/versions/*`
     #[prost(string, tag="1")]
     pub name: ::prost::alloc::string::String,
 }
@@ -677,7 +681,7 @@ pub struct GetApiVersionRequest {
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct CreateApiVersionRequest {
     /// Required. The parent, which owns this collection of versions.
-    /// Format: projects/*/locations/*/apis/*
+    /// Format: `projects/*/locations/*/apis/*`
     #[prost(string, tag="1")]
     pub parent: ::prost::alloc::string::String,
     /// Required. The version to create.
@@ -699,13 +703,13 @@ pub struct UpdateApiVersionRequest {
     /// Required. The version to update.
     ///
     /// The `name` field is used to identify the version to update.
-    /// Format: projects/*/locations/*/apis/*/versions/*
+    /// Format: `projects/*/locations/*/apis/*/versions/*`
     #[prost(message, optional, tag="1")]
     pub api_version: ::core::option::Option<ApiVersion>,
     /// The list of fields to be updated. If omitted, all fields are updated that
     /// are set in the request message (fields set to default values are ignored).
-    /// If a "*" is specified, all fields are updated, including fields that are
-    /// unspecified/default in the request.
+    /// If an asterisk "*" is specified, all fields are updated, including fields
+    /// that are unspecified/default in the request.
     #[prost(message, optional, tag="2")]
     pub update_mask: ::core::option::Option<::prost_types::FieldMask>,
     /// If set to true, and the version is not found, a new version will be
@@ -717,15 +721,19 @@ pub struct UpdateApiVersionRequest {
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct DeleteApiVersionRequest {
     /// Required. The name of the version to delete.
-    /// Format: projects/*/locations/*/apis/*/versions/*
+    /// Format: `projects/*/locations/*/apis/*/versions/*`
     #[prost(string, tag="1")]
     pub name: ::prost::alloc::string::String,
+    /// If set to true, any child resources will also be deleted.
+    /// (Otherwise, the request will only work if there are no child resources.)
+    #[prost(bool, tag="2")]
+    pub force: bool,
 }
 /// Request message for ListApiSpecs.
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ListApiSpecsRequest {
     /// Required. The parent, which owns this collection of specs.
-    /// Format: projects/*/locations/*/apis/*/versions/*
+    /// Format: `projects/*/locations/*/apis/*/versions/*`
     #[prost(string, tag="1")]
     pub parent: ::prost::alloc::string::String,
     /// The maximum number of specs to return.
@@ -761,7 +769,7 @@ pub struct ListApiSpecsResponse {
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct GetApiSpecRequest {
     /// Required. The name of the spec to retrieve.
-    /// Format: projects/*/locations/*/apis/*/versions/*/specs/*
+    /// Format: `projects/*/locations/*/apis/*/versions/*/specs/*`
     #[prost(string, tag="1")]
     pub name: ::prost::alloc::string::String,
 }
@@ -769,7 +777,7 @@ pub struct GetApiSpecRequest {
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct GetApiSpecContentsRequest {
     /// Required. The name of the spec whose contents should be retrieved.
-    /// Format: projects/*/locations/*/apis/*/versions/*/specs/*
+    /// Format: `projects/*/locations/*/apis/*/versions/*/specs/*`
     #[prost(string, tag="1")]
     pub name: ::prost::alloc::string::String,
 }
@@ -777,7 +785,7 @@ pub struct GetApiSpecContentsRequest {
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct CreateApiSpecRequest {
     /// Required. The parent, which owns this collection of specs.
-    /// Format: projects/*/locations/*/apis/*/versions/*
+    /// Format: `projects/*/locations/*/apis/*/versions/*`
     #[prost(string, tag="1")]
     pub parent: ::prost::alloc::string::String,
     /// Required. The spec to create.
@@ -799,13 +807,13 @@ pub struct UpdateApiSpecRequest {
     /// Required. The spec to update.
     ///
     /// The `name` field is used to identify the spec to update.
-    /// Format: projects/*/locations/*/apis/*/versions/*/specs/*
+    /// Format: `projects/*/locations/*/apis/*/versions/*/specs/*`
     #[prost(message, optional, tag="1")]
     pub api_spec: ::core::option::Option<ApiSpec>,
     /// The list of fields to be updated. If omitted, all fields are updated that
     /// are set in the request message (fields set to default values are ignored).
-    /// If a "*" is specified, all fields are updated, including fields that are
-    /// unspecified/default in the request.
+    /// If an asterisk "*" is specified, all fields are updated, including fields
+    /// that are unspecified/default in the request.
     #[prost(message, optional, tag="2")]
     pub update_mask: ::core::option::Option<::prost_types::FieldMask>,
     /// If set to true, and the spec is not found, a new spec will be created.
@@ -817,7 +825,7 @@ pub struct UpdateApiSpecRequest {
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct DeleteApiSpecRequest {
     /// Required. The name of the spec to delete.
-    /// Format: projects/*/locations/*/apis/*/versions/*/specs/*
+    /// Format: `projects/*/locations/*/apis/*/versions/*/specs/*`
     #[prost(string, tag="1")]
     pub name: ::prost::alloc::string::String,
     /// If set to true, any child resources will also be deleted.
@@ -870,7 +878,7 @@ pub struct RollbackApiSpecRequest {
     /// Required. The revision ID to roll back to.
     /// It must be a revision of the same spec.
     ///
-    ///   Example: c7cfa2a8
+    ///   Example: `c7cfa2a8`
     #[prost(string, tag="2")]
     pub revision_id: ::prost::alloc::string::String,
 }
@@ -881,7 +889,7 @@ pub struct DeleteApiSpecRevisionRequest {
     /// with a revision ID explicitly included.
     ///
     /// Example:
-    /// projects/sample/locations/global/apis/petstore/versions/1.0.0/specs/openapi.yaml@c7cfa2a8
+    /// `projects/sample/locations/global/apis/petstore/versions/1.0.0/specs/openapi.yaml@c7cfa2a8`
     #[prost(string, tag="1")]
     pub name: ::prost::alloc::string::String,
 }
@@ -889,7 +897,7 @@ pub struct DeleteApiSpecRevisionRequest {
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ListApiDeploymentsRequest {
     /// Required. The parent, which owns this collection of deployments.
-    /// Format: projects/*/locations/*/apis/*
+    /// Format: `projects/*/locations/*/apis/*`
     #[prost(string, tag="1")]
     pub parent: ::prost::alloc::string::String,
     /// The maximum number of deployments to return.
@@ -925,7 +933,7 @@ pub struct ListApiDeploymentsResponse {
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct GetApiDeploymentRequest {
     /// Required. The name of the deployment to retrieve.
-    /// Format: projects/*/locations/*/apis/*/deployments/*
+    /// Format: `projects/*/locations/*/apis/*/deployments/*`
     #[prost(string, tag="1")]
     pub name: ::prost::alloc::string::String,
 }
@@ -933,7 +941,7 @@ pub struct GetApiDeploymentRequest {
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct CreateApiDeploymentRequest {
     /// Required. The parent, which owns this collection of deployments.
-    /// Format: projects/*/locations/*/apis/*
+    /// Format: `projects/*/locations/*/apis/*`
     #[prost(string, tag="1")]
     pub parent: ::prost::alloc::string::String,
     /// Required. The deployment to create.
@@ -955,13 +963,13 @@ pub struct UpdateApiDeploymentRequest {
     /// Required. The deployment to update.
     ///
     /// The `name` field is used to identify the deployment to update.
-    /// Format: projects/*/locations/*/apis/*/deployments/*
+    /// Format: `projects/*/locations/*/apis/*/deployments/*`
     #[prost(message, optional, tag="1")]
     pub api_deployment: ::core::option::Option<ApiDeployment>,
     /// The list of fields to be updated. If omitted, all fields are updated that
     /// are set in the request message (fields set to default values are ignored).
-    /// If a "*" is specified, all fields are updated, including fields that are
-    /// unspecified/default in the request.
+    /// If an asterisk "*" is specified, all fields are updated, including fields
+    /// that are unspecified/default in the request.
     #[prost(message, optional, tag="2")]
     pub update_mask: ::core::option::Option<::prost_types::FieldMask>,
     /// If set to true, and the deployment is not found, a new deployment will be
@@ -973,7 +981,7 @@ pub struct UpdateApiDeploymentRequest {
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct DeleteApiDeploymentRequest {
     /// Required. The name of the deployment to delete.
-    /// Format: projects/*/locations/*/apis/*/deployments/*
+    /// Format: `projects/*/locations/*/apis/*/deployments/*`
     #[prost(string, tag="1")]
     pub name: ::prost::alloc::string::String,
     /// If set to true, any child resources will also be deleted.
@@ -1026,7 +1034,7 @@ pub struct RollbackApiDeploymentRequest {
     /// Required. The revision ID to roll back to.
     /// It must be a revision of the same deployment.
     ///
-    ///   Example: c7cfa2a8
+    ///   Example: `c7cfa2a8`
     #[prost(string, tag="2")]
     pub revision_id: ::prost::alloc::string::String,
 }
@@ -1037,7 +1045,7 @@ pub struct DeleteApiDeploymentRevisionRequest {
     /// with a revision ID explicitly included.
     ///
     /// Example:
-    /// projects/sample/locations/global/apis/petstore/deployments/prod@c7cfa2a8
+    /// `projects/sample/locations/global/apis/petstore/deployments/prod@c7cfa2a8`
     #[prost(string, tag="1")]
     pub name: ::prost::alloc::string::String,
 }
@@ -1045,7 +1053,7 @@ pub struct DeleteApiDeploymentRevisionRequest {
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ListArtifactsRequest {
     /// Required. The parent, which owns this collection of artifacts.
-    /// Format: {parent}
+    /// Format: `{parent}`
     #[prost(string, tag="1")]
     pub parent: ::prost::alloc::string::String,
     /// The maximum number of artifacts to return.
@@ -1081,7 +1089,7 @@ pub struct ListArtifactsResponse {
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct GetArtifactRequest {
     /// Required. The name of the artifact to retrieve.
-    /// Format: {parent}/artifacts/*
+    /// Format: `{parent}/artifacts/*`
     #[prost(string, tag="1")]
     pub name: ::prost::alloc::string::String,
 }
@@ -1089,7 +1097,7 @@ pub struct GetArtifactRequest {
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct GetArtifactContentsRequest {
     /// Required. The name of the artifact whose contents should be retrieved.
-    /// Format: {parent}/artifacts/*
+    /// Format: `{parent}/artifacts/*`
     #[prost(string, tag="1")]
     pub name: ::prost::alloc::string::String,
 }
@@ -1097,7 +1105,7 @@ pub struct GetArtifactContentsRequest {
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct CreateArtifactRequest {
     /// Required. The parent, which owns this collection of artifacts.
-    /// Format: {parent}
+    /// Format: `{parent}`
     #[prost(string, tag="1")]
     pub parent: ::prost::alloc::string::String,
     /// Required. The artifact to create.
@@ -1119,7 +1127,7 @@ pub struct ReplaceArtifactRequest {
     /// Required. The artifact to replace.
     ///
     /// The `name` field is used to identify the artifact to replace.
-    /// Format: {parent}/artifacts/*
+    /// Format: `{parent}/artifacts/*`
     #[prost(message, optional, tag="1")]
     pub artifact: ::core::option::Option<Artifact>,
 }
@@ -1127,7 +1135,7 @@ pub struct ReplaceArtifactRequest {
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct DeleteArtifactRequest {
     /// Required. The name of the artifact to delete.
-    /// Format: {parent}/artifacts/*
+    /// Format: `{parent}/artifacts/*`
     #[prost(string, tag="1")]
     pub name: ::prost::alloc::string::String,
 }
@@ -1185,7 +1193,7 @@ pub mod registry_client {
             self.inner = self.inner.accept_gzip();
             self
         }
-        /// ListApis returns matching APIs.
+        /// Returns matching APIs.
         pub async fn list_apis(
             &mut self,
             request: impl tonic::IntoRequest<super::ListApisRequest>,
@@ -1205,7 +1213,7 @@ pub mod registry_client {
             );
             self.inner.unary(request.into_request(), path, codec).await
         }
-        /// GetApi returns a specified API.
+        /// Returns a specified API.
         pub async fn get_api(
             &mut self,
             request: impl tonic::IntoRequest<super::GetApiRequest>,
@@ -1225,7 +1233,7 @@ pub mod registry_client {
             );
             self.inner.unary(request.into_request(), path, codec).await
         }
-        /// CreateApi creates a specified API.
+        /// Creates a specified API.
         pub async fn create_api(
             &mut self,
             request: impl tonic::IntoRequest<super::CreateApiRequest>,
@@ -1245,7 +1253,7 @@ pub mod registry_client {
             );
             self.inner.unary(request.into_request(), path, codec).await
         }
-        /// UpdateApi can be used to modify a specified API.
+        /// Used to modify a specified API.
         pub async fn update_api(
             &mut self,
             request: impl tonic::IntoRequest<super::UpdateApiRequest>,
@@ -1265,7 +1273,7 @@ pub mod registry_client {
             );
             self.inner.unary(request.into_request(), path, codec).await
         }
-        /// DeleteApi removes a specified API and all of the resources that it
+        /// Removes a specified API and all of the resources that it
         /// owns.
         pub async fn delete_api(
             &mut self,
@@ -1286,7 +1294,7 @@ pub mod registry_client {
             );
             self.inner.unary(request.into_request(), path, codec).await
         }
-        /// ListApiVersions returns matching versions.
+        /// Returns matching versions.
         pub async fn list_api_versions(
             &mut self,
             request: impl tonic::IntoRequest<super::ListApiVersionsRequest>,
@@ -1306,7 +1314,7 @@ pub mod registry_client {
             );
             self.inner.unary(request.into_request(), path, codec).await
         }
-        /// GetApiVersion returns a specified version.
+        /// Returns a specified version.
         pub async fn get_api_version(
             &mut self,
             request: impl tonic::IntoRequest<super::GetApiVersionRequest>,
@@ -1326,7 +1334,7 @@ pub mod registry_client {
             );
             self.inner.unary(request.into_request(), path, codec).await
         }
-        /// CreateApiVersion creates a specified version.
+        /// Creates a specified version.
         pub async fn create_api_version(
             &mut self,
             request: impl tonic::IntoRequest<super::CreateApiVersionRequest>,
@@ -1346,7 +1354,7 @@ pub mod registry_client {
             );
             self.inner.unary(request.into_request(), path, codec).await
         }
-        /// UpdateApiVersion can be used to modify a specified version.
+        /// Used to modify a specified version.
         pub async fn update_api_version(
             &mut self,
             request: impl tonic::IntoRequest<super::UpdateApiVersionRequest>,
@@ -1366,7 +1374,7 @@ pub mod registry_client {
             );
             self.inner.unary(request.into_request(), path, codec).await
         }
-        /// DeleteApiVersion removes a specified version and all of the resources that
+        /// Removes a specified version and all of the resources that
         /// it owns.
         pub async fn delete_api_version(
             &mut self,
@@ -1387,7 +1395,7 @@ pub mod registry_client {
             );
             self.inner.unary(request.into_request(), path, codec).await
         }
-        /// ListApiSpecs returns matching specs.
+        /// Returns matching specs.
         pub async fn list_api_specs(
             &mut self,
             request: impl tonic::IntoRequest<super::ListApiSpecsRequest>,
@@ -1407,7 +1415,7 @@ pub mod registry_client {
             );
             self.inner.unary(request.into_request(), path, codec).await
         }
-        /// GetApiSpec returns a specified spec.
+        /// Returns a specified spec.
         pub async fn get_api_spec(
             &mut self,
             request: impl tonic::IntoRequest<super::GetApiSpecRequest>,
@@ -1427,7 +1435,7 @@ pub mod registry_client {
             );
             self.inner.unary(request.into_request(), path, codec).await
         }
-        /// GetApiSpecContents returns the contents of a specified spec.
+        /// Returns the contents of a specified spec.
         /// If specs are stored with GZip compression, the default behavior
         /// is to return the spec uncompressed (the mime_type response field
         /// indicates the exact format returned).
@@ -1453,7 +1461,7 @@ pub mod registry_client {
             );
             self.inner.unary(request.into_request(), path, codec).await
         }
-        /// CreateApiSpec creates a specified spec.
+        /// Creates a specified spec.
         pub async fn create_api_spec(
             &mut self,
             request: impl tonic::IntoRequest<super::CreateApiSpecRequest>,
@@ -1473,7 +1481,7 @@ pub mod registry_client {
             );
             self.inner.unary(request.into_request(), path, codec).await
         }
-        /// UpdateApiSpec can be used to modify a specified spec.
+        /// Used to modify a specified spec.
         pub async fn update_api_spec(
             &mut self,
             request: impl tonic::IntoRequest<super::UpdateApiSpecRequest>,
@@ -1493,8 +1501,8 @@ pub mod registry_client {
             );
             self.inner.unary(request.into_request(), path, codec).await
         }
-        /// DeleteApiSpec removes a specified spec, all revisions, and all child
-        /// resources (e.g. artifacts).
+        /// Removes a specified spec, all revisions, and all child
+        /// resources (e.g., artifacts).
         pub async fn delete_api_spec(
             &mut self,
             request: impl tonic::IntoRequest<super::DeleteApiSpecRequest>,
@@ -1514,7 +1522,7 @@ pub mod registry_client {
             );
             self.inner.unary(request.into_request(), path, codec).await
         }
-        /// TagApiSpecRevision adds a tag to a specified revision of a spec.
+        /// Adds a tag to a specified revision of a spec.
         pub async fn tag_api_spec_revision(
             &mut self,
             request: impl tonic::IntoRequest<super::TagApiSpecRevisionRequest>,
@@ -1534,7 +1542,7 @@ pub mod registry_client {
             );
             self.inner.unary(request.into_request(), path, codec).await
         }
-        /// ListApiSpecRevisions lists all revisions of a spec.
+        /// Lists all revisions of a spec.
         /// Revisions are returned in descending order of revision creation time.
         pub async fn list_api_spec_revisions(
             &mut self,
@@ -1558,7 +1566,7 @@ pub mod registry_client {
             );
             self.inner.unary(request.into_request(), path, codec).await
         }
-        /// RollbackApiSpec sets the current revision to a specified prior revision.
+        /// Sets the current revision to a specified prior revision.
         /// Note that this creates a new revision with a new revision ID.
         pub async fn rollback_api_spec(
             &mut self,
@@ -1579,7 +1587,7 @@ pub mod registry_client {
             );
             self.inner.unary(request.into_request(), path, codec).await
         }
-        /// DeleteApiSpecRevision deletes a revision of a spec.
+        /// Deletes a revision of a spec.
         pub async fn delete_api_spec_revision(
             &mut self,
             request: impl tonic::IntoRequest<super::DeleteApiSpecRevisionRequest>,
@@ -1599,7 +1607,7 @@ pub mod registry_client {
             );
             self.inner.unary(request.into_request(), path, codec).await
         }
-        /// ListApiDeployments returns matching deployments.
+        /// Returns matching deployments.
         pub async fn list_api_deployments(
             &mut self,
             request: impl tonic::IntoRequest<super::ListApiDeploymentsRequest>,
@@ -1619,7 +1627,7 @@ pub mod registry_client {
             );
             self.inner.unary(request.into_request(), path, codec).await
         }
-        /// GetApiDeployment returns a specified deployment.
+        /// Returns a specified deployment.
         pub async fn get_api_deployment(
             &mut self,
             request: impl tonic::IntoRequest<super::GetApiDeploymentRequest>,
@@ -1639,7 +1647,7 @@ pub mod registry_client {
             );
             self.inner.unary(request.into_request(), path, codec).await
         }
-        /// CreateApiDeployment creates a specified deployment.
+        /// Creates a specified deployment.
         pub async fn create_api_deployment(
             &mut self,
             request: impl tonic::IntoRequest<super::CreateApiDeploymentRequest>,
@@ -1659,7 +1667,7 @@ pub mod registry_client {
             );
             self.inner.unary(request.into_request(), path, codec).await
         }
-        /// UpdateApiDeployment can be used to modify a specified deployment.
+        /// Used to modify a specified deployment.
         pub async fn update_api_deployment(
             &mut self,
             request: impl tonic::IntoRequest<super::UpdateApiDeploymentRequest>,
@@ -1679,8 +1687,8 @@ pub mod registry_client {
             );
             self.inner.unary(request.into_request(), path, codec).await
         }
-        /// DeleteApiDeployment removes a specified deployment, all revisions, and all
-        /// child resources (e.g. artifacts).
+        /// Removes a specified deployment, all revisions, and all
+        /// child resources (e.g., artifacts).
         pub async fn delete_api_deployment(
             &mut self,
             request: impl tonic::IntoRequest<super::DeleteApiDeploymentRequest>,
@@ -1700,7 +1708,7 @@ pub mod registry_client {
             );
             self.inner.unary(request.into_request(), path, codec).await
         }
-        /// TagApiDeploymentRevision adds a tag to a specified revision of a
+        /// Adds a tag to a specified revision of a
         /// deployment.
         pub async fn tag_api_deployment_revision(
             &mut self,
@@ -1721,7 +1729,7 @@ pub mod registry_client {
             );
             self.inner.unary(request.into_request(), path, codec).await
         }
-        /// ListApiDeploymentRevisions lists all revisions of a deployment.
+        /// Lists all revisions of a deployment.
         /// Revisions are returned in descending order of revision creation time.
         pub async fn list_api_deployment_revisions(
             &mut self,
@@ -1745,7 +1753,7 @@ pub mod registry_client {
             );
             self.inner.unary(request.into_request(), path, codec).await
         }
-        /// RollbackApiDeployment sets the current revision to a specified prior
+        /// Sets the current revision to a specified prior
         /// revision. Note that this creates a new revision with a new revision ID.
         pub async fn rollback_api_deployment(
             &mut self,
@@ -1766,7 +1774,7 @@ pub mod registry_client {
             );
             self.inner.unary(request.into_request(), path, codec).await
         }
-        /// DeleteApiDeploymentRevision deletes a revision of a deployment.
+        /// Deletes a revision of a deployment.
         pub async fn delete_api_deployment_revision(
             &mut self,
             request: impl tonic::IntoRequest<super::DeleteApiDeploymentRevisionRequest>,
@@ -1786,7 +1794,7 @@ pub mod registry_client {
             );
             self.inner.unary(request.into_request(), path, codec).await
         }
-        /// ListArtifacts returns matching artifacts.
+        /// Returns matching artifacts.
         pub async fn list_artifacts(
             &mut self,
             request: impl tonic::IntoRequest<super::ListArtifactsRequest>,
@@ -1806,7 +1814,7 @@ pub mod registry_client {
             );
             self.inner.unary(request.into_request(), path, codec).await
         }
-        /// GetArtifact returns a specified artifact.
+        /// Returns a specified artifact.
         pub async fn get_artifact(
             &mut self,
             request: impl tonic::IntoRequest<super::GetArtifactRequest>,
@@ -1826,7 +1834,7 @@ pub mod registry_client {
             );
             self.inner.unary(request.into_request(), path, codec).await
         }
-        /// GetArtifactContents returns the contents of a specified artifact.
+        /// Returns the contents of a specified artifact.
         /// If artifacts are stored with GZip compression, the default behavior
         /// is to return the artifact uncompressed (the mime_type response field
         /// indicates the exact format returned).
@@ -1852,7 +1860,7 @@ pub mod registry_client {
             );
             self.inner.unary(request.into_request(), path, codec).await
         }
-        /// CreateArtifact creates a specified artifact.
+        /// Creates a specified artifact.
         pub async fn create_artifact(
             &mut self,
             request: impl tonic::IntoRequest<super::CreateArtifactRequest>,
@@ -1872,7 +1880,7 @@ pub mod registry_client {
             );
             self.inner.unary(request.into_request(), path, codec).await
         }
-        /// ReplaceArtifact can be used to replace a specified artifact.
+        /// Used to replace a specified artifact.
         pub async fn replace_artifact(
             &mut self,
             request: impl tonic::IntoRequest<super::ReplaceArtifactRequest>,
@@ -1892,7 +1900,7 @@ pub mod registry_client {
             );
             self.inner.unary(request.into_request(), path, codec).await
         }
-        /// DeleteArtifact removes a specified artifact.
+        /// Removes a specified artifact.
         pub async fn delete_artifact(
             &mut self,
             request: impl tonic::IntoRequest<super::DeleteArtifactRequest>,
