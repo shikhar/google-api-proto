@@ -984,6 +984,34 @@ pub struct Container {
     #[prost(message, repeated, tag="4")]
     pub labels: ::prost::alloc::vec::Vec<Label>,
 }
+/// Represents database access information, such as queries.
+/// A database may be a sub-resource of an instance (as in the case of CloudSQL
+/// instances or Cloud Spanner instances), or the database instance itself.
+/// Some database resources may not have the full resource name populated
+/// because these resource types are not yet supported by Cloud Asset Inventory
+/// (e.g. CloudSQL databases).  In these cases only the display name will be
+/// provided.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct Database {
+    /// The full resource name of the database the user connected to, if it is
+    /// supported by CAI. (<https://google.aip.dev/122#full-resource-names>)
+    #[prost(string, tag="1")]
+    pub name: ::prost::alloc::string::String,
+    /// The human readable name of the database the user connected to.
+    #[prost(string, tag="2")]
+    pub display_name: ::prost::alloc::string::String,
+    /// The username used to connect to the DB. This may not necessarily be an IAM
+    /// principal, and has no required format.
+    #[prost(string, tag="3")]
+    pub user_name: ::prost::alloc::string::String,
+    /// The SQL statement associated with the relevant access.
+    #[prost(string, tag="4")]
+    pub query: ::prost::alloc::string::String,
+    /// The target usernames/roles/groups of a SQL privilege grant (not an IAM
+    /// policy change).
+    #[prost(string, repeated, tag="5")]
+    pub grantees: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
+}
 /// Kubernetes related attributes.
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct Kubernetes {
@@ -1286,8 +1314,8 @@ pub struct Finding {
     /// Output only. The most recent time this finding was muted or unmuted.
     #[prost(message, optional, tag="21")]
     pub mute_update_time: ::core::option::Option<::prost_types::Timestamp>,
-    /// Output only. Third party SIEM/SOAR fields within SCC, contains external system
-    /// information and external system finding fields.
+    /// Output only. Third party SIEM/SOAR fields within SCC, contains external
+    /// system information and external system finding fields.
     #[prost(btree_map="string, message", tag="22")]
     pub external_systems: ::prost::alloc::collections::BTreeMap<::prost::alloc::string::String, ExternalSystem>,
     /// MITRE ATT&CK tactics and techniques related to this finding.
@@ -1310,9 +1338,9 @@ pub struct Finding {
     /// Represents operating system processes associated with the Finding.
     #[prost(message, repeated, tag="30")]
     pub processes: ::prost::alloc::vec::Vec<Process>,
-    /// Output only. Map containing the point of contacts for the given finding. The key
-    /// represents the type of contact, while the value contains a list of all the
-    /// contacts that pertain. Please refer to:
+    /// Output only. Map containing the point of contacts for the given finding.
+    /// The key represents the type of contact, while the value contains a list of
+    /// all the contacts that pertain. Please refer to:
     /// <https://cloud.google.com/resource-manager/docs/managing-notification-contacts#notification-categories>
     ///
     ///     {
@@ -1352,6 +1380,9 @@ pub struct Finding {
     /// Kubernetes resources associated with the finding.
     #[prost(message, optional, tag="43")]
     pub kubernetes: ::core::option::Option<Kubernetes>,
+    /// Database associated with the finding.
+    #[prost(message, optional, tag="44")]
+    pub database: ::core::option::Option<Database>,
 }
 /// Nested message and enum types in `Finding`.
 pub mod finding {
