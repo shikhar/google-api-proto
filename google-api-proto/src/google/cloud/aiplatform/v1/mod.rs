@@ -4461,6 +4461,32 @@ pub mod pipeline_job {
         /// tasks will continue to completion.
         #[prost(enumeration="super::PipelineFailurePolicy", tag="4")]
         pub failure_policy: i32,
+        /// The runtime artifacts of the PipelineJob. The key will be the input
+        /// artifact name and the value would be one of the InputArtifact.
+        #[prost(btree_map="string, message", tag="5")]
+        pub input_artifacts: ::prost::alloc::collections::BTreeMap<::prost::alloc::string::String, runtime_config::InputArtifact>,
+    }
+    /// Nested message and enum types in `RuntimeConfig`.
+    pub mod runtime_config {
+        /// The type of an input artifact.
+        #[derive(Clone, PartialEq, ::prost::Message)]
+        pub struct InputArtifact {
+            #[prost(oneof="input_artifact::Kind", tags="1")]
+            pub kind: ::core::option::Option<input_artifact::Kind>,
+        }
+        /// Nested message and enum types in `InputArtifact`.
+        pub mod input_artifact {
+            #[derive(Clone, PartialEq, ::prost::Oneof)]
+            pub enum Kind {
+                /// Artifact resource id from MLMD. Which is the last portion of an
+                /// artifact resource
+                /// name(projects/{project}/locations/{location}/metadataStores/default/artifacts/{artifact_id}).
+                /// The artifact must stay within the same project, location and default
+                /// metadatastore as the pipeline.
+                #[prost(string, tag="1")]
+                ArtifactId(::prost::alloc::string::String),
+            }
+        }
     }
 }
 /// Pipeline template metadata if \[PipelineJob.template_uri][google.cloud.aiplatform.v1.PipelineJob.template_uri\] is from supported
@@ -15131,6 +15157,9 @@ pub struct ListPipelineJobsRequest {
     ///   * `start_time`
     #[prost(string, tag="6")]
     pub order_by: ::prost::alloc::string::String,
+    /// Mask specifying which fields to read.
+    #[prost(message, optional, tag="7")]
+    pub read_mask: ::core::option::Option<::prost_types::FieldMask>,
 }
 /// Response message for \[PipelineService.ListPipelineJobs][google.cloud.aiplatform.v1.PipelineService.ListPipelineJobs\]
 #[derive(Clone, PartialEq, ::prost::Message)]

@@ -420,6 +420,13 @@ pub mod mitre_attack {
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct Access {
     /// Associated email, such as "foo@google.com".
+    ///
+    /// The email address of the authenticated user (or service account on behalf
+    /// of third party principal) making the request. For third party identity
+    /// callers, the `principal_subject` field is populated instead of this field.
+    /// For privacy reasons, the principal email address is sometimes redacted.
+    /// For more information, see [Caller identities in audit
+    /// logs](<https://cloud.google.com/logging/docs/audit#user-id>).
     #[prost(string, tag="1")]
     pub principal_email: ::prost::alloc::string::String,
     /// Caller's IP address, such as "1.1.1.1".
@@ -439,6 +446,46 @@ pub struct Access {
     /// The method that the service account called, e.g. "SetIamPolicy".
     #[prost(string, tag="6")]
     pub method_name: ::prost::alloc::string::String,
+    /// A string representing the principal_subject associated with the identity.
+    /// As compared to `principal_email`, supports principals that aren't
+    /// associated with email addresses, such as third party principals. For most
+    /// identities, the format will be `principal://iam.googleapis.com/{identity
+    /// pool name}/subjects/{subject}` except for some GKE identities
+    /// (GKE_WORKLOAD, FREEFORM, GKE_HUB_WORKLOAD) that are still in the legacy
+    /// format `serviceAccount:{identity pool name}\[{subject}\]`
+    #[prost(string, tag="7")]
+    pub principal_subject: ::prost::alloc::string::String,
+    /// The name of the service account key used to create or exchange
+    /// credentials for authenticating the service account making the request.
+    /// This is a scheme-less URI full resource name. For example:
+    ///
+    /// "//iam.googleapis.com/projects/{PROJECT_ID}/serviceAccounts/{ACCOUNT}/keys/{key}"
+    ///
+    #[prost(string, tag="8")]
+    pub service_account_key_name: ::prost::alloc::string::String,
+    /// Identity delegation history of an authenticated service account that makes
+    /// the request. It contains information on the real authorities that try to
+    /// access GCP resources by delegating on a service account. When multiple
+    /// authorities are present, they are guaranteed to be sorted based on the
+    /// original ordering of the identity delegation events.
+    #[prost(message, repeated, tag="9")]
+    pub service_account_delegation_info: ::prost::alloc::vec::Vec<ServiceAccountDelegationInfo>,
+}
+/// Identity delegation history of an authenticated service account.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ServiceAccountDelegationInfo {
+    /// The email address of a Google account.
+    #[prost(string, tag="1")]
+    pub principal_email: ::prost::alloc::string::String,
+    /// A string representing the principal_subject associated with the identity.
+    /// As compared to `principal_email`, supports principals that aren't
+    /// associated with email addresses, such as third party principals. For most
+    /// identities, the format will be `principal://iam.googleapis.com/{identity
+    /// pool name}/subjects/{subject}` except for some GKE identities
+    /// (GKE_WORKLOAD, FREEFORM, GKE_HUB_WORKLOAD) that are still in the legacy
+    /// format `serviceAccount:{identity pool name}\[{subject}\]`
+    #[prost(string, tag="2")]
+    pub principal_subject: ::prost::alloc::string::String,
 }
 /// Represents a geographical location for a given access.
 #[derive(Clone, PartialEq, ::prost::Message)]
