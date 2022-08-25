@@ -287,6 +287,7 @@ pub mod ccc;
         feature = "google-cloud-tasks-v2beta3",
         feature = "google-cloud-texttospeech-v1",
         feature = "google-cloud-texttospeech-v1beta1",
+        feature = "google-cloud-timeseriesinsights-v1",
         feature = "google-cloud-tpu-v1",
         feature = "google-cloud-tpu-v2alpha1",
         feature = "google-cloud-translation-v3",

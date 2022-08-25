@@ -315,6 +315,7 @@ google-cloud-tasks-v2beta2 = ["google-api", "google-cloud", "google-iam-v1", "go
 google-cloud-tasks-v2beta3 = ["google-api", "google-cloud", "google-iam-v1", "google-rpc"]
 google-cloud-texttospeech-v1 = ["google-api", "google-cloud"]
 google-cloud-texttospeech-v1beta1 = ["google-api", "google-cloud"]
+google-cloud-timeseriesinsights-v1 = ["google-api", "google-cloud", "google-rpc"]
 google-cloud-tpu-v1 = ["google-api", "google-cloud", "google-longrunning"]
 google-cloud-tpu-v2alpha1 = ["google-api", "google-cloud", "google-longrunning"]
 google-cloud-translation-v3 = ["google-api", "google-cloud", "google-longrunning"]
