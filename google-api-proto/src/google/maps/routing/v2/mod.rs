@@ -72,13 +72,11 @@ pub enum Maneuver {
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct SpeedReadingInterval {
     /// The starting index of this interval in the polyline.
-    /// In JSON, when the index is 0, the field appears to be unpopulated.
-    #[prost(int32, tag="1")]
-    pub start_polyline_point_index: i32,
+    #[prost(int32, optional, tag="1")]
+    pub start_polyline_point_index: ::core::option::Option<i32>,
     /// The ending index of this interval in the polyline.
-    /// In JSON, when the index is 0, the field appears to be unpopulated.
-    #[prost(int32, tag="2")]
-    pub end_polyline_point_index: i32,
+    #[prost(int32, optional, tag="2")]
+    pub end_polyline_point_index: ::core::option::Option<i32>,
     /// Traffic speed in this interval.
     #[prost(enumeration="speed_reading_interval::Speed", tag="3")]
     pub speed: i32,
@@ -467,10 +465,24 @@ pub enum TollPass {
     /// India, HP state plate exemption.
     InLocalHpPlateExempt = 79,
     /// Mexico toll pass.
+    /// <https://iave.capufe.gob.mx/#/>
+    MxIave = 90,
+    /// Mexico
+    /// <https://www.pase.com.mx>
+    MxPase = 91,
+    /// Mexico
+    ///  <https://operadoravial.com/quick-pass/>
+    MxQuickpass = 93,
+    /// <http://appsh.chihuahua.gob.mx/transparencia/?doc=/ingresos/TelepeajeFormato4.pdf>
+    MxSistemaTelepeajeChihuahua = 89,
+    /// Mexico
     MxTagIave = 12,
     /// Mexico toll pass company. One of many operating in Mexico City. See
     /// additional details at <https://www.televia.com.mx.>
     MxTagTelevia = 13,
+    /// Mexico toll pass company. One of many operating in Mexico City.
+    /// <https://www.televia.com.mx>
+    MxTelevia = 92,
     /// Mexico toll pass. See additional details at
     /// <https://www.viapass.com.mx/viapass/web_home.aspx.>
     MxViapass = 14,
@@ -772,8 +784,7 @@ pub struct ComputeRoutesRequest {
     /// time that has already occurred, then the request fails.
     #[prost(message, optional, tag="7")]
     pub departure_time: ::core::option::Option<::prost_types::Timestamp>,
-    /// Optional. Specifies whether to calculate alternate routes in addition to
-    /// the route.
+    /// Optional. Specifies whether to calculate alternate routes in addition to the route.
     #[prost(bool, tag="8")]
     pub compute_alternative_routes: bool,
     /// Optional. A set of conditions to satisfy that affect the way routes are
@@ -816,8 +827,8 @@ pub struct ComputeRoutesResponse {
 /// ComputeRouteMatrix request message
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ComputeRouteMatrixRequest {
-    /// Required. Array of origins, which determines the rows of the response
-    /// matrix. Several size restrictions apply to the cardinality of origins and
+    /// Required. Array of origins, which determines the rows of the response matrix.
+    /// Several size restrictions apply to the cardinality of origins and
     /// destinations:
     ///
     /// * The number of elements (origins × destinations) must be no greater than
@@ -828,25 +839,24 @@ pub struct ComputeRouteMatrixRequest {
     /// must be no greater than 50.
     #[prost(message, repeated, tag="1")]
     pub origins: ::prost::alloc::vec::Vec<RouteMatrixOrigin>,
-    /// Required. Array of destinations, which determines the columns of the
-    /// response matrix.
+    /// Required. Array of destinations, which determines the columns of the response matrix.
     #[prost(message, repeated, tag="2")]
     pub destinations: ::prost::alloc::vec::Vec<RouteMatrixDestination>,
     /// Optional. Specifies the mode of transportation.
     #[prost(enumeration="RouteTravelMode", tag="3")]
     pub travel_mode: i32,
-    /// Optional. Specifies how to compute the route. The server attempts to use
-    /// the selected routing preference to compute the route. If the routing
-    /// preference results in an error or an extra long latency, an error is
-    /// returned. In the future, we might implement a fallback mechanism to use a
-    /// different option when the preferred option does not give a valid result.
-    /// You can specify this option only when the `travel_mode` is `DRIVE` or
-    /// `TWO_WHEELER`, otherwise the request fails.
+    /// Optional. Specifies how to compute the route. The server attempts to use the selected
+    /// routing preference to compute the route. If the routing preference results
+    /// in an error or an extra long latency, an error is returned. In the future,
+    /// we might implement a fallback mechanism to use a different option when the
+    /// preferred option does not give a valid result. You can specify this option
+    /// only when the `travel_mode` is `DRIVE` or `TWO_WHEELER`, otherwise the
+    /// request fails.
     #[prost(enumeration="RoutingPreference", tag="4")]
     pub routing_preference: i32,
-    /// Optional. The departure time. If you don't set this value, this defaults to
-    /// the time that you made the request. If you set this value to a time that
-    /// has already occurred, the request fails.
+    /// Optional. The departure time. If you don't set this value, this defaults to the time
+    /// that you made the request. If you set this value to a time that has already
+    /// occurred, the request fails.
     #[prost(message, optional, tag="5")]
     pub departure_time: ::core::option::Option<::prost_types::Timestamp>,
 }
@@ -872,11 +882,11 @@ pub struct RouteMatrixDestination {
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct RouteMatrixElement {
     /// Zero-based index of the origin in the request.
-    #[prost(int32, tag="1")]
-    pub origin_index: i32,
+    #[prost(int32, optional, tag="1")]
+    pub origin_index: ::core::option::Option<i32>,
     /// Zero-based index of the destination in the request.
-    #[prost(int32, tag="2")]
-    pub destination_index: i32,
+    #[prost(int32, optional, tag="2")]
+    pub destination_index: ::core::option::Option<i32>,
     /// Error status code for this element.
     #[prost(message, optional, tag="3")]
     pub status: ::core::option::Option<super::super::super::rpc::Status>,
