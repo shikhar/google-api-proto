@@ -968,6 +968,13 @@ pub enum TypeAnnotationCode {
     /// \[NUMERIC][google.spanner.v1.TypeCode.NUMERIC\] when a client interacts with PostgreSQL-enabled
     /// Spanner databases.
     PgNumeric = 2,
+    /// PostgreSQL compatible JSONB type. This annotation needs to be applied to
+    /// \[Type][google.spanner.v1.Type\] instances having \[JSON][google.spanner.v1.TypeCode.JSON\]
+    /// type code to specify that values of this type should be treated as
+    /// PostgreSQL JSONB values. Currently this annotation is always needed for
+    /// \[JSON][google.spanner.v1.TypeCode.JSON\] when a client interacts with PostgreSQL-enabled
+    /// Spanner databases.
+    PgJsonb = 3,
 }
 /// Results from \[Read][google.spanner.v1.Spanner.Read\] or
 /// \[ExecuteSql][google.spanner.v1.Spanner.ExecuteSql\].
