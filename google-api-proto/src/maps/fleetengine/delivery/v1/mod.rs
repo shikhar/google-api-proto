@@ -671,11 +671,8 @@ pub struct ListDeliveryVehiclesRequest {
     /// delivery vehicles are returned.
     ///
     /// Note that the only queries supported for `ListDeliveryVehicles` are
-    /// equality comparisons on vehicle attributes (`attributes.<key> = <value>`).
-    /// Comparison operators besides `=` (like `!=`, `>`, `<`, etc.) aren't
-    /// supported. Queries that include them are rejected. You can combine
-    /// attribute equality queries with **AND**, but not with any other boolean
-    /// operator.
+    /// on vehicle attributes (for example, `attributes.<key> = <value>` or
+    /// `attributes.<key1> = <value1> AND attributes.<key2> = <value2>`).
     #[prost(string, tag="6")]
     pub filter: ::prost::alloc::string::String,
     /// Optional. A filter that limits the search area to a rectangle defined by the

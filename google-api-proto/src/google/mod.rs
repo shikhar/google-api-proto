@@ -192,6 +192,7 @@ pub mod chromeos;
         feature = "google-cloud-domains-v1",
         feature = "google-cloud-domains-v1alpha2",
         feature = "google-cloud-domains-v1beta1",
+        feature = "google-cloud-edgecontainer-v1",
         feature = "google-cloud-essentialcontacts-v1",
         feature = "google-cloud-eventarc-publishing-v1",
         feature = "google-cloud-eventarc-v1",
