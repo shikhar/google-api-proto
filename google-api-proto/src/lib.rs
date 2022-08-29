@@ -363,6 +363,7 @@ pub mod ccc;
         feature = "google-iam-v1",
         feature = "google-iam-v1-logging",
         feature = "google-iam-v1beta",
+        feature = "google-iam-v2",
         feature = "google-iam-v2beta",
         feature = "google-identity-accesscontextmanager-type",
         feature = "google-identity-accesscontextmanager-v1",
