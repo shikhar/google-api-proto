@@ -400,15 +400,21 @@ pub struct RouteLegStep {
 pub enum RoutingPreference {
     /// No routing preference specified. Default to `TRAFFIC_UNAWARE`.
     Unspecified = 0,
-    /// Computes routes without taking traffic conditions into consideration.
-    /// Suitable when traffic conditions don't matter. Using this value produces
-    /// the lowest latency.
+    /// Computes routes without taking live traffic conditions into consideration.
+    /// Suitable when traffic conditions don't matter or are not applicable.
+    /// Using this value produces the lowest latency.
+    /// Note: For `RouteTravelMode` DRIVE and TWO_WHEELER choice of route and
+    /// duration are based on road network and average time-independent traffic
+    /// conditions. Results for a given request may vary over time due to changes
+    /// in the road network, updated average traffic conditions, and the
+    /// distributed nature of the service. Results may also vary between
+    /// nearly-equivalent routes at any time or frequency.
     TrafficUnaware = 1,
-    /// Calculates routes taking traffic conditions into consideration. In contrast
-    /// to `TRAFFIC_AWARE_OPTIMAL`, some optimizations are applied to significantly
-    /// reduce latency.
+    /// Calculates routes taking live traffic conditions into consideration.
+    /// In contrast to `TRAFFIC_AWARE_OPTIMAL`, some optimizations are applied to
+    /// significantly reduce latency.
     TrafficAware = 2,
-    /// Calculates the routes taking traffic conditions into consideration,
+    /// Calculates the routes taking live traffic conditions into consideration,
     /// without applying most performance optimizations. Using this value produces
     /// the highest latency.
     TrafficAwareOptimal = 3,
@@ -708,8 +714,7 @@ pub struct Waypoint {
     /// added to the `legs` array, but they do route the journey through the
     /// waypoint. You can only set this value on waypoints that are intermediates.
     /// The request fails if you set this field on terminal waypoints.
-    /// If
-    /// \[ComputeRoutesRequest][google.maps.routing.v2.ComputeRoutesRequest.optimize_waypoint_order\]
+    /// If `ComputeRoutesRequest.optimize_waypoint_order`
     /// is set to true then this field cannot be set to
     /// true; otherwise, the request fails.
     #[prost(bool, tag="3")]

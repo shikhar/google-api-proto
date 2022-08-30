@@ -8453,6 +8453,12 @@ pub struct BatchPredictionJob {
     /// training dataset.
     #[prost(message, optional, tag="26")]
     pub model_monitoring_config: ::core::option::Option<ModelMonitoringConfig>,
+    /// Get batch prediction job monitoring statistics.
+    #[prost(message, repeated, tag="31")]
+    pub model_monitoring_stats_anomalies: ::prost::alloc::vec::Vec<ModelMonitoringStatsAnomalies>,
+    /// Output only. The running status of the model monitoring pipeline.
+    #[prost(message, optional, tag="32")]
+    pub model_monitoring_status: ::core::option::Option<super::super::super::rpc::Status>,
 }
 /// Nested message and enum types in `BatchPredictionJob`.
 pub mod batch_prediction_job {
