@@ -1237,3 +1237,31 @@ pub mod web_security_scanner_client {
         }
     }
 }
+/// A ScanRunLog is an output-only proto used for Stackdriver customer logging.
+/// It is used for logs covering the start and end of scan pipelines.
+/// Other than an added summary, this is a subset of the ScanRun.
+/// Representation in logs is either a proto Struct, or converted to JSON.
+/// Next id: 9
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ScanRunLog {
+    /// Human friendly message about the event.
+    #[prost(string, tag="1")]
+    pub summary: ::prost::alloc::string::String,
+    /// The resource name of the ScanRun being logged.
+    #[prost(string, tag="2")]
+    pub name: ::prost::alloc::string::String,
+    /// The execution state of the ScanRun.
+    #[prost(enumeration="scan_run::ExecutionState", tag="3")]
+    pub execution_state: i32,
+    /// The result state of the ScanRun.
+    #[prost(enumeration="scan_run::ResultState", tag="4")]
+    pub result_state: i32,
+    #[prost(int64, tag="5")]
+    pub urls_crawled_count: i64,
+    #[prost(int64, tag="6")]
+    pub urls_tested_count: i64,
+    #[prost(bool, tag="7")]
+    pub has_findings: bool,
+    #[prost(message, optional, tag="8")]
+    pub error_trace: ::core::option::Option<ScanRunErrorTrace>,
+}
