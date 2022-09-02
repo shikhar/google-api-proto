@@ -663,6 +663,7 @@ pub struct AllocationPolicy {
     #[prost(enumeration="allocation_policy::ProvisioningModel", repeated, packed="false", tag="4")]
     pub provisioning_models: ::prost::alloc::vec::Vec<i32>,
     /// Email of the service account that VMs will run as.
+    #[deprecated]
     #[prost(string, tag="5")]
     pub service_account_email: ::prost::alloc::string::String,
     /// Service account that VMs will run as.
@@ -776,8 +777,6 @@ pub mod allocation_policy {
         /// The number of accelerators of this type.
         #[prost(int64, tag="2")]
         pub count: i64,
-        /// When true, Batch will install the GPU drivers.
-        /// This field will be ignored if specified.
         #[deprecated]
         #[prost(bool, tag="3")]
         pub install_gpu_drivers: bool,

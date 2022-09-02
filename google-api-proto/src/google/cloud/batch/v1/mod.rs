@@ -642,8 +642,6 @@ pub mod allocation_policy {
         /// The number of accelerators of this type.
         #[prost(int64, tag="2")]
         pub count: i64,
-        /// When true, Batch will install the GPU drivers.
-        /// This field will be ignored if specified.
         #[deprecated]
         #[prost(bool, tag="3")]
         pub install_gpu_drivers: bool,
