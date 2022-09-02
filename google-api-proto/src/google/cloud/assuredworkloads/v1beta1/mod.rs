@@ -247,6 +247,12 @@ pub struct Workload {
     /// In failure cases, user friendly error message is shown in SAA details page.
     #[prost(message, optional, tag="20")]
     pub saa_enrollment_response: ::core::option::Option<workload::SaaEnrollmentResponse>,
+    /// Output only. Urls for services which are compliant for this Assured Workload, but which
+    /// are currently disallowed by the ResourceUsageRestriction org policy.
+    /// Invoke RestrictAllowedResources endpoint to allow your project developers
+    /// to use these services in their environment."
+    #[prost(string, repeated, tag="24")]
+    pub compliant_but_disallowed_services: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
     /// Settings specific to the selected \[compliance_regime\]
     #[prost(oneof="workload::ComplianceRegimeSettings", tags="7, 8, 11, 12")]
     pub compliance_regime_settings: ::core::option::Option<workload::ComplianceRegimeSettings>,
@@ -640,8 +646,8 @@ pub mod assured_workloads_service_client {
             );
             self.inner.unary(request.into_request(), path, codec).await
         }
-        /// A request to analyze a hypothetical move of a source project or
-        /// project-based workload to a target (destination) folder-based workload.
+        /// Analyze if the source Assured Workloads can be moved to the target Assured
+        /// Workload
         pub async fn analyze_workload_move(
             &mut self,
             request: impl tonic::IntoRequest<super::AnalyzeWorkloadMoveRequest>,
