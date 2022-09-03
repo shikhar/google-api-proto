@@ -12,6 +12,34 @@ pub struct InfoType {
     #[prost(string, tag="2")]
     pub version: ::prost::alloc::string::String,
 }
+/// Score is a summary of all elements in the data profile.
+/// A higher number means more sensitive.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct SensitivityScore {
+    /// The score applied to the resource.
+    #[prost(enumeration="sensitivity_score::SensitivityScoreLevel", tag="1")]
+    pub score: i32,
+}
+/// Nested message and enum types in `SensitivityScore`.
+pub mod sensitivity_score {
+    /// Various score levels for resources.
+    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+    #[repr(i32)]
+    pub enum SensitivityScoreLevel {
+        /// Unused.
+        SensitivityScoreUnspecified = 0,
+        /// No sensitive information detected. Limited access.
+        SensitivityLow = 10,
+        /// Medium risk - PII, potentially sensitive data, or fields with free-text
+        /// data that are at higher risk of having intermittent sensitive data.
+        /// Consider limiting access.
+        SensitivityModerate = 20,
+        /// High risk – SPII may be present. Exfiltration of data may lead to user
+        /// data loss. Re-identification of users may be possible. Consider limiting
+        /// usage and or removing SPII.
+        SensitivityHigh = 30,
+    }
+}
 /// A reference to a StoredInfoType to use with scanning.
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct StoredType {
@@ -340,7 +368,7 @@ pub struct CloudStorageRegexFileSet {
     #[prost(string, repeated, tag="3")]
     pub exclude_regex: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
 }
-/// Options defining a file or a set of files within a Google Cloud Storage
+/// Options defining a file or a set of files within a Cloud Storage
 /// bucket.
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct CloudStorageOptions {
@@ -493,7 +521,7 @@ pub struct StorageConfig {
 /// Nested message and enum types in `StorageConfig`.
 pub mod storage_config {
     /// Configuration of the timespan of the items to include in scanning.
-    /// Currently only supported when inspecting Google Cloud Storage and BigQuery.
+    /// Currently only supported when inspecting Cloud Storage and BigQuery.
     #[derive(Clone, PartialEq, ::prost::Message)]
     pub struct TimespanConfig {
         /// Exclude files, tables, or rows older than this value.
@@ -507,7 +535,8 @@ pub mod storage_config {
         /// Specification of the field containing the timestamp of scanned items.
         /// Used for data sources like Datastore and BigQuery.
         ///
-        /// For BigQuery:
+        /// <b>For BigQuery</b>
+        ///
         /// If this value is not specified and the table was modified between the
         /// given start and end times, the entire table will be scanned. If this
         /// value is specified, then rows are filtered based on the given start and
@@ -516,17 +545,34 @@ pub mod storage_config {
         /// Valid data types of the provided BigQuery column are: `INTEGER`, `DATE`,
         /// `TIMESTAMP`, and `DATETIME`.
         ///
-        /// For Datastore:
+        /// If your BigQuery table is [partitioned at ingestion
+        /// time](<https://cloud.google.com/bigquery/docs/partitioned-tables#ingestion_time>),
+        /// you can use any of the following pseudo-columns as your timestamp field.
+        /// When used with Cloud DLP, these pseudo-column names are case sensitive.
+        ///
+        /// <ul>
+        /// <li><code>_PARTITIONTIME</code></li>
+        /// <li><code>_PARTITIONDATE</code></li>
+        /// <li><code>_PARTITION_LOAD_TIME</code></li>
+        /// </ul>
+        ///
+        /// <b>For Datastore</b>
+        ///
         /// If this value is specified, then entities are filtered based on the given
         /// start and end times. If an entity does not contain the provided timestamp
         /// property or contains empty or invalid values, then it is included.
         /// Valid data types of the provided timestamp property are: `TIMESTAMP`.
+        ///
+        /// See the
+        /// [known issue](<https://cloud.google.com/dlp/docs/known-issues#bq-timespan>)
+        /// related to this operation.
         #[prost(message, optional, tag="3")]
         pub timestamp_field: ::core::option::Option<super::FieldId>,
         /// When the job is started by a JobTrigger we will automatically figure out
         /// a valid start_time to avoid scanning files that have not been modified
         /// since the last time the JobTrigger executed. This will be based on the
-        /// time of the execution of the last run of the JobTrigger.
+        /// time of the execution of the last run of the JobTrigger or the timespan
+        /// end_time used in the last run of the JobTrigger.
         #[prost(bool, tag="4")]
         pub enable_auto_population_of_timespan_config: bool,
     }
@@ -535,7 +581,7 @@ pub mod storage_config {
         /// Google Cloud Datastore options.
         #[prost(message, tag="2")]
         DatastoreOptions(super::DatastoreOptions),
-        /// Google Cloud Storage options.
+        /// Cloud Storage options.
         #[prost(message, tag="3")]
         CloudStorageOptions(super::CloudStorageOptions),
         /// BigQuery options.
@@ -802,7 +848,7 @@ pub enum FileType {
     ///   xlsx, xlsm, xltx, xltm
     Excel = 12,
 }
-/// List of exclude infoTypes.
+/// List of excluded infoTypes.
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ExcludeInfoTypes {
     /// InfoType list in ExclusionRule rule drops a finding when it overlaps or
@@ -900,6 +946,12 @@ pub struct InspectConfig {
     pub min_likelihood: i32,
     /// Configuration to control the number of findings returned.
     /// This is not used for data profiling.
+    ///
+    /// When redacting sensitive data from images, finding limits don't apply. They
+    /// can cause unexpected or inconsistent results, where only some data is
+    /// redacted. Don't include finding limits in
+    /// \[RedactImage][google.privacy.dlp.v2.DlpService.RedactImage\]
+    /// requests. Otherwise, Cloud DLP returns an error.
     #[prost(message, optional, tag="3")]
     pub limits: ::core::option::Option<inspect_config::FindingLimits>,
     /// When true, a contextual quote from the data that triggered a finding is
@@ -928,6 +980,12 @@ pub struct InspectConfig {
 pub mod inspect_config {
     /// Configuration to control the number of findings returned for inspection.
     /// This is not used for de-identification or data profiling.
+    ///
+    /// When redacting sensitive data from images, finding limits don't apply. They
+    /// can cause unexpected or inconsistent results, where only some data is
+    /// redacted. Don't include finding limits in
+    /// \[RedactImage][google.privacy.dlp.v2.DlpService.RedactImage\]
+    /// requests. Otherwise, Cloud DLP returns an error.
     #[derive(Clone, PartialEq, ::prost::Message)]
     pub struct FindingLimits {
         /// Max number of findings that will be returned for each item scanned.
@@ -1173,17 +1231,17 @@ pub struct ContentLocation {
     /// * Datastore namespace: {namespace}
     ///
     /// Nested names could be absent if the embedded object has no string
-    /// identifier (for an example an image contained within a document).
+    /// identifier (for example, an image contained within a document).
     #[prost(string, tag="1")]
     pub container_name: ::prost::alloc::string::String,
-    /// Findings container modification timestamp, if applicable.
-    /// For Google Cloud Storage contains last file modification timestamp.
-    /// For BigQuery table contains last_modified_time property.
-    /// For Datastore - not populated.
+    /// Finding container modification timestamp, if applicable. For Cloud Storage,
+    /// this field contains the last file modification timestamp. For a BigQuery
+    /// table, this field contains the last_modified_time property. For Datastore,
+    /// this field isn't populated.
     #[prost(message, optional, tag="6")]
     pub container_timestamp: ::core::option::Option<::prost_types::Timestamp>,
-    /// Findings container version, if available
-    /// ("generation" for Google Cloud Storage).
+    /// Finding container version, if available
+    /// ("generation" for Cloud Storage).
     #[prost(string, tag="7")]
     pub container_version: ::prost::alloc::string::String,
     /// Type of the container within the file with location of the finding.
@@ -1274,7 +1332,7 @@ pub struct TableLocation {
 /// Examples of a container include a file, table, or database record.
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct Container {
-    /// Container type, for example BigQuery or Google Cloud Storage.
+    /// Container type, for example BigQuery or Cloud Storage.
     #[prost(string, tag="1")]
     pub r#type: ::prost::alloc::string::String,
     /// Project where the finding was found.
@@ -1284,33 +1342,35 @@ pub struct Container {
     /// A string representation of the full container name.
     /// Examples:
     /// - BigQuery: 'Project:DataSetId.TableId'
-    /// - Google Cloud Storage: 'gs://Bucket/folders/filename.txt'
+    /// - Cloud Storage: 'gs://Bucket/folders/filename.txt'
     #[prost(string, tag="3")]
     pub full_path: ::prost::alloc::string::String,
     /// The root of the container.
     /// Examples:
+    ///
     /// - For BigQuery table `project_id:dataset_id.table_id`, the root is
     ///  `dataset_id`
-    /// - For Google Cloud Storage file `gs://bucket/folder/filename.txt`, the root
+    /// - For Cloud Storage file `gs://bucket/folder/filename.txt`, the root
     ///  is `gs://bucket`
     #[prost(string, tag="4")]
     pub root_path: ::prost::alloc::string::String,
     /// The rest of the path after the root.
     /// Examples:
+    ///
     /// - For BigQuery table `project_id:dataset_id.table_id`, the relative path is
     ///  `table_id`
-    /// - Google Cloud Storage file `gs://bucket/folder/filename.txt`, the relative
+    /// - For Cloud Storage file `gs://bucket/folder/filename.txt`, the relative
     ///  path is `folder/filename.txt`
     #[prost(string, tag="5")]
     pub relative_path: ::prost::alloc::string::String,
-    /// Findings container modification timestamp, if applicable.
-    /// For Google Cloud Storage contains last file modification timestamp.
-    /// For BigQuery table contains last_modified_time property.
-    /// For Datastore - not populated.
+    /// Findings container modification timestamp, if applicable. For Cloud
+    /// Storage, this field contains the last file modification timestamp. For a
+    /// BigQuery table, this field contains the last_modified_time property. For
+    /// Datastore, this field isn't populated.
     #[prost(message, optional, tag="6")]
     pub update_time: ::core::option::Option<::prost_types::Timestamp>,
     /// Findings container version, if available
-    /// ("generation" for Google Cloud Storage).
+    /// ("generation" for Cloud Storage).
     #[prost(string, tag="7")]
     pub version: ::prost::alloc::string::String,
 }
@@ -1445,7 +1505,7 @@ pub struct RedactImageResponse {
     #[prost(message, optional, tag="3")]
     pub inspect_result: ::core::option::Option<InspectResult>,
 }
-/// Request to de-identify a list of items.
+/// Request to de-identify a ContentItem.
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct DeidentifyContentRequest {
     /// Parent resource name.
@@ -1566,7 +1626,7 @@ pub struct ReidentifyContentRequest {
     #[prost(string, tag="7")]
     pub location_id: ::prost::alloc::string::String,
 }
-/// Results of re-identifying a item.
+/// Results of re-identifying an item.
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ReidentifyContentResponse {
     /// The re-identified item.
@@ -1653,7 +1713,7 @@ pub mod output_storage_config {
         /// Basic schema including only `info_type`, `quote`, `certainty`, and
         /// `timestamp`.
         BasicColumns = 1,
-        /// Schema tailored to findings from scanning Google Cloud Storage.
+        /// Schema tailored to findings from scanning Cloud Storage.
         GcsColumns = 2,
         /// Schema tailored to findings from scanning Google Datastore.
         DatastoreColumns = 3,
@@ -1668,8 +1728,8 @@ pub mod output_storage_config {
         /// Store findings in an existing table or a new table in an existing
         /// dataset. If table_id is not set a new one will be generated
         /// for you with the following format:
-        /// dlp_googleapis_yyyy_mm_dd_\[dlp_job_id\]. Pacific timezone will be used for
-        /// generating the date details.
+        /// dlp_googleapis_yyyy_mm_dd_\[dlp_job_id\]. Pacific time zone will be used
+        /// for generating the date details.
         ///
         /// For Inspect, each column in an existing output table must have the same
         /// name, type, and mode of a field in the `Finding` object.
@@ -1768,6 +1828,9 @@ pub struct InfoTypeDescription {
     /// request.
     #[prost(string, tag="4")]
     pub description: ::prost::alloc::string::String,
+    /// A list of available versions for the infotype.
+    #[prost(message, repeated, tag="9")]
+    pub versions: ::prost::alloc::vec::Vec<VersionDescription>,
     /// The category of the infoType.
     #[prost(message, repeated, tag="10")]
     pub categories: ::prost::alloc::vec::Vec<InfoTypeCategory>,
@@ -1923,6 +1986,16 @@ pub mod info_type_category {
         #[prost(enumeration="TypeCategory", tag="3")]
         TypeCategory(i32),
     }
+}
+/// Details about each available version for an infotype.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct VersionDescription {
+    /// Name of the version
+    #[prost(string, tag="1")]
+    pub version: ::prost::alloc::string::String,
+    /// Description of the version.
+    #[prost(string, tag="2")]
+    pub description: ::prost::alloc::string::String,
 }
 /// Request for the list of infoTypes.
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -2480,10 +2553,10 @@ pub mod analyze_data_source_risk_details {
             #[prost(message, repeated, tag="1")]
             pub quasi_ids_values: ::prost::alloc::vec::Vec<super::super::Value>,
             /// The estimated probability that a given individual sharing these
-            /// quasi-identifier values is in the dataset. This value, typically called
-            /// δ, is the ratio between the number of records in the dataset with these
-            /// quasi-identifier values, and the total number of individuals (inside
-            /// *and* outside the dataset) with these quasi-identifier values.
+            /// quasi-identifier values is in the dataset. This value, typically
+            /// called δ, is the ratio between the number of records in the dataset
+            /// with these quasi-identifier values, and the total number of individuals
+            /// (inside *and* outside the dataset) with these quasi-identifier values.
             /// For example, if there are 15 individuals in the dataset who share the
             /// same quasi-identifier values, and an estimated 100 people in the entire
             /// population with these values, then δ is 0.15.
@@ -2655,7 +2728,7 @@ pub struct DeidentifyConfig {
     /// mode is `TransformationErrorHandling.ThrowError`.
     #[prost(message, optional, tag="3")]
     pub transformation_error_handling: ::core::option::Option<TransformationErrorHandling>,
-    #[prost(oneof="deidentify_config::Transformation", tags="1, 2")]
+    #[prost(oneof="deidentify_config::Transformation", tags="1, 2, 4")]
     pub transformation: ::core::option::Option<deidentify_config::Transformation>,
 }
 /// Nested message and enum types in `DeidentifyConfig`.
@@ -2671,6 +2744,62 @@ pub mod deidentify_config {
         /// a column within a table.
         #[prost(message, tag="2")]
         RecordTransformations(super::RecordTransformations),
+        /// Treat the dataset as an image and redact.
+        #[prost(message, tag="4")]
+        ImageTransformations(super::ImageTransformations),
+    }
+}
+/// A type of transformation that is applied over images.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ImageTransformations {
+    #[prost(message, repeated, tag="2")]
+    pub transforms: ::prost::alloc::vec::Vec<image_transformations::ImageTransformation>,
+}
+/// Nested message and enum types in `ImageTransformations`.
+pub mod image_transformations {
+    /// Configuration for determining how redaction of images should occur.
+    #[derive(Clone, PartialEq, ::prost::Message)]
+    pub struct ImageTransformation {
+        /// The color to use when redacting content from an image. If not
+        /// specified, the default is black.
+        #[prost(message, optional, tag="3")]
+        pub redaction_color: ::core::option::Option<super::Color>,
+        #[prost(oneof="image_transformation::Target", tags="4, 5, 6")]
+        pub target: ::core::option::Option<image_transformation::Target>,
+    }
+    /// Nested message and enum types in `ImageTransformation`.
+    pub mod image_transformation {
+        /// Apply transformation to the selected info_types.
+        #[derive(Clone, PartialEq, ::prost::Message)]
+        pub struct SelectedInfoTypes {
+            /// Required. InfoTypes to apply the transformation to. Required. Provided InfoType
+            /// must be unique within the ImageTransformations message.
+            #[prost(message, repeated, tag="5")]
+            pub info_types: ::prost::alloc::vec::Vec<super::super::InfoType>,
+        }
+        /// Apply transformation to all findings.
+        #[derive(Clone, PartialEq, ::prost::Message)]
+        pub struct AllInfoTypes {
+        }
+        /// Apply to all text.
+        #[derive(Clone, PartialEq, ::prost::Message)]
+        pub struct AllText {
+        }
+        #[derive(Clone, PartialEq, ::prost::Oneof)]
+        pub enum Target {
+            /// Apply transformation to the selected info_types.
+            #[prost(message, tag="4")]
+            SelectedInfoTypes(SelectedInfoTypes),
+            /// Apply transformation to all findings not specified in other
+            /// ImageTransformation's selected_info_types. Only one instance is allowed
+            /// within the ImageTransformations message.
+            #[prost(message, tag="5")]
+            AllInfoTypes(AllInfoTypes),
+            /// Apply transformation to all text that doesn't match an infoType. Only
+            /// one instance is allowed within the ImageTransformations message.
+            #[prost(message, tag="6")]
+            AllText(AllText),
+        }
     }
 }
 /// How to handle transformation errors during de-identification. A
@@ -2863,7 +2992,7 @@ pub struct CryptoDeterministicConfig {
     /// plaintext would be used as is for encryption.
     ///
     /// Note that case (1) is expected when an `InfoTypeTransformation` is
-    /// applied to both structured and non-structured `ContentItem`s.
+    /// applied to both structured and unstructured `ContentItem`s.
     #[prost(message, optional, tag="3")]
     pub context: ::core::option::Option<FieldId>,
 }
@@ -2910,7 +3039,7 @@ pub struct CharsToIgnore {
 }
 /// Nested message and enum types in `CharsToIgnore`.
 pub mod chars_to_ignore {
-    /// Convenience enum for indication common characters to not transform.
+    /// Convenience enum for indicating common characters to not transform.
     #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
     #[repr(i32)]
     pub enum CommonCharsToIgnore {
@@ -2954,6 +3083,21 @@ pub struct CharacterMaskConfig {
     pub masking_character: ::prost::alloc::string::String,
     /// Number of characters to mask. If not set, all matching chars will be
     /// masked. Skipped characters do not count towards this tally.
+    ///
+    /// If `number_to_mask` is negative, this denotes inverse masking. Cloud DLP
+    /// masks all but a number of characters.
+    /// For example, suppose you have the following values:
+    ///
+    /// - `masking_character` is `*`
+    /// - `number_to_mask` is `-4`
+    /// - `reverse_order` is `false`
+    /// - `CharsToIgnore` includes `-`
+    /// - Input string is `1234-5678-9012-3456`
+    ///
+    /// The resulting de-identified string is
+    /// `****-****-****-3456`. Cloud DLP masks all but the last four characters.
+    /// If `reverse_order` is `true`, all but the first four characters are masked
+    /// as `1234-****-****-****`.
     #[prost(int32, tag="2")]
     pub number_to_mask: i32,
     /// Mask characters in reverse order. For example, if `masking_character` is
@@ -3067,7 +3211,7 @@ pub struct CryptoReplaceFfxFpeConfig {
     /// a default tweak will be used.
     ///
     /// Note that case (1) is expected when an `InfoTypeTransformation` is
-    /// applied to both structured and non-structured `ContentItem`s.
+    /// applied to both structured and unstructured `ContentItem`s.
     /// Currently, the referenced field may be of value type integer or string.
     ///
     /// The tweak is constructed as a sequence of bytes in big endian byte order
@@ -3112,7 +3256,7 @@ pub struct CryptoReplaceFfxFpeConfig {
 pub mod crypto_replace_ffx_fpe_config {
     /// These are commonly used subsets of the alphabet that the FFX mode
     /// natively supports. In the algorithm, the alphabet is selected using
-    /// the "radix". Therefore each corresponds to particular radix.
+    /// the "radix". Therefore each corresponds to a particular radix.
     #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
     #[repr(i32)]
     pub enum FfxCommonNativeAlphabet {
@@ -3391,7 +3535,7 @@ pub mod record_condition {
         #[prost(message, repeated, tag="1")]
         pub conditions: ::prost::alloc::vec::Vec<Condition>,
     }
-    /// An expression, consisting or an operator and conditions.
+    /// An expression, consisting of an operator and conditions.
     #[derive(Clone, PartialEq, ::prost::Message)]
     pub struct Expressions {
         /// The operator to apply to the result of conditions. Default and currently
@@ -3490,6 +3634,139 @@ pub mod transformation_summary {
         Error = 2,
     }
 }
+/// A flattened description of a `PrimitiveTransformation` or
+/// `RecordSuppression`.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct TransformationDescription {
+    /// The transformation type.
+    #[prost(enumeration="TransformationType", tag="1")]
+    pub r#type: i32,
+    /// A description of the transformation. This is empty for a
+    /// RECORD_SUPPRESSION, or is the output of calling toString() on the
+    /// `PrimitiveTransformation` protocol buffer message for any other type of
+    /// transformation.
+    #[prost(string, tag="2")]
+    pub description: ::prost::alloc::string::String,
+    /// A human-readable string representation of the `RecordCondition`
+    /// corresponding to this transformation. Set if a `RecordCondition` was used
+    /// to determine whether or not to apply this transformation.
+    ///
+    /// Examples:
+    ///     * (age_field > 85)
+    ///     * (age_field <= 18)
+    ///     * (zip_field exists)
+    ///     * (zip_field == 01234) && (city_field != "Springville")
+    ///     * (zip_field == 01234) && (age_field <= 18) && (city_field exists)
+    #[prost(string, tag="3")]
+    pub condition: ::prost::alloc::string::String,
+    /// Set if the transformation was limited to a specific `InfoType`.
+    #[prost(message, optional, tag="4")]
+    pub info_type: ::core::option::Option<InfoType>,
+}
+/// Details about a single transformation. This object contains a description of
+/// the transformation, information about whether the transformation was
+/// successfully applied, and the precise location where the transformation
+/// occurred. These details are stored in a user-specified BigQuery table.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct TransformationDetails {
+    /// The name of the job that completed the transformation.
+    #[prost(string, tag="1")]
+    pub resource_name: ::prost::alloc::string::String,
+    /// The top level name of the container where the transformation is located
+    /// (this will be the source file name or table name).
+    #[prost(string, tag="2")]
+    pub container_name: ::prost::alloc::string::String,
+    /// Description of transformation. This would only contain more than one
+    /// element if there were multiple matching transformations and which one to
+    /// apply was ambiguous. Not set for states that contain no transformation,
+    /// currently only state that contains no transformation is
+    /// TransformationResultStateType.METADATA_UNRETRIEVABLE.
+    #[prost(message, repeated, tag="3")]
+    pub transformation: ::prost::alloc::vec::Vec<TransformationDescription>,
+    /// Status of the transformation, if transformation was not successful, this
+    /// will specify what caused it to fail, otherwise it will show that the
+    /// transformation was successful.
+    #[prost(message, optional, tag="4")]
+    pub status_details: ::core::option::Option<TransformationResultStatus>,
+    /// The number of bytes that were transformed. If transformation was
+    /// unsuccessful or did not take place because there was no content to
+    /// transform, this will be zero.
+    #[prost(int64, tag="5")]
+    pub transformed_bytes: i64,
+    /// The precise location of the transformed content in the original container.
+    #[prost(message, optional, tag="6")]
+    pub transformation_location: ::core::option::Option<TransformationLocation>,
+}
+/// Specifies the location of a transformation.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct TransformationLocation {
+    /// Information about the functionality of the container where this finding
+    /// occurred, if available.
+    #[prost(enumeration="TransformationContainerType", tag="3")]
+    pub container_type: i32,
+    #[prost(oneof="transformation_location::LocationType", tags="1, 2")]
+    pub location_type: ::core::option::Option<transformation_location::LocationType>,
+}
+/// Nested message and enum types in `TransformationLocation`.
+pub mod transformation_location {
+    #[derive(Clone, PartialEq, ::prost::Oneof)]
+    pub enum LocationType {
+        /// For infotype transformations, link to the corresponding findings ID so
+        /// that location information does not need to be duplicated. Each findings
+        /// ID correlates to an entry in the findings output table, this table only
+        /// gets created when users specify to save findings (add the save findings
+        /// action to the request).
+        #[prost(string, tag="1")]
+        FindingId(::prost::alloc::string::String),
+        /// For record transformations, provide a field and container information.
+        #[prost(message, tag="2")]
+        RecordTransformation(super::RecordTransformation),
+    }
+}
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct RecordTransformation {
+    /// For record transformations, provide a field.
+    #[prost(message, optional, tag="1")]
+    pub field_id: ::core::option::Option<FieldId>,
+    /// Findings container modification timestamp, if applicable.
+    #[prost(message, optional, tag="2")]
+    pub container_timestamp: ::core::option::Option<::prost_types::Timestamp>,
+    /// Container version, if available ("generation" for Cloud Storage).
+    #[prost(string, tag="3")]
+    pub container_version: ::prost::alloc::string::String,
+}
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct TransformationResultStatus {
+    /// Transformation result status type, this will be either SUCCESS, or it will
+    /// be the reason for why the transformation was not completely successful.
+    #[prost(enumeration="TransformationResultStatusType", tag="1")]
+    pub result_status_type: i32,
+    /// Detailed error codes and messages
+    #[prost(message, optional, tag="2")]
+    pub details: ::core::option::Option<super::super::super::rpc::Status>,
+}
+/// Config for storing transformation details.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct TransformationDetailsStorageConfig {
+    /// Location to store the transformation summary.
+    #[prost(oneof="transformation_details_storage_config::Type", tags="1")]
+    pub r#type: ::core::option::Option<transformation_details_storage_config::Type>,
+}
+/// Nested message and enum types in `TransformationDetailsStorageConfig`.
+pub mod transformation_details_storage_config {
+    /// Location to store the transformation summary.
+    #[derive(Clone, PartialEq, ::prost::Oneof)]
+    pub enum Type {
+        /// The BigQuery table in which to store the output. This may be an existing
+        /// table or in a new table in an existing dataset.
+        /// If table_id is not set a new one will be generated for you with the
+        /// following format:
+        /// dlp_googleapis_transformation_details_yyyy_mm_dd_\[dlp_job_id\]. Pacific
+        /// time zone will be used for generating the date details.
+        #[prost(message, tag="1")]
+        Table(super::BigQueryTable),
+    }
+}
 /// Schedule for inspect job triggers.
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct Schedule {
@@ -3500,7 +3777,7 @@ pub struct Schedule {
 pub mod schedule {
     #[derive(Clone, PartialEq, ::prost::Oneof)]
     pub enum Option {
-        /// With this option a job is started a regular periodic basis. For
+        /// With this option a job is started on a regular periodic basis. For
         /// example: every day (86400 seconds).
         ///
         /// A scheduled start time will be skipped if the previous
@@ -3674,7 +3951,7 @@ pub mod job_trigger {
 /// See <https://cloud.google.com/dlp/docs/concepts-actions> to learn more.
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct Action {
-    #[prost(oneof="action::Action", tags="1, 2, 3, 5, 8, 9")]
+    #[prost(oneof="action::Action", tags="1, 2, 3, 5, 7, 8, 9")]
     pub action: ::core::option::Option<action::Action>,
 }
 /// Nested message and enum types in `Action`.
@@ -3689,7 +3966,7 @@ pub mod action {
         #[prost(message, optional, tag="1")]
         pub output_config: ::core::option::Option<super::OutputStorageConfig>,
     }
-    /// Publish a message into given Pub/Sub topic when DlpJob has completed. The
+    /// Publish a message into a given Pub/Sub topic when DlpJob has completed. The
     /// message contains a single field, `DlpJobName`, which is equal to the
     /// finished job's
     /// \[`DlpJob.name`\](<https://cloud.google.com/dlp/docs/reference/rest/v2/projects.dlpJobs#DlpJob>).
@@ -3708,29 +3985,93 @@ pub mod action {
     /// This action is only available for projects which are parts of
     /// an organization and whitelisted for the alpha Cloud Security Command
     /// Center.
-    /// The action will publish count of finding instances and their info types.
-    /// The summary of findings will be persisted in CSCC and are governed by CSCC
-    /// service-specific policy, see <https://cloud.google.com/terms/service-terms>
-    /// Only a single instance of this action can be specified.
-    /// Compatible with: Inspect
+    /// The action will publish the count of finding instances and their info
+    /// types. The summary of findings will be persisted in CSCC and are governed
+    /// by CSCC service-specific policy, see
+    /// <https://cloud.google.com/terms/service-terms> Only a single instance of this
+    /// action can be specified. Compatible with: Inspect
     #[derive(Clone, PartialEq, ::prost::Message)]
     pub struct PublishSummaryToCscc {
     }
-    /// Publish findings of a DlpJob to Data Catalog. Labels summarizing the
-    /// results of the DlpJob will be applied to the entry for the resource scanned
-    /// in Data Catalog. Any labels previously written by another DlpJob will
-    /// be deleted. InfoType naming patterns are strictly enforced when using this
-    /// feature. Note that the findings will be persisted in Data Catalog
-    /// storage and are governed by Data Catalog service-specific policy, see
-    /// <https://cloud.google.com/terms/service-terms>
-    /// Only a single instance of this action can be specified and only allowed if
-    /// all resources being scanned are BigQuery tables.
+    /// Publish findings of a DlpJob to Data Catalog. In Data Catalog, tag
+    /// templates are applied to the resource that Cloud DLP scanned. Data
+    /// Catalog tag templates are stored in the same project and region where the
+    /// BigQuery table exists. For Cloud DLP to create and apply the tag template,
+    /// the Cloud DLP service agent must have the
+    /// `roles/datacatalog.tagTemplateOwner` permission on the project. The tag
+    /// template contains fields summarizing the results of the DlpJob. Any field
+    /// values previously written by another DlpJob are deleted. [InfoType naming
+    /// patterns]\[google.privacy.dlp.v2.InfoType\] are strictly enforced when using
+    /// this feature.
+    ///
+    /// Findings are persisted in Data Catalog storage and are governed by
+    /// service-specific policies for Data Catalog. For more information, see
+    /// [Service Specific Terms](<https://cloud.google.com/terms/service-terms>).
+    ///
+    /// Only a single instance of this action can be specified. This action is
+    /// allowed only if all resources being scanned are BigQuery tables.
     /// Compatible with: Inspect
     #[derive(Clone, PartialEq, ::prost::Message)]
     pub struct PublishFindingsToCloudDataCatalog {
     }
-    /// Enable email notification to project owners and editors on jobs's
-    /// completion/failure.
+    /// Create a de-identified copy of the requested table or files.
+    ///
+    /// A TransformationDetail will be created for each transformation.
+    ///
+    /// If any rows in BigQuery are skipped during de-identification
+    /// (transformation errors or row size exceeds BigQuery insert API limits) they
+    /// are placed in the failure output table. If the original row exceeds
+    /// the BigQuery insert API limit it will be truncated when written to the
+    /// failure output table. The failure output table can be set in the
+    /// action.deidentify.output.big_query_output.deidentified_failure_output_table
+    /// field, if no table is set, a table will be automatically created in the
+    /// same project and dataset as the original table.
+    ///
+    /// Compatible with: Inspect
+    #[derive(Clone, PartialEq, ::prost::Message)]
+    pub struct Deidentify {
+        /// User specified deidentify templates and configs for structured,
+        /// unstructured, and image files.
+        #[prost(message, optional, tag="7")]
+        pub transformation_config: ::core::option::Option<super::TransformationConfig>,
+        /// Config for storing transformation details. This is separate from the
+        /// de-identified content, and contains metadata about the successful
+        /// transformations and/or failures that occurred while de-identifying. This
+        /// needs to be set in order for users to access information about the status
+        /// of each transformation (see
+        /// \[TransformationDetails][google.privacy.dlp.v2.TransformationDetails\]
+        /// message for more information about what is noted).
+        #[prost(message, optional, tag="3")]
+        pub transformation_details_storage_config: ::core::option::Option<super::TransformationDetailsStorageConfig>,
+        /// List of user-specified file type groups to transform. If specified, only
+        /// the files with these filetypes will be transformed. If empty, all
+        /// supported files will be transformed. Supported types may be automatically
+        /// added over time. If a file type is set in this field that isn't supported
+        /// by the Deidentify action then the job will fail and will not be
+        /// successfully created/started. Currently the only filetypes supported are:
+        /// IMAGES, TEXT_FILES, CSV, TSV.
+        #[prost(enumeration="super::FileType", repeated, tag="8")]
+        pub file_types_to_transform: ::prost::alloc::vec::Vec<i32>,
+        #[prost(oneof="deidentify::Output", tags="9")]
+        pub output: ::core::option::Option<deidentify::Output>,
+    }
+    /// Nested message and enum types in `Deidentify`.
+    pub mod deidentify {
+        #[derive(Clone, PartialEq, ::prost::Oneof)]
+        pub enum Output {
+            /// Required. User settable Cloud Storage bucket and folders to store de-identified
+            /// files. This field must be set for cloud storage deidentification. The
+            /// output Cloud Storage bucket must be different from the input bucket.
+            /// De-identified files will overwrite files in the output path.
+            ///
+            /// Form of: gs://bucket/folder/ or gs://bucket
+            #[prost(string, tag="9")]
+            CloudStorageOutput(::prost::alloc::string::String),
+        }
+    }
+    /// Sends an email when the job completes. The email goes to IAM project owners
+    /// and technical [Essential
+    /// Contacts](<https://cloud.google.com/resource-manager/docs/managing-notification-contacts>).
     #[derive(Clone, PartialEq, ::prost::Message)]
     pub struct JobNotificationEmails {
     }
@@ -3746,7 +4087,7 @@ pub mod action {
         /// Save resulting findings in a provided location.
         #[prost(message, tag="1")]
         SaveFindings(SaveFindings),
-        /// Publish a notification to a pubsub topic.
+        /// Publish a notification to a Pub/Sub topic.
         #[prost(message, tag="2")]
         PubSub(PublishToPubSub),
         /// Publish summary to Cloud Security Command Center (Alpha).
@@ -3755,6 +4096,9 @@ pub mod action {
         /// Publish findings to Cloud Datahub.
         #[prost(message, tag="5")]
         PublishFindingsToCloudDataCatalog(PublishFindingsToCloudDataCatalog),
+        /// Create a de-identified copy of the input data.
+        #[prost(message, tag="7")]
+        Deidentify(Deidentify),
         /// Enable email notification for project owners and editors on job's
         /// completion/failure.
         #[prost(message, tag="8")]
@@ -3763,6 +4107,35 @@ pub mod action {
         #[prost(message, tag="9")]
         PublishToStackdriver(PublishToStackdriver),
     }
+}
+/// User specified templates and configs for how to deidentify structured,
+/// unstructures, and image files. User must provide either a unstructured
+/// deidentify template or at least one redact image config.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct TransformationConfig {
+    /// De-identify template.
+    /// If this template is specified, it will serve as the default de-identify
+    /// template. This template cannot contain `record_transformations` since it
+    /// can be used for unstructured content such as free-form text files. If this
+    /// template is not set, a default `ReplaceWithInfoTypeConfig` will be used to
+    /// de-identify unstructured content.
+    #[prost(string, tag="1")]
+    pub deidentify_template: ::prost::alloc::string::String,
+    /// Structured de-identify template.
+    /// If this template is specified, it will serve as the de-identify template
+    /// for structured content such as delimited files and tables. If this template
+    /// is not set but the `deidentify_template` is set, then `deidentify_template`
+    /// will also apply to the structured content. If neither template is set, a
+    /// default `ReplaceWithInfoTypeConfig` will be used to de-identify structured
+    /// content.
+    #[prost(string, tag="2")]
+    pub structured_deidentify_template: ::prost::alloc::string::String,
+    /// Image redact template.
+    /// If this template is specified, it will serve as the de-identify template
+    /// for images. If this template is not set, all findings in the image will be
+    /// redacted with a black box.
+    #[prost(string, tag="4")]
+    pub image_redact_template: ::prost::alloc::string::String,
 }
 /// Request message for CreateInspectTemplate.
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -3855,7 +4228,7 @@ pub struct ListInspectTemplatesRequest {
     /// to `ListInspectTemplates`.
     #[prost(string, tag="2")]
     pub page_token: ::prost::alloc::string::String,
-    /// Size of the page, can be limited by server. If zero server returns
+    /// Size of the page, can be limited by the server. If zero server returns
     /// a page of max size 100.
     #[prost(int32, tag="3")]
     pub page_size: i32,
@@ -3868,10 +4241,10 @@ pub struct ListInspectTemplatesRequest {
     ///
     /// Supported fields are:
     ///
-    /// - `create_time`: corresponds to time the template was created.
-    /// - `update_time`: corresponds to time the template was last updated.
-    /// - `name`: corresponds to template's name.
-    /// - `display_name`: corresponds to template's display name.
+    /// - `create_time`: corresponds to the time the template was created.
+    /// - `update_time`: corresponds to the time the template was last updated.
+    /// - `name`: corresponds to the template's name.
+    /// - `display_name`: corresponds to the template's display name.
     #[prost(string, tag="4")]
     pub order_by: ::prost::alloc::string::String,
     /// Deprecated. This field has no effect.
@@ -4050,11 +4423,11 @@ pub struct ListJobTriggersRequest {
     ///
     /// Supported fields are:
     ///
-    /// - `create_time`: corresponds to time the JobTrigger was created.
-    /// - `update_time`: corresponds to time the JobTrigger was last updated.
+    /// - `create_time`: corresponds to the time the JobTrigger was created.
+    /// - `update_time`: corresponds to the time the JobTrigger was last updated.
     /// - `last_run_time`: corresponds to the last time the JobTrigger ran.
-    /// - `name`: corresponds to JobTrigger's name.
-    /// - `display_name`: corresponds to JobTrigger's display name.
+    /// - `name`: corresponds to the JobTrigger's name.
+    /// - `display_name`: corresponds to the JobTrigger's display name.
     /// - `status`: corresponds to JobTrigger's status.
     #[prost(string, tag="4")]
     pub order_by: ::prost::alloc::string::String,
@@ -4319,13 +4692,13 @@ pub mod dlp_job {
         Running = 2,
         /// The job is no longer running.
         Done = 3,
-        /// The job was canceled before it could complete.
+        /// The job was canceled before it could be completed.
         Canceled = 4,
         /// The job had an error and did not complete.
         Failed = 5,
         /// The job is currently accepting findings via hybridInspect.
         /// A hybrid job in ACTIVE state may continue to have findings added to it
-        /// through calling of hybridInspect. After the job has finished no more
+        /// through the calling of hybridInspect. After the job has finished no more
         /// calls to hybridInspect may be made. ACTIVE jobs can transition to DONE.
         Active = 6,
     }
@@ -4378,13 +4751,13 @@ pub struct ListDlpJobsRequest {
     /// * Supported fields/values for inspect jobs:
     ///     - `state` - PENDING|RUNNING|CANCELED|FINISHED|FAILED
     ///     - `inspected_storage` - DATASTORE|CLOUD_STORAGE|BIGQUERY
-    ///     - `trigger_name` - The resource name of the trigger that created job.
-    ///     - 'end_time` - Corresponds to time the job finished.
-    ///     - 'start_time` - Corresponds to time the job finished.
+    ///     - `trigger_name` - The name of the trigger that created the job.
+    ///     - 'end_time` - Corresponds to the time the job finished.
+    ///     - 'start_time` - Corresponds to the time the job finished.
     /// * Supported fields for risk analysis jobs:
     ///     - `state` - RUNNING|CANCELED|FINISHED|FAILED
-    ///     - 'end_time` - Corresponds to time the job finished.
-    ///     - 'start_time` - Corresponds to time the job finished.
+    ///     - 'end_time` - Corresponds to the time the job finished.
+    ///     - 'start_time` - Corresponds to the time the job finished.
     /// * The operator must be `=` or `!=`.
     ///
     /// Examples:
@@ -4415,9 +4788,9 @@ pub struct ListDlpJobsRequest {
     ///
     /// Supported fields are:
     ///
-    /// - `create_time`: corresponds to time the job was created.
-    /// - `end_time`: corresponds to time the job ended.
-    /// - `name`: corresponds to job's name.
+    /// - `create_time`: corresponds to the time the job was created.
+    /// - `end_time`: corresponds to the time the job ended.
+    /// - `name`: corresponds to the job's name.
     /// - `state`: corresponds to `state`
     #[prost(string, tag="6")]
     pub order_by: ::prost::alloc::string::String,
@@ -4547,7 +4920,7 @@ pub struct ListDeidentifyTemplatesRequest {
     /// to `ListDeidentifyTemplates`.
     #[prost(string, tag="2")]
     pub page_token: ::prost::alloc::string::String,
-    /// Size of the page, can be limited by server. If zero server returns
+    /// Size of the page, can be limited by the server. If zero server returns
     /// a page of max size 100.
     #[prost(int32, tag="3")]
     pub page_size: i32,
@@ -4560,10 +4933,10 @@ pub struct ListDeidentifyTemplatesRequest {
     ///
     /// Supported fields are:
     ///
-    /// - `create_time`: corresponds to time the template was created.
-    /// - `update_time`: corresponds to time the template was last updated.
-    /// - `name`: corresponds to template's name.
-    /// - `display_name`: corresponds to template's display name.
+    /// - `create_time`: corresponds to the time the template was created.
+    /// - `update_time`: corresponds to the time the template was last updated.
+    /// - `name`: corresponds to the template's name.
+    /// - `display_name`: corresponds to the template's display name.
     #[prost(string, tag="4")]
     pub order_by: ::prost::alloc::string::String,
     /// Deprecated. This field has no effect.
@@ -4594,12 +4967,12 @@ pub struct DeleteDeidentifyTemplateRequest {
 /// Configuration for a custom dictionary created from a data source of any size
 /// up to the maximum size defined in the
 /// \[limits\](<https://cloud.google.com/dlp/limits>) page. The artifacts of
-/// dictionary creation are stored in the specified Google Cloud Storage
+/// dictionary creation are stored in the specified Cloud Storage
 /// location. Consider using `CustomInfoType.Dictionary` for smaller dictionaries
 /// that satisfy the size requirements.
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct LargeCustomDictionaryConfig {
-    /// Location to store dictionary artifacts in Google Cloud Storage. These files
+    /// Location to store dictionary artifacts in Cloud Storage. These files
     /// will only be accessible by project owners and the DLP API. If any of these
     /// artifacts are modified, the dictionary is considered invalid and can no
     /// longer be used.
@@ -4696,7 +5069,7 @@ pub struct StoredInfoTypeVersion {
     /// appearing first.
     ///
     /// For example, some of the data for stored custom dictionaries is put in
-    /// the user's Google Cloud Storage bucket, and if this data is modified or
+    /// the user's Cloud Storage bucket, and if this data is modified or
     /// deleted by the user or another system, the dictionary becomes invalid.
     ///
     /// If any errors occur, fix the problem indicated by the error message and
@@ -4801,10 +5174,6 @@ pub struct ListStoredInfoTypesRequest {
     ///   `projects/`<var>PROJECT_ID</var>`/locations/`<var>LOCATION_ID</var>
     /// + Projects scope, no location specified (defaults to global):<br/>
     ///   `projects/`<var>PROJECT_ID</var>
-    /// + Organizations scope, location specified:<br/>
-    ///   `organizations/`<var>ORG_ID</var>`/locations/`<var>LOCATION_ID</var>
-    /// + Organizations scope, no location specified (defaults to global):<br/>
-    ///   `organizations/`<var>ORG_ID</var>
     ///
     /// The following example `parent` string specifies a parent project with the
     /// identifier `example-project`, and specifies the `europe-west3` location
@@ -4817,7 +5186,7 @@ pub struct ListStoredInfoTypesRequest {
     /// to `ListStoredInfoTypes`.
     #[prost(string, tag="2")]
     pub page_token: ::prost::alloc::string::String,
-    /// Size of the page, can be limited by server. If zero server returns
+    /// Size of the page, can be limited by the server. If zero server returns
     /// a page of max size 100.
     #[prost(int32, tag="3")]
     pub page_size: i32,
@@ -4830,7 +5199,7 @@ pub struct ListStoredInfoTypesRequest {
     ///
     /// Supported fields are:
     ///
-    /// - `create_time`: corresponds to time the most recent version of the
+    /// - `create_time`: corresponds to the time the most recent version of the
     /// resource was created.
     /// - `state`: corresponds to the state of the resource.
     /// - `name`: corresponds to resource name.
@@ -4942,35 +5311,7 @@ pub struct HybridFindingDetails {
 pub struct HybridInspectResponse {
 }
 /// Score is a summary of all elements in the data profile.
-/// A higher number means more sensitive.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct SensitivityScore {
-    /// The score applied to the resource.
-    #[prost(enumeration="sensitivity_score::SensitivityScoreLevel", tag="1")]
-    pub score: i32,
-}
-/// Nested message and enum types in `SensitivityScore`.
-pub mod sensitivity_score {
-    /// Various score levels for resources.
-    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
-    #[repr(i32)]
-    pub enum SensitivityScoreLevel {
-        /// Unused.
-        SensitivityScoreUnspecified = 0,
-        /// No sensitive information detected. Limited access.
-        SensitivityLow = 10,
-        /// Medium risk - PII, potentially sensitive data, or fields with free-text
-        /// data that are at higher risk of having intermittent sensitive data.
-        /// Consider limiting access.
-        SensitivityModerate = 20,
-        /// High risk – SPII may be present. Exfiltration of data may lead to user
-        /// data loss. Re-identification of users may be possible. Consider limiting
-        /// usage and or removing SPII.
-        SensitivityHigh = 30,
-    }
-}
-/// Score is a summary of all elements in the data profile.
-/// A higher number means more risky.
+/// A higher number means more risk.
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct DataRiskLevel {
     /// The score applied to the resource.
@@ -4990,8 +5331,8 @@ pub mod data_risk_level {
         /// data found.
         RiskLow = 10,
         /// Medium risk - Sensitive data may be present but additional access or fine
-        /// grain access restrictions appears to be present.  Consider limiting
-        /// access even further or transforming data to mask.
+        /// grain access restrictions appear to be present.  Consider limiting
+        /// access even further or transform data to mask.
         RiskModerate = 20,
         /// High risk – SPII may be present. Access controls may include public
         /// ACLs. Exfiltration of data may lead to user data loss. Re-identification
@@ -5125,6 +5466,10 @@ pub struct InfoTypeSummary {
     /// The infoType.
     #[prost(message, optional, tag="1")]
     pub info_type: ::core::option::Option<InfoType>,
+    /// Approximate percentage of non-null rows that contained data detected by
+    /// this infotype.
+    #[prost(int32, tag="2")]
+    pub estimated_prevalence: i32,
 }
 /// Infotype details for other infoTypes found within a column.
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -5132,8 +5477,12 @@ pub struct OtherInfoTypeSummary {
     /// The other infoType.
     #[prost(message, optional, tag="1")]
     pub info_type: ::core::option::Option<InfoType>,
+    /// Approximate percentage of non-null rows that contained data detected by
+    /// this infotype.
+    #[prost(int32, tag="2")]
+    pub estimated_prevalence: i32,
 }
-/// A condition for determining whether a PubSub should be triggered.
+/// A condition for determining whether a Pub/Sub should be triggered.
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct DataProfilePubSubCondition {
     /// An expression.
@@ -5198,10 +5547,9 @@ pub mod data_profile_pub_sub_condition {
         MediumOrHigh = 2,
     }
 }
-/// The message that will be published to a Pub/Sub topic.
+/// Pub/Sub topic message for a DataProfileAction.PubSubNotification event.
 /// To receive a message of protocol buffer schema type, convert the message data
 /// to an object of this proto class.
-/// <https://cloud.google.com/pubsub/docs/samples/pubsub-subscribe-proto-messages>
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct DataProfilePubSubMessage {
     /// If `DetailLevel` is `TABLE_PROFILE` this will be fully populated.
@@ -5212,6 +5560,73 @@ pub struct DataProfilePubSubMessage {
     /// The event that caused the Pub/Sub message to be sent.
     #[prost(enumeration="data_profile_action::EventType", tag="2")]
     pub event: i32,
+}
+/// Enum of possible outcomes of transformations. SUCCESS if transformation and
+/// storing of transformation was successful, otherwise, reason for not
+/// transforming.
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+#[repr(i32)]
+pub enum TransformationResultStatusType {
+    StateTypeUnspecified = 0,
+    /// This will be set when a finding could not be transformed (i.e. outside user
+    /// set bucket range).
+    InvalidTransform = 1,
+    /// This will be set when a BigQuery transformation was successful but could
+    /// not be stored back in BigQuery because the transformed row exceeds
+    /// BigQuery's max row size.
+    BigqueryMaxRowSizeExceeded = 2,
+    /// This will be set when there is a finding in the custom metadata of a file,
+    /// but at the write time of the transformed file, this key / value pair is
+    /// unretrievable.
+    MetadataUnretrievable = 3,
+    /// This will be set when the transformation and storing of it is successful.
+    Success = 4,
+}
+/// Describes functionality of a given container in its original format.
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+#[repr(i32)]
+pub enum TransformationContainerType {
+    TransformUnknownContainer = 0,
+    TransformBody = 1,
+    TransformMetadata = 2,
+    TransformTable = 3,
+}
+/// An enum of rules that can be used to transform a value. Can be a
+/// record suppression, or one of the transformation rules specified under
+/// `PrimitiveTransformation`.
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+#[repr(i32)]
+pub enum TransformationType {
+    /// Unused
+    Unspecified = 0,
+    /// Record suppression
+    RecordSuppression = 1,
+    /// Replace value
+    ReplaceValue = 2,
+    /// Replace value using a dictionary.
+    ReplaceDictionary = 15,
+    /// Redact
+    Redact = 3,
+    /// Character mask
+    CharacterMask = 4,
+    /// FFX-FPE
+    CryptoReplaceFfxFpe = 5,
+    /// Fixed size bucketing
+    FixedSizeBucketing = 6,
+    /// Bucketing
+    Bucketing = 7,
+    /// Replace with info type
+    ReplaceWithInfoType = 8,
+    /// Time part
+    TimePart = 9,
+    /// Crypto hash
+    CryptoHash = 10,
+    /// Date shift
+    DateShift = 12,
+    /// Deterministic crypto
+    CryptoDeterministicConfig = 13,
+    /// Redact image
+    RedactImage = 14,
 }
 /// Operators available for comparing the value of fields.
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
@@ -5511,7 +5926,7 @@ pub mod dlp_service_client {
             );
             self.inner.unary(request.into_request(), path, codec).await
         }
-        /// Returns a list of the sensitive information types that the DLP API
+        /// Returns a list of the sensitive information types that DLP API
         /// supports. See https://cloud.google.com/dlp/docs/infotypes-reference to
         /// learn more.
         pub async fn list_info_types(
@@ -5533,7 +5948,7 @@ pub mod dlp_service_client {
             );
             self.inner.unary(request.into_request(), path, codec).await
         }
-        /// Creates an InspectTemplate for re-using frequently used configuration
+        /// Creates an InspectTemplate for reusing frequently used configuration
         /// for inspecting content, images, and storage.
         /// See https://cloud.google.com/dlp/docs/creating-templates to learn more.
         pub async fn create_inspect_template(
@@ -5642,7 +6057,7 @@ pub mod dlp_service_client {
             );
             self.inner.unary(request.into_request(), path, codec).await
         }
-        /// Creates a DeidentifyTemplate for re-using frequently used configuration
+        /// Creates a DeidentifyTemplate for reusing frequently used configuration
         /// for de-identifying content, images, and storage.
         /// See https://cloud.google.com/dlp/docs/creating-templates-deid to learn
         /// more.
@@ -5976,7 +6391,7 @@ pub mod dlp_service_client {
             self.inner.unary(request.into_request(), path, codec).await
         }
         /// Deletes a long-running DlpJob. This method indicates that the client is
-        /// no longer interested in the DlpJob result. The job will be cancelled if
+        /// no longer interested in the DlpJob result. The job will be canceled if
         /// possible.
         /// See https://cloud.google.com/dlp/docs/inspecting-storage and
         /// https://cloud.google.com/dlp/docs/compute-risk-analysis to learn more.
