@@ -46,6 +46,8 @@ pub mod scan_run_warning_trace {
         TooManyFuzzTasks = 3,
         /// Indicates that a scan is blocked by IAP.
         BlockedByIap = 4,
+        /// Indicates that no seeds is found for a scan
+        NoStartingUrlFoundForManagedScan = 5,
     }
 }
 /// ! Information about a vulnerability with an HTML.
@@ -169,6 +171,29 @@ pub mod xss {
         UserControllableUrl = 15,
     }
 }
+/// Information reported for an XXE.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct Xxe {
+    /// The XML string that triggered the XXE vulnerability. Non-payload values
+    /// might be redacted.
+    #[prost(string, tag="1")]
+    pub payload_value: ::prost::alloc::string::String,
+    /// Location within the request where the payload was placed.
+    #[prost(enumeration="xxe::Location", tag="2")]
+    pub payload_location: i32,
+}
+/// Nested message and enum types in `Xxe`.
+pub mod xxe {
+    /// Locations within a request where XML was substituted.
+    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+    #[repr(i32)]
+    pub enum Location {
+        /// Unknown Location.
+        Unspecified = 0,
+        /// The XML payload replaced the complete request body.
+        CompleteRequestBody = 1,
+    }
+}
 /// A Finding resource represents a vulnerability instance identified during a
 /// ScanRun.
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -236,6 +261,9 @@ pub struct Finding {
     /// Output only. An addon containing information reported for an XSS, if any.
     #[prost(message, optional, tag="14")]
     pub xss: ::core::option::Option<Xss>,
+    /// Output only. An addon containing information reported for an XXE, if any.
+    #[prost(message, optional, tag="18")]
+    pub xxe: ::core::option::Option<Xxe>,
 }
 /// Nested message and enum types in `Finding`.
 pub mod finding {
@@ -315,6 +343,9 @@ pub struct ScanConfig {
     /// If enabled, the scanner will access applications from static IP addresses.
     #[prost(bool, tag="14")]
     pub static_ip_scan: bool,
+    /// Whether to keep scanning even if most requests return HTTP error codes.
+    #[prost(bool, tag="15")]
+    pub ignore_http_status_errors: bool,
 }
 /// Nested message and enum types in `ScanConfig`.
 pub mod scan_config {
@@ -593,7 +624,7 @@ pub struct ScanRunErrorTrace {
 pub mod scan_run_error_trace {
     /// Output only.
     /// Defines an error reason code.
-    /// Next id: 7
+    /// Next id: 8
     #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
     #[repr(i32)]
     pub enum Code {
