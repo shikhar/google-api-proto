@@ -425,6 +425,11 @@ pub struct WriteStream {
     /// Immutable. Mode of the stream.
     #[prost(enumeration="write_stream::WriteMode", tag="7")]
     pub write_mode: i32,
+    /// Immutable. The geographic location where the stream's dataset resides. See
+    /// <https://cloud.google.com/bigquery/docs/locations> for supported
+    /// locations.
+    #[prost(string, tag="8")]
+    pub location: ::prost::alloc::string::String,
 }
 /// Nested message and enum types in `WriteStream`.
 pub mod write_stream {
@@ -465,6 +470,22 @@ pub enum DataFormat {
     /// Arrow is a standard open source column-based message format.
     /// See <https://arrow.apache.org/> for more details.
     Arrow = 2,
+}
+/// WriteStreamView is a view enum that controls what details about a write
+/// stream should be returned.
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+#[repr(i32)]
+pub enum WriteStreamView {
+    /// The default / unset value.
+    Unspecified = 0,
+    /// The BASIC projection returns basic metadata about a write stream.  The
+    /// basic view does not include schema information.  This is the default view
+    /// returned by GetWriteStream.
+    Basic = 1,
+    /// The FULL projection returns all available write stream metadata, including
+    /// the schema.  CreateWriteStream returns the full projection of write stream
+    /// metadata.
+    Full = 2,
 }
 /// Request message for `CreateReadSession`.
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -778,6 +799,10 @@ pub struct GetWriteStreamRequest {
     /// `projects/{project}/datasets/{dataset}/tables/{table}/streams/{stream}`.
     #[prost(string, tag="1")]
     pub name: ::prost::alloc::string::String,
+    /// Indicates whether to get full or partial view of the WriteStream. If
+    /// not set, view returned will be basic.
+    #[prost(enumeration="WriteStreamView", tag="3")]
+    pub view: i32,
 }
 /// Request message for `BatchCommitWriteStreams`.
 #[derive(Clone, PartialEq, ::prost::Message)]
