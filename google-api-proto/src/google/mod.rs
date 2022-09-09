@@ -457,6 +457,7 @@ pub mod logging;
 pub mod longrunning;
 #[cfg(
     any(
+        feature = "google-maps-addressvalidation-v1",
         feature = "google-maps-mapsplatformdatasets-v1alpha",
         feature = "google-maps-playablelocations-v3",
         feature = "google-maps-playablelocations-v3-sample",
