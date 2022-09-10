@@ -291,6 +291,118 @@ pub struct PosixFilesystem {
     #[prost(string, tag="1")]
     pub root_directory: ::prost::alloc::string::String,
 }
+/// An AwsS3CompatibleData resource.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct AwsS3CompatibleData {
+    /// Required. Specifies the name of the bucket.
+    #[prost(string, tag="1")]
+    pub bucket_name: ::prost::alloc::string::String,
+    /// Specifies the root path to transfer objects.
+    ///
+    /// Must be an empty string or full path name that ends with a '/'. This
+    /// field is treated as an object prefix. As such, it should generally not
+    /// begin with a '/'.
+    #[prost(string, tag="2")]
+    pub path: ::prost::alloc::string::String,
+    /// Required. Specifies the endpoint of the storage service.
+    #[prost(string, tag="3")]
+    pub endpoint: ::prost::alloc::string::String,
+    /// Specifies the region to sign requests with. This can be left blank if
+    /// requests should be signed with an empty region.
+    #[prost(string, tag="5")]
+    pub region: ::prost::alloc::string::String,
+    /// Specifies the metadata of the S3 compatible data provider. Each provider
+    /// may contain some attributes that do not apply to all S3-compatible data
+    /// providers. When not specified, S3CompatibleMetadata is used by default.
+    #[prost(oneof="aws_s3_compatible_data::DataProvider", tags="4")]
+    pub data_provider: ::core::option::Option<aws_s3_compatible_data::DataProvider>,
+}
+/// Nested message and enum types in `AwsS3CompatibleData`.
+pub mod aws_s3_compatible_data {
+    /// Specifies the metadata of the S3 compatible data provider. Each provider
+    /// may contain some attributes that do not apply to all S3-compatible data
+    /// providers. When not specified, S3CompatibleMetadata is used by default.
+    #[derive(Clone, PartialEq, ::prost::Oneof)]
+    pub enum DataProvider {
+        /// A S3 compatible metadata.
+        #[prost(message, tag="4")]
+        S3Metadata(super::S3CompatibleMetadata),
+    }
+}
+/// S3CompatibleMetadata contains the metadata fields that apply to the basic
+/// types of S3-compatible data providers.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct S3CompatibleMetadata {
+    /// Specifies the authentication and authorization method used by the storage
+    /// service. When not specified, Transfer Service will attempt to determine
+    /// right auth method to use.
+    #[prost(enumeration="s3_compatible_metadata::AuthMethod", tag="1")]
+    pub auth_method: i32,
+    /// Specifies the API request model used to call the storage service. When not
+    /// specified, the default value of RequestModel
+    /// REQUEST_MODEL_VIRTUAL_HOSTED_STYLE is used.
+    #[prost(enumeration="s3_compatible_metadata::RequestModel", tag="2")]
+    pub request_model: i32,
+    /// Specifies the network protocol of the agent. When not specified, the
+    /// default value of NetworkProtocol NETWORK_PROTOCOL_HTTPS is used.
+    #[prost(enumeration="s3_compatible_metadata::NetworkProtocol", tag="3")]
+    pub protocol: i32,
+    /// The Listing API to use for discovering objects. When not specified,
+    /// Transfer Service will attempt to determine the right API to use.
+    #[prost(enumeration="s3_compatible_metadata::ListApi", tag="4")]
+    pub list_api: i32,
+}
+/// Nested message and enum types in `S3CompatibleMetadata`.
+pub mod s3_compatible_metadata {
+    /// The authentication and authorization method used by the storage service.
+    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+    #[repr(i32)]
+    pub enum AuthMethod {
+        /// AuthMethod is not specified.
+        Unspecified = 0,
+        /// Auth requests with AWS SigV4.
+        AwsSignatureV4 = 1,
+        /// Auth requests with AWS SigV2.
+        AwsSignatureV2 = 2,
+    }
+    /// The request model of the API.
+    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+    #[repr(i32)]
+    pub enum RequestModel {
+        /// RequestModel is not specified.
+        Unspecified = 0,
+        /// Perform requests using Virtual Hosted Style.
+        /// Example: <https://bucket-name.s3.region.amazonaws.com/key-name>
+        VirtualHostedStyle = 1,
+        /// Perform requests using Path Style.
+        /// Example: <https://s3.region.amazonaws.com/bucket-name/key-name>
+        PathStyle = 2,
+    }
+    /// The agent network protocol to access the storage service.
+    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+    #[repr(i32)]
+    pub enum NetworkProtocol {
+        /// NetworkProtocol is not specified.
+        Unspecified = 0,
+        /// Perform requests using HTTPS.
+        Https = 1,
+        /// Not recommended: This sends data in clear-text. This is only
+        /// appropriate within a closed network or for publicly available data.
+        /// Perform requests using HTTP.
+        Http = 2,
+    }
+    /// The Listing API to use for discovering objects.
+    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+    #[repr(i32)]
+    pub enum ListApi {
+        /// ListApi is not specified.
+        Unspecified = 0,
+        /// Perform listing using ListObjectsV2 API.
+        ListObjectsV2 = 1,
+        /// Legacy ListObjects API.
+        ListObjects = 2,
+    }
+}
 /// Represents an On-Premises Agent pool.
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct AgentPool {
@@ -359,13 +471,12 @@ pub struct TransferOptions {
     /// exclusive.
     #[prost(bool, tag="3")]
     pub delete_objects_from_source_after_transfer: bool,
-    /// When to overwrite objects that already exist in the sink. If not set
+    /// When to overwrite objects that already exist in the sink. If not set,
     /// overwrite behavior is determined by
     /// \[overwrite_objects_already_existing_in_sink][google.storagetransfer.v1.TransferOptions.overwrite_objects_already_existing_in_sink\].
     #[prost(enumeration="transfer_options::OverwriteWhen", tag="4")]
     pub overwrite_when: i32,
-    /// Represents the selected metadata options for a transfer job. This feature
-    /// is in Preview.
+    /// Represents the selected metadata options for a transfer job.
     #[prost(message, optional, tag="5")]
     pub metadata_options: ::core::option::Option<MetadataOptions>,
 }
@@ -376,14 +487,16 @@ pub mod transfer_options {
     #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
     #[repr(i32)]
     pub enum OverwriteWhen {
-        /// Indicate the option is not set.
+        /// Overwrite behavior is unspecified.
         Unspecified = 0,
-        /// Overwrite destination object with source if the two objects are
-        /// different.
+        /// Overwrites destination objects with the source objects, only if the
+        /// objects have the same name but different HTTP ETags or checksum values.
         Different = 1,
-        /// Never overwrite destination object.
+        /// Never overwrites a destination object if a source object has the
+        /// same name. In this case, the source object is not transferred.
         Never = 2,
-        /// Always overwrite destination object.
+        /// Always overwrite the destination object with the source object, even if
+        /// the HTTP Etags or checksum values are the same.
         Always = 3,
     }
 }
@@ -419,7 +532,7 @@ pub struct TransferSpec {
     #[prost(oneof="transfer_spec::DataSink", tags="4, 13")]
     pub data_sink: ::core::option::Option<transfer_spec::DataSink>,
     /// The read source of the data.
-    #[prost(oneof="transfer_spec::DataSource", tags="1, 2, 3, 14, 8")]
+    #[prost(oneof="transfer_spec::DataSource", tags="1, 2, 3, 14, 8, 19")]
     pub data_source: ::core::option::Option<transfer_spec::DataSource>,
     /// Represents a supported data container type which is required for transfer
     /// jobs which needs a data source, a data sink and an intermediate location to
@@ -457,6 +570,9 @@ pub mod transfer_spec {
         /// An Azure Blob Storage data source.
         #[prost(message, tag="8")]
         AzureBlobStorageDataSource(super::AzureBlobStorageData),
+        /// An AWS S3 compatible data source.
+        #[prost(message, tag="19")]
+        AwsS3CompatibleDataSource(super::AwsS3CompatibleData),
     }
     /// Represents a supported data container type which is required for transfer
     /// jobs which needs a data source, a data sink and an intermediate location to
@@ -1143,7 +1259,7 @@ pub struct UpdateTransferJobRequest {
     /// other fields are rejected with the error
     /// \[INVALID_ARGUMENT][google.rpc.Code.INVALID_ARGUMENT\]. Updating a job status
     /// to \[DELETED][google.storagetransfer.v1.TransferJob.Status.DELETED\] requires
-    /// `storagetransfer.jobs.delete` permissions.
+    /// `storagetransfer.jobs.delete` permission.
     #[prost(message, optional, tag="3")]
     pub transfer_job: ::core::option::Option<TransferJob>,
     /// The field mask of the fields in `transferJob` that are to be updated in
@@ -1163,6 +1279,17 @@ pub struct UpdateTransferJobRequest {
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct GetTransferJobRequest {
     /// Required. The job to get.
+    #[prost(string, tag="1")]
+    pub job_name: ::prost::alloc::string::String,
+    /// Required. The ID of the Google Cloud project that owns the
+    /// job.
+    #[prost(string, tag="2")]
+    pub project_id: ::prost::alloc::string::String,
+}
+/// Request passed to DeleteTransferJob.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct DeleteTransferJobRequest {
+    /// Required. The job to delete.
     #[prost(string, tag="1")]
     pub job_name: ::prost::alloc::string::String,
     /// Required. The ID of the Google Cloud project that owns the
@@ -1563,6 +1690,27 @@ pub mod storage_transfer_service_client {
             let codec = tonic::codec::ProstCodec::default();
             let path = http::uri::PathAndQuery::from_static(
                 "/google.storagetransfer.v1.StorageTransferService/RunTransferJob",
+            );
+            self.inner.unary(request.into_request(), path, codec).await
+        }
+        /// Deletes a transfer job. Deleting a transfer job sets its status to
+        /// [DELETED][google.storagetransfer.v1.TransferJob.Status.DELETED].
+        pub async fn delete_transfer_job(
+            &mut self,
+            request: impl tonic::IntoRequest<super::DeleteTransferJobRequest>,
+        ) -> Result<tonic::Response<()>, tonic::Status> {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/google.storagetransfer.v1.StorageTransferService/DeleteTransferJob",
             );
             self.inner.unary(request.into_request(), path, codec).await
         }
