@@ -271,7 +271,7 @@ pub mod iap;
     )
 )]
 pub mod identitytoolkit;
-#[cfg(any(feature = "google-cloud-ids-v1"))]
+#[cfg(any(feature = "google-cloud-ids-logging-v1", feature = "google-cloud-ids-v1"))]
 pub mod ids;
 #[cfg(any(feature = "google-cloud-integrations-v1alpha"))]
 pub mod integrations;
