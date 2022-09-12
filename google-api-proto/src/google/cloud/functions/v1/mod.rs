@@ -45,6 +45,20 @@ pub enum OperationType {
     /// Triggered by DeleteFunction call.
     DeleteFunction = 3,
 }
+impl OperationType {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            OperationType::OperationUnspecified => "OPERATION_UNSPECIFIED",
+            OperationType::CreateFunction => "CREATE_FUNCTION",
+            OperationType::UpdateFunction => "UPDATE_FUNCTION",
+            OperationType::DeleteFunction => "DELETE_FUNCTION",
+        }
+    }
+}
 /// Describes a Cloud Function that contains user computation executed in
 /// response to an event. It encapsulate function and triggers configurations.
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -172,16 +186,16 @@ pub struct CloudFunction {
     /// on the Key/KeyRing/Project/Organization (least access preferred).
     ///
     /// 1. Google Cloud Functions service account
-    ///    (service-{project_number}@gcf-admin-robot.iam.gserviceaccount.com) -
-    ///    Required to protect the function's image.
+    ///     (service-{project_number}@gcf-admin-robot.iam.gserviceaccount.com) -
+    ///     Required to protect the function's image.
     /// 2. Google Storage service account
-    ///    (service-{project_number}@gs-project-accounts.iam.gserviceaccount.com) -
-    ///    Required to protect the function's source code.
-    ///    If this service account does not exist, deploying a function without a
-    ///    KMS key or retrieving the service agent name provisions it. For more
-    ///    information, see
-    ///    <https://cloud.google.com/storage/docs/projects#service-agents> and
-    ///    <https://cloud.google.com/storage/docs/getting-service-agent#gsutil.>
+    ///     (service-{project_number}@gs-project-accounts.iam.gserviceaccount.com) -
+    ///     Required to protect the function's source code.
+    ///     If this service account does not exist, deploying a function without a
+    ///     KMS key or retrieving the service agent name provisions it. For more
+    ///     information, see
+    ///     <https://cloud.google.com/storage/docs/projects#service-agents> and
+    ///     <https://cloud.google.com/storage/docs/getting-service-agent#gsutil.>
     ///
     /// Google Cloud Functions delegates access to service agents to protect
     /// function resources in internal projects that are not accessible by the
@@ -267,6 +281,19 @@ pub mod cloud_function {
         /// function.
         AllTraffic = 2,
     }
+    impl VpcConnectorEgressSettings {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                VpcConnectorEgressSettings::Unspecified => "VPC_CONNECTOR_EGRESS_SETTINGS_UNSPECIFIED",
+                VpcConnectorEgressSettings::PrivateRangesOnly => "PRIVATE_RANGES_ONLY",
+                VpcConnectorEgressSettings::AllTraffic => "ALL_TRAFFIC",
+            }
+        }
+    }
     /// Available ingress settings.
     ///
     /// This controls what traffic can reach the function.
@@ -284,6 +311,20 @@ pub mod cloud_function {
         /// Allow HTTP traffic from private VPC sources and through GCLB.
         AllowInternalAndGclb = 3,
     }
+    impl IngressSettings {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                IngressSettings::Unspecified => "INGRESS_SETTINGS_UNSPECIFIED",
+                IngressSettings::AllowAll => "ALLOW_ALL",
+                IngressSettings::AllowInternalOnly => "ALLOW_INTERNAL_ONLY",
+                IngressSettings::AllowInternalAndGclb => "ALLOW_INTERNAL_AND_GCLB",
+            }
+        }
+    }
     /// Docker Registry to use for storing function Docker images.
     #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
     #[repr(i32)]
@@ -299,6 +340,19 @@ pub mod cloud_function {
         /// use can also be specified by the user using the `docker_repository`
         /// field.
         ArtifactRegistry = 2,
+    }
+    impl DockerRegistry {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                DockerRegistry::Unspecified => "DOCKER_REGISTRY_UNSPECIFIED",
+                DockerRegistry::ContainerRegistry => "CONTAINER_REGISTRY",
+                DockerRegistry::ArtifactRegistry => "ARTIFACT_REGISTRY",
+            }
+        }
     }
     /// The location of the function source code.
     #[derive(Clone, PartialEq, ::prost::Oneof)]
@@ -388,6 +442,19 @@ pub mod https_trigger {
         /// which protocol was used and respond accordingly.
         SecureOptional = 2,
     }
+    impl SecurityLevel {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                SecurityLevel::Unspecified => "SECURITY_LEVEL_UNSPECIFIED",
+                SecurityLevel::SecureAlways => "SECURE_ALWAYS",
+                SecurityLevel::SecureOptional => "SECURE_OPTIONAL",
+            }
+        }
+    }
 }
 /// Describes EventTrigger, used to request events be sent from another
 /// service.
@@ -401,11 +468,11 @@ pub struct EventTrigger {
     /// The pattern contains:
     ///
     /// 1. namespace: For example, `cloud.storage` and
-    ///    `google.firebase.analytics`.
+    ///     `google.firebase.analytics`.
     /// 2. resource type: The type of resource on which event occurs. For
-    ///    example, the Google Cloud Storage API includes the type `object`.
+    ///     example, the Google Cloud Storage API includes the type `object`.
     /// 3. action: The action that generates the event. For example, action for
-    ///    a Google Cloud Storage Object is 'change'.
+    ///     a Google Cloud Storage Object is 'change'.
     /// These parts are lower case.
     #[prost(string, tag="1")]
     pub event_type: ::prost::alloc::string::String,
@@ -416,12 +483,12 @@ pub struct EventTrigger {
     /// example:
     ///
     /// 1. The authorization model must support it. Google Cloud Functions
-    ///    only allows EventTriggers to be deployed that observe resources in the
-    ///    same project as the `CloudFunction`.
+    ///     only allows EventTriggers to be deployed that observe resources in the
+    ///     same project as the `CloudFunction`.
     /// 2. The resource type must match the pattern expected for an
-    ///    `event_type`. For example, an `EventTrigger` that has an
-    ///    `event_type` of "google.pubsub.topic.publish" should have a resource
-    ///    that matches Google Cloud Pub/Sub topics.
+    ///     `event_type`. For example, an `EventTrigger` that has an
+    ///     `event_type` of "google.pubsub.topic.publish" should have a resource
+    ///     that matches Google Cloud Pub/Sub topics.
     ///
     /// Additionally, some services may support short names when creating an
     /// `EventTrigger`. These will always be returned in the normalized "long"
@@ -711,10 +778,27 @@ pub enum CloudFunctionStatus {
     /// The function should be updated or deleted to move it out of this state.
     Unknown = 5,
 }
+impl CloudFunctionStatus {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            CloudFunctionStatus::Unspecified => "CLOUD_FUNCTION_STATUS_UNSPECIFIED",
+            CloudFunctionStatus::Active => "ACTIVE",
+            CloudFunctionStatus::Offline => "OFFLINE",
+            CloudFunctionStatus::DeployInProgress => "DEPLOY_IN_PROGRESS",
+            CloudFunctionStatus::DeleteInProgress => "DELETE_IN_PROGRESS",
+            CloudFunctionStatus::Unknown => "UNKNOWN",
+        }
+    }
+}
 /// Generated client implementations.
 pub mod cloud_functions_service_client {
     #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
     use tonic::codegen::*;
+    use tonic::codegen::http::Uri;
     /// A service that application uses to manipulate triggers and functions.
     #[derive(Debug, Clone)]
     pub struct CloudFunctionsServiceClient<T> {
@@ -729,6 +813,10 @@ pub mod cloud_functions_service_client {
     {
         pub fn new(inner: T) -> Self {
             let inner = tonic::client::Grpc::new(inner);
+            Self { inner }
+        }
+        pub fn with_origin(inner: T, origin: Uri) -> Self {
+            let inner = tonic::client::Grpc::with_origin(inner, origin);
             Self { inner }
         }
         pub fn with_interceptor<F>(
@@ -750,19 +838,19 @@ pub mod cloud_functions_service_client {
         {
             CloudFunctionsServiceClient::new(InterceptedService::new(inner, interceptor))
         }
-        /// Compress requests with `gzip`.
+        /// Compress requests with the given encoding.
         ///
         /// This requires the server to support it otherwise it might respond with an
         /// error.
         #[must_use]
-        pub fn send_gzip(mut self) -> Self {
-            self.inner = self.inner.send_gzip();
+        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.send_compressed(encoding);
             self
         }
-        /// Enable decompressing responses with `gzip`.
+        /// Enable decompressing responses.
         #[must_use]
-        pub fn accept_gzip(mut self) -> Self {
-            self.inner = self.inner.accept_gzip();
+        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.accept_compressed(encoding);
             self
         }
         /// Returns a list of functions that belong to the requested project.

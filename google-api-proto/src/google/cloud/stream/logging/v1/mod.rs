@@ -79,6 +79,31 @@ pub enum OperationEventType {
     /// Operation for delete stream instance ended.
     OperationEventDeleteInstanceEnded = 14,
 }
+impl OperationEventType {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            OperationEventType::Unspecified => "OPERATION_EVENT_TYPE_UNSPECIFIED",
+            OperationEventType::OperationEventCreateContentStarted => "OPERATION_EVENT_CREATE_CONTENT_STARTED",
+            OperationEventType::OperationEventCreateContentEnded => "OPERATION_EVENT_CREATE_CONTENT_ENDED",
+            OperationEventType::OperationEventBuildContentStarted => "OPERATION_EVENT_BUILD_CONTENT_STARTED",
+            OperationEventType::OperationEventBuildContentEnded => "OPERATION_EVENT_BUILD_CONTENT_ENDED",
+            OperationEventType::OperationEventUpdateContentStarted => "OPERATION_EVENT_UPDATE_CONTENT_STARTED",
+            OperationEventType::OperationEventUpdateContentEnded => "OPERATION_EVENT_UPDATE_CONTENT_ENDED",
+            OperationEventType::OperationEventDeleteContentStarted => "OPERATION_EVENT_DELETE_CONTENT_STARTED",
+            OperationEventType::OperationEventDeleteContentEnded => "OPERATION_EVENT_DELETE_CONTENT_ENDED",
+            OperationEventType::OperationEventCreateInstanceStarted => "OPERATION_EVENT_CREATE_INSTANCE_STARTED",
+            OperationEventType::OperationEventCreateInstanceEnded => "OPERATION_EVENT_CREATE_INSTANCE_ENDED",
+            OperationEventType::OperationEventUpdateInstanceStarted => "OPERATION_EVENT_UPDATE_INSTANCE_STARTED",
+            OperationEventType::OperationEventUpdateInstanceEnded => "OPERATION_EVENT_UPDATE_INSTANCE_ENDED",
+            OperationEventType::OperationEventDeleteInstanceStarted => "OPERATION_EVENT_DELETE_INSTANCE_STARTED",
+            OperationEventType::OperationEventDeleteInstanceEnded => "OPERATION_EVENT_DELETE_INSTANCE_ENDED",
+        }
+    }
+}
 /// SessionEventType is the enum value for the state of session.
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
 #[repr(i32)]
@@ -127,4 +152,36 @@ pub enum SessionEventType {
     SessionEventServerGameUpdatedFramePipeline = 20,
     /// Session in server error state.
     SessionEventServerError = 21,
+}
+impl SessionEventType {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            SessionEventType::Unspecified => "SESSION_EVENT_TYPE_UNSPECIFIED",
+            SessionEventType::SessionEventServerStreamerShuttingDown => "SESSION_EVENT_SERVER_STREAMER_SHUTTING_DOWN",
+            SessionEventType::SessionEventServerStreamerReady => "SESSION_EVENT_SERVER_STREAMER_READY",
+            SessionEventType::SessionEventServerStreamerBinaryStarted => "SESSION_EVENT_SERVER_STREAMER_BINARY_STARTED",
+            SessionEventType::SessionEventServerStreamerReadPodImageNames => "SESSION_EVENT_SERVER_STREAMER_READ_POD_IMAGE_NAMES",
+            SessionEventType::SessionEventServerStreamerConnectedToGame => "SESSION_EVENT_SERVER_STREAMER_CONNECTED_TO_GAME",
+            SessionEventType::SessionEventServerStreamerConnectedToClient => "SESSION_EVENT_SERVER_STREAMER_CONNECTED_TO_CLIENT",
+            SessionEventType::SessionEventServerStreamerDisconnectedFromClient => "SESSION_EVENT_SERVER_STREAMER_DISCONNECTED_FROM_CLIENT",
+            SessionEventType::SessionEventServerStreamerReceivedCreateSessionRequest => "SESSION_EVENT_SERVER_STREAMER_RECEIVED_CREATE_SESSION_REQUEST",
+            SessionEventType::SessionEventServerStreamerGameMessageStreamClosed => "SESSION_EVENT_SERVER_STREAMER_GAME_MESSAGE_STREAM_CLOSED",
+            SessionEventType::SessionEventServerStreamerGameFrameStreamClosed => "SESSION_EVENT_SERVER_STREAMER_GAME_FRAME_STREAM_CLOSED",
+            SessionEventType::SessionEventServerStreamerGameMessageStreamError => "SESSION_EVENT_SERVER_STREAMER_GAME_MESSAGE_STREAM_ERROR",
+            SessionEventType::SessionEventServerStreamerGameAudioStreamError => "SESSION_EVENT_SERVER_STREAMER_GAME_AUDIO_STREAM_ERROR",
+            SessionEventType::SessionEventServerStreamerGameAudioStreamClosed => "SESSION_EVENT_SERVER_STREAMER_GAME_AUDIO_STREAM_CLOSED",
+            SessionEventType::SessionEventServerStreamerGameFrameStreamError => "SESSION_EVENT_SERVER_STREAMER_GAME_FRAME_STREAM_ERROR",
+            SessionEventType::SessionEventServerGameDisconnectingAfterPausedTooLong => "SESSION_EVENT_SERVER_GAME_DISCONNECTING_AFTER_PAUSED_TOO_LONG",
+            SessionEventType::SessionEventServerStreamerReceivedExperimentConfiguration => "SESSION_EVENT_SERVER_STREAMER_RECEIVED_EXPERIMENT_CONFIGURATION",
+            SessionEventType::SessionEventServerGameConnectedToLoggingService => "SESSION_EVENT_SERVER_GAME_CONNECTED_TO_LOGGING_SERVICE",
+            SessionEventType::SessionEventServerStreamerDeterminedSessionOptions => "SESSION_EVENT_SERVER_STREAMER_DETERMINED_SESSION_OPTIONS",
+            SessionEventType::SessionEventServerStreamerKilledInMiddleOfSession => "SESSION_EVENT_SERVER_STREAMER_KILLED_IN_MIDDLE_OF_SESSION",
+            SessionEventType::SessionEventServerGameUpdatedFramePipeline => "SESSION_EVENT_SERVER_GAME_UPDATED_FRAME_PIPELINE",
+            SessionEventType::SessionEventServerError => "SESSION_EVENT_SERVER_ERROR",
+        }
+    }
 }

@@ -70,6 +70,21 @@ pub mod build {
         /// Complete Status: The build was aborted.
         Aborted = 4,
     }
+    impl BuildStatus {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                BuildStatus::Unspecified => "BUILD_STATUS_UNSPECIFIED",
+                BuildStatus::Pass => "PASS",
+                BuildStatus::Fail => "FAIL",
+                BuildStatus::Running => "RUNNING",
+                BuildStatus::Aborted => "ABORTED",
+            }
+        }
+    }
     /// The build types.
     #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
     #[repr(i32)]
@@ -80,6 +95,19 @@ pub mod build {
         Release = 1,
         /// The firmware build.
         Firmware = 2,
+    }
+    impl BuildType {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                BuildType::Unspecified => "BUILD_TYPE_UNSPECIFIED",
+                BuildType::Release => "RELEASE",
+                BuildType::Firmware => "FIRMWARE",
+            }
+        }
     }
 }
 /// Resource that represents a build artifact stored in Google Cloud Storage for
@@ -291,6 +319,7 @@ pub struct StageBuildMetadata {
 pub mod build_service_client {
     #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
     use tonic::codegen::*;
+    use tonic::codegen::http::Uri;
     /// Manages Chrome OS build services.
     #[derive(Debug, Clone)]
     pub struct BuildServiceClient<T> {
@@ -305,6 +334,10 @@ pub mod build_service_client {
     {
         pub fn new(inner: T) -> Self {
             let inner = tonic::client::Grpc::new(inner);
+            Self { inner }
+        }
+        pub fn with_origin(inner: T, origin: Uri) -> Self {
+            let inner = tonic::client::Grpc::with_origin(inner, origin);
             Self { inner }
         }
         pub fn with_interceptor<F>(
@@ -326,19 +359,19 @@ pub mod build_service_client {
         {
             BuildServiceClient::new(InterceptedService::new(inner, interceptor))
         }
-        /// Compress requests with `gzip`.
+        /// Compress requests with the given encoding.
         ///
         /// This requires the server to support it otherwise it might respond with an
         /// error.
         #[must_use]
-        pub fn send_gzip(mut self) -> Self {
-            self.inner = self.inner.send_gzip();
+        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.send_compressed(encoding);
             self
         }
-        /// Enable decompressing responses with `gzip`.
+        /// Enable decompressing responses.
         #[must_use]
-        pub fn accept_gzip(mut self) -> Self {
-            self.inner = self.inner.accept_gzip();
+        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.accept_compressed(encoding);
             self
         }
         /// Lists all build targets that a user has access to.

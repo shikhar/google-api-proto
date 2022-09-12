@@ -163,6 +163,21 @@ pub enum ResolutionStatus {
     /// The error group is muted and excluded by default on group stats requests.
     Muted = 4,
 }
+impl ResolutionStatus {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            ResolutionStatus::Unspecified => "RESOLUTION_STATUS_UNSPECIFIED",
+            ResolutionStatus::Open => "OPEN",
+            ResolutionStatus::Acknowledged => "ACKNOWLEDGED",
+            ResolutionStatus::Resolved => "RESOLVED",
+            ResolutionStatus::Muted => "MUTED",
+        }
+    }
+}
 /// A request for reporting an individual error event.
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ReportErrorEventRequest {
@@ -228,6 +243,7 @@ pub struct ReportedErrorEvent {
 pub mod report_errors_service_client {
     #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
     use tonic::codegen::*;
+    use tonic::codegen::http::Uri;
     /// An API for reporting error events.
     #[derive(Debug, Clone)]
     pub struct ReportErrorsServiceClient<T> {
@@ -242,6 +258,10 @@ pub mod report_errors_service_client {
     {
         pub fn new(inner: T) -> Self {
             let inner = tonic::client::Grpc::new(inner);
+            Self { inner }
+        }
+        pub fn with_origin(inner: T, origin: Uri) -> Self {
+            let inner = tonic::client::Grpc::with_origin(inner, origin);
             Self { inner }
         }
         pub fn with_interceptor<F>(
@@ -263,19 +283,19 @@ pub mod report_errors_service_client {
         {
             ReportErrorsServiceClient::new(InterceptedService::new(inner, interceptor))
         }
-        /// Compress requests with `gzip`.
+        /// Compress requests with the given encoding.
         ///
         /// This requires the server to support it otherwise it might respond with an
         /// error.
         #[must_use]
-        pub fn send_gzip(mut self) -> Self {
-            self.inner = self.inner.send_gzip();
+        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.send_compressed(encoding);
             self
         }
-        /// Enable decompressing responses with `gzip`.
+        /// Enable decompressing responses.
         #[must_use]
-        pub fn accept_gzip(mut self) -> Self {
-            self.inner = self.inner.accept_gzip();
+        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.accept_compressed(encoding);
             self
         }
         /// Report an individual error event and record the event to a log.
@@ -339,6 +359,7 @@ pub struct UpdateGroupRequest {
 pub mod error_group_service_client {
     #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
     use tonic::codegen::*;
+    use tonic::codegen::http::Uri;
     /// Service for retrieving and updating individual error groups.
     #[derive(Debug, Clone)]
     pub struct ErrorGroupServiceClient<T> {
@@ -353,6 +374,10 @@ pub mod error_group_service_client {
     {
         pub fn new(inner: T) -> Self {
             let inner = tonic::client::Grpc::new(inner);
+            Self { inner }
+        }
+        pub fn with_origin(inner: T, origin: Uri) -> Self {
+            let inner = tonic::client::Grpc::with_origin(inner, origin);
             Self { inner }
         }
         pub fn with_interceptor<F>(
@@ -374,19 +399,19 @@ pub mod error_group_service_client {
         {
             ErrorGroupServiceClient::new(InterceptedService::new(inner, interceptor))
         }
-        /// Compress requests with `gzip`.
+        /// Compress requests with the given encoding.
         ///
         /// This requires the server to support it otherwise it might respond with an
         /// error.
         #[must_use]
-        pub fn send_gzip(mut self) -> Self {
-            self.inner = self.inner.send_gzip();
+        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.send_compressed(encoding);
             self
         }
-        /// Enable decompressing responses with `gzip`.
+        /// Enable decompressing responses.
         #[must_use]
-        pub fn accept_gzip(mut self) -> Self {
-            self.inner = self.inner.accept_gzip();
+        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.accept_compressed(encoding);
             self
         }
         /// Get the specified group.
@@ -658,6 +683,22 @@ pub mod query_time_range {
         /// Recommended minimum timed count duration: 1 day.
         Period30Days = 5,
     }
+    impl Period {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                Period::Unspecified => "PERIOD_UNSPECIFIED",
+                Period::Period1Hour => "PERIOD_1_HOUR",
+                Period::Period6Hours => "PERIOD_6_HOURS",
+                Period::Period1Day => "PERIOD_1_DAY",
+                Period::Period1Week => "PERIOD_1_WEEK",
+                Period::Period30Days => "PERIOD_30_DAYS",
+            }
+        }
+    }
 }
 /// Specifies criteria for filtering a subset of service contexts.
 /// The fields in the filter correspond to the fields in `ServiceContext`.
@@ -715,6 +756,19 @@ pub enum TimedCountAlignment {
     /// first time period.
     AlignmentEqualAtEnd = 2,
 }
+impl TimedCountAlignment {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            TimedCountAlignment::ErrorCountAlignmentUnspecified => "ERROR_COUNT_ALIGNMENT_UNSPECIFIED",
+            TimedCountAlignment::AlignmentEqualRounded => "ALIGNMENT_EQUAL_ROUNDED",
+            TimedCountAlignment::AlignmentEqualAtEnd => "ALIGNMENT_EQUAL_AT_END",
+        }
+    }
+}
 /// A sorting order of error groups.
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
 #[repr(i32)]
@@ -731,10 +785,26 @@ pub enum ErrorGroupOrder {
     /// Number of affected users in the given time window in descending order.
     AffectedUsersDesc = 4,
 }
+impl ErrorGroupOrder {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            ErrorGroupOrder::GroupOrderUnspecified => "GROUP_ORDER_UNSPECIFIED",
+            ErrorGroupOrder::CountDesc => "COUNT_DESC",
+            ErrorGroupOrder::LastSeenDesc => "LAST_SEEN_DESC",
+            ErrorGroupOrder::CreatedDesc => "CREATED_DESC",
+            ErrorGroupOrder::AffectedUsersDesc => "AFFECTED_USERS_DESC",
+        }
+    }
+}
 /// Generated client implementations.
 pub mod error_stats_service_client {
     #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
     use tonic::codegen::*;
+    use tonic::codegen::http::Uri;
     /// An API for retrieving and managing error statistics as well as data for
     /// individual events.
     #[derive(Debug, Clone)]
@@ -750,6 +820,10 @@ pub mod error_stats_service_client {
     {
         pub fn new(inner: T) -> Self {
             let inner = tonic::client::Grpc::new(inner);
+            Self { inner }
+        }
+        pub fn with_origin(inner: T, origin: Uri) -> Self {
+            let inner = tonic::client::Grpc::with_origin(inner, origin);
             Self { inner }
         }
         pub fn with_interceptor<F>(
@@ -771,19 +845,19 @@ pub mod error_stats_service_client {
         {
             ErrorStatsServiceClient::new(InterceptedService::new(inner, interceptor))
         }
-        /// Compress requests with `gzip`.
+        /// Compress requests with the given encoding.
         ///
         /// This requires the server to support it otherwise it might respond with an
         /// error.
         #[must_use]
-        pub fn send_gzip(mut self) -> Self {
-            self.inner = self.inner.send_gzip();
+        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.send_compressed(encoding);
             self
         }
-        /// Enable decompressing responses with `gzip`.
+        /// Enable decompressing responses.
         #[must_use]
-        pub fn accept_gzip(mut self) -> Self {
-            self.inner = self.inner.accept_gzip();
+        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.accept_compressed(encoding);
             self
         }
         /// Lists the specified groups.

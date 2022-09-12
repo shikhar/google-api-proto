@@ -74,6 +74,22 @@ pub mod threat_log {
         Critical = 5,
         Informational = 6,
     }
+    impl Severity {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                Severity::Unspecified => "SEVERITY_UNSPECIFIED",
+                Severity::Low => "LOW",
+                Severity::Medium => "MEDIUM",
+                Severity::High => "HIGH",
+                Severity::Critical => "CRITICAL",
+                Severity::Informational => "INFORMATIONAL",
+            }
+        }
+    }
     #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
     #[repr(i32)]
     pub enum Direction {
@@ -83,6 +99,19 @@ pub mod threat_log {
         ClientToServer = 1,
         /// Egress traffic.
         ServerToClient = 2,
+    }
+    impl Direction {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                Direction::Undefined => "DIRECTION_UNDEFINED",
+                Direction::ClientToServer => "CLIENT_TO_SERVER",
+                Direction::ServerToClient => "SERVER_TO_CLIENT",
+            }
+        }
     }
 }
 /// Traffic detected by Cloud IDS.

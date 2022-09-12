@@ -318,7 +318,7 @@ pub struct ObbFile {
     /// Android
     /// e.g. \[main|patch\].0300110.com.example.android.obb
     /// which will be installed into
-    ///   \<shared-storage\>/Android/obb/\<package-name\>/
+    ///    \<shared-storage\>/Android/obb/\<package-name\>/
     /// on the device.
     #[prost(string, tag="1")]
     pub obb_file_name: ::prost::alloc::string::String,
@@ -486,9 +486,9 @@ pub struct AndroidInstrumentationTest {
     pub test_runner_class: ::prost::alloc::string::String,
     /// Each target must be fully qualified with the package name or class name,
     /// in one of these formats:
-    ///  - "package package_name"
-    ///  - "class package_name.class_name"
-    ///  - "class package_name.class_name#method_name"
+    ///   - "package package_name"
+    ///   - "class package_name.class_name"
+    ///   - "class package_name.class_name#method_name"
     ///
     /// If empty, all targets in the module will be run.
     #[prost(string, repeated, tag="6")]
@@ -498,9 +498,9 @@ pub struct AndroidInstrumentationTest {
     /// ** Orchestrator is only compatible with AndroidJUnitRunner version 1.0 or
     /// higher! **
     /// Orchestrator offers the following benefits:
-    ///  - No shared state
-    ///  - Crashes are isolated
-    ///  - Logs are scoped per test
+    ///   - No shared state
+    ///   - Crashes are isolated
+    ///   - Logs are scoped per test
     ///
     /// See
     /// <<https://developer.android.com/training/testing/junit-runner.html#using-android-test-orchestrator>>
@@ -590,8 +590,8 @@ pub mod android_robo_test {
 pub struct RoboDirective {
     /// Required. The android resource name of the target UI element.
     /// For example,
-    ///    in Java: R.string.foo
-    ///    in xml: @string/foo
+    ///     in Java: R.string.foo
+    ///     in xml: @string/foo
     /// Only the "foo" part is needed.
     /// Reference doc:
     /// <https://developer.android.com/guide/topics/resources/accessing-resources.html>
@@ -923,6 +923,22 @@ pub mod invalid_request_detail {
         /// This request is not currently implemented.
         NotImplemented = 5,
     }
+    impl Reason {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                Reason::Unspecified => "REASON_UNSPECIFIED",
+                Reason::RequestInvalid => "REQUEST_INVALID",
+                Reason::ResourceTooBig => "RESOURCE_TOO_BIG",
+                Reason::ResourceNotFound => "RESOURCE_NOT_FOUND",
+                Reason::Unsupported => "UNSUPPORTED",
+                Reason::NotImplemented => "NOT_IMPLEMENTED",
+            }
+        }
+    }
 }
 /// Options for enabling sharding.
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -1058,6 +1074,19 @@ pub enum OrchestratorOption {
     /// Run test without using orchestrator.
     DoNotUseOrchestrator = 2,
 }
+impl OrchestratorOption {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            OrchestratorOption::Unspecified => "ORCHESTRATOR_OPTION_UNSPECIFIED",
+            OrchestratorOption::UseOrchestrator => "USE_ORCHESTRATOR",
+            OrchestratorOption::DoNotUseOrchestrator => "DO_NOT_USE_ORCHESTRATOR",
+        }
+    }
+}
 /// Actions which Robo can perform on UI elements.
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
 #[repr(i32)]
@@ -1072,6 +1101,20 @@ pub enum RoboActionType {
     EnterText = 2,
     /// Direct Robo to ignore interactions with a specific element.
     Ignore = 3,
+}
+impl RoboActionType {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            RoboActionType::ActionTypeUnspecified => "ACTION_TYPE_UNSPECIFIED",
+            RoboActionType::SingleClick => "SINGLE_CLICK",
+            RoboActionType::EnterText => "ENTER_TEXT",
+            RoboActionType::Ignore => "IGNORE",
+        }
+    }
 }
 /// The detailed reason that a Matrix was deemed INVALID.
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
@@ -1175,6 +1218,51 @@ pub enum InvalidMatrixDetails {
     /// APK is built for a preview SDK which is unsupported
     InvalidApkPreviewSdk = 29,
 }
+impl InvalidMatrixDetails {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            InvalidMatrixDetails::Unspecified => "INVALID_MATRIX_DETAILS_UNSPECIFIED",
+            InvalidMatrixDetails::DetailsUnavailable => "DETAILS_UNAVAILABLE",
+            InvalidMatrixDetails::MalformedApk => "MALFORMED_APK",
+            InvalidMatrixDetails::MalformedTestApk => "MALFORMED_TEST_APK",
+            InvalidMatrixDetails::NoManifest => "NO_MANIFEST",
+            InvalidMatrixDetails::NoPackageName => "NO_PACKAGE_NAME",
+            InvalidMatrixDetails::InvalidPackageName => "INVALID_PACKAGE_NAME",
+            InvalidMatrixDetails::TestSameAsApp => "TEST_SAME_AS_APP",
+            InvalidMatrixDetails::NoInstrumentation => "NO_INSTRUMENTATION",
+            InvalidMatrixDetails::NoSignature => "NO_SIGNATURE",
+            InvalidMatrixDetails::InstrumentationOrchestratorIncompatible => "INSTRUMENTATION_ORCHESTRATOR_INCOMPATIBLE",
+            InvalidMatrixDetails::NoTestRunnerClass => "NO_TEST_RUNNER_CLASS",
+            InvalidMatrixDetails::NoLauncherActivity => "NO_LAUNCHER_ACTIVITY",
+            InvalidMatrixDetails::ForbiddenPermissions => "FORBIDDEN_PERMISSIONS",
+            InvalidMatrixDetails::InvalidRoboDirectives => "INVALID_ROBO_DIRECTIVES",
+            InvalidMatrixDetails::InvalidResourceName => "INVALID_RESOURCE_NAME",
+            InvalidMatrixDetails::InvalidDirectiveAction => "INVALID_DIRECTIVE_ACTION",
+            InvalidMatrixDetails::TestLoopIntentFilterNotFound => "TEST_LOOP_INTENT_FILTER_NOT_FOUND",
+            InvalidMatrixDetails::ScenarioLabelNotDeclared => "SCENARIO_LABEL_NOT_DECLARED",
+            InvalidMatrixDetails::ScenarioLabelMalformed => "SCENARIO_LABEL_MALFORMED",
+            InvalidMatrixDetails::ScenarioNotDeclared => "SCENARIO_NOT_DECLARED",
+            InvalidMatrixDetails::DeviceAdminReceiver => "DEVICE_ADMIN_RECEIVER",
+            InvalidMatrixDetails::MalformedXcTestZip => "MALFORMED_XC_TEST_ZIP",
+            InvalidMatrixDetails::BuiltForIosSimulator => "BUILT_FOR_IOS_SIMULATOR",
+            InvalidMatrixDetails::NoTestsInXcTestZip => "NO_TESTS_IN_XC_TEST_ZIP",
+            InvalidMatrixDetails::UseDestinationArtifacts => "USE_DESTINATION_ARTIFACTS",
+            InvalidMatrixDetails::TestNotAppHosted => "TEST_NOT_APP_HOSTED",
+            InvalidMatrixDetails::PlistCannotBeParsed => "PLIST_CANNOT_BE_PARSED",
+            InvalidMatrixDetails::TestOnlyApk => "TEST_ONLY_APK",
+            InvalidMatrixDetails::MalformedIpa => "MALFORMED_IPA",
+            InvalidMatrixDetails::MissingUrlScheme => "MISSING_URL_SCHEME",
+            InvalidMatrixDetails::MalformedAppBundle => "MALFORMED_APP_BUNDLE",
+            InvalidMatrixDetails::NoCodeApk => "NO_CODE_APK",
+            InvalidMatrixDetails::InvalidInputApk => "INVALID_INPUT_APK",
+            InvalidMatrixDetails::InvalidApkPreviewSdk => "INVALID_APK_PREVIEW_SDK",
+        }
+    }
+}
 /// The state (i.e., progress) of a test execution or matrix.
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
 #[repr(i32)]
@@ -1228,6 +1316,27 @@ pub enum TestState {
     /// was flagged as malware
     Invalid = 7,
 }
+impl TestState {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            TestState::Unspecified => "TEST_STATE_UNSPECIFIED",
+            TestState::Validating => "VALIDATING",
+            TestState::Pending => "PENDING",
+            TestState::Running => "RUNNING",
+            TestState::Finished => "FINISHED",
+            TestState::Error => "ERROR",
+            TestState::UnsupportedEnvironment => "UNSUPPORTED_ENVIRONMENT",
+            TestState::IncompatibleEnvironment => "INCOMPATIBLE_ENVIRONMENT",
+            TestState::IncompatibleArchitecture => "INCOMPATIBLE_ARCHITECTURE",
+            TestState::Cancelled => "CANCELLED",
+            TestState::Invalid => "INVALID",
+        }
+    }
+}
 /// Outcome summary for a finished test matrix.
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
 #[repr(i32)]
@@ -1251,10 +1360,26 @@ pub enum OutcomeSummary {
     /// - All device configurations were incompatible.
     Skipped = 4,
 }
+impl OutcomeSummary {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            OutcomeSummary::Unspecified => "OUTCOME_SUMMARY_UNSPECIFIED",
+            OutcomeSummary::Success => "SUCCESS",
+            OutcomeSummary::Failure => "FAILURE",
+            OutcomeSummary::Inconclusive => "INCONCLUSIVE",
+            OutcomeSummary::Skipped => "SKIPPED",
+        }
+    }
+}
 /// Generated client implementations.
 pub mod test_execution_service_client {
     #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
     use tonic::codegen::*;
+    use tonic::codegen::http::Uri;
     /// A service for requesting test executions and querying their status.
     ///
     /// This service is part of Firebase Test Lab. To learn about how to use the
@@ -1294,6 +1419,10 @@ pub mod test_execution_service_client {
             let inner = tonic::client::Grpc::new(inner);
             Self { inner }
         }
+        pub fn with_origin(inner: T, origin: Uri) -> Self {
+            let inner = tonic::client::Grpc::with_origin(inner, origin);
+            Self { inner }
+        }
         pub fn with_interceptor<F>(
             inner: T,
             interceptor: F,
@@ -1313,19 +1442,19 @@ pub mod test_execution_service_client {
         {
             TestExecutionServiceClient::new(InterceptedService::new(inner, interceptor))
         }
-        /// Compress requests with `gzip`.
+        /// Compress requests with the given encoding.
         ///
         /// This requires the server to support it otherwise it might respond with an
         /// error.
         #[must_use]
-        pub fn send_gzip(mut self) -> Self {
-            self.inner = self.inner.send_gzip();
+        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.send_compressed(encoding);
             self
         }
-        /// Enable decompressing responses with `gzip`.
+        /// Enable decompressing responses.
         #[must_use]
-        pub fn accept_gzip(mut self) -> Self {
-            self.inner = self.inner.accept_gzip();
+        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.accept_compressed(encoding);
             self
         }
         /// Creates and runs a matrix of tests according to the given specifications.
@@ -1453,6 +1582,22 @@ pub mod get_test_environment_catalog_request {
         ProvidedSoftware = 5,
         /// The IP blocks used by devices in the test environment.
         DeviceIpBlocks = 6,
+    }
+    impl EnvironmentType {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                EnvironmentType::Unspecified => "ENVIRONMENT_TYPE_UNSPECIFIED",
+                EnvironmentType::Android => "ANDROID",
+                EnvironmentType::Ios => "IOS",
+                EnvironmentType::NetworkConfiguration => "NETWORK_CONFIGURATION",
+                EnvironmentType::ProvidedSoftware => "PROVIDED_SOFTWARE",
+                EnvironmentType::DeviceIpBlocks => "DEVICE_IP_BLOCKS",
+            }
+        }
     }
 }
 /// A description of a test environment.
@@ -1818,6 +1963,20 @@ pub enum DeviceForm {
     /// to Android Studio.
     Emulator = 3,
 }
+impl DeviceForm {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            DeviceForm::Unspecified => "DEVICE_FORM_UNSPECIFIED",
+            DeviceForm::Virtual => "VIRTUAL",
+            DeviceForm::Physical => "PHYSICAL",
+            DeviceForm::Emulator => "EMULATOR",
+        }
+    }
+}
 /// The form factor of a device.
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
 #[repr(i32)]
@@ -1831,10 +1990,25 @@ pub enum DeviceFormFactor {
     /// This device has the shape of a watch or other wearable.
     Wearable = 3,
 }
+impl DeviceFormFactor {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            DeviceFormFactor::Unspecified => "DEVICE_FORM_FACTOR_UNSPECIFIED",
+            DeviceFormFactor::Phone => "PHONE",
+            DeviceFormFactor::Tablet => "TABLET",
+            DeviceFormFactor::Wearable => "WEARABLE",
+        }
+    }
+}
 /// Generated client implementations.
 pub mod test_environment_discovery_service_client {
     #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
     use tonic::codegen::*;
+    use tonic::codegen::http::Uri;
     /// Service for discovering environments supported by the TestExecutionService.
     ///
     /// Over time the TestService may add or remove devices or configuration options
@@ -1882,6 +2056,10 @@ pub mod test_environment_discovery_service_client {
             let inner = tonic::client::Grpc::new(inner);
             Self { inner }
         }
+        pub fn with_origin(inner: T, origin: Uri) -> Self {
+            let inner = tonic::client::Grpc::with_origin(inner, origin);
+            Self { inner }
+        }
         pub fn with_interceptor<F>(
             inner: T,
             interceptor: F,
@@ -1903,19 +2081,19 @@ pub mod test_environment_discovery_service_client {
                 InterceptedService::new(inner, interceptor),
             )
         }
-        /// Compress requests with `gzip`.
+        /// Compress requests with the given encoding.
         ///
         /// This requires the server to support it otherwise it might respond with an
         /// error.
         #[must_use]
-        pub fn send_gzip(mut self) -> Self {
-            self.inner = self.inner.send_gzip();
+        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.send_compressed(encoding);
             self
         }
-        /// Enable decompressing responses with `gzip`.
+        /// Enable decompressing responses.
         #[must_use]
-        pub fn accept_gzip(mut self) -> Self {
-            self.inner = self.inner.accept_gzip();
+        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.accept_compressed(encoding);
             self
         }
         /// Gets the catalog of supported test environments.
@@ -2011,6 +2189,7 @@ pub struct GetApkDetailsResponse {
 pub mod application_detail_service_client {
     #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
     use tonic::codegen::*;
+    use tonic::codegen::http::Uri;
     /// A service which parses input applications and returns details that can be
     /// useful in the context of testing.
     #[derive(Debug, Clone)]
@@ -2026,6 +2205,10 @@ pub mod application_detail_service_client {
     {
         pub fn new(inner: T) -> Self {
             let inner = tonic::client::Grpc::new(inner);
+            Self { inner }
+        }
+        pub fn with_origin(inner: T, origin: Uri) -> Self {
+            let inner = tonic::client::Grpc::with_origin(inner, origin);
             Self { inner }
         }
         pub fn with_interceptor<F>(
@@ -2049,19 +2232,19 @@ pub mod application_detail_service_client {
                 InterceptedService::new(inner, interceptor),
             )
         }
-        /// Compress requests with `gzip`.
+        /// Compress requests with the given encoding.
         ///
         /// This requires the server to support it otherwise it might respond with an
         /// error.
         #[must_use]
-        pub fn send_gzip(mut self) -> Self {
-            self.inner = self.inner.send_gzip();
+        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.send_compressed(encoding);
             self
         }
-        /// Enable decompressing responses with `gzip`.
+        /// Enable decompressing responses.
         #[must_use]
-        pub fn accept_gzip(mut self) -> Self {
-            self.inner = self.inner.accept_gzip();
+        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.accept_compressed(encoding);
             self
         }
         /// Gets the details of an Android application APK.

@@ -1,30 +1,3 @@
-/// Restricts access to Cloud Console and Google Cloud APIs for a set of users
-/// using Context-Aware Access.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct GcpUserAccessBinding {
-    /// Immutable. Assigned by the server during creation. The last segment has an arbitrary
-    /// length and has only URI unreserved characters (as defined by
-    /// [RFC 3986 Section 2.3](<https://tools.ietf.org/html/rfc3986#section-2.3>)).
-    /// Should not be specified by the client during creation.
-    /// Example: "organizations/256/gcpUserAccessBindings/b3-BhcX_Ud5N"
-    #[prost(string, tag="1")]
-    pub name: ::prost::alloc::string::String,
-    /// Required. Immutable. Google Group id whose members are subject to this binding's restrictions.
-    /// See "id" in the [G Suite Directory API's Groups resource]
-    /// (<https://developers.google.com/admin-sdk/directory/v1/reference/groups#resource>).
-    /// If a group's email address/alias is changed, this resource will continue
-    /// to point at the changed group. This field does not accept group email
-    /// addresses or aliases.
-    /// Example: "01d520gv4vjcrht"
-    #[prost(string, tag="2")]
-    pub group_key: ::prost::alloc::string::String,
-    /// Required. Access level that a user must have to be granted access. Only one access
-    /// level is supported, not multiple. This repeated field must have exactly
-    /// one element.
-    /// Example: "accessPolicies/9522/accessLevels/device_trusted"
-    #[prost(string, repeated, tag="3")]
-    pub access_levels: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
-}
 /// An `AccessLevel` is a label that can be applied to requests to Google Cloud
 /// services, along with a list of requirements necessary for the label to be
 /// applied.
@@ -90,6 +63,18 @@ pub mod basic_level {
         And = 0,
         /// If at least one `Condition` is true, then the `BasicLevel` is true.
         Or = 1,
+    }
+    impl ConditionCombiningFunction {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                ConditionCombiningFunction::And => "AND",
+                ConditionCombiningFunction::Or => "OR",
+            }
+        }
     }
 }
 /// A condition necessary for an `AccessLevel` to be granted. The Condition is an
@@ -229,6 +214,33 @@ pub struct AccessPolicy {
     #[prost(string, tag="6")]
     pub etag: ::prost::alloc::string::String,
 }
+/// Restricts access to Cloud Console and Google Cloud APIs for a set of users
+/// using Context-Aware Access.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct GcpUserAccessBinding {
+    /// Immutable. Assigned by the server during creation. The last segment has an arbitrary
+    /// length and has only URI unreserved characters (as defined by
+    /// [RFC 3986 Section 2.3](<https://tools.ietf.org/html/rfc3986#section-2.3>)).
+    /// Should not be specified by the client during creation.
+    /// Example: "organizations/256/gcpUserAccessBindings/b3-BhcX_Ud5N"
+    #[prost(string, tag="1")]
+    pub name: ::prost::alloc::string::String,
+    /// Required. Immutable. Google Group id whose members are subject to this binding's restrictions.
+    /// See "id" in the [G Suite Directory API's Groups resource]
+    /// (<https://developers.google.com/admin-sdk/directory/v1/reference/groups#resource>).
+    /// If a group's email address/alias is changed, this resource will continue
+    /// to point at the changed group. This field does not accept group email
+    /// addresses or aliases.
+    /// Example: "01d520gv4vjcrht"
+    #[prost(string, tag="2")]
+    pub group_key: ::prost::alloc::string::String,
+    /// Required. Access level that a user must have to be granted access. Only one access
+    /// level is supported, not multiple. This repeated field must have exactly
+    /// one element.
+    /// Example: "accessPolicies/9522/accessLevels/device_trusted"
+    #[prost(string, repeated, tag="3")]
+    pub access_levels: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
+}
 /// `ServicePerimeter` describes a set of Google Cloud resources which can freely
 /// import and export data amongst themselves, but not export outside of the
 /// `ServicePerimeter`. If a request with a source within this `ServicePerimeter`
@@ -316,6 +328,18 @@ pub mod service_perimeter {
         Regular = 0,
         /// Perimeter Bridge.
         Bridge = 1,
+    }
+    impl PerimeterType {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                PerimeterType::Regular => "PERIMETER_TYPE_REGULAR",
+                PerimeterType::Bridge => "PERIMETER_TYPE_BRIDGE",
+            }
+        }
     }
 }
 /// `ServicePerimeterConfig` specifies a set of Google Cloud resources that
@@ -689,6 +713,20 @@ pub mod service_perimeter_config {
         AnyUserAccount = 2,
         /// Authorize access from all service accounts outside the perimeter.
         AnyServiceAccount = 3,
+    }
+    impl IdentityType {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                IdentityType::Unspecified => "IDENTITY_TYPE_UNSPECIFIED",
+                IdentityType::AnyIdentity => "ANY_IDENTITY",
+                IdentityType::AnyUserAccount => "ANY_USER_ACCOUNT",
+                IdentityType::AnyServiceAccount => "ANY_SERVICE_ACCOUNT",
+            }
+        }
     }
 }
 /// A request to list all `AccessPolicies` for a container.
@@ -1141,10 +1179,24 @@ pub enum LevelFormat {
     /// BasicLevels and CustomLevels are returned as CustomLevels.
     Cel = 2,
 }
+impl LevelFormat {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            LevelFormat::Unspecified => "LEVEL_FORMAT_UNSPECIFIED",
+            LevelFormat::AsDefined => "AS_DEFINED",
+            LevelFormat::Cel => "CEL",
+        }
+    }
+}
 /// Generated client implementations.
 pub mod access_context_manager_client {
     #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
     use tonic::codegen::*;
+    use tonic::codegen::http::Uri;
     /// API for setting [Access Levels]
     /// [google.identity.accesscontextmanager.v1.AccessLevel] and [Service
     /// Perimeters] [google.identity.accesscontextmanager.v1.ServicePerimeter]
@@ -1171,6 +1223,10 @@ pub mod access_context_manager_client {
             let inner = tonic::client::Grpc::new(inner);
             Self { inner }
         }
+        pub fn with_origin(inner: T, origin: Uri) -> Self {
+            let inner = tonic::client::Grpc::with_origin(inner, origin);
+            Self { inner }
+        }
         pub fn with_interceptor<F>(
             inner: T,
             interceptor: F,
@@ -1190,19 +1246,19 @@ pub mod access_context_manager_client {
         {
             AccessContextManagerClient::new(InterceptedService::new(inner, interceptor))
         }
-        /// Compress requests with `gzip`.
+        /// Compress requests with the given encoding.
         ///
         /// This requires the server to support it otherwise it might respond with an
         /// error.
         #[must_use]
-        pub fn send_gzip(mut self) -> Self {
-            self.inner = self.inner.send_gzip();
+        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.send_compressed(encoding);
             self
         }
-        /// Enable decompressing responses with `gzip`.
+        /// Enable decompressing responses.
         #[must_use]
-        pub fn accept_gzip(mut self) -> Self {
-            self.inner = self.inner.accept_gzip();
+        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.accept_compressed(encoding);
             self
         }
         /// List all [AccessPolicies]

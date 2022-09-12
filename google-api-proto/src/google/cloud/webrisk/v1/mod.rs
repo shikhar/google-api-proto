@@ -89,6 +89,19 @@ pub mod compute_threat_list_diff_response {
         /// or the client is believed to be corrupt.
         Reset = 2,
     }
+    impl ResponseType {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                ResponseType::Unspecified => "RESPONSE_TYPE_UNSPECIFIED",
+                ResponseType::Diff => "DIFF",
+                ResponseType::Reset => "RESET",
+            }
+        }
+    }
 }
 /// Request to check URI entries against threatLists.
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -270,6 +283,20 @@ pub enum ThreatType {
     /// Unwanted software targeting any platform.
     UnwantedSoftware = 3,
 }
+impl ThreatType {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            ThreatType::Unspecified => "THREAT_TYPE_UNSPECIFIED",
+            ThreatType::Malware => "MALWARE",
+            ThreatType::SocialEngineering => "SOCIAL_ENGINEERING",
+            ThreatType::UnwantedSoftware => "UNWANTED_SOFTWARE",
+        }
+    }
+}
 /// The ways in which threat entry sets can be compressed.
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
 #[repr(i32)]
@@ -281,10 +308,24 @@ pub enum CompressionType {
     /// Rice-Golomb encoded data.
     Rice = 2,
 }
+impl CompressionType {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            CompressionType::Unspecified => "COMPRESSION_TYPE_UNSPECIFIED",
+            CompressionType::Raw => "RAW",
+            CompressionType::Rice => "RICE",
+        }
+    }
+}
 /// Generated client implementations.
 pub mod web_risk_service_client {
     #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
     use tonic::codegen::*;
+    use tonic::codegen::http::Uri;
     /// Web Risk API defines an interface to detect malicious URLs on your
     /// website and in client applications.
     #[derive(Debug, Clone)]
@@ -300,6 +341,10 @@ pub mod web_risk_service_client {
     {
         pub fn new(inner: T) -> Self {
             let inner = tonic::client::Grpc::new(inner);
+            Self { inner }
+        }
+        pub fn with_origin(inner: T, origin: Uri) -> Self {
+            let inner = tonic::client::Grpc::with_origin(inner, origin);
             Self { inner }
         }
         pub fn with_interceptor<F>(
@@ -321,19 +366,19 @@ pub mod web_risk_service_client {
         {
             WebRiskServiceClient::new(InterceptedService::new(inner, interceptor))
         }
-        /// Compress requests with `gzip`.
+        /// Compress requests with the given encoding.
         ///
         /// This requires the server to support it otherwise it might respond with an
         /// error.
         #[must_use]
-        pub fn send_gzip(mut self) -> Self {
-            self.inner = self.inner.send_gzip();
+        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.send_compressed(encoding);
             self
         }
-        /// Enable decompressing responses with `gzip`.
+        /// Enable decompressing responses.
         #[must_use]
-        pub fn accept_gzip(mut self) -> Self {
-            self.inner = self.inner.accept_gzip();
+        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.accept_compressed(encoding);
             self
         }
         /// Gets the most recent threat list diffs. These diffs should be applied to

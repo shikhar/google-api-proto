@@ -8,7 +8,7 @@ pub struct FormatMessage {
     /// Examples:
     ///
     /// *   `Failed to load '$0' which helps debug $1 the first time it
-    ///     is loaded.  Again, $0 is very important.`
+    ///      is loaded.  Again, $0 is very important.`
     /// *   `Please pay $$10 to use $0 instead of $1.`
     #[prost(string, tag="1")]
     pub format: ::prost::alloc::string::String,
@@ -54,6 +54,23 @@ pub mod status_message {
         /// Status applies to variable value (variable name is valid).
         VariableValue = 6,
     }
+    impl Reference {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                Reference::Unspecified => "UNSPECIFIED",
+                Reference::BreakpointSourceLocation => "BREAKPOINT_SOURCE_LOCATION",
+                Reference::BreakpointCondition => "BREAKPOINT_CONDITION",
+                Reference::BreakpointExpression => "BREAKPOINT_EXPRESSION",
+                Reference::BreakpointAge => "BREAKPOINT_AGE",
+                Reference::VariableName => "VARIABLE_NAME",
+                Reference::VariableValue => "VARIABLE_VALUE",
+            }
+        }
+    }
 }
 /// Represents a location in the source code.
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -75,48 +92,48 @@ pub struct SourceLocation {
 ///
 /// 1) A simple variable:
 ///
-///     int x = 5
+///      int x = 5
 ///
-///     { name: "x", value: "5", type: "int" }  // Captured variable
+///      { name: "x", value: "5", type: "int" }  // Captured variable
 ///
 /// 2) A compound object:
 ///
-///     struct T {
-///         int m1;
-///         int m2;
-///     };
-///     T x = { 3, 7 };
+///      struct T {
+///          int m1;
+///          int m2;
+///      };
+///      T x = { 3, 7 };
 ///
-///     {  // Captured variable
-///         name: "x",
-///         type: "T",
-///         members { name: "m1", value: "3", type: "int" },
-///         members { name: "m2", value: "7", type: "int" }
-///     }
+///      {  // Captured variable
+///          name: "x",
+///          type: "T",
+///          members { name: "m1", value: "3", type: "int" },
+///          members { name: "m2", value: "7", type: "int" }
+///      }
 ///
 /// 3) A pointer where the pointee was captured:
 ///
-///     T x = { 3, 7 };
-///     T* p = &x;
+///      T x = { 3, 7 };
+///      T* p = &x;
 ///
-///     {   // Captured variable
-///         name: "p",
-///         type: "T*",
-///         value: "0x00500500",
-///         members { name: "m1", value: "3", type: "int" },
-///         members { name: "m2", value: "7", type: "int" }
-///     }
+///      {   // Captured variable
+///          name: "p",
+///          type: "T*",
+///          value: "0x00500500",
+///          members { name: "m1", value: "3", type: "int" },
+///          members { name: "m2", value: "7", type: "int" }
+///      }
 ///
 /// 4) A pointer where the pointee was not captured:
 ///
-///     T* p = new T;
+///      T* p = new T;
 ///
-///     {   // Captured variable
-///         name: "p",
-///         type: "T*",
-///         value: "0x00400400"
-///         status { is_error: true, description { format: "unavailable" } }
-///     }
+///      {   // Captured variable
+///          name: "p",
+///          type: "T*",
+///          value: "0x00400400"
+///          status { is_error: true, description { format: "unavailable" } }
+///      }
 ///
 /// The status should describe the reason for the missing value,
 /// such as `<optimized out>`, `<inaccessible>`, `<pointers limit reached>`.
@@ -125,32 +142,32 @@ pub struct SourceLocation {
 ///
 /// 5) An unnamed value:
 ///
-///     int* p = new int(7);
+///      int* p = new int(7);
 ///
-///     {   // Captured variable
-///         name: "p",
-///         value: "0x00500500",
-///         type: "int*",
-///         members { value: "7", type: "int" } }
+///      {   // Captured variable
+///          name: "p",
+///          value: "0x00500500",
+///          type: "int*",
+///          members { value: "7", type: "int" } }
 ///
 /// 6) An unnamed pointer where the pointee was not captured:
 ///
-///     int* p = new int(7);
-///     int** pp = &p;
+///      int* p = new int(7);
+///      int** pp = &p;
 ///
-///     {  // Captured variable
-///         name: "pp",
-///         value: "0x00500500",
-///         type: "int**",
-///         members {
-///             value: "0x00400400",
-///             type: "int*"
-///             status {
-///                 is_error: true,
-///                 description: { format: "unavailable" } }
-///             }
-///         }
-///     }
+///      {  // Captured variable
+///          name: "pp",
+///          value: "0x00500500",
+///          type: "int**",
+///          members {
+///              value: "0x00400400",
+///              type: "int*"
+///              status {
+///                  is_error: true,
+///                  description: { format: "unavailable" } }
+///              }
+///          }
+///      }
 ///
 /// To optimize computation, memory and network traffic, variables that
 /// repeat in the output multiple times can be stored once in a shared
@@ -161,18 +178,18 @@ pub struct SourceLocation {
 ///
 /// When using the shared variable table, the following variables:
 ///
-///     T x = { 3, 7 };
-///     T* p = &x;
-///     T& r = x;
+///      T x = { 3, 7 };
+///      T* p = &x;
+///      T& r = x;
 ///
-///     { name: "x", var_table_index: 3, type: "T" }  // Captured variables
-///     { name: "p", value "0x00500500", type="T*", var_table_index: 3 }
-///     { name: "r", type="T&", var_table_index: 3 }
+///      { name: "x", var_table_index: 3, type: "T" }  // Captured variables
+///      { name: "p", value "0x00500500", type="T*", var_table_index: 3 }
+///      { name: "r", type="T&", var_table_index: 3 }
 ///
-///     {  // Shared variable table entry #3:
-///         members { name: "m1", value: "3", type: "int" },
-///         members { name: "m2", value: "7", type: "int" }
-///     }
+///      {  // Shared variable table entry #3:
+///          members { name: "m1", value: "3", type: "int" },
+///          members { name: "m2", value: "7", type: "int" }
+///      }
 ///
 /// Note that the pointer address is stored with the referencing variable
 /// and not with the referenced variable. This allows the referenced variable
@@ -356,6 +373,18 @@ pub mod breakpoint {
         /// deleted or expired.
         Log = 1,
     }
+    impl Action {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                Action::Capture => "CAPTURE",
+                Action::Log => "LOG",
+            }
+        }
+    }
     /// Log severity levels.
     #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
     #[repr(i32)]
@@ -366,6 +395,19 @@ pub mod breakpoint {
         Warning = 1,
         /// Error log message.
         Error = 2,
+    }
+    impl LogLevel {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                LogLevel::Info => "INFO",
+                LogLevel::Warning => "WARNING",
+                LogLevel::Error => "ERROR",
+            }
+        }
     }
 }
 /// Represents the debugged application. The application may include one or more
@@ -574,6 +616,7 @@ pub struct ListDebuggeesResponse {
 pub mod debugger2_client {
     #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
     use tonic::codegen::*;
+    use tonic::codegen::http::Uri;
     /// The Debugger service provides the API that allows users to collect run-time
     /// information from a running application, without stopping or slowing it down
     /// and without modifying its state.  An application may include one or
@@ -601,6 +644,10 @@ pub mod debugger2_client {
             let inner = tonic::client::Grpc::new(inner);
             Self { inner }
         }
+        pub fn with_origin(inner: T, origin: Uri) -> Self {
+            let inner = tonic::client::Grpc::with_origin(inner, origin);
+            Self { inner }
+        }
         pub fn with_interceptor<F>(
             inner: T,
             interceptor: F,
@@ -620,19 +667,19 @@ pub mod debugger2_client {
         {
             Debugger2Client::new(InterceptedService::new(inner, interceptor))
         }
-        /// Compress requests with `gzip`.
+        /// Compress requests with the given encoding.
         ///
         /// This requires the server to support it otherwise it might respond with an
         /// error.
         #[must_use]
-        pub fn send_gzip(mut self) -> Self {
-            self.inner = self.inner.send_gzip();
+        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.send_compressed(encoding);
             self
         }
-        /// Enable decompressing responses with `gzip`.
+        /// Enable decompressing responses.
         #[must_use]
-        pub fn accept_gzip(mut self) -> Self {
-            self.inner = self.inner.accept_gzip();
+        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.accept_compressed(encoding);
             self
         }
         /// Sets the breakpoint to the debuggee.
@@ -816,6 +863,7 @@ pub struct UpdateActiveBreakpointResponse {
 pub mod controller2_client {
     #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
     use tonic::codegen::*;
+    use tonic::codegen::http::Uri;
     /// The Controller service provides the API for orchestrating a collection of
     /// debugger agents to perform debugging tasks. These agents are each attached
     /// to a process of an application which may include one or more replicas.
@@ -851,6 +899,10 @@ pub mod controller2_client {
             let inner = tonic::client::Grpc::new(inner);
             Self { inner }
         }
+        pub fn with_origin(inner: T, origin: Uri) -> Self {
+            let inner = tonic::client::Grpc::with_origin(inner, origin);
+            Self { inner }
+        }
         pub fn with_interceptor<F>(
             inner: T,
             interceptor: F,
@@ -870,19 +922,19 @@ pub mod controller2_client {
         {
             Controller2Client::new(InterceptedService::new(inner, interceptor))
         }
-        /// Compress requests with `gzip`.
+        /// Compress requests with the given encoding.
         ///
         /// This requires the server to support it otherwise it might respond with an
         /// error.
         #[must_use]
-        pub fn send_gzip(mut self) -> Self {
-            self.inner = self.inner.send_gzip();
+        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.send_compressed(encoding);
             self
         }
-        /// Enable decompressing responses with `gzip`.
+        /// Enable decompressing responses.
         #[must_use]
-        pub fn accept_gzip(mut self) -> Self {
-            self.inner = self.inner.accept_gzip();
+        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.accept_compressed(encoding);
             self
         }
         /// Registers the debuggee with the controller service.

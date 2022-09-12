@@ -87,6 +87,19 @@ pub enum State {
     /// The service has been explicitly enabled for use by this consumer.
     Enabled = 2,
 }
+impl State {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            State::Unspecified => "STATE_UNSPECIFIED",
+            State::Disabled => "DISABLED",
+            State::Enabled => "ENABLED",
+        }
+    }
+}
 /// Request message for the `EnableService` method.
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct EnableServiceRequest {
@@ -151,6 +164,19 @@ pub mod disable_service_request {
         /// service, or its dependents, has usage in the last 30 days, the request
         /// returns a FAILED_PRECONDITION error.
         Check = 2,
+    }
+    impl CheckIfServiceHasUsage {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                CheckIfServiceHasUsage::Unspecified => "CHECK_IF_SERVICE_HAS_USAGE_UNSPECIFIED",
+                CheckIfServiceHasUsage::Skip => "SKIP",
+                CheckIfServiceHasUsage::Check => "CHECK",
+            }
+        }
     }
 }
 /// Response message for the `DisableService` method.
@@ -288,6 +314,7 @@ pub struct BatchGetServicesResponse {
 pub mod service_usage_client {
     #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
     use tonic::codegen::*;
+    use tonic::codegen::http::Uri;
     /// Enables services that service consumers want to use on Google Cloud Platform,
     /// lists the available or enabled services, or disables services that service
     /// consumers no longer use.
@@ -306,6 +333,10 @@ pub mod service_usage_client {
     {
         pub fn new(inner: T) -> Self {
             let inner = tonic::client::Grpc::new(inner);
+            Self { inner }
+        }
+        pub fn with_origin(inner: T, origin: Uri) -> Self {
+            let inner = tonic::client::Grpc::with_origin(inner, origin);
             Self { inner }
         }
         pub fn with_interceptor<F>(
@@ -327,19 +358,19 @@ pub mod service_usage_client {
         {
             ServiceUsageClient::new(InterceptedService::new(inner, interceptor))
         }
-        /// Compress requests with `gzip`.
+        /// Compress requests with the given encoding.
         ///
         /// This requires the server to support it otherwise it might respond with an
         /// error.
         #[must_use]
-        pub fn send_gzip(mut self) -> Self {
-            self.inner = self.inner.send_gzip();
+        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.send_compressed(encoding);
             self
         }
-        /// Enable decompressing responses with `gzip`.
+        /// Enable decompressing responses.
         #[must_use]
-        pub fn accept_gzip(mut self) -> Self {
-            self.inner = self.inner.accept_gzip();
+        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.accept_compressed(encoding);
             self
         }
         /// Enable a service so that it can be used with a project.

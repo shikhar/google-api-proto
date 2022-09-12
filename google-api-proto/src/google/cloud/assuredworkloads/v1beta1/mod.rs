@@ -59,6 +59,19 @@ pub mod restrict_allowed_resources_request {
         /// for the list of supported resources.
         AllowCompliantResources = 2,
     }
+    impl RestrictionType {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                RestrictionType::Unspecified => "RESTRICTION_TYPE_UNSPECIFIED",
+                RestrictionType::AllowAllGcpResources => "ALLOW_ALL_GCP_RESOURCES",
+                RestrictionType::AllowCompliantResources => "ALLOW_COMPLIANT_RESOURCES",
+            }
+        }
+    }
 }
 /// Response for restricting the list of allowed resources.
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -288,6 +301,21 @@ pub mod workload {
             /// Keyring resource that hosts encryption keys.
             Keyring = 3,
         }
+        impl ResourceType {
+            /// String value of the enum field names used in the ProtoBuf definition.
+            ///
+            /// The values are not transformed in any way and thus are considered stable
+            /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+            pub fn as_str_name(&self) -> &'static str {
+                match self {
+                    ResourceType::Unspecified => "RESOURCE_TYPE_UNSPECIFIED",
+                    ResourceType::ConsumerProject => "CONSUMER_PROJECT",
+                    ResourceType::ConsumerFolder => "CONSUMER_FOLDER",
+                    ResourceType::EncryptionKeysProject => "ENCRYPTION_KEYS_PROJECT",
+                    ResourceType::Keyring => "KEYRING",
+                }
+            }
+        }
     }
     /// Settings specific to the Key Management Service.
     #[derive(Clone, PartialEq, ::prost::Message)]
@@ -374,6 +402,19 @@ pub mod workload {
             /// SAA enrollment comopleted.
             StatusComplete = 2,
         }
+        impl SetupState {
+            /// String value of the enum field names used in the ProtoBuf definition.
+            ///
+            /// The values are not transformed in any way and thus are considered stable
+            /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+            pub fn as_str_name(&self) -> &'static str {
+                match self {
+                    SetupState::Unspecified => "SETUP_STATE_UNSPECIFIED",
+                    SetupState::StatusPending => "STATUS_PENDING",
+                    SetupState::StatusComplete => "STATUS_COMPLETE",
+                }
+            }
+        }
         /// Setup error of SAA enrollment.
         #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
         #[repr(i32)]
@@ -391,6 +432,21 @@ pub mod workload {
             /// Returned when exception was encountered during evaluation of other
             /// criteria.
             ErrorSetupCheckFailed = 4,
+        }
+        impl SetupError {
+            /// String value of the enum field names used in the ProtoBuf definition.
+            ///
+            /// The values are not transformed in any way and thus are considered stable
+            /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+            pub fn as_str_name(&self) -> &'static str {
+                match self {
+                    SetupError::Unspecified => "SETUP_ERROR_UNSPECIFIED",
+                    SetupError::ErrorInvalidBaseSetup => "ERROR_INVALID_BASE_SETUP",
+                    SetupError::ErrorMissingExternalSigningKey => "ERROR_MISSING_EXTERNAL_SIGNING_KEY",
+                    SetupError::ErrorNotAllServicesEnrolled => "ERROR_NOT_ALL_SERVICES_ENROLLED",
+                    SetupError::ErrorSetupCheckFailed => "ERROR_SETUP_CHECK_FAILED",
+                }
+            }
         }
     }
     /// Supported Compliance Regimes.
@@ -422,6 +478,28 @@ pub mod workload {
         /// Assured Workloads for Australia Regions and Support controls
         AuRegionsAndUsSupport = 11,
     }
+    impl ComplianceRegime {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                ComplianceRegime::Unspecified => "COMPLIANCE_REGIME_UNSPECIFIED",
+                ComplianceRegime::Il4 => "IL4",
+                ComplianceRegime::Cjis => "CJIS",
+                ComplianceRegime::FedrampHigh => "FEDRAMP_HIGH",
+                ComplianceRegime::FedrampModerate => "FEDRAMP_MODERATE",
+                ComplianceRegime::UsRegionalAccess => "US_REGIONAL_ACCESS",
+                ComplianceRegime::Hipaa => "HIPAA",
+                ComplianceRegime::Hitrust => "HITRUST",
+                ComplianceRegime::EuRegionsAndSupport => "EU_REGIONS_AND_SUPPORT",
+                ComplianceRegime::CaRegionsAndSupport => "CA_REGIONS_AND_SUPPORT",
+                ComplianceRegime::Itar => "ITAR",
+                ComplianceRegime::AuRegionsAndUsSupport => "AU_REGIONS_AND_US_SUPPORT",
+            }
+        }
+    }
     /// Key Access Justifications(KAJ) Enrollment State.
     #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
     #[repr(i32)]
@@ -432,6 +510,19 @@ pub mod workload {
         Pending = 1,
         /// Complete State for KAJ Enrollment.
         Complete = 2,
+    }
+    impl KajEnrollmentState {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                KajEnrollmentState::Unspecified => "KAJ_ENROLLMENT_STATE_UNSPECIFIED",
+                KajEnrollmentState::Pending => "KAJ_ENROLLMENT_STATE_PENDING",
+                KajEnrollmentState::Complete => "KAJ_ENROLLMENT_STATE_COMPLETE",
+            }
+        }
     }
     /// Settings specific to the selected \[compliance_regime\]
     #[derive(Clone, PartialEq, ::prost::Oneof)]
@@ -475,6 +566,7 @@ pub struct CreateWorkloadOperationMetadata {
 pub mod assured_workloads_service_client {
     #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
     use tonic::codegen::*;
+    use tonic::codegen::http::Uri;
     /// Service to manage AssuredWorkloads.
     #[derive(Debug, Clone)]
     pub struct AssuredWorkloadsServiceClient<T> {
@@ -489,6 +581,10 @@ pub mod assured_workloads_service_client {
     {
         pub fn new(inner: T) -> Self {
             let inner = tonic::client::Grpc::new(inner);
+            Self { inner }
+        }
+        pub fn with_origin(inner: T, origin: Uri) -> Self {
+            let inner = tonic::client::Grpc::with_origin(inner, origin);
             Self { inner }
         }
         pub fn with_interceptor<F>(
@@ -512,19 +608,19 @@ pub mod assured_workloads_service_client {
                 InterceptedService::new(inner, interceptor),
             )
         }
-        /// Compress requests with `gzip`.
+        /// Compress requests with the given encoding.
         ///
         /// This requires the server to support it otherwise it might respond with an
         /// error.
         #[must_use]
-        pub fn send_gzip(mut self) -> Self {
-            self.inner = self.inner.send_gzip();
+        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.send_compressed(encoding);
             self
         }
-        /// Enable decompressing responses with `gzip`.
+        /// Enable decompressing responses.
         #[must_use]
-        pub fn accept_gzip(mut self) -> Self {
-            self.inner = self.inner.accept_gzip();
+        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.accept_compressed(encoding);
             self
         }
         /// Creates Assured Workload.

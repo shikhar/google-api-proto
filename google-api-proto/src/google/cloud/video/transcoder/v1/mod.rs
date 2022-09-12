@@ -70,6 +70,21 @@ pub mod job {
         /// `failure_details`
         Failed = 4,
     }
+    impl ProcessingState {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                ProcessingState::Unspecified => "PROCESSING_STATE_UNSPECIFIED",
+                ProcessingState::Pending => "PENDING",
+                ProcessingState::Running => "RUNNING",
+                ProcessingState::Succeeded => "SUCCEEDED",
+                ProcessingState::Failed => "FAILED",
+            }
+        }
+    }
     /// Specify the `job_config` for the transcoding job. If you don't specify the
     /// `job_config`, the API selects `templateId`; this template ID is set to
     /// `preset/web-hd` by default. When you use a `template_id` to create a job,
@@ -83,7 +98,7 @@ pub mod job {
         /// - `preset/{preset_id}`
         ///
         /// - User defined JobTemplate:
-        ///   `{job_template_id}`
+        ///    `{job_template_id}`
         #[prost(string, tag="4")]
         TemplateId(::prost::alloc::string::String),
         /// The configuration for this job.
@@ -295,6 +310,19 @@ pub mod manifest {
         /// Create `DASH` manifest. The corresponding file extension is `.mpd`.
         Dash = 2,
     }
+    impl ManifestType {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                ManifestType::Unspecified => "MANIFEST_TYPE_UNSPECIFIED",
+                ManifestType::Hls => "HLS",
+                ManifestType::Dash => "DASH",
+            }
+        }
+    }
 }
 /// A Pub/Sub destination.
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -495,6 +523,19 @@ pub mod overlay {
         /// Fade the overlay object out of view.
         FadeOut = 2,
     }
+    impl FadeType {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                FadeType::Unspecified => "FADE_TYPE_UNSPECIFIED",
+                FadeType::FadeIn => "FADE_IN",
+                FadeType::FadeOut => "FADE_OUT",
+            }
+        }
+    }
 }
 /// Preprocessing configurations.
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -585,7 +626,7 @@ pub mod preprocessing_config {
         /// *   -18 is the ReplayGain standard
         /// *   -16 is the prior standard for stereo audio
         /// *   -14 is the new online audio standard recommended by Spotify, as well
-        ///     as Amazon Echo
+        ///      as Amazon Echo
         /// *   0 disables normalization
         #[prost(double, tag="1")]
         pub lufs: f64,
@@ -875,23 +916,23 @@ pub mod video_stream {
         /// supported:
         ///
         /// *   8-bit profiles
-        ///     *   `main` (default)
-        ///     *   `main-intra`
-        ///     *   `mainstillpicture`
+        ///      *   `main` (default)
+        ///      *   `main-intra`
+        ///      *   `mainstillpicture`
         /// *   10-bit profiles
-        ///     *   `main10` (default)
-        ///     *   `main10-intra`
-        ///     *   `main422-10`
-        ///     *   `main422-10-intra`
-        ///     *   `main444-10`
-        ///     *   `main444-10-intra`
+        ///      *   `main10` (default)
+        ///      *   `main10-intra`
+        ///      *   `main422-10`
+        ///      *   `main422-10-intra`
+        ///      *   `main444-10`
+        ///      *   `main444-10-intra`
         /// *   12-bit profiles
-        ///     *   `main12` (default)
-        ///     *   `main12-intra`
-        ///     *   `main422-12`
-        ///     *   `main422-12-intra`
-        ///     *   `main444-12`
-        ///     *   `main444-12-intra`
+        ///      *   `main12` (default)
+        ///      *   `main12-intra`
+        ///      *   `main422-12`
+        ///      *   `main422-12-intra`
+        ///      *   `main444-12`
+        ///      *   `main444-12-intra`
         ///
         /// The available options are
         /// \[FFmpeg-compatible\](<https://x265.readthedocs.io/>).
@@ -1305,6 +1346,7 @@ pub struct ListJobTemplatesResponse {
 pub mod transcoder_service_client {
     #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
     use tonic::codegen::*;
+    use tonic::codegen::http::Uri;
     /// Using the Transcoder API, you can queue asynchronous jobs for transcoding
     /// media into various output formats. Output formats may include different
     /// streaming standards such as HTTP Live Streaming (HLS) and Dynamic Adaptive
@@ -1326,6 +1368,10 @@ pub mod transcoder_service_client {
             let inner = tonic::client::Grpc::new(inner);
             Self { inner }
         }
+        pub fn with_origin(inner: T, origin: Uri) -> Self {
+            let inner = tonic::client::Grpc::with_origin(inner, origin);
+            Self { inner }
+        }
         pub fn with_interceptor<F>(
             inner: T,
             interceptor: F,
@@ -1345,19 +1391,19 @@ pub mod transcoder_service_client {
         {
             TranscoderServiceClient::new(InterceptedService::new(inner, interceptor))
         }
-        /// Compress requests with `gzip`.
+        /// Compress requests with the given encoding.
         ///
         /// This requires the server to support it otherwise it might respond with an
         /// error.
         #[must_use]
-        pub fn send_gzip(mut self) -> Self {
-            self.inner = self.inner.send_gzip();
+        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.send_compressed(encoding);
             self
         }
-        /// Enable decompressing responses with `gzip`.
+        /// Enable decompressing responses.
         #[must_use]
-        pub fn accept_gzip(mut self) -> Self {
-            self.inner = self.inner.accept_gzip();
+        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.accept_compressed(encoding);
             self
         }
         /// Creates a job in the specified region.

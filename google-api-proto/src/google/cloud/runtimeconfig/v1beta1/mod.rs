@@ -5,7 +5,7 @@
 pub struct RuntimeConfig {
     /// The resource name of a runtime config. The name must have the format:
     ///
-    ///     projects/\[PROJECT_ID]/configs/[CONFIG_NAME\]
+    ///      projects/\[PROJECT_ID]/configs/[CONFIG_NAME\]
     ///
     /// The `\[PROJECT_ID\]` must be a valid project ID, and `\[CONFIG_NAME\]` is an
     /// arbitrary name that matches RFC 1035 segment specification. The length of
@@ -29,7 +29,7 @@ pub struct RuntimeConfig {
 pub struct Variable {
     /// The name of the variable resource, in the format:
     ///
-    ///     projects/\[PROJECT_ID]/configs/[CONFIG_NAME]/variables/[VARIABLE_NAME\]
+    ///      projects/\[PROJECT_ID]/configs/[CONFIG_NAME]/variables/[VARIABLE_NAME\]
     ///
     /// The `\[PROJECT_ID\]` must be a valid project ID, `\[CONFIG_NAME\]` must be a
     /// valid RuntimeConfig reource and `\[VARIABLE_NAME\]` follows Unix file system
@@ -141,7 +141,7 @@ pub mod end_condition {
 pub struct Waiter {
     /// The name of the Waiter resource, in the format:
     ///
-    ///     projects/\[PROJECT_ID]/configs/[CONFIG_NAME]/waiters/[WAITER_NAME\]
+    ///      projects/\[PROJECT_ID]/configs/[CONFIG_NAME]/waiters/[WAITER_NAME\]
     ///
     /// The `\[PROJECT_ID\]` must be a valid Google Cloud project ID,
     /// the `\[CONFIG_NAME\]` must be a valid RuntimeConfig resource, the
@@ -199,6 +199,19 @@ pub enum VariableState {
     Updated = 1,
     /// The variable was deleted, while `variables().watch` was executing.
     Deleted = 2,
+}
+impl VariableState {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            VariableState::Unspecified => "VARIABLE_STATE_UNSPECIFIED",
+            VariableState::Updated => "UPDATED",
+            VariableState::Deleted => "DELETED",
+        }
+    }
 }
 /// Request for the `ListConfigs()` method.
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -480,7 +493,7 @@ pub struct CreateWaiterRequest {
 pub struct DeleteWaiterRequest {
     /// The Waiter resource to delete, in the format:
     ///
-    ///  `projects/\[PROJECT_ID]/configs/[CONFIG_NAME]/waiters/[WAITER_NAME\]`
+    ///   `projects/\[PROJECT_ID]/configs/[CONFIG_NAME]/waiters/[WAITER_NAME\]`
     #[prost(string, tag="1")]
     pub name: ::prost::alloc::string::String,
 }
@@ -488,6 +501,7 @@ pub struct DeleteWaiterRequest {
 pub mod runtime_config_manager_client {
     #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
     use tonic::codegen::*;
+    use tonic::codegen::http::Uri;
     /// RuntimeConfig API represents configuration objects and operations on those
     /// configuration objects.
     /// RuntimeConfig objects consist of Variables logically grouped in the those
@@ -513,6 +527,10 @@ pub mod runtime_config_manager_client {
             let inner = tonic::client::Grpc::new(inner);
             Self { inner }
         }
+        pub fn with_origin(inner: T, origin: Uri) -> Self {
+            let inner = tonic::client::Grpc::with_origin(inner, origin);
+            Self { inner }
+        }
         pub fn with_interceptor<F>(
             inner: T,
             interceptor: F,
@@ -532,19 +550,19 @@ pub mod runtime_config_manager_client {
         {
             RuntimeConfigManagerClient::new(InterceptedService::new(inner, interceptor))
         }
-        /// Compress requests with `gzip`.
+        /// Compress requests with the given encoding.
         ///
         /// This requires the server to support it otherwise it might respond with an
         /// error.
         #[must_use]
-        pub fn send_gzip(mut self) -> Self {
-            self.inner = self.inner.send_gzip();
+        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.send_compressed(encoding);
             self
         }
-        /// Enable decompressing responses with `gzip`.
+        /// Enable decompressing responses.
         #[must_use]
-        pub fn accept_gzip(mut self) -> Self {
-            self.inner = self.inner.accept_gzip();
+        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.accept_compressed(encoding);
             self
         }
         /// Lists all the RuntimeConfig resources within project.

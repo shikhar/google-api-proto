@@ -215,18 +215,18 @@ pub struct QuotaOverride {
     /// This map has the following restrictions:
     ///
     /// *   Keys that are not defined in the limit's unit are not valid keys.
-    ///     Any string appearing in `{brackets}` in the unit (besides `{project}`
-    ///     or
-    ///     `{user}`) is a defined key.
+    ///      Any string appearing in `{brackets}` in the unit (besides `{project}`
+    ///      or
+    ///      `{user}`) is a defined key.
     /// *   `project` is not a valid key; the project is already specified in
-    ///     the parent resource name.
+    ///      the parent resource name.
     /// *   `user` is not a valid key; the API does not support quota overrides
-    ///     that apply only to a specific user.
+    ///      that apply only to a specific user.
     /// *   If `region` appears as a key, its value must be a valid Cloud region.
     /// *   If `zone` appears as a key, its value must be a valid Cloud zone.
     /// *   If any valid key other than `region` or `zone` appears in the map, then
-    ///     all valid keys other than `region` or `zone` must also appear in the
-    ///     map.
+    ///      all valid keys other than `region` or `zone` must also appear in the
+    ///      map.
     #[prost(btree_map="string, string", tag="3")]
     pub dimensions: ::prost::alloc::collections::BTreeMap<::prost::alloc::string::String, ::prost::alloc::string::String>,
     /// The name of the metric to which this override applies.
@@ -334,6 +334,19 @@ pub enum State {
     /// The service has been explicitly enabled for use by this consumer.
     Enabled = 2,
 }
+impl State {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            State::Unspecified => "STATE_UNSPECIFIED",
+            State::Disabled => "DISABLED",
+            State::Enabled => "ENABLED",
+        }
+    }
+}
 /// Selected view of quota. Can be used to request more detailed quota
 /// information when retrieving quota metrics and limits.
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
@@ -352,6 +365,19 @@ pub enum QuotaView {
     /// extra information should use the BASIC view instead.
     Full = 2,
 }
+impl QuotaView {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            QuotaView::Unspecified => "QUOTA_VIEW_UNSPECIFIED",
+            QuotaView::Basic => "BASIC",
+            QuotaView::Full => "FULL",
+        }
+    }
+}
 /// Enumerations of quota safety checks.
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
 #[repr(i32)]
@@ -364,6 +390,19 @@ pub enum QuotaSafetyCheck {
     /// Validates that a quota mutation would not cause the consumer's effective
     /// limit to decrease by more than 10 percent.
     LimitDecreasePercentageTooHigh = 2,
+}
+impl QuotaSafetyCheck {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            QuotaSafetyCheck::Unspecified => "QUOTA_SAFETY_CHECK_UNSPECIFIED",
+            QuotaSafetyCheck::LimitDecreaseBelowUsage => "LIMIT_DECREASE_BELOW_USAGE",
+            QuotaSafetyCheck::LimitDecreasePercentageTooHigh => "LIMIT_DECREASE_PERCENTAGE_TOO_HIGH",
+        }
+    }
 }
 /// Request message for the `EnableService` method.
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -418,7 +457,7 @@ pub struct ListServicesRequest {
     pub parent: ::prost::alloc::string::String,
     /// Requested size of the next page of data.
     /// Requested page size cannot exceed 200.
-    ///  If not set, the default page size is 50.
+    ///   If not set, the default page size is 50.
     #[prost(int32, tag="2")]
     pub page_size: i32,
     /// Token identifying which result to start with, which is returned by a
@@ -913,6 +952,18 @@ pub mod get_service_identity_response {
         /// Service identity has been created and can be used.
         Active = 1,
     }
+    impl IdentityState {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                IdentityState::Unspecified => "IDENTITY_STATE_UNSPECIFIED",
+                IdentityState::Active => "ACTIVE",
+            }
+        }
+    }
 }
 /// Metadata for the `GetServiceIdentity` method.
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -922,6 +973,7 @@ pub struct GetServiceIdentityMetadata {
 pub mod service_usage_client {
     #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
     use tonic::codegen::*;
+    use tonic::codegen::http::Uri;
     /// [Service Usage API](https://cloud.google.com/service-usage/docs/overview)
     #[derive(Debug, Clone)]
     pub struct ServiceUsageClient<T> {
@@ -936,6 +988,10 @@ pub mod service_usage_client {
     {
         pub fn new(inner: T) -> Self {
             let inner = tonic::client::Grpc::new(inner);
+            Self { inner }
+        }
+        pub fn with_origin(inner: T, origin: Uri) -> Self {
+            let inner = tonic::client::Grpc::with_origin(inner, origin);
             Self { inner }
         }
         pub fn with_interceptor<F>(
@@ -957,19 +1013,19 @@ pub mod service_usage_client {
         {
             ServiceUsageClient::new(InterceptedService::new(inner, interceptor))
         }
-        /// Compress requests with `gzip`.
+        /// Compress requests with the given encoding.
         ///
         /// This requires the server to support it otherwise it might respond with an
         /// error.
         #[must_use]
-        pub fn send_gzip(mut self) -> Self {
-            self.inner = self.inner.send_gzip();
+        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.send_compressed(encoding);
             self
         }
-        /// Enable decompressing responses with `gzip`.
+        /// Enable decompressing responses.
         #[must_use]
-        pub fn accept_gzip(mut self) -> Self {
-            self.inner = self.inner.accept_gzip();
+        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.accept_compressed(encoding);
             self
         }
         /// Enables a service so that it can be used with a project.

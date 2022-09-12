@@ -51,6 +51,20 @@ pub mod support_account {
         /// Account deletion has been requested by the user.
         PendingDeletion = 3,
     }
+    impl State {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                State::Unspecified => "STATE_UNSPECIFIED",
+                State::Active => "ACTIVE",
+                State::Pending => "PENDING",
+                State::PendingDeletion => "PENDING_DELETION",
+            }
+        }
+    }
     /// Pricing model applicable to this support account.
     #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
     #[repr(i32)]
@@ -62,6 +76,19 @@ pub mod support_account {
         /// Support charges are calculated based on user seats a.k.a,
         /// "Pick Your Team" model.
         UserRoles = 2,
+    }
+    impl PricingModel {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                PricingModel::Unknown => "PRICING_MODEL_UNKNOWN",
+                PricingModel::Packages => "PACKAGES",
+                PricingModel::UserRoles => "USER_ROLES",
+            }
+        }
     }
 }
 /// A support case created by the user.
@@ -142,6 +169,22 @@ pub mod case {
         /// available.
         P4 = 5,
     }
+    impl Priority {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                Priority::Unspecified => "PRIORITY_UNSPECIFIED",
+                Priority::P0 => "P0",
+                Priority::P1 => "P1",
+                Priority::P2 => "P2",
+                Priority::P3 => "P3",
+                Priority::P4 => "P4",
+            }
+        }
+    }
     /// The state of a case.
     #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
     #[repr(i32)]
@@ -164,6 +207,25 @@ pub mod case {
         SolutionOffered = 7,
         /// Cases has been fully resolved and is in a closed state.
         Closed = 8,
+    }
+    impl State {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                State::Unspecified => "STATE_UNSPECIFIED",
+                State::New => "NEW",
+                State::Assigned => "ASSIGNED",
+                State::InProgressGoogleSupport => "IN_PROGRESS_GOOGLE_SUPPORT",
+                State::InProgressGoogleEng => "IN_PROGRESS_GOOGLE_ENG",
+                State::InProgressKnownIssue => "IN_PROGRESS_KNOWN_ISSUE",
+                State::WaitingForCustomerResponse => "WAITING_FOR_CUSTOMER_RESPONSE",
+                State::SolutionOffered => "SOLUTION_OFFERED",
+                State::Closed => "CLOSED",
+            }
+        }
     }
 }
 /// Reference to a Google internal ticket used for investigating a support case.
@@ -211,6 +273,22 @@ pub mod customer_issue {
         /// Issue verified and in production.
         Verified = 5,
     }
+    impl IssueState {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                IssueState::Unspecified => "ISSUE_STATE_UNSPECIFIED",
+                IssueState::Open => "OPEN",
+                IssueState::InProgress => "IN_PROGRESS",
+                IssueState::Fixed => "FIXED",
+                IssueState::WontFix => "WONT_FIX",
+                IssueState::Verified => "VERIFIED",
+            }
+        }
+    }
 }
 /// A message that contains mapping of a user and their role under a support
 /// account.
@@ -240,6 +318,21 @@ pub mod support_role {
         Operation = 3,
         /// The site reliability role.
         SiteReliability = 4,
+    }
+    impl Role {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                Role::Unspecified => "ROLE_UNSPECIFIED",
+                Role::Basic => "BASIC",
+                Role::Developer => "DEVELOPER",
+                Role::Operation => "OPERATION",
+                Role::SiteReliability => "SITE_RELIABILITY",
+            }
+        }
     }
 }
 /// The comment text associated with a `Case`.

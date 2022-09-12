@@ -139,6 +139,20 @@ pub mod private_connection {
         /// The private connection creation has failed.
         Failed = 3,
     }
+    impl State {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                State::Unspecified => "STATE_UNSPECIFIED",
+                State::Creating => "CREATING",
+                State::Created => "CREATED",
+                State::Failed => "FAILED",
+            }
+        }
+    }
 }
 /// Private Connectivity
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -440,6 +454,19 @@ pub mod json_file_format {
         /// Gzip compression.
         Gzip = 2,
     }
+    impl JsonCompression {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                JsonCompression::Unspecified => "JSON_COMPRESSION_UNSPECIFIED",
+                JsonCompression::NoCompression => "NO_COMPRESSION",
+                JsonCompression::Gzip => "GZIP",
+            }
+        }
+    }
 }
 /// Google Cloud Storage destination configuration
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -582,6 +609,25 @@ pub mod stream {
         /// the buffer.
         Draining = 8,
     }
+    impl State {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                State::Unspecified => "STATE_UNSPECIFIED",
+                State::Created => "CREATED",
+                State::Running => "RUNNING",
+                State::Paused => "PAUSED",
+                State::Maintenance => "MAINTENANCE",
+                State::Failed => "FAILED",
+                State::FailedPermanently => "FAILED_PERMANENTLY",
+                State::Starting => "STARTING",
+                State::Draining => "DRAINING",
+            }
+        }
+    }
     /// Stream backfill strategy.
     #[derive(Clone, PartialEq, ::prost::Oneof)]
     pub enum BackfillStrategy {
@@ -652,6 +698,20 @@ pub mod validation {
         /// Validation passed.
         Passed = 3,
     }
+    impl Status {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                Status::Unspecified => "STATUS_UNSPECIFIED",
+                Status::NotExecuted => "NOT_EXECUTED",
+                Status::Failed => "FAILED",
+                Status::Passed => "PASSED",
+            }
+        }
+    }
 }
 /// Represent user-facing validation result message.
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -682,6 +742,19 @@ pub mod validation_message {
         /// Definitely cause issues with the Stream.
         Error = 2,
     }
+    impl Level {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                Level::Unspecified => "LEVEL_UNSPECIFIED",
+                Level::Warning => "WARNING",
+                Level::Error => "ERROR",
+            }
+        }
+    }
 }
 /// File format in Cloud Storage.
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
@@ -691,6 +764,18 @@ pub enum GcsFileFormat {
     Unspecified = 0,
     /// Avro file format
     Avro = 1,
+}
+impl GcsFileFormat {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            GcsFileFormat::Unspecified => "GCS_FILE_FORMAT_UNSPECIFIED",
+            GcsFileFormat::Avro => "AVRO",
+        }
+    }
 }
 /// Schema file format.
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
@@ -702,6 +787,19 @@ pub enum SchemaFileFormat {
     NoSchemaFile = 1,
     /// Avro schema format.
     AvroSchemaFile = 2,
+}
+impl SchemaFileFormat {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            SchemaFileFormat::Unspecified => "SCHEMA_FILE_FORMAT_UNSPECIFIED",
+            SchemaFileFormat::NoSchemaFile => "NO_SCHEMA_FILE",
+            SchemaFileFormat::AvroSchemaFile => "AVRO_SCHEMA_FILE",
+        }
+    }
 }
 /// Request message for 'discover' ConnectionProfile request.
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -1293,6 +1391,7 @@ pub struct GetRouteRequest {
 pub mod datastream_client {
     #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
     use tonic::codegen::*;
+    use tonic::codegen::http::Uri;
     /// Datastream service
     #[derive(Debug, Clone)]
     pub struct DatastreamClient<T> {
@@ -1307,6 +1406,10 @@ pub mod datastream_client {
     {
         pub fn new(inner: T) -> Self {
             let inner = tonic::client::Grpc::new(inner);
+            Self { inner }
+        }
+        pub fn with_origin(inner: T, origin: Uri) -> Self {
+            let inner = tonic::client::Grpc::with_origin(inner, origin);
             Self { inner }
         }
         pub fn with_interceptor<F>(
@@ -1328,19 +1431,19 @@ pub mod datastream_client {
         {
             DatastreamClient::new(InterceptedService::new(inner, interceptor))
         }
-        /// Compress requests with `gzip`.
+        /// Compress requests with the given encoding.
         ///
         /// This requires the server to support it otherwise it might respond with an
         /// error.
         #[must_use]
-        pub fn send_gzip(mut self) -> Self {
-            self.inner = self.inner.send_gzip();
+        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.send_compressed(encoding);
             self
         }
-        /// Enable decompressing responses with `gzip`.
+        /// Enable decompressing responses.
         #[must_use]
-        pub fn accept_gzip(mut self) -> Self {
-            self.inner = self.inner.accept_gzip();
+        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.accept_compressed(encoding);
             self
         }
         /// Use this method to list connection profiles created in a project and

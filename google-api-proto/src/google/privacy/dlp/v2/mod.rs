@@ -39,6 +39,20 @@ pub mod sensitivity_score {
         /// usage and or removing SPII.
         SensitivityHigh = 30,
     }
+    impl SensitivityScoreLevel {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                SensitivityScoreLevel::SensitivityScoreUnspecified => "SENSITIVITY_SCORE_UNSPECIFIED",
+                SensitivityScoreLevel::SensitivityLow => "SENSITIVITY_LOW",
+                SensitivityScoreLevel::SensitivityModerate => "SENSITIVITY_MODERATE",
+                SensitivityScoreLevel::SensitivityHigh => "SENSITIVITY_HIGH",
+            }
+        }
+    }
 }
 /// A reference to a StoredInfoType to use with scanning.
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -252,6 +266,18 @@ pub mod custom_info_type {
         /// but can still affect rule execution.
         Exclude = 1,
     }
+    impl ExclusionType {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                ExclusionType::Unspecified => "EXCLUSION_TYPE_UNSPECIFIED",
+                ExclusionType::Exclude => "EXCLUSION_TYPE_EXCLUDE",
+            }
+        }
+    }
     #[derive(Clone, PartialEq, ::prost::Oneof)]
     pub enum Type {
         /// A list of phrases to detect as a CustomInfoType.
@@ -440,6 +466,19 @@ pub mod cloud_storage_options {
         /// to start scanning. The scanned bytes are contiguous.
         RandomStart = 2,
     }
+    impl SampleMethod {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                SampleMethod::Unspecified => "SAMPLE_METHOD_UNSPECIFIED",
+                SampleMethod::Top => "TOP",
+                SampleMethod::RandomStart => "RANDOM_START",
+            }
+        }
+    }
 }
 /// Message representing a set of files in Cloud Storage.
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -508,6 +547,19 @@ pub mod big_query_options {
         Top = 1,
         /// Randomly pick groups of rows to scan.
         RandomStart = 2,
+    }
+    impl SampleMethod {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                SampleMethod::Unspecified => "SAMPLE_METHOD_UNSPECIFIED",
+                SampleMethod::Top => "TOP",
+                SampleMethod::RandomStart => "RANDOM_START",
+            }
+        }
     }
 }
 /// Shared message indicating Cloud storage type.
@@ -796,6 +848,22 @@ pub enum Likelihood {
     /// Many matching elements.
     VeryLikely = 5,
 }
+impl Likelihood {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            Likelihood::Unspecified => "LIKELIHOOD_UNSPECIFIED",
+            Likelihood::VeryUnlikely => "VERY_UNLIKELY",
+            Likelihood::Unlikely => "UNLIKELY",
+            Likelihood::Possible => "POSSIBLE",
+            Likelihood::Likely => "LIKELY",
+            Likelihood::VeryLikely => "VERY_LIKELY",
+        }
+    }
+}
 /// Definitions of file type groups to scan. New types will be added to this
 /// list.
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
@@ -810,43 +878,64 @@ pub enum FileType {
     /// FileType's in your storage scan.
     BinaryFile = 1,
     /// Included file extensions:
-    ///   asc,asp, aspx, brf, c, cc,cfm, cgi, cpp, csv, cxx, c++, cs, css, dart,
-    ///   dat, dot, eml,, epbub, ged, go, h, hh, hpp, hxx, h++, hs, html, htm,
-    ///   mkd, markdown, m, ml, mli, perl, pl, plist, pm, php, phtml, pht,
-    ///   properties, py, pyw, rb, rbw, rs, rss,  rc, scala, sh, sql, swift, tex,
-    ///   shtml, shtm, xhtml, lhs, ics, ini, java, js, json, kix, kml, ocaml, md,
-    ///   txt, text, tsv, vb, vcard, vcs, wml, xcodeproj, xml, xsl, xsd, yml, yaml.
+    ///    asc,asp, aspx, brf, c, cc,cfm, cgi, cpp, csv, cxx, c++, cs, css, dart,
+    ///    dat, dot, eml,, epbub, ged, go, h, hh, hpp, hxx, h++, hs, html, htm,
+    ///    mkd, markdown, m, ml, mli, perl, pl, plist, pm, php, phtml, pht,
+    ///    properties, py, pyw, rb, rbw, rs, rss,  rc, scala, sh, sql, swift, tex,
+    ///    shtml, shtm, xhtml, lhs, ics, ini, java, js, json, kix, kml, ocaml, md,
+    ///    txt, text, tsv, vb, vcard, vcs, wml, xcodeproj, xml, xsl, xsd, yml, yaml.
     TextFile = 2,
     /// Included file extensions:
-    ///   bmp, gif, jpg, jpeg, jpe, png.
+    ///    bmp, gif, jpg, jpeg, jpe, png.
     /// bytes_limit_per_file has no effect on image files.
     /// Image inspection is restricted to 'global', 'us', 'asia', and 'europe'.
     Image = 3,
     /// Word files >30 MB will be scanned as binary files.
     /// Included file extensions:
-    ///   docx, dotx, docm, dotm
+    ///    docx, dotx, docm, dotm
     Word = 5,
     /// PDF files >30 MB will be scanned as binary files.
     /// Included file extensions:
-    ///   pdf
+    ///    pdf
     Pdf = 6,
     /// Included file extensions:
-    ///   avro
+    ///    avro
     Avro = 7,
     /// Included file extensions:
-    ///   csv
+    ///    csv
     Csv = 8,
     /// Included file extensions:
-    ///   tsv
+    ///    tsv
     Tsv = 9,
     /// Powerpoint files >30 MB will be scanned as binary files.
     /// Included file extensions:
-    ///   pptx, pptm, potx, potm, pot
+    ///    pptx, pptm, potx, potm, pot
     Powerpoint = 11,
     /// Excel files >30 MB will be scanned as binary files.
     /// Included file extensions:
-    ///   xlsx, xlsm, xltx, xltm
+    ///    xlsx, xlsm, xltx, xltm
     Excel = 12,
+}
+impl FileType {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            FileType::Unspecified => "FILE_TYPE_UNSPECIFIED",
+            FileType::BinaryFile => "BINARY_FILE",
+            FileType::TextFile => "TEXT_FILE",
+            FileType::Image => "IMAGE",
+            FileType::Word => "WORD",
+            FileType::Pdf => "PDF",
+            FileType::Avro => "AVRO",
+            FileType::Csv => "CSV",
+            FileType::Tsv => "TSV",
+            FileType::Powerpoint => "POWERPOINT",
+            FileType::Excel => "EXCEL",
+        }
+    }
 }
 /// List of excluded infoTypes.
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -1067,6 +1156,30 @@ pub mod byte_content_item {
         Csv = 12,
         /// tsv
         Tsv = 13,
+    }
+    impl BytesType {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                BytesType::Unspecified => "BYTES_TYPE_UNSPECIFIED",
+                BytesType::Image => "IMAGE",
+                BytesType::ImageJpeg => "IMAGE_JPEG",
+                BytesType::ImageBmp => "IMAGE_BMP",
+                BytesType::ImagePng => "IMAGE_PNG",
+                BytesType::ImageSvg => "IMAGE_SVG",
+                BytesType::TextUtf8 => "TEXT_UTF8",
+                BytesType::WordDocument => "WORD_DOCUMENT",
+                BytesType::Pdf => "PDF",
+                BytesType::PowerpointDocument => "POWERPOINT_DOCUMENT",
+                BytesType::ExcelDocument => "EXCEL_DOCUMENT",
+                BytesType::Avro => "AVRO",
+                BytesType::Csv => "CSV",
+                BytesType::Tsv => "TSV",
+            }
+        }
     }
 }
 /// Container structure for the content to inspect.
@@ -1349,18 +1462,18 @@ pub struct Container {
     /// Examples:
     ///
     /// - For BigQuery table `project_id:dataset_id.table_id`, the root is
-    ///  `dataset_id`
+    ///   `dataset_id`
     /// - For Cloud Storage file `gs://bucket/folder/filename.txt`, the root
-    ///  is `gs://bucket`
+    ///   is `gs://bucket`
     #[prost(string, tag="4")]
     pub root_path: ::prost::alloc::string::String,
     /// The rest of the path after the root.
     /// Examples:
     ///
     /// - For BigQuery table `project_id:dataset_id.table_id`, the relative path is
-    ///  `table_id`
+    ///   `table_id`
     /// - For Cloud Storage file `gs://bucket/folder/filename.txt`, the relative
-    ///  path is `folder/filename.txt`
+    ///   path is `folder/filename.txt`
     #[prost(string, tag="5")]
     pub relative_path: ::prost::alloc::string::String,
     /// Findings container modification timestamp, if applicable. For Cloud
@@ -1418,15 +1531,15 @@ pub struct RedactImageRequest {
     /// location](<https://cloud.google.com/dlp/docs/specifying-location>):
     ///
     /// + Projects scope, location specified:<br/>
-    ///   `projects/`<var>PROJECT_ID</var>`/locations/`<var>LOCATION_ID</var>
+    ///    `projects/`<var>PROJECT_ID</var>`/locations/`<var>LOCATION_ID</var>
     /// + Projects scope, no location specified (defaults to global):<br/>
-    ///   `projects/`<var>PROJECT_ID</var>
+    ///    `projects/`<var>PROJECT_ID</var>
     ///
     /// The following example `parent` string specifies a parent project with the
     /// identifier `example-project`, and specifies the `europe-west3` location
     /// for processing data:
     ///
-    ///     parent=projects/example-project/locations/europe-west3
+    ///      parent=projects/example-project/locations/europe-west3
     #[prost(string, tag="1")]
     pub parent: ::prost::alloc::string::String,
     /// Deprecated. This field has no effect.
@@ -1515,15 +1628,15 @@ pub struct DeidentifyContentRequest {
     /// location](<https://cloud.google.com/dlp/docs/specifying-location>):
     ///
     /// + Projects scope, location specified:<br/>
-    ///   `projects/`<var>PROJECT_ID</var>`/locations/`<var>LOCATION_ID</var>
+    ///    `projects/`<var>PROJECT_ID</var>`/locations/`<var>LOCATION_ID</var>
     /// + Projects scope, no location specified (defaults to global):<br/>
-    ///   `projects/`<var>PROJECT_ID</var>
+    ///    `projects/`<var>PROJECT_ID</var>
     ///
     /// The following example `parent` string specifies a parent project with the
     /// identifier `example-project`, and specifies the `europe-west3` location
     /// for processing data:
     ///
-    ///     parent=projects/example-project/locations/europe-west3
+    ///      parent=projects/example-project/locations/europe-west3
     #[prost(string, tag="1")]
     pub parent: ::prost::alloc::string::String,
     /// Configuration for the de-identification of the content item.
@@ -1577,15 +1690,15 @@ pub struct ReidentifyContentRequest {
     /// location](<https://cloud.google.com/dlp/docs/specifying-location>):
     ///
     /// + Projects scope, location specified:<br/>
-    ///   `projects/`<var>PROJECT_ID</var>`/locations/`<var>LOCATION_ID</var>
+    ///    `projects/`<var>PROJECT_ID</var>`/locations/`<var>LOCATION_ID</var>
     /// + Projects scope, no location specified (defaults to global):<br/>
-    ///   `projects/`<var>PROJECT_ID</var>
+    ///    `projects/`<var>PROJECT_ID</var>
     ///
     /// The following example `parent` string specifies a parent project with the
     /// identifier `example-project`, and specifies the `europe-west3` location
     /// for processing data:
     ///
-    ///     parent=projects/example-project/locations/europe-west3
+    ///      parent=projects/example-project/locations/europe-west3
     #[prost(string, tag="1")]
     pub parent: ::prost::alloc::string::String,
     /// Configuration for the re-identification of the content item.
@@ -1596,8 +1709,8 @@ pub struct ReidentifyContentRequest {
     /// reverse. This requires that only reversible transformations
     /// be provided here. The reversible transformations are:
     ///
-    ///  - `CryptoDeterministicConfig`
-    ///  - `CryptoReplaceFfxFpeConfig`
+    ///   - `CryptoDeterministicConfig`
+    ///   - `CryptoReplaceFfxFpeConfig`
     #[prost(message, optional, tag="2")]
     pub reidentify_config: ::core::option::Option<DeidentifyConfig>,
     /// Configuration for the inspector.
@@ -1646,15 +1759,15 @@ pub struct InspectContentRequest {
     /// location](<https://cloud.google.com/dlp/docs/specifying-location>):
     ///
     /// + Projects scope, location specified:<br/>
-    ///   `projects/`<var>PROJECT_ID</var>`/locations/`<var>LOCATION_ID</var>
+    ///    `projects/`<var>PROJECT_ID</var>`/locations/`<var>LOCATION_ID</var>
     /// + Projects scope, no location specified (defaults to global):<br/>
-    ///   `projects/`<var>PROJECT_ID</var>
+    ///    `projects/`<var>PROJECT_ID</var>
     ///
     /// The following example `parent` string specifies a parent project with the
     /// identifier `example-project`, and specifies the `europe-west3` location
     /// for processing data:
     ///
-    ///     parent=projects/example-project/locations/europe-west3
+    ///      parent=projects/example-project/locations/europe-west3
     #[prost(string, tag="1")]
     pub parent: ::prost::alloc::string::String,
     /// Configuration for the inspector. What specified here will override
@@ -1721,6 +1834,22 @@ pub mod output_storage_config {
         BigQueryColumns = 4,
         /// Schema containing all columns.
         AllColumns = 5,
+    }
+    impl OutputSchema {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                OutputSchema::Unspecified => "OUTPUT_SCHEMA_UNSPECIFIED",
+                OutputSchema::BasicColumns => "BASIC_COLUMNS",
+                OutputSchema::GcsColumns => "GCS_COLUMNS",
+                OutputSchema::DatastoreColumns => "DATASTORE_COLUMNS",
+                OutputSchema::BigQueryColumns => "BIG_QUERY_COLUMNS",
+                OutputSchema::AllColumns => "ALL_COLUMNS",
+            }
+        }
     }
     /// Output storage types.
     #[derive(Clone, PartialEq, ::prost::Oneof)]
@@ -1933,6 +2062,57 @@ pub mod info_type_category {
         /// The infoType is typically used in Google internally.
         Internal = 40,
     }
+    impl LocationCategory {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                LocationCategory::LocationUnspecified => "LOCATION_UNSPECIFIED",
+                LocationCategory::Global => "GLOBAL",
+                LocationCategory::Argentina => "ARGENTINA",
+                LocationCategory::Australia => "AUSTRALIA",
+                LocationCategory::Belgium => "BELGIUM",
+                LocationCategory::Brazil => "BRAZIL",
+                LocationCategory::Canada => "CANADA",
+                LocationCategory::Chile => "CHILE",
+                LocationCategory::China => "CHINA",
+                LocationCategory::Colombia => "COLOMBIA",
+                LocationCategory::Denmark => "DENMARK",
+                LocationCategory::France => "FRANCE",
+                LocationCategory::Finland => "FINLAND",
+                LocationCategory::Germany => "GERMANY",
+                LocationCategory::HongKong => "HONG_KONG",
+                LocationCategory::India => "INDIA",
+                LocationCategory::Indonesia => "INDONESIA",
+                LocationCategory::Ireland => "IRELAND",
+                LocationCategory::Israel => "ISRAEL",
+                LocationCategory::Italy => "ITALY",
+                LocationCategory::Japan => "JAPAN",
+                LocationCategory::Korea => "KOREA",
+                LocationCategory::Mexico => "MEXICO",
+                LocationCategory::TheNetherlands => "THE_NETHERLANDS",
+                LocationCategory::Norway => "NORWAY",
+                LocationCategory::Paraguay => "PARAGUAY",
+                LocationCategory::Peru => "PERU",
+                LocationCategory::Poland => "POLAND",
+                LocationCategory::Portugal => "PORTUGAL",
+                LocationCategory::Singapore => "SINGAPORE",
+                LocationCategory::SouthAfrica => "SOUTH_AFRICA",
+                LocationCategory::Spain => "SPAIN",
+                LocationCategory::Sweden => "SWEDEN",
+                LocationCategory::Taiwan => "TAIWAN",
+                LocationCategory::Thailand => "THAILAND",
+                LocationCategory::Turkey => "TURKEY",
+                LocationCategory::UnitedKingdom => "UNITED_KINGDOM",
+                LocationCategory::UnitedStates => "UNITED_STATES",
+                LocationCategory::Uruguay => "URUGUAY",
+                LocationCategory::Venezuela => "VENEZUELA",
+                LocationCategory::Internal => "INTERNAL",
+            }
+        }
+    }
     /// Enum of the current industries in the category.
     /// We might add more industries in the future.
     #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
@@ -1946,6 +2126,20 @@ pub mod info_type_category {
         Health = 2,
         /// The infoType is typically used in the telecommunications industry.
         Telecommunications = 3,
+    }
+    impl IndustryCategory {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                IndustryCategory::IndustryUnspecified => "INDUSTRY_UNSPECIFIED",
+                IndustryCategory::Finance => "FINANCE",
+                IndustryCategory::Health => "HEALTH",
+                IndustryCategory::Telecommunications => "TELECOMMUNICATIONS",
+            }
+        }
     }
     /// Enum of the current types in the category.
     /// We might add more types in the future.
@@ -1972,6 +2166,24 @@ pub mod info_type_category {
         /// Information that is not sensitive on its own, but provides details about
         /// the circumstances surrounding an entity or an event.
         ContextualInformation = 7,
+    }
+    impl TypeCategory {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                TypeCategory::TypeUnspecified => "TYPE_UNSPECIFIED",
+                TypeCategory::Pii => "PII",
+                TypeCategory::Spii => "SPII",
+                TypeCategory::Demographic => "DEMOGRAPHIC",
+                TypeCategory::Credential => "CREDENTIAL",
+                TypeCategory::GovernmentId => "GOVERNMENT_ID",
+                TypeCategory::Document => "DOCUMENT",
+                TypeCategory::ContextualInformation => "CONTEXTUAL_INFORMATION",
+            }
+        }
     }
     #[derive(Clone, PartialEq, ::prost::Oneof)]
     pub enum Category {
@@ -2004,7 +2216,7 @@ pub struct ListInfoTypesRequest {
     ///
     /// The format of this value is as follows:
     ///
-    ///     locations/<var>LOCATION_ID</var>
+    ///      locations/<var>LOCATION_ID</var>
     #[prost(string, tag="4")]
     pub parent: ::prost::alloc::string::String,
     /// BCP-47 language code for localized infoType friendly
@@ -2481,9 +2693,9 @@ pub mod analyze_data_source_risk_details {
         /// The intervals [min_anonymity, max_anonymity] do not overlap. If a value
         /// doesn't correspond to any such interval, the associated frequency is
         /// zero. For example, the following records:
-        ///   {min_anonymity: 1, max_anonymity: 1, frequency: 17}
-        ///   {min_anonymity: 2, max_anonymity: 3, frequency: 42}
-        ///   {min_anonymity: 5, max_anonymity: 10, frequency: 99}
+        ///    {min_anonymity: 1, max_anonymity: 1, frequency: 17}
+        ///    {min_anonymity: 2, max_anonymity: 3, frequency: 42}
+        ///    {min_anonymity: 5, max_anonymity: 10, frequency: 99}
         /// mean that there are no record with an estimated anonymity of 4, 5, or
         /// larger than 10.
         #[prost(message, repeated, tag="1")]
@@ -2502,9 +2714,9 @@ pub mod analyze_data_source_risk_details {
             pub estimated_anonymity: i64,
         }
         /// A KMapEstimationHistogramBucket message with the following values:
-        ///   min_anonymity: 3
-        ///   max_anonymity: 5
-        ///   frequency: 42
+        ///    min_anonymity: 3
+        ///    max_anonymity: 5
+        ///    frequency: 42
         /// means that there are 42 records whose quasi-identifier values correspond
         /// to 3, 4 or 5 people in the overlying population. An important particular
         /// case is when min_anonymity = max_anonymity = 1: the frequency field then
@@ -2536,9 +2748,9 @@ pub mod analyze_data_source_risk_details {
         /// The intervals [min_probability, max_probability) do not overlap. If a
         /// value doesn't correspond to any such interval, the associated frequency
         /// is zero. For example, the following records:
-        ///   {min_probability: 0, max_probability: 0.1, frequency: 17}
-        ///   {min_probability: 0.2, max_probability: 0.3, frequency: 42}
-        ///   {min_probability: 0.3, max_probability: 0.4, frequency: 99}
+        ///    {min_probability: 0, max_probability: 0.1, frequency: 17}
+        ///    {min_probability: 0.2, max_probability: 0.3, frequency: 42}
+        ///    {min_probability: 0.3, max_probability: 0.4, frequency: 99}
         /// mean that there are no record with an estimated probability in [0.1, 0.2)
         /// nor larger or equal to 0.4.
         #[prost(message, repeated, tag="1")]
@@ -2565,9 +2777,9 @@ pub mod analyze_data_source_risk_details {
         }
         /// A DeltaPresenceEstimationHistogramBucket message with the following
         /// values:
-        ///   min_probability: 0.1
-        ///   max_probability: 0.2
-        ///   frequency: 42
+        ///    min_probability: 0.1
+        ///    max_probability: 0.2
+        ///    frequency: 42
         /// means that there are 42 records for which δ is in [0.1, 0.2). An
         /// important particular case is when min_probability = max_probability = 1:
         /// then, every individual who shares this quasi-identifier combination is in
@@ -2917,6 +3129,23 @@ pub mod time_part_config {
         /// \[0-23\]
         HourOfDay = 6,
     }
+    impl TimePart {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                TimePart::Unspecified => "TIME_PART_UNSPECIFIED",
+                TimePart::Year => "YEAR",
+                TimePart::Month => "MONTH",
+                TimePart::DayOfMonth => "DAY_OF_MONTH",
+                TimePart::DayOfWeek => "DAY_OF_WEEK",
+                TimePart::WeekOfYear => "WEEK_OF_YEAR",
+                TimePart::HourOfDay => "HOUR_OF_DAY",
+            }
+        }
+    }
 }
 /// Pseudonymization method that generates surrogates via cryptographic hashing.
 /// Uses SHA-256.
@@ -3055,6 +3284,22 @@ pub mod chars_to_ignore {
         Punctuation = 4,
         /// Whitespace character, one of [ \t\n\x0B\f\r]
         Whitespace = 5,
+    }
+    impl CommonCharsToIgnore {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                CommonCharsToIgnore::Unspecified => "COMMON_CHARS_TO_IGNORE_UNSPECIFIED",
+                CommonCharsToIgnore::Numeric => "NUMERIC",
+                CommonCharsToIgnore::AlphaUpperCase => "ALPHA_UPPER_CASE",
+                CommonCharsToIgnore::AlphaLowerCase => "ALPHA_LOWER_CASE",
+                CommonCharsToIgnore::Punctuation => "PUNCTUATION",
+                CommonCharsToIgnore::Whitespace => "WHITESPACE",
+            }
+        }
     }
     #[derive(Clone, PartialEq, ::prost::Oneof)]
     pub enum Characters {
@@ -3270,6 +3515,21 @@ pub mod crypto_replace_ffx_fpe_config {
         UpperCaseAlphaNumeric = 3,
         /// `\[0-9A-Za-z\]` (radix of 62)
         AlphaNumeric = 4,
+    }
+    impl FfxCommonNativeAlphabet {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                FfxCommonNativeAlphabet::Unspecified => "FFX_COMMON_NATIVE_ALPHABET_UNSPECIFIED",
+                FfxCommonNativeAlphabet::Numeric => "NUMERIC",
+                FfxCommonNativeAlphabet::Hexadecimal => "HEXADECIMAL",
+                FfxCommonNativeAlphabet::UpperCaseAlphaNumeric => "UPPER_CASE_ALPHA_NUMERIC",
+                FfxCommonNativeAlphabet::AlphaNumeric => "ALPHA_NUMERIC",
+            }
+        }
     }
     /// Choose an alphabet which the data being transformed will be made up of.
     #[derive(Clone, PartialEq, ::prost::Oneof)]
@@ -3557,6 +3817,18 @@ pub mod record_condition {
             /// Conditional AND
             And = 1,
         }
+        impl LogicalOperator {
+            /// String value of the enum field names used in the ProtoBuf definition.
+            ///
+            /// The values are not transformed in any way and thus are considered stable
+            /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+            pub fn as_str_name(&self) -> &'static str {
+                match self {
+                    LogicalOperator::Unspecified => "LOGICAL_OPERATOR_UNSPECIFIED",
+                    LogicalOperator::And => "AND",
+                }
+            }
+        }
         /// Expression types.
         #[derive(Clone, PartialEq, ::prost::Oneof)]
         pub enum Type {
@@ -3633,6 +3905,19 @@ pub mod transformation_summary {
         /// Transformation had an error.
         Error = 2,
     }
+    impl TransformationResultCode {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                TransformationResultCode::Unspecified => "TRANSFORMATION_RESULT_CODE_UNSPECIFIED",
+                TransformationResultCode::Success => "SUCCESS",
+                TransformationResultCode::Error => "ERROR",
+            }
+        }
+    }
 }
 /// A flattened description of a `PrimitiveTransformation` or
 /// `RecordSuppression`.
@@ -3652,11 +3937,11 @@ pub struct TransformationDescription {
     /// to determine whether or not to apply this transformation.
     ///
     /// Examples:
-    ///     * (age_field > 85)
-    ///     * (age_field <= 18)
-    ///     * (zip_field exists)
-    ///     * (zip_field == 01234) && (city_field != "Springville")
-    ///     * (zip_field == 01234) && (age_field <= 18) && (city_field exists)
+    ///      * (age_field > 85)
+    ///      * (age_field <= 18)
+    ///      * (zip_field exists)
+    ///      * (zip_field == 01234) && (city_field != "Springville")
+    ///      * (zip_field == 01234) && (age_field <= 18) && (city_field exists)
     #[prost(string, tag="3")]
     pub condition: ::prost::alloc::string::String,
     /// Set if the transformation was limited to a specific `InfoType`.
@@ -3939,6 +4224,20 @@ pub mod job_trigger {
         /// Trigger is cancelled and can not be resumed.
         Cancelled = 3,
     }
+    impl Status {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                Status::Unspecified => "STATUS_UNSPECIFIED",
+                Status::Healthy => "HEALTHY",
+                Status::Paused => "PAUSED",
+                Status::Cancelled => "CANCELLED",
+            }
+        }
+    }
     /// The configuration details for the specific type of job to run.
     #[derive(Clone, PartialEq, ::prost::Oneof)]
     pub enum Job {
@@ -4147,19 +4446,19 @@ pub struct CreateInspectTemplateRequest {
     /// location](<https://cloud.google.com/dlp/docs/specifying-location>):
     ///
     /// + Projects scope, location specified:<br/>
-    ///   `projects/`<var>PROJECT_ID</var>`/locations/`<var>LOCATION_ID</var>
+    ///    `projects/`<var>PROJECT_ID</var>`/locations/`<var>LOCATION_ID</var>
     /// + Projects scope, no location specified (defaults to global):<br/>
-    ///   `projects/`<var>PROJECT_ID</var>
+    ///    `projects/`<var>PROJECT_ID</var>
     /// + Organizations scope, location specified:<br/>
-    ///   `organizations/`<var>ORG_ID</var>`/locations/`<var>LOCATION_ID</var>
+    ///    `organizations/`<var>ORG_ID</var>`/locations/`<var>LOCATION_ID</var>
     /// + Organizations scope, no location specified (defaults to global):<br/>
-    ///   `organizations/`<var>ORG_ID</var>
+    ///    `organizations/`<var>ORG_ID</var>
     ///
     /// The following example `parent` string specifies a parent project with the
     /// identifier `example-project`, and specifies the `europe-west3` location
     /// for processing data:
     ///
-    ///     parent=projects/example-project/locations/europe-west3
+    ///      parent=projects/example-project/locations/europe-west3
     #[prost(string, tag="1")]
     pub parent: ::prost::alloc::string::String,
     /// Required. The InspectTemplate to create.
@@ -4209,19 +4508,19 @@ pub struct ListInspectTemplatesRequest {
     /// location](<https://cloud.google.com/dlp/docs/specifying-location>):
     ///
     /// + Projects scope, location specified:<br/>
-    ///   `projects/`<var>PROJECT_ID</var>`/locations/`<var>LOCATION_ID</var>
+    ///    `projects/`<var>PROJECT_ID</var>`/locations/`<var>LOCATION_ID</var>
     /// + Projects scope, no location specified (defaults to global):<br/>
-    ///   `projects/`<var>PROJECT_ID</var>
+    ///    `projects/`<var>PROJECT_ID</var>
     /// + Organizations scope, location specified:<br/>
-    ///   `organizations/`<var>ORG_ID</var>`/locations/`<var>LOCATION_ID</var>
+    ///    `organizations/`<var>ORG_ID</var>`/locations/`<var>LOCATION_ID</var>
     /// + Organizations scope, no location specified (defaults to global):<br/>
-    ///   `organizations/`<var>ORG_ID</var>
+    ///    `organizations/`<var>ORG_ID</var>
     ///
     /// The following example `parent` string specifies a parent project with the
     /// identifier `example-project`, and specifies the `europe-west3` location
     /// for processing data:
     ///
-    ///     parent=projects/example-project/locations/europe-west3
+    ///      parent=projects/example-project/locations/europe-west3
     #[prost(string, tag="1")]
     pub parent: ::prost::alloc::string::String,
     /// Page token to continue retrieval. Comes from previous call
@@ -4281,15 +4580,15 @@ pub struct CreateJobTriggerRequest {
     /// location](<https://cloud.google.com/dlp/docs/specifying-location>):
     ///
     /// + Projects scope, location specified:<br/>
-    ///   `projects/`<var>PROJECT_ID</var>`/locations/`<var>LOCATION_ID</var>
+    ///    `projects/`<var>PROJECT_ID</var>`/locations/`<var>LOCATION_ID</var>
     /// + Projects scope, no location specified (defaults to global):<br/>
-    ///   `projects/`<var>PROJECT_ID</var>
+    ///    `projects/`<var>PROJECT_ID</var>
     ///
     /// The following example `parent` string specifies a parent project with the
     /// identifier `example-project`, and specifies the `europe-west3` location
     /// for processing data:
     ///
-    ///     parent=projects/example-project/locations/europe-west3
+    ///      parent=projects/example-project/locations/europe-west3
     #[prost(string, tag="1")]
     pub parent: ::prost::alloc::string::String,
     /// Required. The JobTrigger to create.
@@ -4347,15 +4646,15 @@ pub struct CreateDlpJobRequest {
     /// location](<https://cloud.google.com/dlp/docs/specifying-location>):
     ///
     /// + Projects scope, location specified:<br/>
-    ///   `projects/`<var>PROJECT_ID</var>`/locations/`<var>LOCATION_ID</var>
+    ///    `projects/`<var>PROJECT_ID</var>`/locations/`<var>LOCATION_ID</var>
     /// + Projects scope, no location specified (defaults to global):<br/>
-    ///   `projects/`<var>PROJECT_ID</var>
+    ///    `projects/`<var>PROJECT_ID</var>
     ///
     /// The following example `parent` string specifies a parent project with the
     /// identifier `example-project`, and specifies the `europe-west3` location
     /// for processing data:
     ///
-    ///     parent=projects/example-project/locations/europe-west3
+    ///      parent=projects/example-project/locations/europe-west3
     #[prost(string, tag="1")]
     pub parent: ::prost::alloc::string::String,
     /// The job id can contain uppercase and lowercase letters,
@@ -4395,15 +4694,15 @@ pub struct ListJobTriggersRequest {
     /// location](<https://cloud.google.com/dlp/docs/specifying-location>):
     ///
     /// + Projects scope, location specified:<br/>
-    ///   `projects/`<var>PROJECT_ID</var>`/locations/`<var>LOCATION_ID</var>
+    ///    `projects/`<var>PROJECT_ID</var>`/locations/`<var>LOCATION_ID</var>
     /// + Projects scope, no location specified (defaults to global):<br/>
-    ///   `projects/`<var>PROJECT_ID</var>
+    ///    `projects/`<var>PROJECT_ID</var>
     ///
     /// The following example `parent` string specifies a parent project with the
     /// identifier `example-project`, and specifies the `europe-west3` location
     /// for processing data:
     ///
-    ///     parent=projects/example-project/locations/europe-west3
+    ///      parent=projects/example-project/locations/europe-west3
     #[prost(string, tag="1")]
     pub parent: ::prost::alloc::string::String,
     /// Page token to continue retrieval. Comes from previous call
@@ -4440,11 +4739,11 @@ pub struct ListJobTriggersRequest {
     /// sequence of restrictions implicitly uses `AND`.
     /// * A restriction has the form of `{field} {operator} {value}`.
     /// * Supported fields/values for inspect triggers:
-    ///     - `status` - HEALTHY|PAUSED|CANCELLED
-    ///     - `inspected_storage` - DATASTORE|CLOUD_STORAGE|BIGQUERY
-    ///     - 'last_run_time` - RFC 3339 formatted timestamp, surrounded by
-    ///     quotation marks. Nanoseconds are ignored.
-    ///     - 'error_count' - Number of errors that have occurred while running.
+    ///      - `status` - HEALTHY|PAUSED|CANCELLED
+    ///      - `inspected_storage` - DATASTORE|CLOUD_STORAGE|BIGQUERY
+    ///      - 'last_run_time` - RFC 3339 formatted timestamp, surrounded by
+    ///      quotation marks. Nanoseconds are ignored.
+    ///      - 'error_count' - Number of errors that have occurred while running.
     /// * The operator must be `=` or `!=` for status and inspected_storage.
     ///
     /// Examples:
@@ -4555,6 +4854,19 @@ pub mod data_profile_action {
             /// The resource name of the table.
             ResourceName = 2,
         }
+        impl DetailLevel {
+            /// String value of the enum field names used in the ProtoBuf definition.
+            ///
+            /// The values are not transformed in any way and thus are considered stable
+            /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+            pub fn as_str_name(&self) -> &'static str {
+                match self {
+                    DetailLevel::Unspecified => "DETAIL_LEVEL_UNSPECIFIED",
+                    DetailLevel::TableProfile => "TABLE_PROFILE",
+                    DetailLevel::ResourceName => "RESOURCE_NAME",
+                }
+            }
+        }
     }
     /// Types of event that can trigger an action.
     #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
@@ -4576,6 +4888,21 @@ pub mod data_profile_action {
         ScoreIncreased = 3,
         /// A user (non-internal) error occurred.
         ErrorChanged = 4,
+    }
+    impl EventType {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                EventType::Unspecified => "EVENT_TYPE_UNSPECIFIED",
+                EventType::NewProfile => "NEW_PROFILE",
+                EventType::ChangedProfile => "CHANGED_PROFILE",
+                EventType::ScoreIncreased => "SCORE_INCREASED",
+                EventType::ErrorChanged => "ERROR_CHANGED",
+            }
+        }
     }
     #[derive(Clone, PartialEq, ::prost::Oneof)]
     pub enum Action {
@@ -4702,6 +5029,23 @@ pub mod dlp_job {
         /// calls to hybridInspect may be made. ACTIVE jobs can transition to DONE.
         Active = 6,
     }
+    impl JobState {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                JobState::Unspecified => "JOB_STATE_UNSPECIFIED",
+                JobState::Pending => "PENDING",
+                JobState::Running => "RUNNING",
+                JobState::Done => "DONE",
+                JobState::Canceled => "CANCELED",
+                JobState::Failed => "FAILED",
+                JobState::Active => "ACTIVE",
+            }
+        }
+    }
     #[derive(Clone, PartialEq, ::prost::Oneof)]
     pub enum Details {
         /// Results from analyzing risk of a data source.
@@ -4729,15 +5073,15 @@ pub struct ListDlpJobsRequest {
     /// location](<https://cloud.google.com/dlp/docs/specifying-location>):
     ///
     /// + Projects scope, location specified:<br/>
-    ///   `projects/`<var>PROJECT_ID</var>`/locations/`<var>LOCATION_ID</var>
+    ///    `projects/`<var>PROJECT_ID</var>`/locations/`<var>LOCATION_ID</var>
     /// + Projects scope, no location specified (defaults to global):<br/>
-    ///   `projects/`<var>PROJECT_ID</var>
+    ///    `projects/`<var>PROJECT_ID</var>
     ///
     /// The following example `parent` string specifies a parent project with the
     /// identifier `example-project`, and specifies the `europe-west3` location
     /// for processing data:
     ///
-    ///     parent=projects/example-project/locations/europe-west3
+    ///      parent=projects/example-project/locations/europe-west3
     #[prost(string, tag="4")]
     pub parent: ::prost::alloc::string::String,
     /// Allows filtering.
@@ -4749,15 +5093,15 @@ pub struct ListDlpJobsRequest {
     /// sequence of restrictions implicitly uses `AND`.
     /// * A restriction has the form of `{field} {operator} {value}`.
     /// * Supported fields/values for inspect jobs:
-    ///     - `state` - PENDING|RUNNING|CANCELED|FINISHED|FAILED
-    ///     - `inspected_storage` - DATASTORE|CLOUD_STORAGE|BIGQUERY
-    ///     - `trigger_name` - The name of the trigger that created the job.
-    ///     - 'end_time` - Corresponds to the time the job finished.
-    ///     - 'start_time` - Corresponds to the time the job finished.
+    ///      - `state` - PENDING|RUNNING|CANCELED|FINISHED|FAILED
+    ///      - `inspected_storage` - DATASTORE|CLOUD_STORAGE|BIGQUERY
+    ///      - `trigger_name` - The name of the trigger that created the job.
+    ///      - 'end_time` - Corresponds to the time the job finished.
+    ///      - 'start_time` - Corresponds to the time the job finished.
     /// * Supported fields for risk analysis jobs:
-    ///     - `state` - RUNNING|CANCELED|FINISHED|FAILED
-    ///     - 'end_time` - Corresponds to the time the job finished.
-    ///     - 'start_time` - Corresponds to the time the job finished.
+    ///      - `state` - RUNNING|CANCELED|FINISHED|FAILED
+    ///      - 'end_time` - Corresponds to the time the job finished.
+    ///      - 'start_time` - Corresponds to the time the job finished.
     /// * The operator must be `=` or `!=`.
     ///
     /// Examples:
@@ -4839,19 +5183,19 @@ pub struct CreateDeidentifyTemplateRequest {
     /// location](<https://cloud.google.com/dlp/docs/specifying-location>):
     ///
     /// + Projects scope, location specified:<br/>
-    ///   `projects/`<var>PROJECT_ID</var>`/locations/`<var>LOCATION_ID</var>
+    ///    `projects/`<var>PROJECT_ID</var>`/locations/`<var>LOCATION_ID</var>
     /// + Projects scope, no location specified (defaults to global):<br/>
-    ///   `projects/`<var>PROJECT_ID</var>
+    ///    `projects/`<var>PROJECT_ID</var>
     /// + Organizations scope, location specified:<br/>
-    ///   `organizations/`<var>ORG_ID</var>`/locations/`<var>LOCATION_ID</var>
+    ///    `organizations/`<var>ORG_ID</var>`/locations/`<var>LOCATION_ID</var>
     /// + Organizations scope, no location specified (defaults to global):<br/>
-    ///   `organizations/`<var>ORG_ID</var>
+    ///    `organizations/`<var>ORG_ID</var>
     ///
     /// The following example `parent` string specifies a parent project with the
     /// identifier `example-project`, and specifies the `europe-west3` location
     /// for processing data:
     ///
-    ///     parent=projects/example-project/locations/europe-west3
+    ///      parent=projects/example-project/locations/europe-west3
     #[prost(string, tag="1")]
     pub parent: ::prost::alloc::string::String,
     /// Required. The DeidentifyTemplate to create.
@@ -4901,19 +5245,19 @@ pub struct ListDeidentifyTemplatesRequest {
     /// location](<https://cloud.google.com/dlp/docs/specifying-location>):
     ///
     /// + Projects scope, location specified:<br/>
-    ///   `projects/`<var>PROJECT_ID</var>`/locations/`<var>LOCATION_ID</var>
+    ///    `projects/`<var>PROJECT_ID</var>`/locations/`<var>LOCATION_ID</var>
     /// + Projects scope, no location specified (defaults to global):<br/>
-    ///   `projects/`<var>PROJECT_ID</var>
+    ///    `projects/`<var>PROJECT_ID</var>
     /// + Organizations scope, location specified:<br/>
-    ///   `organizations/`<var>ORG_ID</var>`/locations/`<var>LOCATION_ID</var>
+    ///    `organizations/`<var>ORG_ID</var>`/locations/`<var>LOCATION_ID</var>
     /// + Organizations scope, no location specified (defaults to global):<br/>
-    ///   `organizations/`<var>ORG_ID</var>
+    ///    `organizations/`<var>ORG_ID</var>
     ///
     /// The following example `parent` string specifies a parent project with the
     /// identifier `example-project`, and specifies the `europe-west3` location
     /// for processing data:
     ///
-    ///     parent=projects/example-project/locations/europe-west3
+    ///      parent=projects/example-project/locations/europe-west3
     #[prost(string, tag="1")]
     pub parent: ::prost::alloc::string::String,
     /// Page token to continue retrieval. Comes from previous call
@@ -5107,19 +5451,19 @@ pub struct CreateStoredInfoTypeRequest {
     /// location](<https://cloud.google.com/dlp/docs/specifying-location>):
     ///
     /// + Projects scope, location specified:<br/>
-    ///   `projects/`<var>PROJECT_ID</var>`/locations/`<var>LOCATION_ID</var>
+    ///    `projects/`<var>PROJECT_ID</var>`/locations/`<var>LOCATION_ID</var>
     /// + Projects scope, no location specified (defaults to global):<br/>
-    ///   `projects/`<var>PROJECT_ID</var>
+    ///    `projects/`<var>PROJECT_ID</var>
     /// + Organizations scope, location specified:<br/>
-    ///   `organizations/`<var>ORG_ID</var>`/locations/`<var>LOCATION_ID</var>
+    ///    `organizations/`<var>ORG_ID</var>`/locations/`<var>LOCATION_ID</var>
     /// + Organizations scope, no location specified (defaults to global):<br/>
-    ///   `organizations/`<var>ORG_ID</var>
+    ///    `organizations/`<var>ORG_ID</var>
     ///
     /// The following example `parent` string specifies a parent project with the
     /// identifier `example-project`, and specifies the `europe-west3` location
     /// for processing data:
     ///
-    ///     parent=projects/example-project/locations/europe-west3
+    ///      parent=projects/example-project/locations/europe-west3
     #[prost(string, tag="1")]
     pub parent: ::prost::alloc::string::String,
     /// Required. Configuration of the storedInfoType to create.
@@ -5171,15 +5515,15 @@ pub struct ListStoredInfoTypesRequest {
     /// location](<https://cloud.google.com/dlp/docs/specifying-location>):
     ///
     /// + Projects scope, location specified:<br/>
-    ///   `projects/`<var>PROJECT_ID</var>`/locations/`<var>LOCATION_ID</var>
+    ///    `projects/`<var>PROJECT_ID</var>`/locations/`<var>LOCATION_ID</var>
     /// + Projects scope, no location specified (defaults to global):<br/>
-    ///   `projects/`<var>PROJECT_ID</var>
+    ///    `projects/`<var>PROJECT_ID</var>
     ///
     /// The following example `parent` string specifies a parent project with the
     /// identifier `example-project`, and specifies the `europe-west3` location
     /// for processing data:
     ///
-    ///     parent=projects/example-project/locations/europe-west3
+    ///      parent=projects/example-project/locations/europe-west3
     #[prost(string, tag="1")]
     pub parent: ::prost::alloc::string::String,
     /// Page token to continue retrieval. Comes from previous call
@@ -5339,6 +5683,20 @@ pub mod data_risk_level {
         /// of users may be possible. Consider limiting usage and or removing SPII.
         RiskHigh = 30,
     }
+    impl DataRiskLevelScore {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                DataRiskLevelScore::RiskScoreUnspecified => "RISK_SCORE_UNSPECIFIED",
+                DataRiskLevelScore::RiskLow => "RISK_LOW",
+                DataRiskLevelScore::RiskModerate => "RISK_MODERATE",
+                DataRiskLevelScore::RiskHigh => "RISK_HIGH",
+            }
+        }
+    }
 }
 /// Snapshot of the configurations used to generate the profile.
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -5450,6 +5808,19 @@ pub mod table_data_profile {
         /// failed.
         Done = 2,
     }
+    impl State {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                State::Unspecified => "STATE_UNSPECIFIED",
+                State::Running => "RUNNING",
+                State::Done => "DONE",
+            }
+        }
+    }
 }
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ProfileStatus {
@@ -5534,6 +5905,19 @@ pub mod data_profile_pub_sub_condition {
             /// Conditional AND.
             And = 2,
         }
+        impl PubSubLogicalOperator {
+            /// String value of the enum field names used in the ProtoBuf definition.
+            ///
+            /// The values are not transformed in any way and thus are considered stable
+            /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+            pub fn as_str_name(&self) -> &'static str {
+                match self {
+                    PubSubLogicalOperator::LogicalOperatorUnspecified => "LOGICAL_OPERATOR_UNSPECIFIED",
+                    PubSubLogicalOperator::Or => "OR",
+                    PubSubLogicalOperator::And => "AND",
+                }
+            }
+        }
     }
     /// Various score levels for resources.
     #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
@@ -5545,6 +5929,19 @@ pub mod data_profile_pub_sub_condition {
         High = 1,
         /// Medium or high risk/sensitivity detected.
         MediumOrHigh = 2,
+    }
+    impl ProfileScoreBucket {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                ProfileScoreBucket::Unspecified => "PROFILE_SCORE_BUCKET_UNSPECIFIED",
+                ProfileScoreBucket::High => "HIGH",
+                ProfileScoreBucket::MediumOrHigh => "MEDIUM_OR_HIGH",
+            }
+        }
     }
 }
 /// Pub/Sub topic message for a DataProfileAction.PubSubNotification event.
@@ -5582,6 +5979,21 @@ pub enum TransformationResultStatusType {
     /// This will be set when the transformation and storing of it is successful.
     Success = 4,
 }
+impl TransformationResultStatusType {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            TransformationResultStatusType::StateTypeUnspecified => "STATE_TYPE_UNSPECIFIED",
+            TransformationResultStatusType::InvalidTransform => "INVALID_TRANSFORM",
+            TransformationResultStatusType::BigqueryMaxRowSizeExceeded => "BIGQUERY_MAX_ROW_SIZE_EXCEEDED",
+            TransformationResultStatusType::MetadataUnretrievable => "METADATA_UNRETRIEVABLE",
+            TransformationResultStatusType::Success => "SUCCESS",
+        }
+    }
+}
 /// Describes functionality of a given container in its original format.
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
 #[repr(i32)]
@@ -5590,6 +6002,20 @@ pub enum TransformationContainerType {
     TransformBody = 1,
     TransformMetadata = 2,
     TransformTable = 3,
+}
+impl TransformationContainerType {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            TransformationContainerType::TransformUnknownContainer => "TRANSFORM_UNKNOWN_CONTAINER",
+            TransformationContainerType::TransformBody => "TRANSFORM_BODY",
+            TransformationContainerType::TransformMetadata => "TRANSFORM_METADATA",
+            TransformationContainerType::TransformTable => "TRANSFORM_TABLE",
+        }
+    }
 }
 /// An enum of rules that can be used to transform a value. Can be a
 /// record suppression, or one of the transformation rules specified under
@@ -5628,6 +6054,31 @@ pub enum TransformationType {
     /// Redact image
     RedactImage = 14,
 }
+impl TransformationType {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            TransformationType::Unspecified => "TRANSFORMATION_TYPE_UNSPECIFIED",
+            TransformationType::RecordSuppression => "RECORD_SUPPRESSION",
+            TransformationType::ReplaceValue => "REPLACE_VALUE",
+            TransformationType::ReplaceDictionary => "REPLACE_DICTIONARY",
+            TransformationType::Redact => "REDACT",
+            TransformationType::CharacterMask => "CHARACTER_MASK",
+            TransformationType::CryptoReplaceFfxFpe => "CRYPTO_REPLACE_FFX_FPE",
+            TransformationType::FixedSizeBucketing => "FIXED_SIZE_BUCKETING",
+            TransformationType::Bucketing => "BUCKETING",
+            TransformationType::ReplaceWithInfoType => "REPLACE_WITH_INFO_TYPE",
+            TransformationType::TimePart => "TIME_PART",
+            TransformationType::CryptoHash => "CRYPTO_HASH",
+            TransformationType::DateShift => "DATE_SHIFT",
+            TransformationType::CryptoDeterministicConfig => "CRYPTO_DETERMINISTIC_CONFIG",
+            TransformationType::RedactImage => "REDACT_IMAGE",
+        }
+    }
+}
 /// Operators available for comparing the value of fields.
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
 #[repr(i32)]
@@ -5648,6 +6099,24 @@ pub enum RelationalOperator {
     LessThanOrEquals = 6,
     /// Exists
     Exists = 7,
+}
+impl RelationalOperator {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            RelationalOperator::Unspecified => "RELATIONAL_OPERATOR_UNSPECIFIED",
+            RelationalOperator::EqualTo => "EQUAL_TO",
+            RelationalOperator::NotEqualTo => "NOT_EQUAL_TO",
+            RelationalOperator::GreaterThan => "GREATER_THAN",
+            RelationalOperator::LessThan => "LESS_THAN",
+            RelationalOperator::GreaterThanOrEquals => "GREATER_THAN_OR_EQUALS",
+            RelationalOperator::LessThanOrEquals => "LESS_THAN_OR_EQUALS",
+            RelationalOperator::Exists => "EXISTS",
+        }
+    }
 }
 /// Type of the match which can be applied to different ways of matching, like
 /// Dictionary, regular expression and intersecting with findings of another
@@ -5676,6 +6145,20 @@ pub enum MatchingType {
     /// - Exclude info type: no intersection with affecting info types findings
     InverseMatch = 3,
 }
+impl MatchingType {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            MatchingType::Unspecified => "MATCHING_TYPE_UNSPECIFIED",
+            MatchingType::FullMatch => "MATCHING_TYPE_FULL_MATCH",
+            MatchingType::PartialMatch => "MATCHING_TYPE_PARTIAL_MATCH",
+            MatchingType::InverseMatch => "MATCHING_TYPE_INVERSE_MATCH",
+        }
+    }
+}
 /// Deprecated and unused.
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
 #[repr(i32)]
@@ -5687,6 +6170,19 @@ pub enum ContentOption {
     /// Images found in the data.
     ContentImage = 2,
 }
+impl ContentOption {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            ContentOption::ContentUnspecified => "CONTENT_UNSPECIFIED",
+            ContentOption::ContentText => "CONTENT_TEXT",
+            ContentOption::ContentImage => "CONTENT_IMAGE",
+        }
+    }
+}
 /// Type of metadata containing the finding.
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
 #[repr(i32)]
@@ -5695,6 +6191,18 @@ pub enum MetadataType {
     MetadatatypeUnspecified = 0,
     /// General file metadata provided by Cloud Storage.
     StorageMetadata = 2,
+}
+impl MetadataType {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            MetadataType::MetadatatypeUnspecified => "METADATATYPE_UNSPECIFIED",
+            MetadataType::StorageMetadata => "STORAGE_METADATA",
+        }
+    }
 }
 /// Parts of the APIs which use certain infoTypes.
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
@@ -5707,6 +6215,19 @@ pub enum InfoTypeSupportedBy {
     /// Supported by the risk analysis operations.
     RiskAnalysis = 2,
 }
+impl InfoTypeSupportedBy {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            InfoTypeSupportedBy::EnumTypeUnspecified => "ENUM_TYPE_UNSPECIFIED",
+            InfoTypeSupportedBy::Inspect => "INSPECT",
+            InfoTypeSupportedBy::RiskAnalysis => "RISK_ANALYSIS",
+        }
+    }
+}
 /// An enum to represent the various types of DLP jobs.
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
 #[repr(i32)]
@@ -5717,6 +6238,19 @@ pub enum DlpJobType {
     InspectJob = 1,
     /// The job executed a Risk Analysis computation.
     RiskAnalysisJob = 2,
+}
+impl DlpJobType {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            DlpJobType::Unspecified => "DLP_JOB_TYPE_UNSPECIFIED",
+            DlpJobType::InspectJob => "INSPECT_JOB",
+            DlpJobType::RiskAnalysisJob => "RISK_ANALYSIS_JOB",
+        }
+    }
 }
 /// State of a StoredInfoType version.
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
@@ -5736,6 +6270,21 @@ pub enum StoredInfoTypeState {
     /// use the `UpdateStoredInfoType` method to create a new version.
     Invalid = 4,
 }
+impl StoredInfoTypeState {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            StoredInfoTypeState::Unspecified => "STORED_INFO_TYPE_STATE_UNSPECIFIED",
+            StoredInfoTypeState::Pending => "PENDING",
+            StoredInfoTypeState::Ready => "READY",
+            StoredInfoTypeState::Failed => "FAILED",
+            StoredInfoTypeState::Invalid => "INVALID",
+        }
+    }
+}
 /// How broadly a resource has been shared. New items may be added over time.
 /// A higher number means more restricted.
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
@@ -5748,6 +6297,19 @@ pub enum ResourceVisibility {
     /// Visible only to specific users.
     Restricted = 20,
 }
+impl ResourceVisibility {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            ResourceVisibility::Unspecified => "RESOURCE_VISIBILITY_UNSPECIFIED",
+            ResourceVisibility::Public => "RESOURCE_VISIBILITY_PUBLIC",
+            ResourceVisibility::Restricted => "RESOURCE_VISIBILITY_RESTRICTED",
+        }
+    }
+}
 /// How a resource is encrypted.
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
 #[repr(i32)]
@@ -5759,10 +6321,24 @@ pub enum EncryptionStatus {
     /// Customer provides the key.
     EncryptionCustomerManaged = 2,
 }
+impl EncryptionStatus {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            EncryptionStatus::Unspecified => "ENCRYPTION_STATUS_UNSPECIFIED",
+            EncryptionStatus::EncryptionGoogleManaged => "ENCRYPTION_GOOGLE_MANAGED",
+            EncryptionStatus::EncryptionCustomerManaged => "ENCRYPTION_CUSTOMER_MANAGED",
+        }
+    }
+}
 /// Generated client implementations.
 pub mod dlp_service_client {
     #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
     use tonic::codegen::*;
+    use tonic::codegen::http::Uri;
     /// The Cloud Data Loss Prevention (DLP) API is a service that allows clients
     /// to detect the presence of Personally Identifiable Information (PII) and other
     /// privacy-sensitive data in user-supplied, unstructured data streams, like text
@@ -5787,6 +6363,10 @@ pub mod dlp_service_client {
             let inner = tonic::client::Grpc::new(inner);
             Self { inner }
         }
+        pub fn with_origin(inner: T, origin: Uri) -> Self {
+            let inner = tonic::client::Grpc::with_origin(inner, origin);
+            Self { inner }
+        }
         pub fn with_interceptor<F>(
             inner: T,
             interceptor: F,
@@ -5806,19 +6386,19 @@ pub mod dlp_service_client {
         {
             DlpServiceClient::new(InterceptedService::new(inner, interceptor))
         }
-        /// Compress requests with `gzip`.
+        /// Compress requests with the given encoding.
         ///
         /// This requires the server to support it otherwise it might respond with an
         /// error.
         #[must_use]
-        pub fn send_gzip(mut self) -> Self {
-            self.inner = self.inner.send_gzip();
+        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.send_compressed(encoding);
             self
         }
-        /// Enable decompressing responses with `gzip`.
+        /// Enable decompressing responses.
         #[must_use]
-        pub fn accept_gzip(mut self) -> Self {
-            self.inner = self.inner.accept_gzip();
+        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.accept_compressed(encoding);
             self
         }
         /// Finds potentially sensitive info in content.

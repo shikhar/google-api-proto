@@ -220,6 +220,20 @@ pub mod reauth_settings {
         /// User must use their secure key 2nd factor device.
         SecureKey = 3,
     }
+    impl Method {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                Method::Unspecified => "METHOD_UNSPECIFIED",
+                Method::Login => "LOGIN",
+                Method::Password => "PASSWORD",
+                Method::SecureKey => "SECURE_KEY",
+            }
+        }
+    }
     /// Type of policy in the case of hierarchial policies.
     #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
     #[repr(i32)]
@@ -231,6 +245,19 @@ pub mod reauth_settings {
         Minimum = 1,
         /// This policy acts as a default if no other reauth policy is set.
         Default = 2,
+    }
+    impl PolicyType {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                PolicyType::Unspecified => "POLICY_TYPE_UNSPECIFIED",
+                PolicyType::Minimum => "MINIMUM",
+                PolicyType::Default => "DEFAULT",
+            }
+        }
     }
 }
 /// Wrapper over application specific settings for IAP.
@@ -416,6 +443,7 @@ pub struct IdentityAwareProxyClient {
 pub mod identity_aware_proxy_admin_service_client {
     #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
     use tonic::codegen::*;
+    use tonic::codegen::http::Uri;
     /// APIs for Identity-Aware Proxy Admin configurations.
     #[derive(Debug, Clone)]
     pub struct IdentityAwareProxyAdminServiceClient<T> {
@@ -430,6 +458,10 @@ pub mod identity_aware_proxy_admin_service_client {
     {
         pub fn new(inner: T) -> Self {
             let inner = tonic::client::Grpc::new(inner);
+            Self { inner }
+        }
+        pub fn with_origin(inner: T, origin: Uri) -> Self {
+            let inner = tonic::client::Grpc::with_origin(inner, origin);
             Self { inner }
         }
         pub fn with_interceptor<F>(
@@ -453,19 +485,19 @@ pub mod identity_aware_proxy_admin_service_client {
                 InterceptedService::new(inner, interceptor),
             )
         }
-        /// Compress requests with `gzip`.
+        /// Compress requests with the given encoding.
         ///
         /// This requires the server to support it otherwise it might respond with an
         /// error.
         #[must_use]
-        pub fn send_gzip(mut self) -> Self {
-            self.inner = self.inner.send_gzip();
+        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.send_compressed(encoding);
             self
         }
-        /// Enable decompressing responses with `gzip`.
+        /// Enable decompressing responses.
         #[must_use]
-        pub fn accept_gzip(mut self) -> Self {
-            self.inner = self.inner.accept_gzip();
+        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.accept_compressed(encoding);
             self
         }
         /// Sets the access control policy for an Identity-Aware Proxy protected
@@ -706,6 +738,7 @@ pub mod identity_aware_proxy_admin_service_client {
 pub mod identity_aware_proxy_o_auth_service_client {
     #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
     use tonic::codegen::*;
+    use tonic::codegen::http::Uri;
     /// API to programmatically create, list and retrieve Identity Aware Proxy (IAP)
     /// OAuth brands; and create, retrieve, delete and reset-secret of IAP OAuth
     /// clients.
@@ -722,6 +755,10 @@ pub mod identity_aware_proxy_o_auth_service_client {
     {
         pub fn new(inner: T) -> Self {
             let inner = tonic::client::Grpc::new(inner);
+            Self { inner }
+        }
+        pub fn with_origin(inner: T, origin: Uri) -> Self {
+            let inner = tonic::client::Grpc::with_origin(inner, origin);
             Self { inner }
         }
         pub fn with_interceptor<F>(
@@ -745,19 +782,19 @@ pub mod identity_aware_proxy_o_auth_service_client {
                 InterceptedService::new(inner, interceptor),
             )
         }
-        /// Compress requests with `gzip`.
+        /// Compress requests with the given encoding.
         ///
         /// This requires the server to support it otherwise it might respond with an
         /// error.
         #[must_use]
-        pub fn send_gzip(mut self) -> Self {
-            self.inner = self.inner.send_gzip();
+        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.send_compressed(encoding);
             self
         }
-        /// Enable decompressing responses with `gzip`.
+        /// Enable decompressing responses.
         #[must_use]
-        pub fn accept_gzip(mut self) -> Self {
-            self.inner = self.inner.accept_gzip();
+        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.accept_compressed(encoding);
             self
         }
         /// Lists the existing brands for the project.

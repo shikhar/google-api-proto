@@ -36,6 +36,18 @@ pub mod network_config {
         /// Use the IPv4 internet protocol.
         ModeIpv4 = 1,
     }
+    impl AddressMode {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                AddressMode::Unspecified => "ADDRESS_MODE_UNSPECIFIED",
+                AddressMode::ModeIpv4 => "MODE_IPV4",
+            }
+        }
+    }
 }
 /// File share configuration for the instance.
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -118,6 +130,19 @@ pub mod nfs_export_options {
         /// The client can read and write the file share (default).
         ReadWrite = 2,
     }
+    impl AccessMode {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                AccessMode::Unspecified => "ACCESS_MODE_UNSPECIFIED",
+                AccessMode::ReadOnly => "READ_ONLY",
+                AccessMode::ReadWrite => "READ_WRITE",
+            }
+        }
+    }
     /// The squash mode.
     #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
     #[repr(i32)]
@@ -128,6 +153,19 @@ pub mod nfs_export_options {
         NoRootSquash = 1,
         /// The Root user has squashed access to the anonymous uid/gid.
         RootSquash = 2,
+    }
+    impl SquashMode {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                SquashMode::Unspecified => "SQUASH_MODE_UNSPECIFIED",
+                SquashMode::NoRootSquash => "NO_ROOT_SQUASH",
+                SquashMode::RootSquash => "ROOT_SQUASH",
+            }
+        }
     }
 }
 /// A Cloud Filestore instance.
@@ -196,6 +234,23 @@ pub mod instance {
         /// and may be unusable during this time.
         Restoring = 7,
     }
+    impl State {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                State::Unspecified => "STATE_UNSPECIFIED",
+                State::Creating => "CREATING",
+                State::Ready => "READY",
+                State::Repairing => "REPAIRING",
+                State::Deleting => "DELETING",
+                State::Error => "ERROR",
+                State::Restoring => "RESTORING",
+            }
+        }
+    }
     /// Available service tiers.
     #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
     #[repr(i32)]
@@ -217,6 +272,22 @@ pub mod instance {
         /// HIGH_SCALE instances offer expanded capacity and performance scaling
         /// capabilities.
         HighScaleSsd = 6,
+    }
+    impl Tier {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                Tier::Unspecified => "TIER_UNSPECIFIED",
+                Tier::Standard => "STANDARD",
+                Tier::Premium => "PREMIUM",
+                Tier::BasicHdd => "BASIC_HDD",
+                Tier::BasicSsd => "BASIC_SSD",
+                Tier::HighScaleSsd => "HIGH_SCALE_SSD",
+            }
+        }
     }
 }
 /// CreateInstanceRequest creates an instance.
@@ -381,6 +452,20 @@ pub mod snapshot {
         /// Snapshot is being deleted.
         Deleting = 4,
     }
+    impl State {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                State::Unspecified => "STATE_UNSPECIFIED",
+                State::Creating => "CREATING",
+                State::Ready => "READY",
+                State::Deleting => "DELETING",
+            }
+        }
+    }
 }
 /// A Cloud Filestore backup.
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -446,6 +531,21 @@ pub mod backup {
         Ready = 3,
         /// Backup is being deleted.
         Deleting = 4,
+    }
+    impl State {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                State::Unspecified => "STATE_UNSPECIFIED",
+                State::Creating => "CREATING",
+                State::Finalizing => "FINALIZING",
+                State::Ready => "READY",
+                State::Deleting => "DELETING",
+            }
+        }
     }
 }
 /// CreateBackupRequest creates a backup.
@@ -543,6 +643,7 @@ pub struct ListBackupsResponse {
 pub mod cloud_filestore_manager_client {
     #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
     use tonic::codegen::*;
+    use tonic::codegen::http::Uri;
     /// Configures and manages Cloud Filestore resources.
     ///
     /// Cloud Filestore Manager v1beta1.
@@ -580,6 +681,10 @@ pub mod cloud_filestore_manager_client {
             let inner = tonic::client::Grpc::new(inner);
             Self { inner }
         }
+        pub fn with_origin(inner: T, origin: Uri) -> Self {
+            let inner = tonic::client::Grpc::with_origin(inner, origin);
+            Self { inner }
+        }
         pub fn with_interceptor<F>(
             inner: T,
             interceptor: F,
@@ -599,19 +704,19 @@ pub mod cloud_filestore_manager_client {
         {
             CloudFilestoreManagerClient::new(InterceptedService::new(inner, interceptor))
         }
-        /// Compress requests with `gzip`.
+        /// Compress requests with the given encoding.
         ///
         /// This requires the server to support it otherwise it might respond with an
         /// error.
         #[must_use]
-        pub fn send_gzip(mut self) -> Self {
-            self.inner = self.inner.send_gzip();
+        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.send_compressed(encoding);
             self
         }
-        /// Enable decompressing responses with `gzip`.
+        /// Enable decompressing responses.
         #[must_use]
-        pub fn accept_gzip(mut self) -> Self {
-            self.inner = self.inner.accept_gzip();
+        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.accept_compressed(encoding);
             self
         }
         /// Lists all instances in a project for either a specified location

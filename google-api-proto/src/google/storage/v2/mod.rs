@@ -1061,6 +1061,31 @@ pub mod service_constants {
         /// GetListObjectsSplitPoints RPC is valid.
         SplitTokenMaxValidDays = 14,
     }
+    impl Values {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                Values::Unspecified => "VALUES_UNSPECIFIED",
+                Values::MaxReadChunkBytes => "MAX_READ_CHUNK_BYTES",
+                Values::MaxObjectSizeMb => "MAX_OBJECT_SIZE_MB",
+                Values::MaxCustomMetadataFieldNameBytes => "MAX_CUSTOM_METADATA_FIELD_NAME_BYTES",
+                Values::MaxCustomMetadataFieldValueBytes => "MAX_CUSTOM_METADATA_FIELD_VALUE_BYTES",
+                Values::MaxCustomMetadataTotalSizeBytes => "MAX_CUSTOM_METADATA_TOTAL_SIZE_BYTES",
+                Values::MaxBucketMetadataTotalSizeBytes => "MAX_BUCKET_METADATA_TOTAL_SIZE_BYTES",
+                Values::MaxNotificationConfigsPerBucket => "MAX_NOTIFICATION_CONFIGS_PER_BUCKET",
+                Values::MaxNotificationCustomAttributes => "MAX_NOTIFICATION_CUSTOM_ATTRIBUTES",
+                Values::MaxNotificationCustomAttributeKeyLength => "MAX_NOTIFICATION_CUSTOM_ATTRIBUTE_KEY_LENGTH",
+                Values::MaxLabelsEntriesCount => "MAX_LABELS_ENTRIES_COUNT",
+                Values::MaxLabelsKeyValueLength => "MAX_LABELS_KEY_VALUE_LENGTH",
+                Values::MaxLabelsKeyValueBytes => "MAX_LABELS_KEY_VALUE_BYTES",
+                Values::MaxObjectIdsPerDeleteObjectsRequest => "MAX_OBJECT_IDS_PER_DELETE_OBJECTS_REQUEST",
+                Values::SplitTokenMaxValidDays => "SPLIT_TOKEN_MAX_VALID_DAYS",
+            }
+        }
+    }
 }
 /// A bucket.
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -1873,6 +1898,7 @@ pub struct ContentRange {
 pub mod storage_client {
     #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
     use tonic::codegen::*;
+    use tonic::codegen::http::Uri;
     /// ## API Overview and Naming Syntax
     ///
     /// The Cloud Storage gRPC API allows applications to read and write data through
@@ -1909,6 +1935,10 @@ pub mod storage_client {
             let inner = tonic::client::Grpc::new(inner);
             Self { inner }
         }
+        pub fn with_origin(inner: T, origin: Uri) -> Self {
+            let inner = tonic::client::Grpc::with_origin(inner, origin);
+            Self { inner }
+        }
         pub fn with_interceptor<F>(
             inner: T,
             interceptor: F,
@@ -1928,19 +1958,19 @@ pub mod storage_client {
         {
             StorageClient::new(InterceptedService::new(inner, interceptor))
         }
-        /// Compress requests with `gzip`.
+        /// Compress requests with the given encoding.
         ///
         /// This requires the server to support it otherwise it might respond with an
         /// error.
         #[must_use]
-        pub fn send_gzip(mut self) -> Self {
-            self.inner = self.inner.send_gzip();
+        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.send_compressed(encoding);
             self
         }
-        /// Enable decompressing responses with `gzip`.
+        /// Enable decompressing responses.
         #[must_use]
-        pub fn accept_gzip(mut self) -> Self {
-            self.inner = self.inner.accept_gzip();
+        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.accept_compressed(encoding);
             self
         }
         /// Permanently deletes an empty bucket.

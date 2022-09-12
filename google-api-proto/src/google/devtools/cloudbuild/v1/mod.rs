@@ -335,7 +335,7 @@ pub struct ArtifactResult {
 /// - $BRANCH_NAME: the branch name specified by RepoSource.
 /// - $TAG_NAME: the tag name specified by RepoSource.
 /// - $REVISION_ID or $COMMIT_SHA: the commit SHA specified by RepoSource or
-///   resolved from the specified branch or tag.
+///    resolved from the specified branch or tag.
 /// - $SHORT_SHA: first 7 characters of $REVISION_ID or $COMMIT_SHA.
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct Build {
@@ -501,6 +501,20 @@ pub mod build {
             /// e.g. alerts that a feature used in the build is pending removal
             Alert = 3,
         }
+        impl Priority {
+            /// String value of the enum field names used in the ProtoBuf definition.
+            ///
+            /// The values are not transformed in any way and thus are considered stable
+            /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+            pub fn as_str_name(&self) -> &'static str {
+                match self {
+                    Priority::Unspecified => "PRIORITY_UNSPECIFIED",
+                    Priority::Info => "INFO",
+                    Priority::Warning => "WARNING",
+                    Priority::Alert => "ALERT",
+                }
+            }
+        }
     }
     /// A fatal problem encountered during the execution of the build.
     #[derive(Clone, PartialEq, ::prost::Message)]
@@ -534,6 +548,23 @@ pub mod build {
             /// The source fetching has failed.
             FetchSourceFailed = 6,
         }
+        impl FailureType {
+            /// String value of the enum field names used in the ProtoBuf definition.
+            ///
+            /// The values are not transformed in any way and thus are considered stable
+            /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+            pub fn as_str_name(&self) -> &'static str {
+                match self {
+                    FailureType::Unspecified => "FAILURE_TYPE_UNSPECIFIED",
+                    FailureType::PushFailed => "PUSH_FAILED",
+                    FailureType::PushImageNotFound => "PUSH_IMAGE_NOT_FOUND",
+                    FailureType::PushNotAuthorized => "PUSH_NOT_AUTHORIZED",
+                    FailureType::LoggingFailure => "LOGGING_FAILURE",
+                    FailureType::UserBuildStep => "USER_BUILD_STEP",
+                    FailureType::FetchSourceFailed => "FETCH_SOURCE_FAILED",
+                }
+            }
+        }
     }
     /// Possible status of a build or build step.
     #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
@@ -560,6 +591,26 @@ pub mod build {
         Cancelled = 7,
         /// Build was enqueued for longer than the value of `queue_ttl`.
         Expired = 9,
+    }
+    impl Status {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                Status::Unknown => "STATUS_UNKNOWN",
+                Status::Pending => "PENDING",
+                Status::Queued => "QUEUED",
+                Status::Working => "WORKING",
+                Status::Success => "SUCCESS",
+                Status::Failure => "FAILURE",
+                Status::InternalError => "INTERNAL_ERROR",
+                Status::Timeout => "TIMEOUT",
+                Status::Cancelled => "CANCELLED",
+                Status::Expired => "EXPIRED",
+            }
+        }
     }
 }
 /// Artifacts produced by a build that should be uploaded upon
@@ -690,6 +741,19 @@ pub mod hash {
         Sha256 = 1,
         /// Use a md5 hash.
         Md5 = 2,
+    }
+    impl HashType {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                HashType::None => "NONE",
+                HashType::Sha256 => "SHA256",
+                HashType::Md5 => "MD5",
+            }
+        }
     }
 }
 /// Secrets and secret environment variables.
@@ -875,6 +939,21 @@ pub mod build_approval {
         /// Build was cancelled while it was still pending approval.
         Cancelled = 5,
     }
+    impl State {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                State::Unspecified => "STATE_UNSPECIFIED",
+                State::Pending => "PENDING",
+                State::Approved => "APPROVED",
+                State::Rejected => "REJECTED",
+                State::Cancelled => "CANCELLED",
+            }
+        }
+    }
 }
 /// ApprovalConfig describes configuration for manual approval of a build.
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -922,6 +1001,19 @@ pub mod approval_result {
         Approved = 1,
         /// Build is rejected.
         Rejected = 2,
+    }
+    impl Decision {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                Decision::Unspecified => "DECISION_UNSPECIFIED",
+                Decision::Approved => "APPROVED",
+                Decision::Rejected => "REJECTED",
+            }
+        }
     }
 }
 /// Configuration for an automated build in response to source repository
@@ -1119,6 +1211,21 @@ pub mod pubsub_config {
         /// Some of the subscription's field are misconfigured.
         SubscriptionMisconfigured = 4,
     }
+    impl State {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                State::Unspecified => "STATE_UNSPECIFIED",
+                State::Ok => "OK",
+                State::SubscriptionDeleted => "SUBSCRIPTION_DELETED",
+                State::TopicDeleted => "TOPIC_DELETED",
+                State::SubscriptionMisconfigured => "SUBSCRIPTION_MISCONFIGURED",
+            }
+        }
+    }
 }
 /// WebhookConfig describes the configuration of a trigger that
 /// creates a build whenever a webhook is sent to a trigger's webhook URL.
@@ -1145,6 +1252,19 @@ pub mod webhook_config {
         Ok = 1,
         /// The secret provided in auth_method has been deleted.
         SecretDeleted = 2,
+    }
+    impl State {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                State::Unspecified => "STATE_UNSPECIFIED",
+                State::Ok => "OK",
+                State::SecretDeleted => "SECRET_DELETED",
+            }
+        }
     }
     /// Auth method specifies how the webhook authenticates with GCP.
     #[derive(Clone, PartialEq, ::prost::Oneof)]
@@ -1184,6 +1304,19 @@ pub mod pull_request_filter {
         /// Enforce that repository owners or collaborators must comment on external
         /// contributors' Pull Requests before builds are triggered.
         CommentsEnabledForExternalContributorsOnly = 2,
+    }
+    impl CommentControl {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                CommentControl::CommentsDisabled => "COMMENTS_DISABLED",
+                CommentControl::CommentsEnabled => "COMMENTS_ENABLED",
+                CommentControl::CommentsEnabledForExternalContributorsOnly => "COMMENTS_ENABLED_FOR_EXTERNAL_CONTRIBUTORS_ONLY",
+            }
+        }
     }
     /// Target refs to match.
     /// A target ref is the git reference where the pull request will be applied.
@@ -1416,6 +1549,18 @@ pub mod build_options {
         /// Verified build.
         Verified = 1,
     }
+    impl VerifyOption {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                VerifyOption::NotVerified => "NOT_VERIFIED",
+                VerifyOption::Verified => "VERIFIED",
+            }
+        }
+    }
     /// Supported Compute Engine machine types.
     /// For more information, see [Machine
     /// types](<https://cloud.google.com/compute/docs/machine-types>).
@@ -1433,6 +1578,21 @@ pub mod build_options {
         /// Highcpu e2 machine with 32 CPUs.
         E2Highcpu32 = 6,
     }
+    impl MachineType {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                MachineType::Unspecified => "UNSPECIFIED",
+                MachineType::N1Highcpu8 => "N1_HIGHCPU_8",
+                MachineType::N1Highcpu32 => "N1_HIGHCPU_32",
+                MachineType::E2Highcpu8 => "E2_HIGHCPU_8",
+                MachineType::E2Highcpu32 => "E2_HIGHCPU_32",
+            }
+        }
+    }
     /// Specifies the behavior when there is an error in the substitution checks.
     #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
     #[repr(i32)]
@@ -1442,6 +1602,18 @@ pub mod build_options {
         MustMatch = 0,
         /// Do not fail the build if error in substitutions checks.
         AllowLoose = 1,
+    }
+    impl SubstitutionOption {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                SubstitutionOption::MustMatch => "MUST_MATCH",
+                SubstitutionOption::AllowLoose => "ALLOW_LOOSE",
+            }
+        }
     }
     /// Specifies the behavior when writing build logs to Google Cloud Storage.
     #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
@@ -1454,6 +1626,19 @@ pub mod build_options {
         /// Build logs should not be streamed to Google Cloud Storage; they will be
         /// written when the build is completed.
         StreamOff = 2,
+    }
+    impl LogStreamingOption {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                LogStreamingOption::StreamDefault => "STREAM_DEFAULT",
+                LogStreamingOption::StreamOn => "STREAM_ON",
+                LogStreamingOption::StreamOff => "STREAM_OFF",
+            }
+        }
     }
     /// Specifies the logging mode.
     #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
@@ -1474,6 +1659,22 @@ pub mod build_options {
         CloudLoggingOnly = 5,
         /// Turn off all logging. No build logs will be captured.
         None = 4,
+    }
+    impl LoggingMode {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                LoggingMode::LoggingUnspecified => "LOGGING_UNSPECIFIED",
+                LoggingMode::Legacy => "LEGACY",
+                LoggingMode::GcsOnly => "GCS_ONLY",
+                LoggingMode::StackdriverOnly => "STACKDRIVER_ONLY",
+                LoggingMode::CloudLoggingOnly => "CLOUD_LOGGING_ONLY",
+                LoggingMode::None => "NONE",
+            }
+        }
     }
 }
 /// ReceiveTriggerWebhookRequest \[Experimental\] is the request object accepted by
@@ -1576,6 +1777,21 @@ pub mod worker_pool {
         /// `WorkerPool` is deleted.
         Deleted = 4,
     }
+    impl State {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                State::Unspecified => "STATE_UNSPECIFIED",
+                State::Creating => "CREATING",
+                State::Running => "RUNNING",
+                State::Deleting => "DELETING",
+                State::Deleted => "DELETED",
+            }
+        }
+    }
     /// Private Pool configuration for the `WorkerPool`.
     #[derive(Clone, PartialEq, ::prost::Oneof)]
     pub enum Config {
@@ -1645,6 +1861,19 @@ pub mod private_pool_v1_config {
             /// If set, workers are created with a public address which allows for
             /// public internet egress.
             PublicEgress = 2,
+        }
+        impl EgressOption {
+            /// String value of the enum field names used in the ProtoBuf definition.
+            ///
+            /// The values are not transformed in any way and thus are considered stable
+            /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+            pub fn as_str_name(&self) -> &'static str {
+                match self {
+                    EgressOption::Unspecified => "EGRESS_OPTION_UNSPECIFIED",
+                    EgressOption::NoPublicEgress => "NO_PUBLIC_EGRESS",
+                    EgressOption::PublicEgress => "PUBLIC_EGRESS",
+                }
+            }
         }
     }
 }
@@ -1793,6 +2022,7 @@ pub struct DeleteWorkerPoolOperationMetadata {
 pub mod cloud_build_client {
     #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
     use tonic::codegen::*;
+    use tonic::codegen::http::Uri;
     /// Creates and manages builds on Google Cloud Platform.
     ///
     /// The main concept used by this API is a `Build`, which describes the location
@@ -1816,6 +2046,10 @@ pub mod cloud_build_client {
             let inner = tonic::client::Grpc::new(inner);
             Self { inner }
         }
+        pub fn with_origin(inner: T, origin: Uri) -> Self {
+            let inner = tonic::client::Grpc::with_origin(inner, origin);
+            Self { inner }
+        }
         pub fn with_interceptor<F>(
             inner: T,
             interceptor: F,
@@ -1835,19 +2069,19 @@ pub mod cloud_build_client {
         {
             CloudBuildClient::new(InterceptedService::new(inner, interceptor))
         }
-        /// Compress requests with `gzip`.
+        /// Compress requests with the given encoding.
         ///
         /// This requires the server to support it otherwise it might respond with an
         /// error.
         #[must_use]
-        pub fn send_gzip(mut self) -> Self {
-            self.inner = self.inner.send_gzip();
+        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.send_compressed(encoding);
             self
         }
-        /// Enable decompressing responses with `gzip`.
+        /// Enable decompressing responses.
         #[must_use]
-        pub fn accept_gzip(mut self) -> Self {
-            self.inner = self.inner.accept_gzip();
+        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.accept_compressed(encoding);
             self
         }
         /// Starts a build with the specified configuration.

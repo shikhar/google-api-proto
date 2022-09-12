@@ -1,53 +1,3 @@
-/// A CrawledUrl resource represents a URL that was crawled during a ScanRun. Web
-/// Security Scanner Service crawls the web applications, following all links
-/// within the scope of sites, to find the URLs to test against.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct CrawledUrl {
-    /// The http method of the request that was used to visit the URL, in
-    /// uppercase.
-    #[prost(string, tag="1")]
-    pub http_method: ::prost::alloc::string::String,
-    /// The URL that was crawled.
-    #[prost(string, tag="2")]
-    pub url: ::prost::alloc::string::String,
-    /// The body of the request that was used to visit the URL.
-    #[prost(string, tag="3")]
-    pub body: ::prost::alloc::string::String,
-}
-/// Output only.
-/// Defines a warning trace message for ScanRun. Warning traces provide customers
-/// with useful information that helps make the scanning process more effective.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ScanRunWarningTrace {
-    /// Indicates the warning code.
-    #[prost(enumeration="scan_run_warning_trace::Code", tag="1")]
-    pub code: i32,
-}
-/// Nested message and enum types in `ScanRunWarningTrace`.
-pub mod scan_run_warning_trace {
-    /// Output only.
-    /// Defines a warning message code.
-    /// Next id: 6
-    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
-    #[repr(i32)]
-    pub enum Code {
-        /// Default value is never used.
-        Unspecified = 0,
-        /// Indicates that a scan discovered an unexpectedly low number of URLs. This
-        /// is sometimes caused by complex navigation features or by using a single
-        /// URL for numerous pages.
-        InsufficientCrawlResults = 1,
-        /// Indicates that a scan discovered too many URLs to test, or excessive
-        /// redundant URLs.
-        TooManyCrawlResults = 2,
-        /// Indicates that too many tests have been generated for the scan. Customer
-        /// should try reducing the number of starting URLs, increasing the QPS rate,
-        /// or narrowing down the scope of the scan using the excluded patterns.
-        TooManyFuzzTasks = 3,
-        /// Indicates that a scan is blocked by IAP.
-        BlockedByIap = 4,
-    }
-}
 /// ! Information about a vulnerability with an HTML.
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct Form {
@@ -321,6 +271,57 @@ pub mod scan_config_error {
         /// The URL scheme of one or more of the supplied URLs is not supported.
         UnsupportedUrlScheme = 42,
     }
+    impl Code {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                Code::Unspecified => "CODE_UNSPECIFIED",
+                Code::InternalError => "INTERNAL_ERROR",
+                Code::AppengineApiBackendError => "APPENGINE_API_BACKEND_ERROR",
+                Code::AppengineApiNotAccessible => "APPENGINE_API_NOT_ACCESSIBLE",
+                Code::AppengineDefaultHostMissing => "APPENGINE_DEFAULT_HOST_MISSING",
+                Code::CannotUseGoogleComAccount => "CANNOT_USE_GOOGLE_COM_ACCOUNT",
+                Code::CannotUseOwnerAccount => "CANNOT_USE_OWNER_ACCOUNT",
+                Code::ComputeApiBackendError => "COMPUTE_API_BACKEND_ERROR",
+                Code::ComputeApiNotAccessible => "COMPUTE_API_NOT_ACCESSIBLE",
+                Code::CustomLoginUrlDoesNotBelongToCurrentProject => "CUSTOM_LOGIN_URL_DOES_NOT_BELONG_TO_CURRENT_PROJECT",
+                Code::CustomLoginUrlMalformed => "CUSTOM_LOGIN_URL_MALFORMED",
+                Code::CustomLoginUrlMappedToNonRoutableAddress => "CUSTOM_LOGIN_URL_MAPPED_TO_NON_ROUTABLE_ADDRESS",
+                Code::CustomLoginUrlMappedToUnreservedAddress => "CUSTOM_LOGIN_URL_MAPPED_TO_UNRESERVED_ADDRESS",
+                Code::CustomLoginUrlHasNonRoutableIpAddress => "CUSTOM_LOGIN_URL_HAS_NON_ROUTABLE_IP_ADDRESS",
+                Code::CustomLoginUrlHasUnreservedIpAddress => "CUSTOM_LOGIN_URL_HAS_UNRESERVED_IP_ADDRESS",
+                Code::DuplicateScanName => "DUPLICATE_SCAN_NAME",
+                Code::InvalidFieldValue => "INVALID_FIELD_VALUE",
+                Code::FailedToAuthenticateToTarget => "FAILED_TO_AUTHENTICATE_TO_TARGET",
+                Code::FindingTypeUnspecified => "FINDING_TYPE_UNSPECIFIED",
+                Code::ForbiddenToScanCompute => "FORBIDDEN_TO_SCAN_COMPUTE",
+                Code::ForbiddenUpdateToManagedScan => "FORBIDDEN_UPDATE_TO_MANAGED_SCAN",
+                Code::MalformedFilter => "MALFORMED_FILTER",
+                Code::MalformedResourceName => "MALFORMED_RESOURCE_NAME",
+                Code::ProjectInactive => "PROJECT_INACTIVE",
+                Code::RequiredField => "REQUIRED_FIELD",
+                Code::ResourceNameInconsistent => "RESOURCE_NAME_INCONSISTENT",
+                Code::ScanAlreadyRunning => "SCAN_ALREADY_RUNNING",
+                Code::ScanNotRunning => "SCAN_NOT_RUNNING",
+                Code::SeedUrlDoesNotBelongToCurrentProject => "SEED_URL_DOES_NOT_BELONG_TO_CURRENT_PROJECT",
+                Code::SeedUrlMalformed => "SEED_URL_MALFORMED",
+                Code::SeedUrlMappedToNonRoutableAddress => "SEED_URL_MAPPED_TO_NON_ROUTABLE_ADDRESS",
+                Code::SeedUrlMappedToUnreservedAddress => "SEED_URL_MAPPED_TO_UNRESERVED_ADDRESS",
+                Code::SeedUrlHasNonRoutableIpAddress => "SEED_URL_HAS_NON_ROUTABLE_IP_ADDRESS",
+                Code::SeedUrlHasUnreservedIpAddress => "SEED_URL_HAS_UNRESERVED_IP_ADDRESS",
+                Code::ServiceAccountNotConfigured => "SERVICE_ACCOUNT_NOT_CONFIGURED",
+                Code::TooManyScans => "TOO_MANY_SCANS",
+                Code::UnableToResolveProjectInfo => "UNABLE_TO_RESOLVE_PROJECT_INFO",
+                Code::UnsupportedBlacklistPatternFormat => "UNSUPPORTED_BLACKLIST_PATTERN_FORMAT",
+                Code::UnsupportedFilter => "UNSUPPORTED_FILTER",
+                Code::UnsupportedFindingType => "UNSUPPORTED_FINDING_TYPE",
+                Code::UnsupportedUrlScheme => "UNSUPPORTED_URL_SCHEME",
+            }
+        }
+    }
 }
 /// Output only.
 /// Defines an error trace message for a ScanRun.
@@ -367,6 +368,72 @@ pub mod scan_run_error_trace {
         /// pages. When available, most_common_http_error_code field indicates the
         /// most common HTTP error code encountered during the scan.
         TooManyHttpErrors = 6,
+    }
+    impl Code {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                Code::Unspecified => "CODE_UNSPECIFIED",
+                Code::InternalError => "INTERNAL_ERROR",
+                Code::ScanConfigIssue => "SCAN_CONFIG_ISSUE",
+                Code::AuthenticationConfigIssue => "AUTHENTICATION_CONFIG_ISSUE",
+                Code::TimedOutWhileScanning => "TIMED_OUT_WHILE_SCANNING",
+                Code::TooManyRedirects => "TOO_MANY_REDIRECTS",
+                Code::TooManyHttpErrors => "TOO_MANY_HTTP_ERRORS",
+            }
+        }
+    }
+}
+/// Output only.
+/// Defines a warning trace message for ScanRun. Warning traces provide customers
+/// with useful information that helps make the scanning process more effective.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ScanRunWarningTrace {
+    /// Indicates the warning code.
+    #[prost(enumeration="scan_run_warning_trace::Code", tag="1")]
+    pub code: i32,
+}
+/// Nested message and enum types in `ScanRunWarningTrace`.
+pub mod scan_run_warning_trace {
+    /// Output only.
+    /// Defines a warning message code.
+    /// Next id: 6
+    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+    #[repr(i32)]
+    pub enum Code {
+        /// Default value is never used.
+        Unspecified = 0,
+        /// Indicates that a scan discovered an unexpectedly low number of URLs. This
+        /// is sometimes caused by complex navigation features or by using a single
+        /// URL for numerous pages.
+        InsufficientCrawlResults = 1,
+        /// Indicates that a scan discovered too many URLs to test, or excessive
+        /// redundant URLs.
+        TooManyCrawlResults = 2,
+        /// Indicates that too many tests have been generated for the scan. Customer
+        /// should try reducing the number of starting URLs, increasing the QPS rate,
+        /// or narrowing down the scope of the scan using the excluded patterns.
+        TooManyFuzzTasks = 3,
+        /// Indicates that a scan is blocked by IAP.
+        BlockedByIap = 4,
+    }
+    impl Code {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                Code::Unspecified => "CODE_UNSPECIFIED",
+                Code::InsufficientCrawlResults => "INSUFFICIENT_CRAWL_RESULTS",
+                Code::TooManyCrawlResults => "TOO_MANY_CRAWL_RESULTS",
+                Code::TooManyFuzzTasks => "TOO_MANY_FUZZ_TASKS",
+                Code::BlockedByIap => "BLOCKED_BY_IAP",
+            }
+        }
     }
 }
 /// A ScanRun is a output-only resource representing an actual run of the scan.
@@ -435,6 +502,20 @@ pub mod scan_run {
         /// The scan is either finished or stopped by user.
         Finished = 3,
     }
+    impl ExecutionState {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                ExecutionState::Unspecified => "EXECUTION_STATE_UNSPECIFIED",
+                ExecutionState::Queued => "QUEUED",
+                ExecutionState::Scanning => "SCANNING",
+                ExecutionState::Finished => "FINISHED",
+            }
+        }
+    }
     /// Types of ScanRun result state.
     #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
     #[repr(i32)]
@@ -448,6 +529,20 @@ pub mod scan_run {
         Error = 2,
         /// The scan was terminated by user.
         Killed = 3,
+    }
+    impl ResultState {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                ResultState::Unspecified => "RESULT_STATE_UNSPECIFIED",
+                ResultState::Success => "SUCCESS",
+                ResultState::Error => "ERROR",
+                ResultState::Killed => "KILLED",
+            }
+        }
     }
 }
 /// A ScanConfig resource contains the configurations to launch a scan.
@@ -574,6 +669,20 @@ pub mod scan_config {
         /// Safari on IPhone.
         SafariIphone = 3,
     }
+    impl UserAgent {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                UserAgent::Unspecified => "USER_AGENT_UNSPECIFIED",
+                UserAgent::ChromeLinux => "CHROME_LINUX",
+                UserAgent::ChromeAndroid => "CHROME_ANDROID",
+                UserAgent::SafariIphone => "SAFARI_IPHONE",
+            }
+        }
+    }
     /// Cloud platforms supported by Cloud Web Security Scanner.
     #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
     #[repr(i32)]
@@ -585,6 +694,19 @@ pub mod scan_config {
         AppEngine = 1,
         /// Google Compute Engine service.
         Compute = 2,
+    }
+    impl TargetPlatform {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                TargetPlatform::Unspecified => "TARGET_PLATFORM_UNSPECIFIED",
+                TargetPlatform::AppEngine => "APP_ENGINE",
+                TargetPlatform::Compute => "COMPUTE",
+            }
+        }
     }
     /// Scan risk levels supported by Cloud Web Security Scanner. LOW impact
     /// scanning will minimize requests with the potential to modify data. To
@@ -599,6 +721,19 @@ pub mod scan_config {
         /// Lower impact scanning
         Low = 2,
     }
+    impl RiskLevel {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                RiskLevel::Unspecified => "RISK_LEVEL_UNSPECIFIED",
+                RiskLevel::Normal => "NORMAL",
+                RiskLevel::Low => "LOW",
+            }
+        }
+    }
     /// Controls export of scan configurations and results to Cloud Security
     /// Command Center.
     #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
@@ -611,6 +746,35 @@ pub mod scan_config {
         /// Do not export results of this scan to Cloud Security Command Center.
         Disabled = 2,
     }
+    impl ExportToSecurityCommandCenter {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                ExportToSecurityCommandCenter::Unspecified => "EXPORT_TO_SECURITY_COMMAND_CENTER_UNSPECIFIED",
+                ExportToSecurityCommandCenter::Enabled => "ENABLED",
+                ExportToSecurityCommandCenter::Disabled => "DISABLED",
+            }
+        }
+    }
+}
+/// A CrawledUrl resource represents a URL that was crawled during a ScanRun. Web
+/// Security Scanner Service crawls the web applications, following all links
+/// within the scope of sites, to find the URLs to test against.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct CrawledUrl {
+    /// The http method of the request that was used to visit the URL, in
+    /// uppercase.
+    #[prost(string, tag="1")]
+    pub http_method: ::prost::alloc::string::String,
+    /// The URL that was crawled.
+    #[prost(string, tag="2")]
+    pub url: ::prost::alloc::string::String,
+    /// The body of the request that was used to visit the URL.
+    #[prost(string, tag="3")]
+    pub body: ::prost::alloc::string::String,
 }
 /// Request for the `CreateScanConfig` method.
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -832,6 +996,7 @@ pub struct ListFindingTypeStatsResponse {
 pub mod web_security_scanner_client {
     #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
     use tonic::codegen::*;
+    use tonic::codegen::http::Uri;
     /// Cloud Web Security Scanner Service identifies security vulnerabilities in web
     /// applications hosted on Google Cloud Platform. It crawls your application, and
     /// attempts to exercise as many user inputs and event handlers as possible.
@@ -848,6 +1013,10 @@ pub mod web_security_scanner_client {
     {
         pub fn new(inner: T) -> Self {
             let inner = tonic::client::Grpc::new(inner);
+            Self { inner }
+        }
+        pub fn with_origin(inner: T, origin: Uri) -> Self {
+            let inner = tonic::client::Grpc::with_origin(inner, origin);
             Self { inner }
         }
         pub fn with_interceptor<F>(
@@ -869,19 +1038,19 @@ pub mod web_security_scanner_client {
         {
             WebSecurityScannerClient::new(InterceptedService::new(inner, interceptor))
         }
-        /// Compress requests with `gzip`.
+        /// Compress requests with the given encoding.
         ///
         /// This requires the server to support it otherwise it might respond with an
         /// error.
         #[must_use]
-        pub fn send_gzip(mut self) -> Self {
-            self.inner = self.inner.send_gzip();
+        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.send_compressed(encoding);
             self
         }
-        /// Enable decompressing responses with `gzip`.
+        /// Enable decompressing responses.
         #[must_use]
-        pub fn accept_gzip(mut self) -> Self {
-            self.inner = self.inner.accept_gzip();
+        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.accept_compressed(encoding);
             self
         }
         /// Creates a new ScanConfig.

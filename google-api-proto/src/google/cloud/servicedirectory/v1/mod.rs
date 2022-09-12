@@ -1,3 +1,18 @@
+/// A container for \[services][google.cloud.servicedirectory.v1.Service\].
+/// Namespaces allow administrators to group services together and define
+/// permissions for a collection of services.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct Namespace {
+    /// Immutable. The resource name for the namespace in the format
+    /// `projects/*/locations/*/namespaces/*`.
+    #[prost(string, tag="1")]
+    pub name: ::prost::alloc::string::String,
+    /// Optional. Resource labels associated with this Namespace.
+    /// No more than 64 user labels can be associated with a given resource.  Label
+    /// keys and values can be no longer than 63 characters.
+    #[prost(btree_map="string, string", tag="2")]
+    pub labels: ::prost::alloc::collections::BTreeMap<::prost::alloc::string::String, ::prost::alloc::string::String>,
+}
 /// An individual endpoint that provides a
 /// \[service][google.cloud.servicedirectory.v1.Service\]. The service must
 /// already exist to create an endpoint.
@@ -9,11 +24,11 @@ pub struct Endpoint {
     pub name: ::prost::alloc::string::String,
     /// Optional. An IPv4 or IPv6 address. Service Directory will reject bad
     /// addresses like:
-    ///   "8.8.8"
-    ///   "8.8.8.8:53"
-    ///   "test:bad:address"
-    ///   "\[::1\]"
-    ///   "\[::1\]:8080"
+    ///    "8.8.8"
+    ///    "8.8.8.8:53"
+    ///    "test:bad:address"
+    ///    "\[::1\]"
+    ///    "\[::1\]:8080"
     /// Limited to 45 characters.
     #[prost(string, tag="2")]
     pub address: ::prost::alloc::string::String,
@@ -22,21 +37,21 @@ pub struct Endpoint {
     pub port: i32,
     /// Optional. Annotations for the endpoint. This data can be consumed by
     /// service clients. Restrictions:
-    ///  - The entire annotations dictionary may contain up to 512 characters,
-    ///    spread accoss all key-value pairs. Annotations that goes beyond any
-    ///    these limits will be rejected.
-    ///  - Valid annotation keys have two segments: an optional prefix and name,
-    ///    separated by a slash (/). The name segment is required and must be 63
-    ///    characters or less, beginning and ending with an alphanumeric character
-    ///    (\[a-z0-9A-Z\]) with dashes (-), underscores (_), dots (.), and
-    ///    alphanumerics between. The prefix is optional. If specified, the prefix
-    ///    must be a DNS subdomain: a series of DNS labels separated by dots (.),
-    ///    not longer than 253 characters in total, followed by a slash (/).
-    ///    Annotations that fails to meet these requirements will be rejected.
-    ///  - The '(*.)google.com/' and '(*.)googleapis.com/' prefixes are reserved
-    ///    for system annotations managed by Service Directory. If the user tries
-    ///    to write to these keyspaces, those entries will be silently ignored by
-    ///    the system.
+    ///   - The entire annotations dictionary may contain up to 512 characters,
+    ///     spread accoss all key-value pairs. Annotations that goes beyond any
+    ///     these limits will be rejected.
+    ///   - Valid annotation keys have two segments: an optional prefix and name,
+    ///     separated by a slash (/). The name segment is required and must be 63
+    ///     characters or less, beginning and ending with an alphanumeric character
+    ///     (\[a-z0-9A-Z\]) with dashes (-), underscores (_), dots (.), and
+    ///     alphanumerics between. The prefix is optional. If specified, the prefix
+    ///     must be a DNS subdomain: a series of DNS labels separated by dots (.),
+    ///     not longer than 253 characters in total, followed by a slash (/).
+    ///     Annotations that fails to meet these requirements will be rejected.
+    ///   - The '(*.)google.com/' and '(*.)googleapis.com/' prefixes are reserved
+    ///     for system annotations managed by Service Directory. If the user tries
+    ///     to write to these keyspaces, those entries will be silently ignored by
+    ///     the system.
     /// Note: This field is equivalent to the 'metadata' field in the v1beta1 API.
     /// They have the same syntax and read/write to the same location in Service
     /// Directory.
@@ -56,21 +71,21 @@ pub struct Service {
     /// Optional. Annotations for the service. This data can be consumed by service
     /// clients.
     /// Restrictions:
-    ///  - The entire annotations dictionary may contain up to 2000 characters,
-    ///    spread accoss all key-value pairs. Annotations that goes beyond any
-    ///    these limits will be rejected.
-    ///  - Valid annotation keys have two segments: an optional prefix and name,
-    ///    separated by a slash (/). The name segment is required and must be 63
-    ///    characters or less, beginning and ending with an alphanumeric character
-    ///    (\[a-z0-9A-Z\]) with dashes (-), underscores (_), dots (.), and
-    ///    alphanumerics between. The prefix is optional. If specified, the prefix
-    ///    must be a DNS subdomain: a series of DNS labels separated by dots (.),
-    ///    not longer than 253 characters in total, followed by a slash (/).
-    ///    Annotations that fails to meet these requirements will be rejected.
-    ///  - The '(*.)google.com/' and '(*.)googleapis.com/' prefixes are reserved
-    ///    for system annotations managed by Service Directory. If the user tries
-    ///    to write to these keyspaces, those entries will be silently ignored by
-    ///    the system.
+    ///   - The entire annotations dictionary may contain up to 2000 characters,
+    ///     spread accoss all key-value pairs. Annotations that goes beyond any
+    ///     these limits will be rejected.
+    ///   - Valid annotation keys have two segments: an optional prefix and name,
+    ///     separated by a slash (/). The name segment is required and must be 63
+    ///     characters or less, beginning and ending with an alphanumeric character
+    ///     (\[a-z0-9A-Z\]) with dashes (-), underscores (_), dots (.), and
+    ///     alphanumerics between. The prefix is optional. If specified, the prefix
+    ///     must be a DNS subdomain: a series of DNS labels separated by dots (.),
+    ///     not longer than 253 characters in total, followed by a slash (/).
+    ///     Annotations that fails to meet these requirements will be rejected.
+    ///   - The '(*.)google.com/' and '(*.)googleapis.com/' prefixes are reserved
+    ///     for system annotations managed by Service Directory. If the user tries
+    ///     to write to these keyspaces, those entries will be silently ignored by
+    ///     the system.
     /// Note: This field is equivalent to the 'metadata' field in the v1beta1 API.
     /// They have the same syntax and read/write to the same location in Service
     /// Directory.
@@ -107,12 +122,12 @@ pub struct ResolveServiceRequest {
     ///
     /// Examples of valid filters:
     /// * "metadata.owner" returns Endpoints that have a label with the
-    ///   key "owner", this is the same as "metadata:owner"
+    ///    key "owner", this is the same as "metadata:owner"
     /// * "metadata.protocol=gRPC" returns Endpoints that have key/value
-    ///   "protocol=gRPC"
+    ///    "protocol=gRPC"
     /// * "metadata.owner!=sd AND metadata.foo=bar" returns
-    ///   Endpoints that have "owner" field in metadata with a value that is not
-    ///   "sd" AND have the key/value foo=bar.
+    ///    Endpoints that have "owner" field in metadata with a value that is not
+    ///    "sd" AND have the key/value foo=bar.
     #[prost(string, tag="3")]
     pub endpoint_filter: ::prost::alloc::string::String,
 }
@@ -127,6 +142,7 @@ pub struct ResolveServiceResponse {
 pub mod lookup_service_client {
     #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
     use tonic::codegen::*;
+    use tonic::codegen::http::Uri;
     /// Service Directory API for looking up service data at runtime.
     #[derive(Debug, Clone)]
     pub struct LookupServiceClient<T> {
@@ -141,6 +157,10 @@ pub mod lookup_service_client {
     {
         pub fn new(inner: T) -> Self {
             let inner = tonic::client::Grpc::new(inner);
+            Self { inner }
+        }
+        pub fn with_origin(inner: T, origin: Uri) -> Self {
+            let inner = tonic::client::Grpc::with_origin(inner, origin);
             Self { inner }
         }
         pub fn with_interceptor<F>(
@@ -162,19 +182,19 @@ pub mod lookup_service_client {
         {
             LookupServiceClient::new(InterceptedService::new(inner, interceptor))
         }
-        /// Compress requests with `gzip`.
+        /// Compress requests with the given encoding.
         ///
         /// This requires the server to support it otherwise it might respond with an
         /// error.
         #[must_use]
-        pub fn send_gzip(mut self) -> Self {
-            self.inner = self.inner.send_gzip();
+        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.send_compressed(encoding);
             self
         }
-        /// Enable decompressing responses with `gzip`.
+        /// Enable decompressing responses.
         #[must_use]
-        pub fn accept_gzip(mut self) -> Self {
-            self.inner = self.inner.accept_gzip();
+        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.accept_compressed(encoding);
             self
         }
         /// Returns a [service][google.cloud.servicedirectory.v1.Service] and its
@@ -200,21 +220,6 @@ pub mod lookup_service_client {
             self.inner.unary(request.into_request(), path, codec).await
         }
     }
-}
-/// A container for \[services][google.cloud.servicedirectory.v1.Service\].
-/// Namespaces allow administrators to group services together and define
-/// permissions for a collection of services.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct Namespace {
-    /// Immutable. The resource name for the namespace in the format
-    /// `projects/*/locations/*/namespaces/*`.
-    #[prost(string, tag="1")]
-    pub name: ::prost::alloc::string::String,
-    /// Optional. Resource labels associated with this Namespace.
-    /// No more than 64 user labels can be associated with a given resource.  Label
-    /// keys and values can be no longer than 63 characters.
-    #[prost(btree_map="string, string", tag="2")]
-    pub labels: ::prost::alloc::collections::BTreeMap<::prost::alloc::string::String, ::prost::alloc::string::String>,
 }
 /// The request message for
 /// \[RegistrationService.CreateNamespace][google.cloud.servicedirectory.v1.RegistrationService.CreateNamespace\].
@@ -264,17 +269,17 @@ pub struct ListNamespacesRequest {
     ///
     /// Examples of valid filters:
     /// * "labels.owner" returns Namespaces that have a label with the key "owner"
-    ///   this is the same as "labels:owner".
+    ///    this is the same as "labels:owner".
     /// * "labels.protocol=gRPC" returns Namespaces that have key/value
-    ///   "protocol=gRPC".
+    ///    "protocol=gRPC".
     /// * "name>projects/my-project/locations/us-east/namespaces/namespace-c"
-    ///   returns Namespaces that have name that is alphabetically later than the
-    ///   string, so "namespace-e" will be returned but "namespace-a" will not be.
+    ///    returns Namespaces that have name that is alphabetically later than the
+    ///    string, so "namespace-e" will be returned but "namespace-a" will not be.
     /// * "labels.owner!=sd AND labels.foo=bar" returns Namespaces that have
-    ///   "owner" in label key but value is not "sd" AND have key/value foo=bar.
+    ///    "owner" in label key but value is not "sd" AND have key/value foo=bar.
     /// * "doesnotexist.foo=bar" returns an empty list. Note that Namespace doesn't
-    ///   have a field called "doesnotexist". Since the filter does not match any
-    ///   Namespaces, it returns no results.
+    ///    have a field called "doesnotexist". Since the filter does not match any
+    ///    Namespaces, it returns no results.
     #[prost(string, tag="4")]
     pub filter: ::prost::alloc::string::String,
     /// Optional. The order to list result by.
@@ -375,17 +380,17 @@ pub struct ListServicesRequest {
     ///
     /// Examples of valid filters:
     /// * "metadata.owner" returns Services that have a label with the key "owner"
-    ///   this is the same as "metadata:owner".
+    ///    this is the same as "metadata:owner".
     /// * "metadata.protocol=gRPC" returns Services that have key/value
-    ///   "protocol=gRPC".
+    ///    "protocol=gRPC".
     /// * "name>projects/my-project/locations/us-east/namespaces/my-namespace/services/service-c"
-    ///   returns Services that have name that is alphabetically later than the
-    ///   string, so "service-e" will be returned but "service-a" will not be.
+    ///    returns Services that have name that is alphabetically later than the
+    ///    string, so "service-e" will be returned but "service-a" will not be.
     /// * "metadata.owner!=sd AND metadata.foo=bar" returns Services that have
-    ///   "owner" in label key but value is not "sd" AND have key/value foo=bar.
+    ///    "owner" in label key but value is not "sd" AND have key/value foo=bar.
     /// * "doesnotexist.foo=bar" returns an empty list. Note that Service doesn't
-    ///   have a field called "doesnotexist". Since the filter does not match any
-    ///   Services, it returns no results.
+    ///    have a field called "doesnotexist". Since the filter does not match any
+    ///    Services, it returns no results.
     #[prost(string, tag="4")]
     pub filter: ::prost::alloc::string::String,
     /// Optional. The order to list result by.
@@ -480,19 +485,19 @@ pub struct ListEndpointsRequest {
     ///
     /// Examples of valid filters:
     /// * "metadata.owner" returns Endpoints that have a label with the key "owner"
-    ///   this is the same as "metadata:owner".
+    ///    this is the same as "metadata:owner".
     /// * "metadata.protocol=gRPC" returns Endpoints that have key/value
-    ///   "protocol=gRPC".
+    ///    "protocol=gRPC".
     /// * "address=192.108.1.105" returns Endpoints that have this address.
     /// * "port>8080" returns Endpoints that have port number larger than 8080.
     /// * "name>projects/my-project/locations/us-east/namespaces/my-namespace/services/my-service/endpoints/endpoint-c"
-    ///   returns Endpoints that have name that is alphabetically later than the
-    ///   string, so "endpoint-e" will be returned but "endpoint-a" will not be.
+    ///    returns Endpoints that have name that is alphabetically later than the
+    ///    string, so "endpoint-e" will be returned but "endpoint-a" will not be.
     /// * "metadata.owner!=sd AND metadata.foo=bar" returns Endpoints that have
-    ///   "owner" in label key but value is not "sd" AND have key/value foo=bar.
+    ///    "owner" in label key but value is not "sd" AND have key/value foo=bar.
     /// * "doesnotexist.foo=bar" returns an empty list. Note that Endpoint doesn't
-    ///   have a field called "doesnotexist". Since the filter does not match any
-    ///   Endpoints, it returns no results.
+    ///    have a field called "doesnotexist". Since the filter does not match any
+    ///    Endpoints, it returns no results.
     #[prost(string, tag="4")]
     pub filter: ::prost::alloc::string::String,
     /// Optional. The order to list result by.
@@ -544,6 +549,7 @@ pub struct DeleteEndpointRequest {
 pub mod registration_service_client {
     #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
     use tonic::codegen::*;
+    use tonic::codegen::http::Uri;
     /// Service Directory API for registering services. It defines the following
     /// resource model:
     ///
@@ -574,6 +580,10 @@ pub mod registration_service_client {
             let inner = tonic::client::Grpc::new(inner);
             Self { inner }
         }
+        pub fn with_origin(inner: T, origin: Uri) -> Self {
+            let inner = tonic::client::Grpc::with_origin(inner, origin);
+            Self { inner }
+        }
         pub fn with_interceptor<F>(
             inner: T,
             interceptor: F,
@@ -593,19 +603,19 @@ pub mod registration_service_client {
         {
             RegistrationServiceClient::new(InterceptedService::new(inner, interceptor))
         }
-        /// Compress requests with `gzip`.
+        /// Compress requests with the given encoding.
         ///
         /// This requires the server to support it otherwise it might respond with an
         /// error.
         #[must_use]
-        pub fn send_gzip(mut self) -> Self {
-            self.inner = self.inner.send_gzip();
+        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.send_compressed(encoding);
             self
         }
-        /// Enable decompressing responses with `gzip`.
+        /// Enable decompressing responses.
         #[must_use]
-        pub fn accept_gzip(mut self) -> Self {
-            self.inner = self.inner.accept_gzip();
+        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.accept_compressed(encoding);
             self
         }
         /// Creates a namespace, and returns the new Namespace.

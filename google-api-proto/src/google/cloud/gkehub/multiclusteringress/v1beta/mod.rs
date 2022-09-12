@@ -21,3 +21,16 @@ pub enum Billing {
     /// User is paying for Anthos as a whole.
     AnthosLicense = 2,
 }
+impl Billing {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            Billing::Unspecified => "BILLING_UNSPECIFIED",
+            Billing::PayAsYouGo => "PAY_AS_YOU_GO",
+            Billing::AnthosLicense => "ANTHOS_LICENSE",
+        }
+    }
+}

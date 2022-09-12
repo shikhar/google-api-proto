@@ -90,6 +90,19 @@ pub mod compose_trigger {
         /// list (To/cc list) of a draft message.
         Metadata = 2,
     }
+    impl DraftAccess {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                DraftAccess::Unspecified => "UNSPECIFIED",
+                DraftAccess::None => "NONE",
+                DraftAccess::Metadata => "METADATA",
+            }
+        }
+    }
 }
 /// Defines a trigger that fires when the open email meets a specific criteria.
 /// When the trigger fires, it executes a specific endpoint, usually

@@ -163,6 +163,22 @@ pub mod private_connection {
         /// Delete request has failed, resource is in invalid state.
         FailedToDelete = 5,
     }
+    impl State {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                State::Unspecified => "STATE_UNSPECIFIED",
+                State::Creating => "CREATING",
+                State::Created => "CREATED",
+                State::Failed => "FAILED",
+                State::Deleting => "DELETING",
+                State::FailedToDelete => "FAILED_TO_DELETE",
+            }
+        }
+    }
 }
 /// Private Connectivity
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -582,6 +598,19 @@ pub mod json_file_format {
         /// Avro schema format.
         AvroSchemaFile = 2,
     }
+    impl SchemaFileFormat {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                SchemaFileFormat::Unspecified => "SCHEMA_FILE_FORMAT_UNSPECIFIED",
+                SchemaFileFormat::NoSchemaFile => "NO_SCHEMA_FILE",
+                SchemaFileFormat::AvroSchemaFile => "AVRO_SCHEMA_FILE",
+            }
+        }
+    }
     /// Json file compression.
     #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
     #[repr(i32)]
@@ -592,6 +621,19 @@ pub mod json_file_format {
         NoCompression = 1,
         /// Gzip compression.
         Gzip = 2,
+    }
+    impl JsonCompression {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                JsonCompression::Unspecified => "JSON_COMPRESSION_UNSPECIFIED",
+                JsonCompression::NoCompression => "NO_COMPRESSION",
+                JsonCompression::Gzip => "GZIP",
+            }
+        }
     }
 }
 /// Google Cloud Storage destination configuration
@@ -809,6 +851,25 @@ pub mod stream {
         /// the buffer.
         Draining = 8,
     }
+    impl State {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                State::Unspecified => "STATE_UNSPECIFIED",
+                State::NotStarted => "NOT_STARTED",
+                State::Running => "RUNNING",
+                State::Paused => "PAUSED",
+                State::Maintenance => "MAINTENANCE",
+                State::Failed => "FAILED",
+                State::FailedPermanently => "FAILED_PERMANENTLY",
+                State::Starting => "STARTING",
+                State::Draining => "DRAINING",
+            }
+        }
+    }
     /// Stream backfill strategy.
     #[derive(Clone, PartialEq, ::prost::Oneof)]
     pub enum BackfillStrategy {
@@ -944,6 +1005,24 @@ pub mod backfill_job {
         /// for backfill.
         Unsupported = 7,
     }
+    impl State {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                State::Unspecified => "STATE_UNSPECIFIED",
+                State::NotStarted => "NOT_STARTED",
+                State::Pending => "PENDING",
+                State::Active => "ACTIVE",
+                State::Stopped => "STOPPED",
+                State::Failed => "FAILED",
+                State::Completed => "COMPLETED",
+                State::Unsupported => "UNSUPPORTED",
+            }
+        }
+    }
     /// Triggering reason for a backfill job.
     #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
     #[repr(i32)]
@@ -955,6 +1034,19 @@ pub mod backfill_job {
         Automatic = 1,
         /// Object backfill job was triggered manually using the dedicated API.
         Manual = 2,
+    }
+    impl Trigger {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                Trigger::Unspecified => "TRIGGER_UNSPECIFIED",
+                Trigger::Automatic => "AUTOMATIC",
+                Trigger::Manual => "MANUAL",
+            }
+        }
     }
 }
 /// Represent a user-facing Error.
@@ -1016,6 +1108,20 @@ pub mod validation {
         /// Validation passed.
         Passed = 3,
     }
+    impl State {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                State::Unspecified => "STATE_UNSPECIFIED",
+                State::NotExecuted => "NOT_EXECUTED",
+                State::Failed => "FAILED",
+                State::Passed => "PASSED",
+            }
+        }
+    }
 }
 /// Represent user-facing validation result message.
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -1045,6 +1151,19 @@ pub mod validation_message {
         Warning = 1,
         /// Definitely cause issues with the Stream.
         Error = 2,
+    }
+    impl Level {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                Level::Unspecified => "LEVEL_UNSPECIFIED",
+                Level::Warning => "WARNING",
+                Level::Error => "ERROR",
+            }
+        }
     }
 }
 /// Request message for 'discover' ConnectionProfile request.
@@ -1739,6 +1858,7 @@ pub struct GetRouteRequest {
 pub mod datastream_client {
     #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
     use tonic::codegen::*;
+    use tonic::codegen::http::Uri;
     /// Datastream service
     #[derive(Debug, Clone)]
     pub struct DatastreamClient<T> {
@@ -1753,6 +1873,10 @@ pub mod datastream_client {
     {
         pub fn new(inner: T) -> Self {
             let inner = tonic::client::Grpc::new(inner);
+            Self { inner }
+        }
+        pub fn with_origin(inner: T, origin: Uri) -> Self {
+            let inner = tonic::client::Grpc::with_origin(inner, origin);
             Self { inner }
         }
         pub fn with_interceptor<F>(
@@ -1774,19 +1898,19 @@ pub mod datastream_client {
         {
             DatastreamClient::new(InterceptedService::new(inner, interceptor))
         }
-        /// Compress requests with `gzip`.
+        /// Compress requests with the given encoding.
         ///
         /// This requires the server to support it otherwise it might respond with an
         /// error.
         #[must_use]
-        pub fn send_gzip(mut self) -> Self {
-            self.inner = self.inner.send_gzip();
+        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.send_compressed(encoding);
             self
         }
-        /// Enable decompressing responses with `gzip`.
+        /// Enable decompressing responses.
         #[must_use]
-        pub fn accept_gzip(mut self) -> Self {
-            self.inner = self.inner.accept_gzip();
+        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.accept_compressed(encoding);
             self
         }
         /// Use this method to list connection profiles created in a project and

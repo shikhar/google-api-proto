@@ -67,7 +67,7 @@ pub struct ObjectConditions {
     /// "last modification time" are transferred only if the elapsed time
     /// between the \[start_time][google.storagetransfer.v1.TransferOperation.start_time\] of the
     /// `TransferOperation`and the "last modification time" of the object
-    ///  is less than the value of max_time_elapsed_since_last_modification`.
+    ///   is less than the value of max_time_elapsed_since_last_modification`.
     /// Objects that do not have a "last modification time" are also transferred.
     #[prost(message, optional, tag="2")]
     pub max_time_elapsed_since_last_modification: ::core::option::Option<::prost_types::Duration>,
@@ -80,20 +80,20 @@ pub struct ObjectConditions {
     ///
     /// The following are requirements of `include_prefixes`:
     ///
-    ///   * Each include-prefix can contain any sequence of Unicode characters, to
-    ///     a max length of 1024 bytes when UTF8-encoded, and must not contain
-    ///     Carriage Return or Line Feed characters.  Wildcard matching and regular
-    ///     expression matching are not supported.
+    ///    * Each include-prefix can contain any sequence of Unicode characters, to
+    ///      a max length of 1024 bytes when UTF8-encoded, and must not contain
+    ///      Carriage Return or Line Feed characters.  Wildcard matching and regular
+    ///      expression matching are not supported.
     ///
-    ///   * Each include-prefix must omit the leading slash. For example, to
-    ///     include the object `s3://my-aws-bucket/logs/y=2015/requests.gz`,
-    ///     specify the include-prefix as `logs/y=2015/requests.gz`.
+    ///    * Each include-prefix must omit the leading slash. For example, to
+    ///      include the object `s3://my-aws-bucket/logs/y=2015/requests.gz`,
+    ///      specify the include-prefix as `logs/y=2015/requests.gz`.
     ///
-    ///   * None of the include-prefix values can be empty, if specified.
+    ///    * None of the include-prefix values can be empty, if specified.
     ///
-    ///   * Each include-prefix must include a distinct portion of the object
-    ///     namespace. No include-prefix may be a prefix of another
-    ///     include-prefix.
+    ///    * Each include-prefix must include a distinct portion of the object
+    ///      namespace. No include-prefix may be a prefix of another
+    ///      include-prefix.
     ///
     /// The max size of `include_prefixes` is 1000.
     ///
@@ -108,23 +108,23 @@ pub struct ObjectConditions {
     ///
     /// The following are requirements of `exclude_prefixes`:
     ///
-    ///   * Each exclude-prefix can contain any sequence of Unicode characters, to
-    ///     a max length of 1024 bytes when UTF8-encoded, and must not contain
-    ///     Carriage Return or Line Feed characters.  Wildcard matching and regular
-    ///     expression matching are not supported.
+    ///    * Each exclude-prefix can contain any sequence of Unicode characters, to
+    ///      a max length of 1024 bytes when UTF8-encoded, and must not contain
+    ///      Carriage Return or Line Feed characters.  Wildcard matching and regular
+    ///      expression matching are not supported.
     ///
-    ///   * Each exclude-prefix must omit the leading slash. For example, to
-    ///     exclude the object `s3://my-aws-bucket/logs/y=2015/requests.gz`,
-    ///     specify the exclude-prefix as `logs/y=2015/requests.gz`.
+    ///    * Each exclude-prefix must omit the leading slash. For example, to
+    ///      exclude the object `s3://my-aws-bucket/logs/y=2015/requests.gz`,
+    ///      specify the exclude-prefix as `logs/y=2015/requests.gz`.
     ///
-    ///   * None of the exclude-prefix values can be empty, if specified.
+    ///    * None of the exclude-prefix values can be empty, if specified.
     ///
-    ///   * Each exclude-prefix must exclude a distinct portion of the object
-    ///     namespace. No exclude-prefix may be a prefix of another
-    ///     exclude-prefix.
+    ///    * Each exclude-prefix must exclude a distinct portion of the object
+    ///      namespace. No exclude-prefix may be a prefix of another
+    ///      exclude-prefix.
     ///
-    ///   * If \[include_prefixes][google.storagetransfer.v1.ObjectConditions.include_prefixes\] is specified, then each exclude-prefix must
-    ///   start with the value of a path explicitly included by `include_prefixes`.
+    ///    * If \[include_prefixes][google.storagetransfer.v1.ObjectConditions.include_prefixes\] is specified, then each exclude-prefix must
+    ///    start with the value of a path explicitly included by `include_prefixes`.
     ///
     /// The max size of `exclude_prefixes` is 1000.
     ///
@@ -365,6 +365,19 @@ pub mod s3_compatible_metadata {
         /// Auth requests with AWS SigV2.
         AwsSignatureV2 = 2,
     }
+    impl AuthMethod {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                AuthMethod::Unspecified => "AUTH_METHOD_UNSPECIFIED",
+                AuthMethod::AwsSignatureV4 => "AUTH_METHOD_AWS_SIGNATURE_V4",
+                AuthMethod::AwsSignatureV2 => "AUTH_METHOD_AWS_SIGNATURE_V2",
+            }
+        }
+    }
     /// The request model of the API.
     #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
     #[repr(i32)]
@@ -377,6 +390,19 @@ pub mod s3_compatible_metadata {
         /// Perform requests using Path Style.
         /// Example: <https://s3.region.amazonaws.com/bucket-name/key-name>
         PathStyle = 2,
+    }
+    impl RequestModel {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                RequestModel::Unspecified => "REQUEST_MODEL_UNSPECIFIED",
+                RequestModel::VirtualHostedStyle => "REQUEST_MODEL_VIRTUAL_HOSTED_STYLE",
+                RequestModel::PathStyle => "REQUEST_MODEL_PATH_STYLE",
+            }
+        }
     }
     /// The agent network protocol to access the storage service.
     #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
@@ -391,6 +417,19 @@ pub mod s3_compatible_metadata {
         /// Perform requests using HTTP.
         Http = 2,
     }
+    impl NetworkProtocol {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                NetworkProtocol::Unspecified => "NETWORK_PROTOCOL_UNSPECIFIED",
+                NetworkProtocol::Https => "NETWORK_PROTOCOL_HTTPS",
+                NetworkProtocol::Http => "NETWORK_PROTOCOL_HTTP",
+            }
+        }
+    }
     /// The Listing API to use for discovering objects.
     #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
     #[repr(i32)]
@@ -401,6 +440,19 @@ pub mod s3_compatible_metadata {
         ListObjectsV2 = 1,
         /// Legacy ListObjects API.
         ListObjects = 2,
+    }
+    impl ListApi {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                ListApi::Unspecified => "LIST_API_UNSPECIFIED",
+                ListApi::ListObjectsV2 => "LIST_OBJECTS_V2",
+                ListApi::ListObjects => "LIST_OBJECTS",
+            }
+        }
     }
 }
 /// Represents an On-Premises Agent pool.
@@ -447,6 +499,20 @@ pub mod agent_pool {
         /// Determines that the AgentPool deletion has been initiated, and all the
         /// resources are scheduled to be cleaned up and freed.
         Deleting = 3,
+    }
+    impl State {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                State::Unspecified => "STATE_UNSPECIFIED",
+                State::Creating => "CREATING",
+                State::Created => "CREATED",
+                State::Deleting => "DELETING",
+            }
+        }
     }
 }
 /// TransferOptions define the actions to be performed on objects in a transfer.
@@ -498,6 +564,20 @@ pub mod transfer_options {
         /// Always overwrite the destination object with the source object, even if
         /// the HTTP Etags or checksum values are the same.
         Always = 3,
+    }
+    impl OverwriteWhen {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                OverwriteWhen::Unspecified => "OVERWRITE_WHEN_UNSPECIFIED",
+                OverwriteWhen::Different => "DIFFERENT",
+                OverwriteWhen::Never => "NEVER",
+                OverwriteWhen::Always => "ALWAYS",
+            }
+        }
     }
 }
 /// Configuration for running a transfer.
@@ -649,6 +729,19 @@ pub mod metadata_options {
         /// Preserve symlinks during a transfer job.
         Preserve = 2,
     }
+    impl Symlink {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                Symlink::Unspecified => "SYMLINK_UNSPECIFIED",
+                Symlink::Skip => "SYMLINK_SKIP",
+                Symlink::Preserve => "SYMLINK_PRESERVE",
+            }
+        }
+    }
     /// Options for handling file mode attribute.
     #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
     #[repr(i32)]
@@ -659,6 +752,19 @@ pub mod metadata_options {
         Skip = 1,
         /// Preserve mode during a transfer job.
         Preserve = 2,
+    }
+    impl Mode {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                Mode::Unspecified => "MODE_UNSPECIFIED",
+                Mode::Skip => "MODE_SKIP",
+                Mode::Preserve => "MODE_PRESERVE",
+            }
+        }
     }
     /// Options for handling file GID attribute.
     #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
@@ -671,6 +777,19 @@ pub mod metadata_options {
         /// Preserve GID during a transfer job.
         Number = 2,
     }
+    impl Gid {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                Gid::Unspecified => "GID_UNSPECIFIED",
+                Gid::Skip => "GID_SKIP",
+                Gid::Number => "GID_NUMBER",
+            }
+        }
+    }
     /// Options for handling file UID attribute.
     #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
     #[repr(i32)]
@@ -681,6 +800,19 @@ pub mod metadata_options {
         Skip = 1,
         /// Preserve UID during a transfer job.
         Number = 2,
+    }
+    impl Uid {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                Uid::Unspecified => "UID_UNSPECIFIED",
+                Uid::Skip => "UID_SKIP",
+                Uid::Number => "UID_NUMBER",
+            }
+        }
     }
     /// Options for handling Cloud Storage object ACLs.
     #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
@@ -696,6 +828,19 @@ pub mod metadata_options {
         /// access](<https://cloud.google.com/storage/docs/uniform-bucket-level-access>)
         /// must not be enabled on either the source or destination buckets.
         Preserve = 2,
+    }
+    impl Acl {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                Acl::Unspecified => "ACL_UNSPECIFIED",
+                Acl::DestinationBucketDefault => "ACL_DESTINATION_BUCKET_DEFAULT",
+                Acl::Preserve => "ACL_PRESERVE",
+            }
+        }
     }
     /// Options for handling Google Cloud Storage object storage class.
     #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
@@ -717,6 +862,23 @@ pub mod metadata_options {
         /// Set the storage class to ARCHIVE.
         Archive = 6,
     }
+    impl StorageClass {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                StorageClass::Unspecified => "STORAGE_CLASS_UNSPECIFIED",
+                StorageClass::DestinationBucketDefault => "STORAGE_CLASS_DESTINATION_BUCKET_DEFAULT",
+                StorageClass::Preserve => "STORAGE_CLASS_PRESERVE",
+                StorageClass::Standard => "STORAGE_CLASS_STANDARD",
+                StorageClass::Nearline => "STORAGE_CLASS_NEARLINE",
+                StorageClass::Coldline => "STORAGE_CLASS_COLDLINE",
+                StorageClass::Archive => "STORAGE_CLASS_ARCHIVE",
+            }
+        }
+    }
     /// Options for handling temporary holds for Google Cloud Storage objects.
     #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
     #[repr(i32)]
@@ -727,6 +889,19 @@ pub mod metadata_options {
         Skip = 1,
         /// Preserve the object's original temporary hold status.
         Preserve = 2,
+    }
+    impl TemporaryHold {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                TemporaryHold::Unspecified => "TEMPORARY_HOLD_UNSPECIFIED",
+                TemporaryHold::Skip => "TEMPORARY_HOLD_SKIP",
+                TemporaryHold::Preserve => "TEMPORARY_HOLD_PRESERVE",
+            }
+        }
     }
     /// Options for handling the KmsKey setting for Google Cloud Storage objects.
     #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
@@ -740,6 +915,19 @@ pub mod metadata_options {
         /// (CMEK) if present. Objects that do not use a Cloud KMS encryption key
         /// will be encrypted using the destination bucket's encryption settings.
         Preserve = 2,
+    }
+    impl KmsKey {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                KmsKey::Unspecified => "KMS_KEY_UNSPECIFIED",
+                KmsKey::DestinationBucketDefault => "KMS_KEY_DESTINATION_BUCKET_DEFAULT",
+                KmsKey::Preserve => "KMS_KEY_PRESERVE",
+            }
+        }
     }
     /// Options for handling `timeCreated` metadata for Google Cloud Storage
     /// objects.
@@ -755,6 +943,19 @@ pub mod metadata_options {
         /// source object's `customTime` field will not be propagated to the
         /// destination object.
         PreserveAsCustomTime = 2,
+    }
+    impl TimeCreated {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                TimeCreated::Unspecified => "TIME_CREATED_UNSPECIFIED",
+                TimeCreated::Skip => "TIME_CREATED_SKIP",
+                TimeCreated::PreserveAsCustomTime => "TIME_CREATED_PRESERVE_AS_CUSTOM_TIME",
+            }
+        }
     }
 }
 /// Specifies where the manifest is located.
@@ -788,10 +989,10 @@ pub struct Schedule {
     /// UTC time. A job runs once per 24 hours within the following guidelines:
     ///
     /// *   If `schedule_end_date` and \[schedule_start_date][google.storagetransfer.v1.Schedule.schedule_start_date\] are the same and in
-    ///     the future relative to UTC, the transfer is executed only one time.
+    ///      the future relative to UTC, the transfer is executed only one time.
     /// *   If `schedule_end_date` is later than `schedule_start_date`  and
-    ///     `schedule_end_date` is in the future relative to UTC, the job runs each
-    ///     day at \[start_time_of_day][google.storagetransfer.v1.Schedule.start_time_of_day\] through `schedule_end_date`.
+    ///      `schedule_end_date` is in the future relative to UTC, the job runs each
+    ///      day at \[start_time_of_day][google.storagetransfer.v1.Schedule.start_time_of_day\] through `schedule_end_date`.
     #[prost(message, optional, tag="2")]
     pub schedule_end_date: ::core::option::Option<super::super::r#type::Date>,
     /// The time in UTC that a transfer job is scheduled to run. Transfers may
@@ -801,13 +1002,13 @@ pub struct Schedule {
     ///
     /// *   One-time transfers run immediately.
     /// *   Recurring transfers run immediately, and each day at midnight UTC,
-    ///     through \[schedule_end_date][google.storagetransfer.v1.Schedule.schedule_end_date\].
+    ///      through \[schedule_end_date][google.storagetransfer.v1.Schedule.schedule_end_date\].
     ///
     /// If `start_time_of_day` is specified:
     ///
     /// *   One-time transfers run at the specified time.
     /// *   Recurring transfers run at the specified time each day, through
-    ///     `schedule_end_date`.
+    ///      `schedule_end_date`.
     #[prost(message, optional, tag="3")]
     pub start_time_of_day: ::core::option::Option<super::super::r#type::TimeOfDay>,
     /// The time in UTC that no further transfer operations are scheduled. Combined
@@ -818,10 +1019,10 @@ pub struct Schedule {
     /// following:
     ///
     /// *   If `end_time_of_day` is not set and `schedule_end_date` is set, then
-    ///     a default value of `23:59:59` is used for `end_time_of_day`.
+    ///      a default value of `23:59:59` is used for `end_time_of_day`.
     ///
     /// *   If `end_time_of_day` is set and `schedule_end_date` is not set, then
-    ///     \[INVALID_ARGUMENT][google.rpc.Code.INVALID_ARGUMENT\] is returned.
+    ///      \[INVALID_ARGUMENT][google.rpc.Code.INVALID_ARGUMENT\] is returned.
     #[prost(message, optional, tag="4")]
     pub end_time_of_day: ::core::option::Option<super::super::r#type::TimeOfDay>,
     /// Interval between the start of each scheduled TransferOperation. If
@@ -925,6 +1126,20 @@ pub mod transfer_job {
         /// garbage collection. Transfer jobs become eligible for garbage collection
         /// 30 days after their status is set to `DELETED`.
         Deleted = 3,
+    }
+    impl Status {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                Status::Unspecified => "STATUS_UNSPECIFIED",
+                Status::Enabled => "ENABLED",
+                Status::Disabled => "DISABLED",
+                Status::Deleted => "DELETED",
+            }
+        }
     }
 }
 /// An entry describing an error that has occurred.
@@ -1097,6 +1312,20 @@ pub mod notification_config {
         /// \[ABORTED][google.storagetransfer.v1.TransferOperation.Status.ABORTED\].
         TransferOperationAborted = 3,
     }
+    impl EventType {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                EventType::Unspecified => "EVENT_TYPE_UNSPECIFIED",
+                EventType::TransferOperationSuccess => "TRANSFER_OPERATION_SUCCESS",
+                EventType::TransferOperationFailed => "TRANSFER_OPERATION_FAILED",
+                EventType::TransferOperationAborted => "TRANSFER_OPERATION_ABORTED",
+            }
+        }
+    }
     /// Enum for specifying the format of a notification message's payload.
     #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
     #[repr(i32)]
@@ -1109,6 +1338,19 @@ pub mod notification_config {
         /// response](<https://developers.google.com/protocol-buffers/docs/proto3#json>),
         /// in application/json.
         Json = 2,
+    }
+    impl PayloadFormat {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                PayloadFormat::Unspecified => "PAYLOAD_FORMAT_UNSPECIFIED",
+                PayloadFormat::None => "NONE",
+                PayloadFormat::Json => "JSON",
+            }
+        }
     }
 }
 /// Specifies the logging behavior for transfer operations.
@@ -1155,6 +1397,20 @@ pub mod logging_config {
         /// Copying objects to Google Cloud Storage.
         Copy = 3,
     }
+    impl LoggableAction {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                LoggableAction::Unspecified => "LOGGABLE_ACTION_UNSPECIFIED",
+                LoggableAction::Find => "FIND",
+                LoggableAction::Delete => "DELETE",
+                LoggableAction::Copy => "COPY",
+            }
+        }
+    }
     /// Loggable action states.
     #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
     #[repr(i32)]
@@ -1167,6 +1423,19 @@ pub mod logging_config {
         /// `LoggableAction` terminated in an error state. `FAILED` actions are
         /// logged as \[ERROR][google.logging.type.LogSeverity.ERROR\].
         Failed = 2,
+    }
+    impl LoggableActionState {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                LoggableActionState::Unspecified => "LOGGABLE_ACTION_STATE_UNSPECIFIED",
+                LoggableActionState::Succeeded => "SUCCEEDED",
+                LoggableActionState::Failed => "FAILED",
+            }
+        }
     }
 }
 /// A description of the execution of a transfer.
@@ -1223,6 +1492,23 @@ pub mod transfer_operation {
         Aborted = 5,
         /// Temporarily delayed by the system. No user action is required.
         Queued = 6,
+    }
+    impl Status {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                Status::Unspecified => "STATUS_UNSPECIFIED",
+                Status::InProgress => "IN_PROGRESS",
+                Status::Paused => "PAUSED",
+                Status::Success => "SUCCESS",
+                Status::Failed => "FAILED",
+                Status::Aborted => "ABORTED",
+                Status::Queued => "QUEUED",
+            }
+        }
     }
 }
 /// Request passed to GetGoogleServiceAccount.
@@ -1303,8 +1589,8 @@ pub struct DeleteTransferJobRequest {
 pub struct ListTransferJobsRequest {
     /// Required. A list of query parameters specified as JSON text in the form of:
     /// `{"projectId":"my_project_id",
-    ///  "jobNames":\["jobid1","jobid2",...\],
-    ///  "jobStatuses":\["status1","status2",...\]}`
+    ///   "jobNames":\["jobid1","jobid2",...\],
+    ///   "jobStatuses":\["status1","status2",...\]}`
     ///
     /// Since `jobNames` and `jobStatuses` support multiple values, their values
     /// must be specified with array notation. `projectId` is required.
@@ -1374,9 +1660,9 @@ pub struct CreateAgentPoolRequest {
     /// *   Length of 128 characters or less.
     /// *   Not start with the string `goog`.
     /// *   Start with a lowercase ASCII character, followed by:
-    ///     *   Zero or more: lowercase Latin alphabet characters, numerals,
-    ///         hyphens (`-`), periods (`.`), underscores (`_`), or tildes (`~`).
-    ///     *   One or more numerals or lowercase ASCII characters.
+    ///      *   Zero or more: lowercase Latin alphabet characters, numerals,
+    ///          hyphens (`-`), periods (`.`), underscores (`_`), or tildes (`~`).
+    ///      *   One or more numerals or lowercase ASCII characters.
     ///
     /// As expressed by the regular expression:
     /// `^(?!goog)\[a-z]([a-z0-9-._~]*[a-z0-9\])?$`.
@@ -1460,6 +1746,7 @@ pub struct ListAgentPoolsResponse {
 pub mod storage_transfer_service_client {
     #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
     use tonic::codegen::*;
+    use tonic::codegen::http::Uri;
     /// Storage Transfer Service and its protos.
     /// Transfers data between between Google Cloud Storage buckets or from a data
     /// source external to Google to a Cloud Storage bucket.
@@ -1476,6 +1763,10 @@ pub mod storage_transfer_service_client {
     {
         pub fn new(inner: T) -> Self {
             let inner = tonic::client::Grpc::new(inner);
+            Self { inner }
+        }
+        pub fn with_origin(inner: T, origin: Uri) -> Self {
+            let inner = tonic::client::Grpc::with_origin(inner, origin);
             Self { inner }
         }
         pub fn with_interceptor<F>(
@@ -1499,19 +1790,19 @@ pub mod storage_transfer_service_client {
                 InterceptedService::new(inner, interceptor),
             )
         }
-        /// Compress requests with `gzip`.
+        /// Compress requests with the given encoding.
         ///
         /// This requires the server to support it otherwise it might respond with an
         /// error.
         #[must_use]
-        pub fn send_gzip(mut self) -> Self {
-            self.inner = self.inner.send_gzip();
+        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.send_compressed(encoding);
             self
         }
-        /// Enable decompressing responses with `gzip`.
+        /// Enable decompressing responses.
         #[must_use]
-        pub fn accept_gzip(mut self) -> Self {
-            self.inner = self.inner.accept_gzip();
+        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.accept_compressed(encoding);
             self
         }
         /// Returns the Google service account that is used by Storage Transfer

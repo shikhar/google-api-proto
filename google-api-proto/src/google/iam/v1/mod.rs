@@ -43,51 +43,51 @@ pub struct GetPolicyOptions {
 ///
 /// **JSON example:**
 ///
-///     {
-///       "bindings": [
-///         {
-///           "role": "roles/resourcemanager.organizationAdmin",
-///           "members": [
-///             "user:mike@example.com",
-///             "group:admins@example.com",
-///             "domain:google.com",
-///             "serviceAccount:my-project-id@appspot.gserviceaccount.com"
-///           ]
-///         },
-///         {
-///           "role": "roles/resourcemanager.organizationViewer",
-///           "members": [
-///             "user:eve@example.com"
-///           ],
-///           "condition": {
-///             "title": "expirable access",
-///             "description": "Does not grant access after Sep 2020",
-///             "expression": "request.time < timestamp('2020-10-01T00:00:00.000Z')",
-///           }
-///         }
-///       ],
-///       "etag": "BwWWja0YfJA=",
-///       "version": 3
-///     }
+///      {
+///        "bindings": [
+///          {
+///            "role": "roles/resourcemanager.organizationAdmin",
+///            "members": [
+///              "user:mike@example.com",
+///              "group:admins@example.com",
+///              "domain:google.com",
+///              "serviceAccount:my-project-id@appspot.gserviceaccount.com"
+///            ]
+///          },
+///          {
+///            "role": "roles/resourcemanager.organizationViewer",
+///            "members": [
+///              "user:eve@example.com"
+///            ],
+///            "condition": {
+///              "title": "expirable access",
+///              "description": "Does not grant access after Sep 2020",
+///              "expression": "request.time < timestamp('2020-10-01T00:00:00.000Z')",
+///            }
+///          }
+///        ],
+///        "etag": "BwWWja0YfJA=",
+///        "version": 3
+///      }
 ///
 /// **YAML example:**
 ///
-///     bindings:
-///     - members:
-///       - user:mike@example.com
-///       - group:admins@example.com
-///       - domain:google.com
-///       - serviceAccount:my-project-id@appspot.gserviceaccount.com
-///       role: roles/resourcemanager.organizationAdmin
-///     - members:
-///       - user:eve@example.com
-///       role: roles/resourcemanager.organizationViewer
-///       condition:
-///         title: expirable access
-///         description: Does not grant access after Sep 2020
-///         expression: request.time < timestamp('2020-10-01T00:00:00.000Z')
-///     etag: BwWWja0YfJA=
-///     version: 3
+///      bindings:
+///      - members:
+///        - user:mike@example.com
+///        - group:admins@example.com
+///        - domain:google.com
+///        - serviceAccount:my-project-id@appspot.gserviceaccount.com
+///        role: roles/resourcemanager.organizationAdmin
+///      - members:
+///        - user:eve@example.com
+///        role: roles/resourcemanager.organizationViewer
+///        condition:
+///          title: expirable access
+///          description: Does not grant access after Sep 2020
+///          expression: request.time < timestamp('2020-10-01T00:00:00.000Z')
+///      etag: BwWWja0YfJA=
+///      version: 3
 ///
 /// For a description of IAM and its features, see the
 /// [IAM documentation](<https://cloud.google.com/iam/docs/>).
@@ -105,7 +105,7 @@ pub struct Policy {
     /// * Adding a conditional role binding to a policy
     /// * Changing a conditional role binding in a policy
     /// * Removing any role binding, with or without a condition, from a policy
-    ///   that includes conditions
+    ///    that includes conditions
     ///
     /// **Important:** If you use IAM Conditions, you must include the `etag` field
     /// whenever you call `setIamPolicy`. If you omit this field, then IAM allows
@@ -160,44 +160,44 @@ pub struct Binding {
     /// `members` can have the following values:
     ///
     /// * `allUsers`: A special identifier that represents anyone who is
-    ///    on the internet; with or without a Google account.
+    ///     on the internet; with or without a Google account.
     ///
     /// * `allAuthenticatedUsers`: A special identifier that represents anyone
-    ///    who is authenticated with a Google account or a service account.
+    ///     who is authenticated with a Google account or a service account.
     ///
     /// * `user:{emailid}`: An email address that represents a specific Google
-    ///    account. For example, `alice@example.com` .
+    ///     account. For example, `alice@example.com` .
     ///
     ///
     /// * `serviceAccount:{emailid}`: An email address that represents a service
-    ///    account. For example, `my-other-app@appspot.gserviceaccount.com`.
+    ///     account. For example, `my-other-app@appspot.gserviceaccount.com`.
     ///
     /// * `group:{emailid}`: An email address that represents a Google group.
-    ///    For example, `admins@example.com`.
+    ///     For example, `admins@example.com`.
     ///
     /// * `deleted:user:{emailid}?uid={uniqueid}`: An email address (plus unique
-    ///    identifier) representing a user that has been recently deleted. For
-    ///    example, `alice@example.com?uid=123456789012345678901`. If the user is
-    ///    recovered, this value reverts to `user:{emailid}` and the recovered user
-    ///    retains the role in the binding.
+    ///     identifier) representing a user that has been recently deleted. For
+    ///     example, `alice@example.com?uid=123456789012345678901`. If the user is
+    ///     recovered, this value reverts to `user:{emailid}` and the recovered user
+    ///     retains the role in the binding.
     ///
     /// * `deleted:serviceAccount:{emailid}?uid={uniqueid}`: An email address (plus
-    ///    unique identifier) representing a service account that has been recently
-    ///    deleted. For example,
-    ///    `my-other-app@appspot.gserviceaccount.com?uid=123456789012345678901`.
-    ///    If the service account is undeleted, this value reverts to
-    ///    `serviceAccount:{emailid}` and the undeleted service account retains the
-    ///    role in the binding.
+    ///     unique identifier) representing a service account that has been recently
+    ///     deleted. For example,
+    ///     `my-other-app@appspot.gserviceaccount.com?uid=123456789012345678901`.
+    ///     If the service account is undeleted, this value reverts to
+    ///     `serviceAccount:{emailid}` and the undeleted service account retains the
+    ///     role in the binding.
     ///
     /// * `deleted:group:{emailid}?uid={uniqueid}`: An email address (plus unique
-    ///    identifier) representing a Google group that has been recently
-    ///    deleted. For example, `admins@example.com?uid=123456789012345678901`. If
-    ///    the group is recovered, this value reverts to `group:{emailid}` and the
-    ///    recovered group retains the role in the binding.
+    ///     identifier) representing a Google group that has been recently
+    ///     deleted. For example, `admins@example.com?uid=123456789012345678901`. If
+    ///     the group is recovered, this value reverts to `group:{emailid}` and the
+    ///     recovered group retains the role in the binding.
     ///
     ///
     /// * `domain:{domain}`: The G Suite domain (primary) that represents all the
-    ///    users of that domain. For example, `google.com` or `example.com`.
+    ///     users of that domain. For example, `google.com` or `example.com`.
     ///
     ///
     #[prost(string, repeated, tag="2")]
@@ -229,41 +229,41 @@ pub struct Binding {
 ///
 /// Example Policy with multiple AuditConfigs:
 ///
-///     {
-///       "audit_configs": [
-///         {
-///           "service": "allServices",
-///           "audit_log_configs": [
-///             {
-///               "log_type": "DATA_READ",
-///               "exempted_members": [
-///                 "user:jose@example.com"
-///               ]
-///             },
-///             {
-///               "log_type": "DATA_WRITE"
-///             },
-///             {
-///               "log_type": "ADMIN_READ"
-///             }
-///           ]
-///         },
-///         {
-///           "service": "sampleservice.googleapis.com",
-///           "audit_log_configs": [
-///             {
-///               "log_type": "DATA_READ"
-///             },
-///             {
-///               "log_type": "DATA_WRITE",
-///               "exempted_members": [
-///                 "user:aliya@example.com"
-///               ]
-///             }
-///           ]
-///         }
-///       ]
-///     }
+///      {
+///        "audit_configs": [
+///          {
+///            "service": "allServices",
+///            "audit_log_configs": [
+///              {
+///                "log_type": "DATA_READ",
+///                "exempted_members": [
+///                  "user:jose@example.com"
+///                ]
+///              },
+///              {
+///                "log_type": "DATA_WRITE"
+///              },
+///              {
+///                "log_type": "ADMIN_READ"
+///              }
+///            ]
+///          },
+///          {
+///            "service": "sampleservice.googleapis.com",
+///            "audit_log_configs": [
+///              {
+///                "log_type": "DATA_READ"
+///              },
+///              {
+///                "log_type": "DATA_WRITE",
+///                "exempted_members": [
+///                  "user:aliya@example.com"
+///                ]
+///              }
+///            ]
+///          }
+///        ]
+///      }
 ///
 /// For sampleservice, this policy enables DATA_READ, DATA_WRITE and ADMIN_READ
 /// logging. It also exempts jose@example.com from DATA_READ logging, and
@@ -282,19 +282,19 @@ pub struct AuditConfig {
 /// Provides the configuration for logging a type of permissions.
 /// Example:
 ///
-///     {
-///       "audit_log_configs": [
-///         {
-///           "log_type": "DATA_READ",
-///           "exempted_members": [
-///             "user:jose@example.com"
-///           ]
-///         },
-///         {
-///           "log_type": "DATA_WRITE"
-///         }
-///       ]
-///     }
+///      {
+///        "audit_log_configs": [
+///          {
+///            "log_type": "DATA_READ",
+///            "exempted_members": [
+///              "user:jose@example.com"
+///            ]
+///          },
+///          {
+///            "log_type": "DATA_WRITE"
+///          }
+///        ]
+///      }
 ///
 /// This enables 'DATA_READ' and 'DATA_WRITE' logging, while exempting
 /// jose@example.com from DATA_READ logging.
@@ -324,6 +324,20 @@ pub mod audit_log_config {
         DataWrite = 2,
         /// Data reads. Example: CloudSQL Users list
         DataRead = 3,
+    }
+    impl LogType {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                LogType::Unspecified => "LOG_TYPE_UNSPECIFIED",
+                LogType::AdminRead => "ADMIN_READ",
+                LogType::DataWrite => "DATA_WRITE",
+                LogType::DataRead => "DATA_READ",
+            }
+        }
     }
 }
 /// The difference delta between two policies.
@@ -371,6 +385,19 @@ pub mod binding_delta {
         /// Removal of a Binding.
         Remove = 2,
     }
+    impl Action {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                Action::Unspecified => "ACTION_UNSPECIFIED",
+                Action::Add => "ADD",
+                Action::Remove => "REMOVE",
+            }
+        }
+    }
 }
 /// One delta entry for AuditConfig. Each individual change (only one
 /// exempted_member in each entry) to a AuditConfig will be a separate entry.
@@ -409,6 +436,19 @@ pub mod audit_config_delta {
         Add = 1,
         /// Removal of an audit configuration.
         Remove = 2,
+    }
+    impl Action {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                Action::Unspecified => "ACTION_UNSPECIFIED",
+                Action::Add => "ADD",
+                Action::Remove => "REMOVE",
+            }
+        }
     }
 }
 /// Request message for `SetIamPolicy` method.
@@ -470,6 +510,7 @@ pub struct TestIamPermissionsResponse {
 pub mod iam_policy_client {
     #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
     use tonic::codegen::*;
+    use tonic::codegen::http::Uri;
     /// API Overview
     ///
     ///
@@ -511,6 +552,10 @@ pub mod iam_policy_client {
             let inner = tonic::client::Grpc::new(inner);
             Self { inner }
         }
+        pub fn with_origin(inner: T, origin: Uri) -> Self {
+            let inner = tonic::client::Grpc::with_origin(inner, origin);
+            Self { inner }
+        }
         pub fn with_interceptor<F>(
             inner: T,
             interceptor: F,
@@ -530,19 +575,19 @@ pub mod iam_policy_client {
         {
             IamPolicyClient::new(InterceptedService::new(inner, interceptor))
         }
-        /// Compress requests with `gzip`.
+        /// Compress requests with the given encoding.
         ///
         /// This requires the server to support it otherwise it might respond with an
         /// error.
         #[must_use]
-        pub fn send_gzip(mut self) -> Self {
-            self.inner = self.inner.send_gzip();
+        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.send_compressed(encoding);
             self
         }
-        /// Enable decompressing responses with `gzip`.
+        /// Enable decompressing responses.
         #[must_use]
-        pub fn accept_gzip(mut self) -> Self {
-            self.inner = self.inner.accept_gzip();
+        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.accept_compressed(encoding);
             self
         }
         /// Sets the access control policy on the specified resource. Replaces any

@@ -103,6 +103,24 @@ pub mod service {
         /// metastore service should be deleted.
         Error = 7,
     }
+    impl State {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                State::Unspecified => "STATE_UNSPECIFIED",
+                State::Creating => "CREATING",
+                State::Active => "ACTIVE",
+                State::Suspending => "SUSPENDING",
+                State::Suspended => "SUSPENDED",
+                State::Updating => "UPDATING",
+                State::Deleting => "DELETING",
+                State::Error => "ERROR",
+            }
+        }
+    }
     /// Available service tiers.
     #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
     #[repr(i32)]
@@ -115,6 +133,19 @@ pub mod service {
         /// The enterprise tier provides multi-zone high availability, and sufficient
         /// scalability for enterprise-level Dataproc Metastore workloads.
         Enterprise = 3,
+    }
+    impl Tier {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                Tier::Unspecified => "TIER_UNSPECIFIED",
+                Tier::Developer => "DEVELOPER",
+                Tier::Enterprise => "ENTERPRISE",
+            }
+        }
     }
     /// Release channels bundle features of varying levels of stability. Newer
     /// features may be introduced initially into less stable release channels and
@@ -132,6 +163,19 @@ pub mod service {
         /// and have been validated for production use.
         Stable = 2,
     }
+    impl ReleaseChannel {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                ReleaseChannel::Unspecified => "RELEASE_CHANNEL_UNSPECIFIED",
+                ReleaseChannel::Canary => "CANARY",
+                ReleaseChannel::Stable => "STABLE",
+            }
+        }
+    }
     /// The backend database type for the metastore service.
     #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
     #[repr(i32)]
@@ -142,6 +186,19 @@ pub mod service {
         Mysql = 1,
         /// Spanner is used to persist the metastore data.
         Spanner = 2,
+    }
+    impl DatabaseType {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                DatabaseType::Unspecified => "DATABASE_TYPE_UNSPECIFIED",
+                DatabaseType::Mysql => "MYSQL",
+                DatabaseType::Spanner => "SPANNER",
+            }
+        }
     }
     /// Configuration properties specific to the underlying metastore service
     /// technology (the software that serves metastore queries).
@@ -250,6 +307,19 @@ pub mod hive_metastore_config {
         Thrift = 1,
         /// Use the modernized gRPC protocol for the metastore service endpoint.
         Grpc = 2,
+    }
+    impl EndpointProtocol {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                EndpointProtocol::Unspecified => "ENDPOINT_PROTOCOL_UNSPECIFIED",
+                EndpointProtocol::Thrift => "THRIFT",
+                EndpointProtocol::Grpc => "GRPC",
+            }
+        }
     }
 }
 /// Configuration information for a Kerberos principal.
@@ -423,6 +493,18 @@ pub mod metadata_import {
             /// The type of the source database is MySQL.
             Mysql = 1,
         }
+        impl DatabaseType {
+            /// String value of the enum field names used in the ProtoBuf definition.
+            ///
+            /// The values are not transformed in any way and thus are considered stable
+            /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+            pub fn as_str_name(&self) -> &'static str {
+                match self {
+                    DatabaseType::Unspecified => "DATABASE_TYPE_UNSPECIFIED",
+                    DatabaseType::Mysql => "MYSQL",
+                }
+            }
+        }
     }
     /// The current state of the metadata import.
     #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
@@ -439,6 +521,21 @@ pub mod metadata_import {
         /// The metadata import failed, and attempted metadata changes were rolled
         /// back.
         Failed = 4,
+    }
+    impl State {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                State::Unspecified => "STATE_UNSPECIFIED",
+                State::Running => "RUNNING",
+                State::Succeeded => "SUCCEEDED",
+                State::Updating => "UPDATING",
+                State::Failed => "FAILED",
+            }
+        }
     }
     /// The metadata to be imported.
     #[derive(Clone, PartialEq, ::prost::Oneof)]
@@ -482,6 +579,21 @@ pub mod metadata_export {
         Failed = 3,
         /// The metadata export is cancelled.
         Cancelled = 4,
+    }
+    impl State {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                State::Unspecified => "STATE_UNSPECIFIED",
+                State::Running => "RUNNING",
+                State::Succeeded => "SUCCEEDED",
+                State::Failed => "FAILED",
+                State::Cancelled => "CANCELLED",
+            }
+        }
     }
     #[derive(Clone, PartialEq, ::prost::Oneof)]
     pub enum Destination {
@@ -538,6 +650,22 @@ pub mod backup {
         /// The backup is being restored.
         Restoring = 5,
     }
+    impl State {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                State::Unspecified => "STATE_UNSPECIFIED",
+                State::Creating => "CREATING",
+                State::Deleting => "DELETING",
+                State::Active => "ACTIVE",
+                State::Failed => "FAILED",
+                State::Restoring => "RESTORING",
+            }
+        }
+    }
 }
 /// The details of a metadata restore operation.
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -582,6 +710,21 @@ pub mod restore {
         /// The metadata restore is cancelled.
         Cancelled = 4,
     }
+    impl State {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                State::Unspecified => "STATE_UNSPECIFIED",
+                State::Running => "RUNNING",
+                State::Succeeded => "SUCCEEDED",
+                State::Failed => "FAILED",
+                State::Cancelled => "CANCELLED",
+            }
+        }
+    }
     /// The type of restore. If unspecified, defaults to `METADATA_ONLY`.
     #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
     #[repr(i32)]
@@ -592,6 +735,19 @@ pub mod restore {
         Full = 1,
         /// Only the service's metadata is restored.
         MetadataOnly = 2,
+    }
+    impl RestoreType {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                RestoreType::Unspecified => "RESTORE_TYPE_UNSPECIFIED",
+                RestoreType::Full => "FULL",
+                RestoreType::MetadataOnly => "METADATA_ONLY",
+            }
+        }
     }
 }
 /// Request message for \[DataprocMetastore.ListServices][google.cloud.metastore.v1alpha.DataprocMetastore.ListServices\].
@@ -1128,11 +1284,25 @@ pub mod database_dump_spec {
         /// Database dump contains Avro files.
         Avro = 2,
     }
+    impl Type {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                Type::Unspecified => "TYPE_UNSPECIFIED",
+                Type::Mysql => "MYSQL",
+                Type::Avro => "AVRO",
+            }
+        }
+    }
 }
 /// Generated client implementations.
 pub mod dataproc_metastore_client {
     #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
     use tonic::codegen::*;
+    use tonic::codegen::http::Uri;
     /// Configures and manages metastore services.
     /// Metastore services are fully managed, highly available, autoscaled,
     /// autohealing, OSS-native deployments of technical metadata management
@@ -1165,6 +1335,10 @@ pub mod dataproc_metastore_client {
             let inner = tonic::client::Grpc::new(inner);
             Self { inner }
         }
+        pub fn with_origin(inner: T, origin: Uri) -> Self {
+            let inner = tonic::client::Grpc::with_origin(inner, origin);
+            Self { inner }
+        }
         pub fn with_interceptor<F>(
             inner: T,
             interceptor: F,
@@ -1184,19 +1358,19 @@ pub mod dataproc_metastore_client {
         {
             DataprocMetastoreClient::new(InterceptedService::new(inner, interceptor))
         }
-        /// Compress requests with `gzip`.
+        /// Compress requests with the given encoding.
         ///
         /// This requires the server to support it otherwise it might respond with an
         /// error.
         #[must_use]
-        pub fn send_gzip(mut self) -> Self {
-            self.inner = self.inner.send_gzip();
+        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.send_compressed(encoding);
             self
         }
-        /// Enable decompressing responses with `gzip`.
+        /// Enable decompressing responses.
         #[must_use]
-        pub fn accept_gzip(mut self) -> Self {
-            self.inner = self.inner.accept_gzip();
+        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.accept_compressed(encoding);
             self
         }
         /// Lists services in a project and location.

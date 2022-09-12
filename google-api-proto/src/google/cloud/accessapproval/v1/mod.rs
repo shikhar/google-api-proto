@@ -7,14 +7,14 @@ pub struct AccessLocations {
     /// of a country code.
     /// Possible Region Codes:
     ///
-    ///   * ASI: Asia
-    ///   * EUR: Europe
-    ///   * OCE: Oceania
-    ///   * AFR: Africa
-    ///   * NAM: North America
-    ///   * SAM: South America
-    ///   * ANT: Antarctica
-    ///   * ANY: Any location
+    ///    * ASI: Asia
+    ///    * EUR: Europe
+    ///    * OCE: Oceania
+    ///    * AFR: Africa
+    ///    * NAM: North America
+    ///    * SAM: South America
+    ///    * ANT: Antarctica
+    ///    * ANY: Any location
     #[prost(string, tag="1")]
     pub principal_office_country: ::prost::alloc::string::String,
     /// Physical location of the principal at the time of the access. A
@@ -23,14 +23,14 @@ pub struct AccessLocations {
     /// a region code instead of a country code.
     /// Possible Region Codes:
     ///
-    ///   * ASI: Asia
-    ///   * EUR: Europe
-    ///   * OCE: Oceania
-    ///   * AFR: Africa
-    ///   * NAM: North America
-    ///   * SAM: South America
-    ///   * ANT: Antarctica
-    ///   * ANY: Any location
+    ///    * ASI: Asia
+    ///    * EUR: Europe
+    ///    * OCE: Oceania
+    ///    * AFR: Africa
+    ///    * NAM: North America
+    ///    * SAM: South America
+    ///    * ANT: Antarctica
+    ///    * ANY: Any location
     #[prost(string, tag="2")]
     pub principal_physical_location_country: ::prost::alloc::string::String,
 }
@@ -54,12 +54,12 @@ pub mod access_reason {
         /// Customer made a request or raised an issue that required the principal to
         /// access customer data. `detail` is of the form ("#####" is the issue ID):
         ///
-        ///   * "Feedback Report: #####"
-        ///   * "Case Number: #####"
-        ///   * "Case ID: #####"
-        ///   * "E-PIN Reference: #####"
-        ///   * "Google-#####"
-        ///   * "T-#####"
+        ///    * "Feedback Report: #####"
+        ///    * "Case Number: #####"
+        ///    * "Case ID: #####"
+        ///    * "E-PIN Reference: #####"
+        ///    * "Google-#####"
+        ///    * "T-#####"
         CustomerInitiatedSupport = 1,
         /// The principal accessed customer data in order to diagnose or resolve a
         /// suspected issue in services. Often this access is used to confirm that
@@ -76,6 +76,22 @@ pub mod access_reason {
         /// The principal accessed customer data in order to diagnose or resolve a
         /// suspected issue in services or a known outage.
         GoogleResponseToProductionAlert = 5,
+    }
+    impl Type {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                Type::Unspecified => "TYPE_UNSPECIFIED",
+                Type::CustomerInitiatedSupport => "CUSTOMER_INITIATED_SUPPORT",
+                Type::GoogleInitiatedService => "GOOGLE_INITIATED_SERVICE",
+                Type::GoogleInitiatedReview => "GOOGLE_INITIATED_REVIEW",
+                Type::ThirdPartyDataRequest => "THIRD_PARTY_DATA_REQUEST",
+                Type::GoogleResponseToProductionAlert => "GOOGLE_RESPONSE_TO_PRODUCTION_ALERT",
+            }
+        }
     }
 }
 /// Information about the digital signature of the resource.
@@ -197,55 +213,55 @@ pub struct EnrolledService {
     /// The product for which Access Approval will be enrolled. Allowed values are
     /// listed below (case-sensitive):
     ///
-    ///   * all
-    ///   * GA
-    ///   * App Engine
-    ///   * BigQuery
-    ///   * Cloud Bigtable
-    ///   * Cloud Key Management Service
-    ///   * Compute Engine
-    ///   * Cloud Dataflow
-    ///   * Cloud Dataproc
-    ///   * Cloud DLP
-    ///   * Cloud EKM
-    ///   * Cloud HSM
-    ///   * Cloud Identity and Access Management
-    ///   * Cloud Logging
-    ///   * Cloud Pub/Sub
-    ///   * Cloud Spanner
-    ///   * Cloud SQL
-    ///   * Cloud Storage
-    ///   * Google Kubernetes Engine
-    ///   * Organization Policy Serivice
-    ///   * Persistent Disk
-    ///   * Resource Manager
-    ///   * Secret Manager
-    ///   * Speaker ID
+    ///    * all
+    ///    * GA
+    ///    * App Engine
+    ///    * BigQuery
+    ///    * Cloud Bigtable
+    ///    * Cloud Key Management Service
+    ///    * Compute Engine
+    ///    * Cloud Dataflow
+    ///    * Cloud Dataproc
+    ///    * Cloud DLP
+    ///    * Cloud EKM
+    ///    * Cloud HSM
+    ///    * Cloud Identity and Access Management
+    ///    * Cloud Logging
+    ///    * Cloud Pub/Sub
+    ///    * Cloud Spanner
+    ///    * Cloud SQL
+    ///    * Cloud Storage
+    ///    * Google Kubernetes Engine
+    ///    * Organization Policy Serivice
+    ///    * Persistent Disk
+    ///    * Resource Manager
+    ///    * Secret Manager
+    ///    * Speaker ID
     ///
     /// Note: These values are supported as input for legacy purposes, but will not
     /// be returned from the API.
     ///
-    ///   * all
-    ///   * ga-only
-    ///   * appengine.googleapis.com
-    ///   * bigquery.googleapis.com
-    ///   * bigtable.googleapis.com
-    ///   * container.googleapis.com
-    ///   * cloudkms.googleapis.com
-    ///   * cloudresourcemanager.googleapis.com
-    ///   * cloudsql.googleapis.com
-    ///   * compute.googleapis.com
-    ///   * dataflow.googleapis.com
-    ///   * dataproc.googleapis.com
-    ///   * dlp.googleapis.com
-    ///   * iam.googleapis.com
-    ///   * logging.googleapis.com
-    ///   * orgpolicy.googleapis.com
-    ///   * pubsub.googleapis.com
-    ///   * spanner.googleapis.com
-    ///   * secretmanager.googleapis.com
-    ///   * speakerid.googleapis.com
-    ///   * storage.googleapis.com
+    ///    * all
+    ///    * ga-only
+    ///    * appengine.googleapis.com
+    ///    * bigquery.googleapis.com
+    ///    * bigtable.googleapis.com
+    ///    * container.googleapis.com
+    ///    * cloudkms.googleapis.com
+    ///    * cloudresourcemanager.googleapis.com
+    ///    * cloudsql.googleapis.com
+    ///    * compute.googleapis.com
+    ///    * dataflow.googleapis.com
+    ///    * dataproc.googleapis.com
+    ///    * dlp.googleapis.com
+    ///    * iam.googleapis.com
+    ///    * logging.googleapis.com
+    ///    * orgpolicy.googleapis.com
+    ///    * pubsub.googleapis.com
+    ///    * spanner.googleapis.com
+    ///    * secretmanager.googleapis.com
+    ///    * speakerid.googleapis.com
+    ///    * storage.googleapis.com
     ///
     /// Calls to UpdateAccessApprovalSettings using 'all' or any of the
     /// XXX.googleapis.com will be translated to the associated product name
@@ -267,9 +283,9 @@ pub struct EnrolledService {
 pub struct AccessApprovalSettings {
     /// The resource name of the settings. Format is one of:
     ///
-    ///   * "projects/{project}/accessApprovalSettings"
-    ///   * "folders/{folder}/accessApprovalSettings"
-    ///   * "organizations/{organization}/accessApprovalSettings"
+    ///    * "projects/{project}/accessApprovalSettings"
+    ///    * "folders/{folder}/accessApprovalSettings"
+    ///    * "organizations/{organization}/accessApprovalSettings"
     #[prost(string, tag="1")]
     pub name: ::prost::alloc::string::String,
     /// A list of email addresses to which notifications relating to approval
@@ -325,9 +341,9 @@ pub struct AccessApprovalSettings {
 pub struct AccessApprovalServiceAccount {
     /// The resource name of the Access Approval service account. Format is one of:
     ///
-    ///   * "projects/{project}/serviceAccount"
-    ///   * "folders/{folder}/serviceAccount"
-    ///   * "organizations/{organization}/serviceAccount"
+    ///    * "projects/{project}/serviceAccount"
+    ///    * "folders/{folder}/serviceAccount"
+    ///    * "organizations/{organization}/serviceAccount"
     #[prost(string, tag="1")]
     pub name: ::prost::alloc::string::String,
     /// Email address of the service account.
@@ -344,15 +360,15 @@ pub struct ListApprovalRequestsMessage {
     /// A filter on the type of approval requests to retrieve. Must be one of the
     /// following values:
     ///
-    ///   * [not set]: Requests that are pending or have active approvals.
-    ///   * ALL: All requests.
-    ///   * PENDING: Only pending requests.
-    ///   * ACTIVE: Only active (i.e. currently approved) requests.
-    ///   * DISMISSED: Only requests that have been dismissed, or requests that
-    ///     are not approved and past expiration.
-    ///   * EXPIRED: Only requests that have been approved, and the approval has
-    ///     expired.
-    ///   * HISTORY: Active, dismissed and expired requests.
+    ///    * [not set]: Requests that are pending or have active approvals.
+    ///    * ALL: All requests.
+    ///    * PENDING: Only pending requests.
+    ///    * ACTIVE: Only active (i.e. currently approved) requests.
+    ///    * DISMISSED: Only requests that have been dismissed, or requests that
+    ///      are not approved and past expiration.
+    ///    * EXPIRED: Only requests that have been approved, and the approval has
+    ///      expired.
+    ///    * HISTORY: Active, dismissed and expired requests.
     #[prost(string, tag="2")]
     pub filter: ::prost::alloc::string::String,
     /// Requested page size.
@@ -455,10 +471,23 @@ pub enum EnrollmentLevel {
     /// Service is enrolled in Access Approval for all requests
     BlockAll = 1,
 }
+impl EnrollmentLevel {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            EnrollmentLevel::Unspecified => "ENROLLMENT_LEVEL_UNSPECIFIED",
+            EnrollmentLevel::BlockAll => "BLOCK_ALL",
+        }
+    }
+}
 /// Generated client implementations.
 pub mod access_approval_client {
     #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
     use tonic::codegen::*;
+    use tonic::codegen::http::Uri;
     /// This API allows a customer to manage accesses to cloud resources by
     /// Google personnel. It defines the following resource model:
     ///
@@ -507,6 +536,10 @@ pub mod access_approval_client {
             let inner = tonic::client::Grpc::new(inner);
             Self { inner }
         }
+        pub fn with_origin(inner: T, origin: Uri) -> Self {
+            let inner = tonic::client::Grpc::with_origin(inner, origin);
+            Self { inner }
+        }
         pub fn with_interceptor<F>(
             inner: T,
             interceptor: F,
@@ -526,19 +559,19 @@ pub mod access_approval_client {
         {
             AccessApprovalClient::new(InterceptedService::new(inner, interceptor))
         }
-        /// Compress requests with `gzip`.
+        /// Compress requests with the given encoding.
         ///
         /// This requires the server to support it otherwise it might respond with an
         /// error.
         #[must_use]
-        pub fn send_gzip(mut self) -> Self {
-            self.inner = self.inner.send_gzip();
+        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.send_compressed(encoding);
             self
         }
-        /// Enable decompressing responses with `gzip`.
+        /// Enable decompressing responses.
         #[must_use]
-        pub fn accept_gzip(mut self) -> Self {
-            self.inner = self.inner.accept_gzip();
+        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.accept_compressed(encoding);
             self
         }
         /// Lists approval requests associated with a project, folder, or organization.

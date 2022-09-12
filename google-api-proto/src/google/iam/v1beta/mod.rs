@@ -42,6 +42,19 @@ pub mod workload_identity_pool {
         /// tokens grant access again.
         Deleted = 2,
     }
+    impl State {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                State::Unspecified => "STATE_UNSPECIFIED",
+                State::Active => "ACTIVE",
+                State::Deleted => "DELETED",
+            }
+        }
+    }
 }
 /// A configuration for an external identity provider.
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -72,13 +85,13 @@ pub struct WorkloadIdentityPoolProvider {
     /// The following keys are supported:
     ///
     /// * `google.subject`: The principal IAM is authenticating. You can reference
-    ///                     this value in IAM bindings. This is also the
-    ///                     subject that appears in Cloud Logging logs.
-    ///                     Cannot exceed 127 characters.
+    ///                      this value in IAM bindings. This is also the
+    ///                      subject that appears in Cloud Logging logs.
+    ///                      Cannot exceed 127 characters.
     ///
     /// * `google.groups`: Groups the external identity belongs to. You can grant
-    ///                    groups access to resources using an IAM `principalSet`
-    ///                    binding; access applies to all members of the group.
+    ///                     groups access to resources using an IAM `principalSet`
+    ///                     binding; access applies to all members of the group.
     ///
     /// You can also provide custom attributes by specifying
     /// `attribute.{custom_attribute}`, where `{custom_attribute}` is the name of
@@ -113,34 +126,34 @@ pub struct WorkloadIdentityPoolProvider {
     /// For AWS providers, the following rules apply:
     ///
     /// - If no attribute mapping is defined, the following default mapping
-    ///   applies:
+    ///    applies:
     ///
-    ///   ```
-    ///   {
-    ///     "google.subject":"assertion.arn",
-    ///     "attribute.aws_role":
-    ///         "assertion.arn.contains('assumed-role')"
-    ///         " ? assertion.arn.extract('{account_arn}assumed-role/')"
-    ///         "   + 'assumed-role/'"
-    ///         "   + assertion.arn.extract('assumed-role/{role_name}/')"
-    ///         " : assertion.arn",
-    ///   }
-    ///   ```
+    ///    ```
+    ///    {
+    ///      "google.subject":"assertion.arn",
+    ///      "attribute.aws_role":
+    ///          "assertion.arn.contains('assumed-role')"
+    ///          " ? assertion.arn.extract('{account_arn}assumed-role/')"
+    ///          "   + 'assumed-role/'"
+    ///          "   + assertion.arn.extract('assumed-role/{role_name}/')"
+    ///          " : assertion.arn",
+    ///    }
+    ///    ```
     ///
     /// - If any custom attribute mappings are defined, they must include a mapping
-    ///   to the `google.subject` attribute.
+    ///    to the `google.subject` attribute.
     ///
     ///
     /// For OIDC providers, the following rules apply:
     ///
     /// - Custom attribute mappings must be defined, and must include a mapping to
-    ///   the `google.subject` attribute. For example, the following maps the
-    ///   `sub` claim of the incoming credential to the `subject` attribute on
-    ///   a Google token.
+    ///    the `google.subject` attribute. For example, the following maps the
+    ///    `sub` claim of the incoming credential to the `subject` attribute on
+    ///    a Google token.
     ///
-    ///   ```
-    ///   {"google.subject": "assertion.sub"}
-    ///   ```
+    ///    ```
+    ///    {"google.subject": "assertion.sub"}
+    ///    ```
     #[prost(btree_map="string, string", tag="6")]
     pub attribute_mapping: ::prost::alloc::collections::BTreeMap<::prost::alloc::string::String, ::prost::alloc::string::String>,
     /// [A Common Expression Language](<https://opensource.google/projects/cel>)
@@ -153,11 +166,11 @@ pub struct WorkloadIdentityPoolProvider {
     /// The following keywords may be referenced in the expressions:
     ///
     /// * `assertion`: JSON representing the authentication credential issued by
-    ///                the provider.
+    ///                 the provider.
     /// * `google`: The Google attributes mapped from the assertion in the
-    ///             `attribute_mappings`.
+    ///              `attribute_mappings`.
     /// * `attribute`: The custom attributes mapped from the assertion in the
-    ///                `attribute_mappings`.
+    ///                 `attribute_mappings`.
     ///
     /// The maximum length of the attribute condition expression is 4096
     /// characters. If unspecified, all valid authentication credential are
@@ -223,6 +236,19 @@ pub mod workload_identity_pool_provider {
         /// You cannot reuse the ID of a soft-deleted provider until it is
         /// permanently deleted.
         Deleted = 2,
+    }
+    impl State {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                State::Unspecified => "STATE_UNSPECIFIED",
+                State::Active => "ACTIVE",
+                State::Deleted => "DELETED",
+            }
+        }
     }
     /// Identity provider configuration types.
     #[derive(Clone, PartialEq, ::prost::Oneof)]
@@ -403,6 +429,7 @@ pub struct WorkloadIdentityPoolProviderOperationMetadata {
 pub mod workload_identity_pools_client {
     #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
     use tonic::codegen::*;
+    use tonic::codegen::http::Uri;
     /// Manages WorkloadIdentityPools.
     #[derive(Debug, Clone)]
     pub struct WorkloadIdentityPoolsClient<T> {
@@ -417,6 +444,10 @@ pub mod workload_identity_pools_client {
     {
         pub fn new(inner: T) -> Self {
             let inner = tonic::client::Grpc::new(inner);
+            Self { inner }
+        }
+        pub fn with_origin(inner: T, origin: Uri) -> Self {
+            let inner = tonic::client::Grpc::with_origin(inner, origin);
             Self { inner }
         }
         pub fn with_interceptor<F>(
@@ -438,19 +469,19 @@ pub mod workload_identity_pools_client {
         {
             WorkloadIdentityPoolsClient::new(InterceptedService::new(inner, interceptor))
         }
-        /// Compress requests with `gzip`.
+        /// Compress requests with the given encoding.
         ///
         /// This requires the server to support it otherwise it might respond with an
         /// error.
         #[must_use]
-        pub fn send_gzip(mut self) -> Self {
-            self.inner = self.inner.send_gzip();
+        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.send_compressed(encoding);
             self
         }
-        /// Enable decompressing responses with `gzip`.
+        /// Enable decompressing responses.
         #[must_use]
-        pub fn accept_gzip(mut self) -> Self {
-            self.inner = self.inner.accept_gzip();
+        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.accept_compressed(encoding);
             self
         }
         /// Lists all non-deleted

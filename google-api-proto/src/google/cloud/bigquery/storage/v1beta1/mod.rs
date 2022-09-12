@@ -15,6 +15,26 @@ pub struct ArrowRecordBatch {
     #[prost(int64, tag="2")]
     pub row_count: i64,
 }
+/// Table reference that includes just the 3 strings needed to identify a table.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct TableReference {
+    /// The assigned project ID of the project.
+    #[prost(string, tag="1")]
+    pub project_id: ::prost::alloc::string::String,
+    /// The ID of the dataset in the above project.
+    #[prost(string, tag="2")]
+    pub dataset_id: ::prost::alloc::string::String,
+    /// The ID of the table in the above dataset.
+    #[prost(string, tag="3")]
+    pub table_id: ::prost::alloc::string::String,
+}
+/// All fields in this message optional.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct TableModifiers {
+    /// The snapshot time of the table. If not set, interpreted as now.
+    #[prost(message, optional, tag="1")]
+    pub snapshot_time: ::core::option::Option<::prost_types::Timestamp>,
+}
 /// Avro schema.
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct AvroSchema {
@@ -46,32 +66,12 @@ pub struct TableReadOptions {
     /// a query. Aggregates are not supported.
     ///
     /// Examples: "int_field > 5"
-    ///           "date_field = CAST('2014-9-27' as DATE)"
-    ///           "nullable_field is not NULL"
-    ///           "st_equals(geo_field, st_geofromtext("POINT(2, 2)"))"
-    ///           "numeric_field BETWEEN 1.0 AND 5.0"
+    ///            "date_field = CAST('2014-9-27' as DATE)"
+    ///            "nullable_field is not NULL"
+    ///            "st_equals(geo_field, st_geofromtext("POINT(2, 2)"))"
+    ///            "numeric_field BETWEEN 1.0 AND 5.0"
     #[prost(string, tag="2")]
     pub row_restriction: ::prost::alloc::string::String,
-}
-/// Table reference that includes just the 3 strings needed to identify a table.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct TableReference {
-    /// The assigned project ID of the project.
-    #[prost(string, tag="1")]
-    pub project_id: ::prost::alloc::string::String,
-    /// The ID of the dataset in the above project.
-    #[prost(string, tag="2")]
-    pub dataset_id: ::prost::alloc::string::String,
-    /// The ID of the table in the above dataset.
-    #[prost(string, tag="3")]
-    pub table_id: ::prost::alloc::string::String,
-}
-/// All fields in this message optional.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct TableModifiers {
-    /// The snapshot time of the table. If not set, interpreted as now.
-    #[prost(message, optional, tag="1")]
-    pub snapshot_time: ::core::option::Option<::prost_types::Timestamp>,
 }
 /// Information about a single data stream within a read session.
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -338,6 +338,19 @@ pub enum DataFormat {
     Avro = 1,
     Arrow = 3,
 }
+impl DataFormat {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            DataFormat::Unspecified => "DATA_FORMAT_UNSPECIFIED",
+            DataFormat::Avro => "AVRO",
+            DataFormat::Arrow => "ARROW",
+        }
+    }
+}
 /// Strategy for distributing data among multiple streams in a read session.
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
 #[repr(i32)]
@@ -357,10 +370,24 @@ pub enum ShardingStrategy {
     /// assignments.
     Balanced = 2,
 }
+impl ShardingStrategy {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            ShardingStrategy::Unspecified => "SHARDING_STRATEGY_UNSPECIFIED",
+            ShardingStrategy::Liquid => "LIQUID",
+            ShardingStrategy::Balanced => "BALANCED",
+        }
+    }
+}
 /// Generated client implementations.
 pub mod big_query_storage_client {
     #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
     use tonic::codegen::*;
+    use tonic::codegen::http::Uri;
     /// BigQuery storage API.
     ///
     /// The BigQuery storage API can be used to read data stored in BigQuery.
@@ -377,6 +404,10 @@ pub mod big_query_storage_client {
     {
         pub fn new(inner: T) -> Self {
             let inner = tonic::client::Grpc::new(inner);
+            Self { inner }
+        }
+        pub fn with_origin(inner: T, origin: Uri) -> Self {
+            let inner = tonic::client::Grpc::with_origin(inner, origin);
             Self { inner }
         }
         pub fn with_interceptor<F>(
@@ -398,19 +429,19 @@ pub mod big_query_storage_client {
         {
             BigQueryStorageClient::new(InterceptedService::new(inner, interceptor))
         }
-        /// Compress requests with `gzip`.
+        /// Compress requests with the given encoding.
         ///
         /// This requires the server to support it otherwise it might respond with an
         /// error.
         #[must_use]
-        pub fn send_gzip(mut self) -> Self {
-            self.inner = self.inner.send_gzip();
+        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.send_compressed(encoding);
             self
         }
-        /// Enable decompressing responses with `gzip`.
+        /// Enable decompressing responses.
         #[must_use]
-        pub fn accept_gzip(mut self) -> Self {
-            self.inner = self.inner.accept_gzip();
+        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.accept_compressed(encoding);
             self
         }
         /// Creates a new read session. A read session divides the contents of a

@@ -86,6 +86,19 @@ pub mod constraint {
         /// Indicate that enforcement is on for boolean constraints.
         Deny = 2,
     }
+    impl ConstraintDefault {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                ConstraintDefault::Unspecified => "CONSTRAINT_DEFAULT_UNSPECIFIED",
+                ConstraintDefault::Allow => "ALLOW",
+                ConstraintDefault::Deny => "DENY",
+            }
+        }
+    }
     /// The type of restrictions for this `Constraint`.
     ///
     /// Immutable after creation.
@@ -163,11 +176,11 @@ pub struct PolicySpec {
     /// Up to 10 PolicyRules are allowed.
     ///
     /// In Policies for boolean constraints, the following requirements apply:
-    ///   - There must be one and only one PolicyRule where condition is unset.
-    ///   - BooleanPolicyRules with conditions must set `enforced` to the opposite
-    ///     of the PolicyRule without a condition.
-    ///   - During policy evaluation, PolicyRules with conditions that are
-    ///     true for a target resource take precedence.
+    ///    - There must be one and only one PolicyRule where condition is unset.
+    ///    - BooleanPolicyRules with conditions must set `enforced` to the opposite
+    ///      of the PolicyRule without a condition.
+    ///    - During policy evaluation, PolicyRules with conditions that are
+    ///      true for a target resource take precedence.
     #[prost(message, repeated, tag="3")]
     pub rules: ::prost::alloc::vec::Vec<policy_spec::PolicyRule>,
     /// Determines the inheritance behavior for this `Policy`.
@@ -222,9 +235,9 @@ pub mod policy_spec {
         /// if the value contains a ":". Values prefixed with "is:" are treated the
         /// same as values with no prefix.
         /// Ancestry subtrees must be in one of the following formats:
-        ///     - "projects/<project-id>", e.g. "projects/tokyo-rain-123"
-        ///     - "folders/<folder-id>", e.g. "folders/1234"
-        ///     - "organizations/<organization-id>", e.g. "organizations/1234"
+        ///      - "projects/<project-id>", e.g. "projects/tokyo-rain-123"
+        ///      - "folders/<folder-id>", e.g. "folders/1234"
+        ///      - "organizations/<organization-id>", e.g. "organizations/1234"
         /// The `supports_under` field of the associated `Constraint`  defines
         /// whether ancestry prefixes can be used.
         #[derive(Clone, PartialEq, ::prost::Message)]
@@ -381,6 +394,7 @@ pub struct DeletePolicyRequest {
 pub mod org_policy_client {
     #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
     use tonic::codegen::*;
+    use tonic::codegen::http::Uri;
     /// An interface for managing organization policies.
     ///
     /// The Cloud Org Policy service provides a simple mechanism for organizations to
@@ -416,6 +430,10 @@ pub mod org_policy_client {
             let inner = tonic::client::Grpc::new(inner);
             Self { inner }
         }
+        pub fn with_origin(inner: T, origin: Uri) -> Self {
+            let inner = tonic::client::Grpc::with_origin(inner, origin);
+            Self { inner }
+        }
         pub fn with_interceptor<F>(
             inner: T,
             interceptor: F,
@@ -435,19 +453,19 @@ pub mod org_policy_client {
         {
             OrgPolicyClient::new(InterceptedService::new(inner, interceptor))
         }
-        /// Compress requests with `gzip`.
+        /// Compress requests with the given encoding.
         ///
         /// This requires the server to support it otherwise it might respond with an
         /// error.
         #[must_use]
-        pub fn send_gzip(mut self) -> Self {
-            self.inner = self.inner.send_gzip();
+        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.send_compressed(encoding);
             self
         }
-        /// Enable decompressing responses with `gzip`.
+        /// Enable decompressing responses.
         #[must_use]
-        pub fn accept_gzip(mut self) -> Self {
-            self.inner = self.inner.accept_gzip();
+        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.accept_compressed(encoding);
             self
         }
         /// Lists `Constraints` that could be applied on the specified resource.

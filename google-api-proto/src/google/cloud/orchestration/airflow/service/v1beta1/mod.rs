@@ -1,3 +1,90 @@
+/// Metadata describing an operation.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct OperationMetadata {
+    /// Output only. The current operation state.
+    #[prost(enumeration="operation_metadata::State", tag="1")]
+    pub state: i32,
+    /// Output only. The type of operation being performed.
+    #[prost(enumeration="operation_metadata::Type", tag="2")]
+    pub operation_type: i32,
+    /// Output only. The resource being operated on, as a [relative resource name](
+    /// /apis/design/resource_names#relative_resource_name).
+    #[prost(string, tag="3")]
+    pub resource: ::prost::alloc::string::String,
+    /// Output only. The UUID of the resource being operated on.
+    #[prost(string, tag="4")]
+    pub resource_uuid: ::prost::alloc::string::String,
+    /// Output only. The time the operation was submitted to the server.
+    #[prost(message, optional, tag="5")]
+    pub create_time: ::core::option::Option<::prost_types::Timestamp>,
+    /// Output only. The time when the operation terminated, regardless of its success.
+    /// This field is unset if the operation is still ongoing.
+    #[prost(message, optional, tag="6")]
+    pub end_time: ::core::option::Option<::prost_types::Timestamp>,
+}
+/// Nested message and enum types in `OperationMetadata`.
+pub mod operation_metadata {
+    /// An enum describing the overall state of an operation.
+    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+    #[repr(i32)]
+    pub enum State {
+        /// Unused.
+        Unspecified = 0,
+        /// The operation has been created but is not yet started.
+        Pending = 1,
+        /// The operation is underway.
+        Running = 2,
+        /// The operation completed successfully.
+        Successful = 3,
+        /// The operation is no longer running but did not succeed.
+        Failed = 4,
+    }
+    impl State {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                State::Unspecified => "STATE_UNSPECIFIED",
+                State::Pending => "PENDING",
+                State::Running => "RUNNING",
+                State::Successful => "SUCCESSFUL",
+                State::Failed => "FAILED",
+            }
+        }
+    }
+    /// Type of longrunning operation.
+    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+    #[repr(i32)]
+    pub enum Type {
+        /// Unused.
+        Unspecified = 0,
+        /// A resource creation operation.
+        Create = 1,
+        /// A resource deletion operation.
+        Delete = 2,
+        /// A resource update operation.
+        Update = 3,
+        /// A resource check operation.
+        Check = 4,
+    }
+    impl Type {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                Type::Unspecified => "TYPE_UNSPECIFIED",
+                Type::Create => "CREATE",
+                Type::Delete => "DELETE",
+                Type::Update => "UPDATE",
+                Type::Check => "CHECK",
+            }
+        }
+    }
+}
 /// List ImageVersions in a project and location.
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ListImageVersionsRequest {
@@ -54,6 +141,7 @@ pub struct ImageVersion {
 pub mod image_versions_client {
     #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
     use tonic::codegen::*;
+    use tonic::codegen::http::Uri;
     /// Readonly service to query available ImageVersions.
     #[derive(Debug, Clone)]
     pub struct ImageVersionsClient<T> {
@@ -68,6 +156,10 @@ pub mod image_versions_client {
     {
         pub fn new(inner: T) -> Self {
             let inner = tonic::client::Grpc::new(inner);
+            Self { inner }
+        }
+        pub fn with_origin(inner: T, origin: Uri) -> Self {
+            let inner = tonic::client::Grpc::with_origin(inner, origin);
             Self { inner }
         }
         pub fn with_interceptor<F>(
@@ -89,19 +181,19 @@ pub mod image_versions_client {
         {
             ImageVersionsClient::new(InterceptedService::new(inner, interceptor))
         }
-        /// Compress requests with `gzip`.
+        /// Compress requests with the given encoding.
         ///
         /// This requires the server to support it otherwise it might respond with an
         /// error.
         #[must_use]
-        pub fn send_gzip(mut self) -> Self {
-            self.inner = self.inner.send_gzip();
+        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.send_compressed(encoding);
             self
         }
-        /// Enable decompressing responses with `gzip`.
+        /// Enable decompressing responses.
         #[must_use]
-        pub fn accept_gzip(mut self) -> Self {
-            self.inner = self.inner.accept_gzip();
+        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.accept_compressed(encoding);
             self
         }
         /// List ImageVersions for provided location.
@@ -124,63 +216,6 @@ pub mod image_versions_client {
             );
             self.inner.unary(request.into_request(), path, codec).await
         }
-    }
-}
-/// Metadata describing an operation.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct OperationMetadata {
-    /// Output only. The current operation state.
-    #[prost(enumeration="operation_metadata::State", tag="1")]
-    pub state: i32,
-    /// Output only. The type of operation being performed.
-    #[prost(enumeration="operation_metadata::Type", tag="2")]
-    pub operation_type: i32,
-    /// Output only. The resource being operated on, as a [relative resource name](
-    /// /apis/design/resource_names#relative_resource_name).
-    #[prost(string, tag="3")]
-    pub resource: ::prost::alloc::string::String,
-    /// Output only. The UUID of the resource being operated on.
-    #[prost(string, tag="4")]
-    pub resource_uuid: ::prost::alloc::string::String,
-    /// Output only. The time the operation was submitted to the server.
-    #[prost(message, optional, tag="5")]
-    pub create_time: ::core::option::Option<::prost_types::Timestamp>,
-    /// Output only. The time when the operation terminated, regardless of its success.
-    /// This field is unset if the operation is still ongoing.
-    #[prost(message, optional, tag="6")]
-    pub end_time: ::core::option::Option<::prost_types::Timestamp>,
-}
-/// Nested message and enum types in `OperationMetadata`.
-pub mod operation_metadata {
-    /// An enum describing the overall state of an operation.
-    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
-    #[repr(i32)]
-    pub enum State {
-        /// Unused.
-        Unspecified = 0,
-        /// The operation has been created but is not yet started.
-        Pending = 1,
-        /// The operation is underway.
-        Running = 2,
-        /// The operation completed successfully.
-        Successful = 3,
-        /// The operation is no longer running but did not succeed.
-        Failed = 4,
-    }
-    /// Type of longrunning operation.
-    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
-    #[repr(i32)]
-    pub enum Type {
-        /// Unused.
-        Unspecified = 0,
-        /// A resource creation operation.
-        Create = 1,
-        /// A resource deletion operation.
-        Delete = 2,
-        /// A resource update operation.
-        Update = 3,
-        /// A resource check operation.
-        Check = 4,
     }
 }
 /// Create a new environment.
@@ -254,15 +289,15 @@ pub struct UpdateEnvironmentRequest {
     /// "config.softwareConfig.pypiPackages.argparse". The included patch
     /// environment would specify the scikit-learn version as follows:
     ///
-    ///     {
-    ///       "config":{
-    ///         "softwareConfig":{
-    ///           "pypiPackages":{
-    ///             "scikit-learn":"==0.19.0"
-    ///           }
-    ///         }
-    ///       }
-    ///     }
+    ///      {
+    ///        "config":{
+    ///          "softwareConfig":{
+    ///            "pypiPackages":{
+    ///              "scikit-learn":"==0.19.0"
+    ///            }
+    ///          }
+    ///        }
+    ///      }
     ///
     /// Note that in the above example, any existing PyPI packages
     /// other than scikit-learn and argparse will be unaffected.
@@ -276,12 +311,12 @@ pub struct UpdateEnvironmentRequest {
     /// provide the paths "labels.label1", "labels.label2", and "labels.label3"
     /// and populate the patch environment as follows:
     ///
-    ///     {
-    ///       "labels":{
-    ///         "label1":"new-label1-value"
-    ///         "label2":"new-label2-value"
-    ///       }
-    ///     }
+    ///      {
+    ///        "labels":{
+    ///          "label1":"new-label1-value"
+    ///          "label2":"new-label2-value"
+    ///        }
+    ///      }
     ///
     /// Note that in the above example, any existing labels that are not
     /// included in the `updateMask` will be unaffected.
@@ -294,86 +329,86 @@ pub struct UpdateEnvironmentRequest {
     /// the path "config.softwareConfig.pypiPackages", and
     /// the patch environment would be the following:
     ///
-    ///     {
-    ///       "config":{
-    ///         "softwareConfig":{
-    ///           "pypiPackages":{
-    ///             "botocore":"==1.7.14"
-    ///           }
-    ///         }
-    ///       }
-    ///     }
+    ///      {
+    ///        "config":{
+    ///          "softwareConfig":{
+    ///            "pypiPackages":{
+    ///              "botocore":"==1.7.14"
+    ///            }
+    ///          }
+    ///        }
+    ///      }
     ///
     /// **Note:** Only the following fields can be updated:
     ///
     /// * `config.softwareConfig.pypiPackages`
-    ///     * Replace all custom custom PyPI packages. If a replacement
-    ///       package map is not included in `environment`, all custom
-    ///       PyPI packages are cleared. It is an error to provide both
-    ///       this mask and a mask specifying an individual package.
+    ///      * Replace all custom custom PyPI packages. If a replacement
+    ///        package map is not included in `environment`, all custom
+    ///        PyPI packages are cleared. It is an error to provide both
+    ///        this mask and a mask specifying an individual package.
     /// * `config.softwareConfig.pypiPackages.`packagename
-    ///     * Update the custom PyPI package *packagename*,
-    ///       preserving other packages. To delete the package, include it in
-    ///       `updateMask`, and omit the mapping for it in
-    ///       `environment.config.softwareConfig.pypiPackages`. It is an error
-    ///       to provide both a mask of this form and the
-    ///       `config.softwareConfig.pypiPackages` mask.
+    ///      * Update the custom PyPI package *packagename*,
+    ///        preserving other packages. To delete the package, include it in
+    ///        `updateMask`, and omit the mapping for it in
+    ///        `environment.config.softwareConfig.pypiPackages`. It is an error
+    ///        to provide both a mask of this form and the
+    ///        `config.softwareConfig.pypiPackages` mask.
     /// * `labels`
-    ///     * Replace all environment labels. If a replacement labels map is not
-    ///       included in `environment`, all labels are cleared. It is an error to
-    ///       provide both this mask and a mask specifying one or more individual
-    ///       labels.
+    ///      * Replace all environment labels. If a replacement labels map is not
+    ///        included in `environment`, all labels are cleared. It is an error to
+    ///        provide both this mask and a mask specifying one or more individual
+    ///        labels.
     /// * `labels.`labelName
-    ///     * Set the label named *labelName*, while preserving other
-    ///       labels. To delete the label, include it in `updateMask` and omit its
-    ///       mapping in `environment.labels`. It is an error to provide both a
-    ///       mask of this form and the `labels` mask.
+    ///      * Set the label named *labelName*, while preserving other
+    ///        labels. To delete the label, include it in `updateMask` and omit its
+    ///        mapping in `environment.labels`. It is an error to provide both a
+    ///        mask of this form and the `labels` mask.
     /// * `config.nodeCount`
-    ///     * Horizontally scale the number of nodes in the environment. An integer
-    ///       greater than or equal to 3 must be provided in the `config.nodeCount`
-    ///       field. * `config.webServerNetworkAccessControl`
-    ///     * Replace the environment's current WebServerNetworkAccessControl.
+    ///      * Horizontally scale the number of nodes in the environment. An integer
+    ///        greater than or equal to 3 must be provided in the `config.nodeCount`
+    ///        field. * `config.webServerNetworkAccessControl`
+    ///      * Replace the environment's current WebServerNetworkAccessControl.
     /// * `config.softwareConfig.airflowConfigOverrides`
-    ///     * Replace all Apache Airflow config overrides. If a replacement config
-    ///       overrides map is not included in `environment`, all config overrides
-    ///       are cleared.
-    ///       It is an error to provide both this mask and a mask specifying one or
-    ///       more individual config overrides.
+    ///      * Replace all Apache Airflow config overrides. If a replacement config
+    ///        overrides map is not included in `environment`, all config overrides
+    ///        are cleared.
+    ///        It is an error to provide both this mask and a mask specifying one or
+    ///        more individual config overrides.
     /// * `config.softwareConfig.airflowConfigOverrides.`section-name
-    ///     * Override the Apache Airflow config property *name* in the
-    ///       section named *section*, preserving other properties. To
-    ///       delete the property override, include it in `updateMask` and omit its
-    ///       mapping in
-    ///       `environment.config.softwareConfig.airflowConfigOverrides`.
-    ///       It is an error to provide both a mask of this form and the
-    ///       `config.softwareConfig.airflowConfigOverrides` mask.
+    ///      * Override the Apache Airflow config property *name* in the
+    ///        section named *section*, preserving other properties. To
+    ///        delete the property override, include it in `updateMask` and omit its
+    ///        mapping in
+    ///        `environment.config.softwareConfig.airflowConfigOverrides`.
+    ///        It is an error to provide both a mask of this form and the
+    ///        `config.softwareConfig.airflowConfigOverrides` mask.
     /// * `config.softwareConfig.envVariables`
-    ///     * Replace all environment variables. If a replacement environment
-    ///       variable map is not included in `environment`, all custom environment
-    ///       variables  are cleared.
-    ///       It is an error to provide both this mask and a mask specifying one or
-    ///       more individual environment variables.
+    ///      * Replace all environment variables. If a replacement environment
+    ///        variable map is not included in `environment`, all custom environment
+    ///        variables  are cleared.
+    ///        It is an error to provide both this mask and a mask specifying one or
+    ///        more individual environment variables.
     /// * `config.softwareConfig.imageVersion`
-    ///     * Upgrade the version of the environment in-place. Refer to
-    ///       `SoftwareConfig.image_version` for information on how to format the
-    ///       new image version. Additionally, the new image version cannot effect
-    ///       a version downgrade and must match the current image version's
-    ///       Composer major version and Airflow major and minor versions. Consult
-    ///       the [Cloud Composer Version
-    ///       List](<https://cloud.google.com/composer/docs/concepts/versioning/composer-versions>)
-    ///       for valid values.
+    ///      * Upgrade the version of the environment in-place. Refer to
+    ///        `SoftwareConfig.image_version` for information on how to format the
+    ///        new image version. Additionally, the new image version cannot effect
+    ///        a version downgrade and must match the current image version's
+    ///        Composer major version and Airflow major and minor versions. Consult
+    ///        the [Cloud Composer Version
+    ///        List](<https://cloud.google.com/composer/docs/concepts/versioning/composer-versions>)
+    ///        for valid values.
     /// * `config.softwareConfig.schedulerCount`
-    ///     * Horizontally scale the number of schedulers in Airflow. A positive
-    ///       integer not greater than the number of nodes must be provided in the
-    ///       `config.softwareConfig.schedulerCount` field. * `config.databaseConfig.machineType`
-    ///     * Cloud SQL machine type used by Airflow database.
-    ///       It has to be one of: db-n1-standard-2, db-n1-standard-4,
-    ///       db-n1-standard-8 or db-n1-standard-16. * `config.webServerConfig.machineType`
-    ///     * Machine type on which Airflow web server is running.
-    ///       It has to be one of: composer-n1-webserver-2, composer-n1-webserver-4
-    ///       or composer-n1-webserver-8. * `config.maintenanceWindow`
-    ///     * Maintenance window during which Cloud Composer components may be
-    ///       under maintenance.
+    ///      * Horizontally scale the number of schedulers in Airflow. A positive
+    ///        integer not greater than the number of nodes must be provided in the
+    ///        `config.softwareConfig.schedulerCount` field. * `config.databaseConfig.machineType`
+    ///      * Cloud SQL machine type used by Airflow database.
+    ///        It has to be one of: db-n1-standard-2, db-n1-standard-4,
+    ///        db-n1-standard-8 or db-n1-standard-16. * `config.webServerConfig.machineType`
+    ///      * Machine type on which Airflow web server is running.
+    ///        It has to be one of: composer-n1-webserver-2, composer-n1-webserver-4
+    ///        or composer-n1-webserver-8. * `config.maintenanceWindow`
+    ///      * Maintenance window during which Cloud Composer components may be
+    ///        under maintenance.
     #[prost(message, optional, tag="3")]
     pub update_mask: ::core::option::Option<::prost_types::FieldMask>,
 }
@@ -477,6 +512,20 @@ pub mod environment_config {
         /// The environment size is large.
         Large = 3,
     }
+    impl EnvironmentSize {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                EnvironmentSize::Unspecified => "ENVIRONMENT_SIZE_UNSPECIFIED",
+                EnvironmentSize::Small => "ENVIRONMENT_SIZE_SMALL",
+                EnvironmentSize::Medium => "ENVIRONMENT_SIZE_MEDIUM",
+                EnvironmentSize::Large => "ENVIRONMENT_SIZE_LARGE",
+            }
+        }
+    }
 }
 /// Network-level access control policy for the Airflow web server.
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -493,7 +542,7 @@ pub mod web_server_network_access_control {
         /// IP address or range, defined using CIDR notation, of requests that this
         /// rule applies to.
         /// Examples: `192.168.1.1` or `192.168.0.0/16` or `2001:db8::/32`
-        ///           or `2001:0db8:0000:0042:0000:8a2e:0370:7334`.
+        ///            or `2001:0db8:0000:0042:0000:8a2e:0370:7334`.
         ///
         /// IP range prefixes should be properly truncated. For example,
         /// `1.2.3.4/24` should be truncated to `1.2.3.0/24`. Similarly, for IPv6,
@@ -852,11 +901,11 @@ pub struct EncryptionConfig {
 /// The following example:
 ///
 /// ```
-///    {
-///      "startTime":"2019-08-01T01:00:00Z"
-///      "endTime":"2019-08-01T07:00:00Z"
-///      "recurrence":"FREQ=WEEKLY;BYDAY=TU,WE"
-///    }
+///     {
+///       "startTime":"2019-08-01T01:00:00Z"
+///       "endTime":"2019-08-01T07:00:00Z"
+///       "recurrence":"FREQ=WEEKLY;BYDAY=TU,WE"
+///     }
 /// ```
 ///
 /// would define a maintenance window between 01 and 07 hours UTC during
@@ -1001,6 +1050,22 @@ pub mod environment {
         /// The environment has encountered an error and cannot be used.
         Error = 5,
     }
+    impl State {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                State::Unspecified => "STATE_UNSPECIFIED",
+                State::Creating => "CREATING",
+                State::Running => "RUNNING",
+                State::Updating => "UPDATING",
+                State::Deleting => "DELETING",
+                State::Error => "ERROR",
+            }
+        }
+    }
 }
 /// Request to check whether image upgrade will succeed.
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -1068,11 +1133,25 @@ pub mod check_upgrade_response {
         /// There were no python packages conflicts.
         NoConflict = 2,
     }
+    impl ConflictResult {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                ConflictResult::Unspecified => "CONFLICT_RESULT_UNSPECIFIED",
+                ConflictResult::Conflict => "CONFLICT",
+                ConflictResult::NoConflict => "NO_CONFLICT",
+            }
+        }
+    }
 }
 /// Generated client implementations.
 pub mod environments_client {
     #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
     use tonic::codegen::*;
+    use tonic::codegen::http::Uri;
     /// Managed Apache Airflow Environments.
     #[derive(Debug, Clone)]
     pub struct EnvironmentsClient<T> {
@@ -1087,6 +1166,10 @@ pub mod environments_client {
     {
         pub fn new(inner: T) -> Self {
             let inner = tonic::client::Grpc::new(inner);
+            Self { inner }
+        }
+        pub fn with_origin(inner: T, origin: Uri) -> Self {
+            let inner = tonic::client::Grpc::with_origin(inner, origin);
             Self { inner }
         }
         pub fn with_interceptor<F>(
@@ -1108,19 +1191,19 @@ pub mod environments_client {
         {
             EnvironmentsClient::new(InterceptedService::new(inner, interceptor))
         }
-        /// Compress requests with `gzip`.
+        /// Compress requests with the given encoding.
         ///
         /// This requires the server to support it otherwise it might respond with an
         /// error.
         #[must_use]
-        pub fn send_gzip(mut self) -> Self {
-            self.inner = self.inner.send_gzip();
+        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.send_compressed(encoding);
             self
         }
-        /// Enable decompressing responses with `gzip`.
+        /// Enable decompressing responses.
         #[must_use]
-        pub fn accept_gzip(mut self) -> Self {
-            self.inner = self.inner.accept_gzip();
+        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.accept_compressed(encoding);
             self
         }
         /// Create a new environment.

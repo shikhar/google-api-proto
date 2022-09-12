@@ -81,6 +81,18 @@ pub mod assist_response {
         /// until the server closes the gRPC connection.
         EndOfUtterance = 1,
     }
+    impl EventType {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                EventType::Unspecified => "EVENT_TYPE_UNSPECIFIED",
+                EventType::EndOfUtterance => "END_OF_UTTERANCE",
+            }
+        }
+    }
 }
 /// Debug info for developer. Only returned if request set `return_debug_info`
 /// to true.
@@ -169,6 +181,19 @@ pub mod audio_in_config {
         /// supported.
         Flac = 2,
     }
+    impl Encoding {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                Encoding::Unspecified => "ENCODING_UNSPECIFIED",
+                Encoding::Linear16 => "LINEAR16",
+                Encoding::Flac => "FLAC",
+            }
+        }
+    }
 }
 /// Specifies the desired format for the server to use when it returns
 /// `audio_out` messages.
@@ -206,6 +231,20 @@ pub mod audio_out_config {
         /// while using the same bitrate. The sample rate is encoded in the payload.
         OpusInOgg = 3,
     }
+    impl Encoding {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                Encoding::Unspecified => "ENCODING_UNSPECIFIED",
+                Encoding::Linear16 => "LINEAR16",
+                Encoding::Mp3 => "MP3",
+                Encoding::OpusInOgg => "OPUS_IN_OGG",
+            }
+        }
+    }
 }
 /// Specifies the desired format for the server to use when it returns
 /// `screen_out` response.
@@ -231,6 +270,19 @@ pub mod screen_out_config {
         /// The Assistant will typically return a partial-screen response in this
         /// mode.
         Playing = 3,
+    }
+    impl ScreenMode {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                ScreenMode::Unspecified => "SCREEN_MODE_UNSPECIFIED",
+                ScreenMode::Off => "OFF",
+                ScreenMode::Playing => "PLAYING",
+            }
+        }
     }
 }
 /// Provides information about the current dialog state.
@@ -328,6 +380,18 @@ pub mod screen_out {
         /// in the actual HTML data.
         Html = 1,
     }
+    impl Format {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                Format::Unspecified => "FORMAT_UNSPECIFIED",
+                Format::Html => "HTML",
+            }
+        }
+    }
 }
 /// The response returned to the device if the user has triggered a Device
 /// Action. For example, a device which supports the query *Turn on the light*
@@ -406,6 +470,19 @@ pub mod dialog_state_out {
         /// (by starting a new `Assist` RPC call to send the new audio).
         DialogFollowOn = 2,
     }
+    impl MicrophoneMode {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                MicrophoneMode::Unspecified => "MICROPHONE_MODE_UNSPECIFIED",
+                MicrophoneMode::CloseMicrophone => "CLOSE_MICROPHONE",
+                MicrophoneMode::DialogFollowOn => "DIALOG_FOLLOW_ON",
+            }
+        }
+    }
 }
 /// Debugging parameters for the current request.
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -419,11 +496,11 @@ pub struct DebugConfig {
 /// There are three sources of locations. They are used with this precedence:
 ///
 /// 1. This `DeviceLocation`, which is primarily used for mobile devices with
-///    GPS .
+///     GPS .
 /// 2. Location specified by the user during device setup; this is per-user, per
-///    device. This location is used if `DeviceLocation` is not specified.
+///     device. This location is used if `DeviceLocation` is not specified.
 /// 3. Inferred location based on IP address. This is used only if neither of the
-///    above are specified.
+///     above are specified.
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct DeviceLocation {
     #[prost(oneof="device_location::Type", tags="1")]
@@ -442,6 +519,7 @@ pub mod device_location {
 pub mod embedded_assistant_client {
     #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
     use tonic::codegen::*;
+    use tonic::codegen::http::Uri;
     /// Service that implements the Google Assistant API.
     #[derive(Debug, Clone)]
     pub struct EmbeddedAssistantClient<T> {
@@ -456,6 +534,10 @@ pub mod embedded_assistant_client {
     {
         pub fn new(inner: T) -> Self {
             let inner = tonic::client::Grpc::new(inner);
+            Self { inner }
+        }
+        pub fn with_origin(inner: T, origin: Uri) -> Self {
+            let inner = tonic::client::Grpc::with_origin(inner, origin);
             Self { inner }
         }
         pub fn with_interceptor<F>(
@@ -477,19 +559,19 @@ pub mod embedded_assistant_client {
         {
             EmbeddedAssistantClient::new(InterceptedService::new(inner, interceptor))
         }
-        /// Compress requests with `gzip`.
+        /// Compress requests with the given encoding.
         ///
         /// This requires the server to support it otherwise it might respond with an
         /// error.
         #[must_use]
-        pub fn send_gzip(mut self) -> Self {
-            self.inner = self.inner.send_gzip();
+        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.send_compressed(encoding);
             self
         }
-        /// Enable decompressing responses with `gzip`.
+        /// Enable decompressing responses.
         #[must_use]
-        pub fn accept_gzip(mut self) -> Self {
-            self.inner = self.inner.accept_gzip();
+        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.accept_compressed(encoding);
             self
         }
         /// Initiates or continues a conversation with the embedded Assistant Service.

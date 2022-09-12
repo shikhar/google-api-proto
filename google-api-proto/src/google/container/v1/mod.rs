@@ -112,25 +112,25 @@ pub struct NodeConfig {
     /// Additionally, to avoid ambiguity, keys must not conflict with any other
     /// metadata keys for the project or be one of the reserved keys:
     ///
-    ///  - "cluster-location"
-    ///  - "cluster-name"
-    ///  - "cluster-uid"
-    ///  - "configure-sh"
-    ///  - "containerd-configure-sh"
-    ///  - "enable-os-login"
-    ///  - "gci-ensure-gke-docker"
-    ///  - "gci-metrics-enabled"
-    ///  - "gci-update-strategy"
-    ///  - "instance-template"
-    ///  - "kube-env"
-    ///  - "startup-script"
-    ///  - "user-data"
-    ///  - "disable-address-manager"
-    ///  - "windows-startup-script-ps1"
-    ///  - "common-psm1"
-    ///  - "k8s-node-setup-psm1"
-    ///  - "install-ssh-psm1"
-    ///  - "user-profile-psm1"
+    ///   - "cluster-location"
+    ///   - "cluster-name"
+    ///   - "cluster-uid"
+    ///   - "configure-sh"
+    ///   - "containerd-configure-sh"
+    ///   - "enable-os-login"
+    ///   - "gci-ensure-gke-docker"
+    ///   - "gci-metrics-enabled"
+    ///   - "gci-update-strategy"
+    ///   - "instance-template"
+    ///   - "kube-env"
+    ///   - "startup-script"
+    ///   - "user-data"
+    ///   - "disable-address-manager"
+    ///   - "windows-startup-script-ps1"
+    ///   - "common-psm1"
+    ///   - "k8s-node-setup-psm1"
+    ///   - "install-ssh-psm1"
+    ///   - "user-profile-psm1"
     ///
     /// Values are free-form strings, and only have meaning as interpreted by
     /// the image running in the instance. The only restriction placed on them is
@@ -329,6 +329,18 @@ pub mod node_network_config {
             /// Higher bandwidth, actual values based on VM size.
             Tier1 = 1,
         }
+        impl Tier {
+            /// String value of the enum field names used in the ProtoBuf definition.
+            ///
+            /// The values are not transformed in any way and thus are considered stable
+            /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+            pub fn as_str_name(&self) -> &'static str {
+                match self {
+                    Tier::Unspecified => "TIER_UNSPECIFIED",
+                    Tier::Tier1 => "TIER_1",
+                }
+            }
+        }
     }
 }
 /// A set of Shielded Instance options.
@@ -367,6 +379,18 @@ pub mod sandbox_config {
         Unspecified = 0,
         /// Run sandbox using gvisor.
         Gvisor = 1,
+    }
+    impl Type {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                Type::Unspecified => "UNSPECIFIED",
+                Type::Gvisor => "GVISOR",
+            }
+        }
     }
 }
 /// GcfsConfig contains configurations of Google Container File System
@@ -410,6 +434,20 @@ pub mod reservation_affinity {
         /// for specifying the reservations.
         SpecificReservation = 3,
     }
+    impl Type {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                Type::Unspecified => "UNSPECIFIED",
+                Type::NoReservation => "NO_RESERVATION",
+                Type::AnyReservation => "ANY_RESERVATION",
+                Type::SpecificReservation => "SPECIFIC_RESERVATION",
+            }
+        }
+    }
 }
 /// Kubernetes taint is comprised of three fields: key, value, and effect. Effect
 /// can only be one of three types:  NoSchedule, PreferNoSchedule or NoExecute.
@@ -443,6 +481,20 @@ pub mod node_taint {
         PreferNoSchedule = 2,
         /// NoExecute
         NoExecute = 3,
+    }
+    impl Effect {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                Effect::Unspecified => "EFFECT_UNSPECIFIED",
+                Effect::NoSchedule => "NO_SCHEDULE",
+                Effect::PreferNoSchedule => "PREFER_NO_SCHEDULE",
+                Effect::NoExecute => "NO_EXECUTE",
+            }
+        }
     }
 }
 /// Collection of Kubernetes [node
@@ -682,6 +734,19 @@ pub mod cloud_run_config {
         /// Install internal load balancer for Cloud Run.
         Internal = 2,
     }
+    impl LoadBalancerType {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                LoadBalancerType::Unspecified => "LOAD_BALANCER_TYPE_UNSPECIFIED",
+                LoadBalancerType::External => "LOAD_BALANCER_TYPE_EXTERNAL",
+                LoadBalancerType::Internal => "LOAD_BALANCER_TYPE_INTERNAL",
+            }
+        }
+    }
 }
 /// Configuration options for the Config Connector add-on.
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -764,6 +829,18 @@ pub mod network_policy {
         /// Tigera (Calico Felix).
         Calico = 1,
     }
+    impl Provider {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                Provider::Unspecified => "PROVIDER_UNSPECIFIED",
+                Provider::Calico => "CALICO",
+            }
+        }
+    }
 }
 /// Configuration for Binary Authorization.
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -794,6 +871,19 @@ pub mod binary_authorization {
         /// project's singleton policy. This is equivalent to setting the
         /// enabled boolean to true.
         ProjectSingletonPolicyEnforce = 2,
+    }
+    impl EvaluationMode {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                EvaluationMode::Unspecified => "EVALUATION_MODE_UNSPECIFIED",
+                EvaluationMode::Disabled => "DISABLED",
+                EvaluationMode::ProjectSingletonPolicyEnforce => "PROJECT_SINGLETON_POLICY_ENFORCE",
+            }
+        }
     }
 }
 /// Configuration for controlling how IPs are allocated in the cluster.
@@ -974,7 +1064,7 @@ pub struct Cluster {
     /// * `logging.googleapis.com/kubernetes` - The Cloud Logging
     /// service with a Kubernetes-native resource model
     /// * `logging.googleapis.com` - The legacy Cloud Logging service (no longer
-    ///   available as of GKE 1.15).
+    ///    available as of GKE 1.15).
     /// * `none` - no logs will be exported from the cluster.
     ///
     /// If left as an empty string,`logging.googleapis.com/kubernetes` will be
@@ -987,7 +1077,7 @@ pub struct Cluster {
     /// * "monitoring.googleapis.com/kubernetes" - The Cloud Monitoring
     /// service with a Kubernetes-native resource model
     /// * `monitoring.googleapis.com` - The legacy Cloud Monitoring service (no
-    ///   longer available as of GKE 1.15).
+    ///    longer available as of GKE 1.15).
     /// * `none` - No metrics will be exported from the cluster.
     ///
     /// If left as an empty string,`monitoring.googleapis.com/kubernetes` will be
@@ -1263,6 +1353,23 @@ pub mod cluster {
         /// full functionality. Details can be found in the `statusMessage` field.
         Degraded = 6,
     }
+    impl Status {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                Status::Unspecified => "STATUS_UNSPECIFIED",
+                Status::Provisioning => "PROVISIONING",
+                Status::Running => "RUNNING",
+                Status::Reconciling => "RECONCILING",
+                Status::Stopping => "STOPPING",
+                Status::Error => "ERROR",
+                Status::Degraded => "DEGRADED",
+            }
+        }
+    }
 }
 /// Node pool configs that apply to all auto-provisioned node pools
 /// in autopilot clusters and node auto-provisioning enabled clusters.
@@ -1313,7 +1420,7 @@ pub struct ClusterUpdate {
     /// * "monitoring.googleapis.com/kubernetes" - The Cloud Monitoring
     /// service with a Kubernetes-native resource model
     /// * `monitoring.googleapis.com` - The legacy Cloud Monitoring service (no
-    ///   longer available as of GKE 1.15).
+    ///    longer available as of GKE 1.15).
     /// * `none` - No metrics will be exported from the cluster.
     ///
     /// If left as an empty string,`monitoring.googleapis.com/kubernetes` will be
@@ -1380,7 +1487,7 @@ pub struct ClusterUpdate {
     /// * `logging.googleapis.com/kubernetes` - The Cloud Logging
     /// service with a Kubernetes-native resource model
     /// * `logging.googleapis.com` - The legacy Cloud Logging service (no longer
-    ///   available as of GKE 1.15).
+    ///    available as of GKE 1.15).
     /// * `none` - no logs will be exported from the cluster.
     ///
     /// If left as an empty string,`logging.googleapis.com/kubernetes` will be
@@ -1535,6 +1642,21 @@ pub mod operation {
         /// The operation is aborting.
         Aborting = 4,
     }
+    impl Status {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                Status::Unspecified => "STATUS_UNSPECIFIED",
+                Status::Pending => "PENDING",
+                Status::Running => "RUNNING",
+                Status::Done => "DONE",
+                Status::Aborting => "ABORTING",
+            }
+        }
+    }
     /// Operation type.
     #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
     #[repr(i32)]
@@ -1574,6 +1696,33 @@ pub mod operation {
         /// Set the maintenance policy.
         SetMaintenancePolicy = 16,
     }
+    impl Type {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                Type::Unspecified => "TYPE_UNSPECIFIED",
+                Type::CreateCluster => "CREATE_CLUSTER",
+                Type::DeleteCluster => "DELETE_CLUSTER",
+                Type::UpgradeMaster => "UPGRADE_MASTER",
+                Type::UpgradeNodes => "UPGRADE_NODES",
+                Type::RepairCluster => "REPAIR_CLUSTER",
+                Type::UpdateCluster => "UPDATE_CLUSTER",
+                Type::CreateNodePool => "CREATE_NODE_POOL",
+                Type::DeleteNodePool => "DELETE_NODE_POOL",
+                Type::SetNodePoolManagement => "SET_NODE_POOL_MANAGEMENT",
+                Type::AutoRepairNodes => "AUTO_REPAIR_NODES",
+                Type::AutoUpgradeNodes => "AUTO_UPGRADE_NODES",
+                Type::SetLabels => "SET_LABELS",
+                Type::SetMasterAuth => "SET_MASTER_AUTH",
+                Type::SetNodePoolSize => "SET_NODE_POOL_SIZE",
+                Type::SetNetworkPolicy => "SET_NETWORK_POLICY",
+                Type::SetMaintenancePolicy => "SET_MAINTENANCE_POLICY",
+            }
+        }
+    }
 }
 /// Information about operation (or operation stage) progress.
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -1587,11 +1736,11 @@ pub struct OperationProgress {
     #[prost(enumeration="operation::Status", tag="2")]
     pub status: i32,
     /// Progress metric bundle, for example:
-    ///   metrics: [{name: "nodes done",     int_value: 15},
-    ///             {name: "nodes total",    int_value: 32}]
+    ///    metrics: [{name: "nodes done",     int_value: 15},
+    ///              {name: "nodes total",    int_value: 32}]
     /// or
-    ///   metrics: [{name: "progress",       double_value: 0.56},
-    ///             {name: "progress scale", double_value: 1.0}]
+    ///    metrics: [{name: "progress",       double_value: 0.56},
+    ///              {name: "progress scale", double_value: 1.0}]
     #[prost(message, repeated, tag="3")]
     pub metrics: ::prost::alloc::vec::Vec<operation_progress::Metric>,
     /// Substages of an operation or a stage.
@@ -1864,7 +2013,7 @@ pub struct SetLoggingServiceRequest {
     /// * `logging.googleapis.com/kubernetes` - The Cloud Logging
     /// service with a Kubernetes-native resource model
     /// * `logging.googleapis.com` - The legacy Cloud Logging service (no longer
-    ///   available as of GKE 1.15).
+    ///    available as of GKE 1.15).
     /// * `none` - no logs will be exported from the cluster.
     ///
     /// If left as an empty string,`logging.googleapis.com/kubernetes` will be
@@ -1903,7 +2052,7 @@ pub struct SetMonitoringServiceRequest {
     /// * "monitoring.googleapis.com/kubernetes" - The Cloud Monitoring
     /// service with a Kubernetes-native resource model
     /// * `monitoring.googleapis.com` - The legacy Cloud Monitoring service (no
-    ///   longer available as of GKE 1.15).
+    ///    longer available as of GKE 1.15).
     /// * `none` - No metrics will be exported from the cluster.
     ///
     /// If left as an empty string,`monitoring.googleapis.com/kubernetes` will be
@@ -2067,6 +2216,20 @@ pub mod set_master_auth_request {
         /// authentication is enabled, with either a provided password or a generated
         /// one.
         SetUsername = 3,
+    }
+    impl Action {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                Action::Unknown => "UNKNOWN",
+                Action::SetPassword => "SET_PASSWORD",
+                Action::GeneratePassword => "GENERATE_PASSWORD",
+                Action::SetUsername => "SET_USERNAME",
+            }
+        }
     }
 }
 /// DeleteClusterRequest deletes a cluster.
@@ -2644,6 +2807,24 @@ pub mod node_pool {
                 /// Rollback has been initiated.
                 RollbackStarted = 7,
             }
+            impl Phase {
+                /// String value of the enum field names used in the ProtoBuf definition.
+                ///
+                /// The values are not transformed in any way and thus are considered stable
+                /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+                pub fn as_str_name(&self) -> &'static str {
+                    match self {
+                        Phase::Unspecified => "PHASE_UNSPECIFIED",
+                        Phase::UpdateStarted => "UPDATE_STARTED",
+                        Phase::CreatingGreenPool => "CREATING_GREEN_POOL",
+                        Phase::CordoningBluePool => "CORDONING_BLUE_POOL",
+                        Phase::DrainingBluePool => "DRAINING_BLUE_POOL",
+                        Phase::NodePoolSoaking => "NODE_POOL_SOAKING",
+                        Phase::DeletingBluePool => "DELETING_BLUE_POOL",
+                        Phase::RollbackStarted => "ROLLBACK_STARTED",
+                    }
+                }
+            }
         }
     }
     /// The current status of the node pool instance.
@@ -2671,6 +2852,23 @@ pub mod node_pool {
         /// The ERROR state indicates the node pool may be unusable. Details
         /// can be found in the `statusMessage` field.
         Error = 6,
+    }
+    impl Status {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                Status::Unspecified => "STATUS_UNSPECIFIED",
+                Status::Provisioning => "PROVISIONING",
+                Status::Running => "RUNNING",
+                Status::RunningWithError => "RUNNING_WITH_ERROR",
+                Status::Reconciling => "RECONCILING",
+                Status::Stopping => "STOPPING",
+                Status::Error => "ERROR",
+            }
+        }
     }
 }
 /// NodeManagement defines the set of node management services turned on for the
@@ -2792,6 +2990,19 @@ pub mod maintenance_exclusion_options {
         /// and also exclude all node pool upgrades. Only control
         /// plane patches are allowed.
         NoMinorOrNodeUpgrades = 2,
+    }
+    impl Scope {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                Scope::NoUpgrades => "NO_UPGRADES",
+                Scope::NoMinorUpgrades => "NO_MINOR_UPGRADES",
+                Scope::NoMinorOrNodeUpgrades => "NO_MINOR_OR_NODE_UPGRADES",
+            }
+        }
     }
 }
 /// Represents an arbitrary window of time that recurs.
@@ -3015,6 +3226,19 @@ pub mod cluster_autoscaling {
         /// Use default (balanced) autoscaling configuration.
         Balanced = 2,
     }
+    impl AutoscalingProfile {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                AutoscalingProfile::ProfileUnspecified => "PROFILE_UNSPECIFIED",
+                AutoscalingProfile::OptimizeUtilization => "OPTIMIZE_UTILIZATION",
+                AutoscalingProfile::Balanced => "BALANCED",
+            }
+        }
+    }
 }
 /// AutoprovisioningNodePoolDefaults contains defaults for a node pool created
 /// by NAP.
@@ -3136,6 +3360,19 @@ pub mod node_pool_autoscaling {
         Balanced = 1,
         /// ANY policy picks zones that have the highest capacity available.
         Any = 2,
+    }
+    impl LocationPolicy {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                LocationPolicy::Unspecified => "LOCATION_POLICY_UNSPECIFIED",
+                LocationPolicy::Balanced => "BALANCED",
+                LocationPolicy::Any => "ANY",
+            }
+        }
     }
 }
 /// SetLabelsRequest sets the Google Cloud Platform labels on a Google Container
@@ -3304,6 +3541,18 @@ pub mod gpu_sharing_config {
         /// GPUs are time-shared between containers.
         TimeSharing = 1,
     }
+    impl GpuSharingStrategy {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                GpuSharingStrategy::Unspecified => "GPU_SHARING_STRATEGY_UNSPECIFIED",
+                GpuSharingStrategy::TimeSharing => "TIME_SHARING",
+            }
+        }
+    }
 }
 /// WorkloadMetadataConfig defines the metadata configuration to expose to
 /// workloads on the node pool.
@@ -3331,6 +3580,19 @@ pub mod workload_metadata_config {
         /// Servers. This feature can only be enabled if Workload Identity is enabled
         /// at the cluster level.
         GkeMetadata = 2,
+    }
+    impl Mode {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                Mode::Unspecified => "MODE_UNSPECIFIED",
+                Mode::GceMetadata => "GCE_METADATA",
+                Mode::GkeMetadata => "GKE_METADATA",
+            }
+        }
     }
 }
 /// SetNetworkPolicyRequest enables/disables network policy for a cluster.
@@ -3426,6 +3688,23 @@ pub mod status_condition {
         CloudKmsKeyError = 7,
         /// Cluster CA is expiring soon.
         CaExpiring = 9,
+    }
+    impl Code {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                Code::Unknown => "UNKNOWN",
+                Code::GceStockout => "GCE_STOCKOUT",
+                Code::GkeServiceAccountDeleted => "GKE_SERVICE_ACCOUNT_DELETED",
+                Code::GceQuotaExceeded => "GCE_QUOTA_EXCEEDED",
+                Code::SetByOperator => "SET_BY_OPERATOR",
+                Code::CloudKmsKeyError => "CLOUD_KMS_KEY_ERROR",
+                Code::CaExpiring => "CA_EXPIRING",
+            }
+        }
     }
 }
 /// NetworkConfig reports the relative names of network & subnetwork.
@@ -3600,6 +3879,20 @@ pub mod release_channel {
         /// stable and reliable in production.
         Stable = 3,
     }
+    impl Channel {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                Channel::Unspecified => "UNSPECIFIED",
+                Channel::Rapid => "RAPID",
+                Channel::Regular => "REGULAR",
+                Channel::Stable => "STABLE",
+            }
+        }
+    }
 }
 /// IntraNodeVisibilityConfig contains the desired config of the intra-node
 /// visibility on this cluster.
@@ -3643,6 +3936,19 @@ pub mod dns_config {
         /// Use CloudDNS for DNS resolution.
         CloudDns = 2,
     }
+    impl Provider {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                Provider::Unspecified => "PROVIDER_UNSPECIFIED",
+                Provider::PlatformDefault => "PLATFORM_DEFAULT",
+                Provider::CloudDns => "CLOUD_DNS",
+            }
+        }
+    }
     /// DNSScope lists the various scopes of access to cluster DNS records.
     #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
     #[repr(i32)]
@@ -3651,6 +3957,18 @@ pub mod dns_config {
         Unspecified = 0,
         /// DNS records are accessible from within the VPC.
         VpcScope = 2,
+    }
+    impl DnsScope {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                DnsScope::Unspecified => "DNS_SCOPE_UNSPECIFIED",
+                DnsScope::VpcScope => "VPC_SCOPE",
+            }
+        }
     }
 }
 /// Constraints applied to pods.
@@ -3715,6 +4033,19 @@ pub mod database_encryption {
         /// Secrets in etcd are stored in plain text (at etcd level) - this is
         /// unrelated to Compute Engine level full disk encryption.
         Decrypted = 2,
+    }
+    impl State {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                State::Unknown => "UNKNOWN",
+                State::Encrypted => "ENCRYPTED",
+                State::Decrypted => "DECRYPTED",
+            }
+        }
     }
 }
 /// ListUsableSubnetworksRequest requests the list of usable subnetworks
@@ -3790,6 +4121,21 @@ pub mod usable_subnetwork_secondary_range {
         /// IN_USE_MANAGED_POD denotes this range was created by GKE and is claimed
         /// for pods. It cannot be used for other clusters.
         InUseManagedPod = 4,
+    }
+    impl Status {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                Status::Unknown => "UNKNOWN",
+                Status::Unused => "UNUSED",
+                Status::InUseService => "IN_USE_SERVICE",
+                Status::InUseShareablePod => "IN_USE_SHAREABLE_POD",
+                Status::InUseManagedPod => "IN_USE_MANAGED_POD",
+            }
+        }
     }
 }
 /// UsableSubnetwork resource returns the subnetwork name, its associated network
@@ -3930,6 +4276,20 @@ pub mod notification_config {
         /// Corresponds with SecurityBulletinEvent.
         SecurityBulletinEvent = 3,
     }
+    impl EventType {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                EventType::Unspecified => "EVENT_TYPE_UNSPECIFIED",
+                EventType::UpgradeAvailableEvent => "UPGRADE_AVAILABLE_EVENT",
+                EventType::UpgradeEvent => "UPGRADE_EVENT",
+                EventType::SecurityBulletinEvent => "SECURITY_BULLETIN_EVENT",
+            }
+        }
+    }
 }
 /// ConfidentialNodes is configuration for the confidential nodes feature, which
 /// makes nodes run on confidential VMs.
@@ -4059,6 +4419,19 @@ pub mod logging_component_config {
         /// workloads
         Workloads = 2,
     }
+    impl Component {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                Component::Unspecified => "COMPONENT_UNSPECIFIED",
+                Component::SystemComponents => "SYSTEM_COMPONENTS",
+                Component::Workloads => "WORKLOADS",
+            }
+        }
+    }
 }
 /// MonitoringConfig is cluster monitoring configuration.
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -4096,6 +4469,21 @@ pub mod monitoring_component_config {
         /// kube-controller-manager
         ControllerManager = 5,
     }
+    impl Component {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                Component::Unspecified => "COMPONENT_UNSPECIFIED",
+                Component::SystemComponents => "SYSTEM_COMPONENTS",
+                Component::Apiserver => "APISERVER",
+                Component::Scheduler => "SCHEDULER",
+                Component::ControllerManager => "CONTROLLER_MANAGER",
+            }
+        }
+    }
 }
 /// ManagedPrometheusConfig defines the configuration for
 /// Google Cloud Managed Service for Prometheus.
@@ -4119,6 +4507,20 @@ pub enum PrivateIPv6GoogleAccess {
     /// Enables priate IPv6 access to and from Google Services
     PrivateIpv6GoogleAccessBidirectional = 3,
 }
+impl PrivateIPv6GoogleAccess {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            PrivateIPv6GoogleAccess::PrivateIpv6GoogleAccessUnspecified => "PRIVATE_IPV6_GOOGLE_ACCESS_UNSPECIFIED",
+            PrivateIPv6GoogleAccess::PrivateIpv6GoogleAccessDisabled => "PRIVATE_IPV6_GOOGLE_ACCESS_DISABLED",
+            PrivateIPv6GoogleAccess::PrivateIpv6GoogleAccessToGoogle => "PRIVATE_IPV6_GOOGLE_ACCESS_TO_GOOGLE",
+            PrivateIPv6GoogleAccess::PrivateIpv6GoogleAccessBidirectional => "PRIVATE_IPV6_GOOGLE_ACCESS_BIDIRECTIONAL",
+        }
+    }
+}
 /// UpgradeResourceType is the resource type that is upgrading. It is used
 /// in upgrade notifications.
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
@@ -4130,6 +4532,19 @@ pub enum UpgradeResourceType {
     Master = 1,
     /// Node pool
     NodePool = 2,
+}
+impl UpgradeResourceType {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            UpgradeResourceType::Unspecified => "UPGRADE_RESOURCE_TYPE_UNSPECIFIED",
+            UpgradeResourceType::Master => "MASTER",
+            UpgradeResourceType::NodePool => "NODE_POOL",
+        }
+    }
 }
 /// The datapath provider selects the implementation of the Kubernetes networking
 /// model for service resolution and network policy enforcement.
@@ -4146,6 +4561,19 @@ pub enum DatapathProvider {
     /// for more.
     AdvancedDatapath = 2,
 }
+impl DatapathProvider {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            DatapathProvider::Unspecified => "DATAPATH_PROVIDER_UNSPECIFIED",
+            DatapathProvider::LegacyDatapath => "LEGACY_DATAPATH",
+            DatapathProvider::AdvancedDatapath => "ADVANCED_DATAPATH",
+        }
+    }
+}
 /// Strategy used for node pool update.
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
 #[repr(i32)]
@@ -4158,10 +4586,24 @@ pub enum NodePoolUpdateStrategy {
     /// max_surge and max_unavailable determines the level of upgrade parallelism.
     Surge = 3,
 }
+impl NodePoolUpdateStrategy {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            NodePoolUpdateStrategy::Unspecified => "NODE_POOL_UPDATE_STRATEGY_UNSPECIFIED",
+            NodePoolUpdateStrategy::BlueGreen => "BLUE_GREEN",
+            NodePoolUpdateStrategy::Surge => "SURGE",
+        }
+    }
+}
 /// Generated client implementations.
 pub mod cluster_manager_client {
     #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
     use tonic::codegen::*;
+    use tonic::codegen::http::Uri;
     /// Google Kubernetes Engine Cluster Manager v1
     #[derive(Debug, Clone)]
     pub struct ClusterManagerClient<T> {
@@ -4176,6 +4618,10 @@ pub mod cluster_manager_client {
     {
         pub fn new(inner: T) -> Self {
             let inner = tonic::client::Grpc::new(inner);
+            Self { inner }
+        }
+        pub fn with_origin(inner: T, origin: Uri) -> Self {
+            let inner = tonic::client::Grpc::with_origin(inner, origin);
             Self { inner }
         }
         pub fn with_interceptor<F>(
@@ -4197,19 +4643,19 @@ pub mod cluster_manager_client {
         {
             ClusterManagerClient::new(InterceptedService::new(inner, interceptor))
         }
-        /// Compress requests with `gzip`.
+        /// Compress requests with the given encoding.
         ///
         /// This requires the server to support it otherwise it might respond with an
         /// error.
         #[must_use]
-        pub fn send_gzip(mut self) -> Self {
-            self.inner = self.inner.send_gzip();
+        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.send_compressed(encoding);
             self
         }
-        /// Enable decompressing responses with `gzip`.
+        /// Enable decompressing responses.
         #[must_use]
-        pub fn accept_gzip(mut self) -> Self {
-            self.inner = self.inner.accept_gzip();
+        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.accept_compressed(encoding);
             self
         }
         /// Lists all clusters owned by a project in either the specified zone or all

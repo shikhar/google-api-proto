@@ -40,4 +40,23 @@ pub mod secret_event {
         /// topic.
         TopicPermissionDenied = 8,
     }
+    impl EventType {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                EventType::Unspecified => "EVENT_TYPE_UNSPECIFIED",
+                EventType::ExpiresIn30Days => "EXPIRES_IN_30_DAYS",
+                EventType::ExpiresIn7Days => "EXPIRES_IN_7_DAYS",
+                EventType::ExpiresIn1Day => "EXPIRES_IN_1_DAY",
+                EventType::ExpiresIn6Hours => "EXPIRES_IN_6_HOURS",
+                EventType::ExpiresIn1Hour => "EXPIRES_IN_1_HOUR",
+                EventType::Expired => "EXPIRED",
+                EventType::TopicNotFound => "TOPIC_NOT_FOUND",
+                EventType::TopicPermissionDenied => "TOPIC_PERMISSION_DENIED",
+            }
+        }
+    }
 }

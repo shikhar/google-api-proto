@@ -89,6 +89,24 @@ pub mod data_set {
         /// Dataset processing failed.
         Failed = 7,
     }
+    impl State {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                State::Unspecified => "STATE_UNSPECIFIED",
+                State::Unknown => "UNKNOWN",
+                State::Pending => "PENDING",
+                State::Loading => "LOADING",
+                State::Loaded => "LOADED",
+                State::Unloading => "UNLOADING",
+                State::Unloaded => "UNLOADED",
+                State::Failed => "FAILED",
+            }
+        }
+    }
 }
 /// Represents an event dimension.
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -139,20 +157,20 @@ pub mod event_dimension {
 /// * A timestamp at which the event occurs.
 /// * One or multiple dimensions.
 /// * Optionally, a group ID that allows clients to group logically related
-///   events (for example, all events representing payments transactions done by
-///   a user in a day have the same group ID).  If a group ID is not provided, an
-///   internal one will be generated based on the content and `eventTime`.
+///    events (for example, all events representing payments transactions done by
+///    a user in a day have the same group ID).  If a group ID is not provided, an
+///    internal one will be generated based on the content and `eventTime`.
 ///
 /// **NOTE**:
 ///
 /// * Internally, we discretize time in equal-sized chunks and we assume an
-///   event has a 0
-///   \[TimeseriesPoint.value][google.cloud.timeseriesinsights.v1.TimeseriesPoint.value\]
-///   in a chunk that does not contain any occurrences of an event in the input.
+///    event has a 0
+///    \[TimeseriesPoint.value][google.cloud.timeseriesinsights.v1.TimeseriesPoint.value\]
+///    in a chunk that does not contain any occurrences of an event in the input.
 /// * The number of Events with the same group ID should be limited.
 /// * Group ID *cannot* be queried.
 /// * Group ID does *not* correspond to a user ID or the like. If a user ID is of
-///   interest to be queried, use a user ID `dimension` instead.
+///    interest to be queried, use a user ID `dimension` instead.
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct Event {
     /// Event dimensions.
@@ -176,19 +194,19 @@ pub struct AppendEventsRequest {
     /// **NOTE**:
     ///
     /// 0. The \[DataSet\] must be shown in a `LOADED` state
-    ///    in the results of [list method]\[ListDataSet\]; otherwise, all events from
-    ///    the append request will be dropped, and a `NOT_FOUND` status will be
-    ///    returned.
+    ///     in the results of [list method]\[ListDataSet\]; otherwise, all events from
+    ///     the append request will be dropped, and a `NOT_FOUND` status will be
+    ///     returned.
     /// 0. All events in a single request must have the same
-    ///    \[groupId][google.cloud.timeseriesinsights.v1.Event.group_id\] if set;
-    ///    otherwise, an `INVALID_ARGUMENT` status will be returned.
+    ///     \[groupId][google.cloud.timeseriesinsights.v1.Event.group_id\] if set;
+    ///     otherwise, an `INVALID_ARGUMENT` status will be returned.
     /// 0. If \[groupId][google.cloud.timeseriesinsights.v1.Event.group_id\] is not
     /// set (or 0), there
-    ///    should be only 1 event; otherwise, an `INVALID_ARGUMENT` status will be
-    ///    returned.
+    ///     should be only 1 event; otherwise, an `INVALID_ARGUMENT` status will be
+    ///     returned.
     /// 0. The events must be newer than the current time minus
-    ///    [DataSet TTL]\[google.cloud.timeseriesinsights.v1.DataSet.ttl\] or they
-    ///    will be dropped.
+    ///     [DataSet TTL]\[google.cloud.timeseriesinsights.v1.DataSet.ttl\] or they
+    ///     will be dropped.
     #[prost(message, repeated, tag="1")]
     pub events: ::prost::alloc::vec::Vec<Event>,
     /// Required. The DataSet to which we want to append to in the format of
@@ -350,6 +368,22 @@ pub mod forecast_params {
         /// 365 days
         Yearly = 4,
     }
+    impl Period {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                Period::Unspecified => "PERIOD_UNSPECIFIED",
+                Period::Hourly => "HOURLY",
+                Period::Daily => "DAILY",
+                Period::Weekly => "WEEKLY",
+                Period::Monthly => "MONTHLY",
+                Period::Yearly => "YEARLY",
+            }
+        }
+    }
 }
 /// A point in a time series.
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -506,11 +540,11 @@ pub struct SlicingParams {
     ///
     /// ```json
     /// {
-    ///   dimensionNames: ["d1", "d2"],
-    ///   pinnedDimensions: [
-    ///     { name: "d3" stringVal: "v3" },
-    ///     { name: "d4" stringVal: "v4" }
-    ///   ]
+    ///    dimensionNames: ["d1", "d2"],
+    ///    pinnedDimensions: [
+    ///      { name: "d3" stringVal: "v3" },
+    ///      { name: "d4" stringVal: "v4" }
+    ///    ]
     /// }
     /// ```
     ///
@@ -523,11 +557,11 @@ pub struct SlicingParams {
     ///
     /// ```json
     /// {
-    ///   dimensionNames: ["d1", "d2"],
-    ///   pinnedDimensions: [
-    ///     { name: "d2" stringVal: "v2" },
-    ///     { name: "d4" stringVal: "v4" }
-    ///   ]
+    ///    dimensionNames: ["d1", "d2"],
+    ///    pinnedDimensions: [
+    ///      { name: "d2" stringVal: "v2" },
+    ///      { name: "d4" stringVal: "v4" }
+    ///    ]
     /// }
     /// ```
     #[prost(message, repeated, tag="2")]
@@ -592,31 +626,31 @@ pub struct TimeseriesParams {
     /// Example: Let's assume we have the following three events in our data set:
     /// ```json
     /// {
-    ///   eventTime: "2020-12-27T00:00:00Z",
-    ///   dimensions: [
-    ///     { name: "d1" stringVal: "v1" },
-    ///     { name: "d2" stringVal: "v2" }
-    ///     { name: "m1" longVal: 100 }
-    ///     { name: "m2" longVal: 11 }
-    ///   ]
+    ///    eventTime: "2020-12-27T00:00:00Z",
+    ///    dimensions: [
+    ///      { name: "d1" stringVal: "v1" },
+    ///      { name: "d2" stringVal: "v2" }
+    ///      { name: "m1" longVal: 100 }
+    ///      { name: "m2" longVal: 11 }
+    ///    ]
     /// },
     /// {
-    ///   eventTime: "2020-12-27T00:10:00Z",
-    ///   dimensions: [
-    ///     { name: "d1" stringVal: "v1" },
-    ///     { name: "d2" stringVal: "v2" }
-    ///     { name: "m1" longVal: 200 }
-    ///     { name: "m2" longVal: 22 }
-    ///   ]
+    ///    eventTime: "2020-12-27T00:10:00Z",
+    ///    dimensions: [
+    ///      { name: "d1" stringVal: "v1" },
+    ///      { name: "d2" stringVal: "v2" }
+    ///      { name: "m1" longVal: 200 }
+    ///      { name: "m2" longVal: 22 }
+    ///    ]
     /// },
     /// {
-    ///   eventTime: "2020-12-27T00:20:00Z",
-    ///   dimensions: [
-    ///     { name: "d1" stringVal: "v1" },
-    ///     { name: "d2" stringVal: "v2" }
-    ///     { name: "m1" longVal: 300 }
-    ///     { name: "m2" longVal: 33 }
-    ///   ]
+    ///    eventTime: "2020-12-27T00:20:00Z",
+    ///    dimensions: [
+    ///      { name: "d1" stringVal: "v1" },
+    ///      { name: "d2" stringVal: "v2" }
+    ///      { name: "m1" longVal: 300 }
+    ///      { name: "m2" longVal: 33 }
+    ///    ]
     /// }
     /// ```
     ///
@@ -676,6 +710,19 @@ pub mod timeseries_params {
         /// \[metric][google.cloud.timeseriesinsights.v1.TimeseriesParams.metric\]
         /// dimension.
         Average = 2,
+    }
+    impl AggregationMethod {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                AggregationMethod::Unspecified => "AGGREGATION_METHOD_UNSPECIFIED",
+                AggregationMethod::Sum => "SUM",
+                AggregationMethod::Average => "AVERAGE",
+            }
+        }
     }
 }
 /// Request for performing a query against a loaded DataSet.
@@ -784,6 +831,7 @@ pub struct EvaluateSliceRequest {
 pub mod timeseries_insights_controller_client {
     #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
     use tonic::codegen::*;
+    use tonic::codegen::http::Uri;
     #[derive(Debug, Clone)]
     pub struct TimeseriesInsightsControllerClient<T> {
         inner: tonic::client::Grpc<T>,
@@ -797,6 +845,10 @@ pub mod timeseries_insights_controller_client {
     {
         pub fn new(inner: T) -> Self {
             let inner = tonic::client::Grpc::new(inner);
+            Self { inner }
+        }
+        pub fn with_origin(inner: T, origin: Uri) -> Self {
+            let inner = tonic::client::Grpc::with_origin(inner, origin);
             Self { inner }
         }
         pub fn with_interceptor<F>(
@@ -820,19 +872,19 @@ pub mod timeseries_insights_controller_client {
                 InterceptedService::new(inner, interceptor),
             )
         }
-        /// Compress requests with `gzip`.
+        /// Compress requests with the given encoding.
         ///
         /// This requires the server to support it otherwise it might respond with an
         /// error.
         #[must_use]
-        pub fn send_gzip(mut self) -> Self {
-            self.inner = self.inner.send_gzip();
+        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.send_compressed(encoding);
             self
         }
-        /// Enable decompressing responses with `gzip`.
+        /// Enable decompressing responses.
         #[must_use]
-        pub fn accept_gzip(mut self) -> Self {
-            self.inner = self.inner.accept_gzip();
+        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.accept_compressed(encoding);
             self
         }
         /// Lists [DataSets][google.cloud.timeseriesinsights.v1.DataSet] under the

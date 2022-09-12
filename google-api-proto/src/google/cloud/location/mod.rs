@@ -47,7 +47,7 @@ pub struct Location {
     pub display_name: ::prost::alloc::string::String,
     /// Cross-service attributes for the location. For example
     ///
-    ///     {"cloud.googleapis.com/region": "us-east1"}
+    ///      {"cloud.googleapis.com/region": "us-east1"}
     #[prost(btree_map="string, string", tag="2")]
     pub labels: ::prost::alloc::collections::BTreeMap<::prost::alloc::string::String, ::prost::alloc::string::String>,
     /// Service-specific metadata. For example the available capacity at the given
@@ -59,6 +59,7 @@ pub struct Location {
 pub mod locations_client {
     #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
     use tonic::codegen::*;
+    use tonic::codegen::http::Uri;
     /// An abstract interface that provides location-related information for
     /// a service. Service-specific metadata is provided through the
     /// [Location.metadata][google.cloud.location.Location.metadata] field.
@@ -75,6 +76,10 @@ pub mod locations_client {
     {
         pub fn new(inner: T) -> Self {
             let inner = tonic::client::Grpc::new(inner);
+            Self { inner }
+        }
+        pub fn with_origin(inner: T, origin: Uri) -> Self {
+            let inner = tonic::client::Grpc::with_origin(inner, origin);
             Self { inner }
         }
         pub fn with_interceptor<F>(
@@ -96,19 +101,19 @@ pub mod locations_client {
         {
             LocationsClient::new(InterceptedService::new(inner, interceptor))
         }
-        /// Compress requests with `gzip`.
+        /// Compress requests with the given encoding.
         ///
         /// This requires the server to support it otherwise it might respond with an
         /// error.
         #[must_use]
-        pub fn send_gzip(mut self) -> Self {
-            self.inner = self.inner.send_gzip();
+        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.send_compressed(encoding);
             self
         }
-        /// Enable decompressing responses with `gzip`.
+        /// Enable decompressing responses.
         #[must_use]
-        pub fn accept_gzip(mut self) -> Self {
-            self.inner = self.inner.accept_gzip();
+        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.accept_compressed(encoding);
             self
         }
         /// Lists information about the supported locations for this service.

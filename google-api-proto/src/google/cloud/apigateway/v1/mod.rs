@@ -48,6 +48,22 @@ pub mod api {
         /// API is being updated.
         Updating = 5,
     }
+    impl State {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                State::Unspecified => "STATE_UNSPECIFIED",
+                State::Creating => "CREATING",
+                State::Active => "ACTIVE",
+                State::Failed => "FAILED",
+                State::Deleting => "DELETING",
+                State::Updating => "UPDATING",
+            }
+        }
+    }
 }
 /// An API Configuration is a combination of settings for both the Managed
 /// Service and Gateways serving this API Config.
@@ -169,6 +185,23 @@ pub mod api_config {
         /// API Configs in this state cannot be used by Gateways.
         Activating = 6,
     }
+    impl State {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                State::Unspecified => "STATE_UNSPECIFIED",
+                State::Creating => "CREATING",
+                State::Active => "ACTIVE",
+                State::Failed => "FAILED",
+                State::Deleting => "DELETING",
+                State::Updating => "UPDATING",
+                State::Activating => "ACTIVATING",
+            }
+        }
+    }
 }
 /// A Gateway is an API-aware HTTP proxy. It performs API-Method and/or
 /// API-Consumer specific actions based on an API Config such as authentication,
@@ -223,6 +256,22 @@ pub mod gateway {
         Deleting = 4,
         /// Gateway is being updated.
         Updating = 5,
+    }
+    impl State {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                State::Unspecified => "STATE_UNSPECIFIED",
+                State::Creating => "CREATING",
+                State::Active => "ACTIVE",
+                State::Failed => "FAILED",
+                State::Deleting => "DELETING",
+                State::Updating => "UPDATING",
+            }
+        }
     }
 }
 /// Request message for ApiGatewayService.ListGateways
@@ -438,6 +487,19 @@ pub mod get_api_config_request {
         /// Include configuration source files.
         Full = 2,
     }
+    impl ConfigView {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                ConfigView::Unspecified => "CONFIG_VIEW_UNSPECIFIED",
+                ConfigView::Basic => "BASIC",
+                ConfigView::Full => "FULL",
+            }
+        }
+    }
 }
 /// Request message for ApiGatewayService.CreateApiConfig
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -524,6 +586,7 @@ pub mod operation_metadata {
 pub mod api_gateway_service_client {
     #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
     use tonic::codegen::*;
+    use tonic::codegen::http::Uri;
     /// The API Gateway Service is the interface for managing API Gateways.
     #[derive(Debug, Clone)]
     pub struct ApiGatewayServiceClient<T> {
@@ -538,6 +601,10 @@ pub mod api_gateway_service_client {
     {
         pub fn new(inner: T) -> Self {
             let inner = tonic::client::Grpc::new(inner);
+            Self { inner }
+        }
+        pub fn with_origin(inner: T, origin: Uri) -> Self {
+            let inner = tonic::client::Grpc::with_origin(inner, origin);
             Self { inner }
         }
         pub fn with_interceptor<F>(
@@ -559,19 +626,19 @@ pub mod api_gateway_service_client {
         {
             ApiGatewayServiceClient::new(InterceptedService::new(inner, interceptor))
         }
-        /// Compress requests with `gzip`.
+        /// Compress requests with the given encoding.
         ///
         /// This requires the server to support it otherwise it might respond with an
         /// error.
         #[must_use]
-        pub fn send_gzip(mut self) -> Self {
-            self.inner = self.inner.send_gzip();
+        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.send_compressed(encoding);
             self
         }
-        /// Enable decompressing responses with `gzip`.
+        /// Enable decompressing responses.
         #[must_use]
-        pub fn accept_gzip(mut self) -> Self {
-            self.inner = self.inner.accept_gzip();
+        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.accept_compressed(encoding);
             self
         }
         /// Lists Gateways in a given project and location.

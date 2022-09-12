@@ -125,15 +125,15 @@ pub struct Action {
     /// operational components.
     ///
     /// <ul>
-    ///   <li><code>/google/logs</code> All logs written during the pipeline
-    ///   execution.</li>
-    ///   <li><code>/google/logs/output</code> The combined standard output and
-    ///   standard error of all actions run as part of the pipeline
-    ///   execution.</li>
-    ///   <li><code>/google/logs/action/*/stdout</code> The complete contents of
-    ///   each individual action's standard output.</li>
-    ///   <li><code>/google/logs/action/*/stderr</code> The complete contents of
-    ///   each individual action's standard error output.</li>
+    ///    <li><code>/google/logs</code> All logs written during the pipeline
+    ///    execution.</li>
+    ///    <li><code>/google/logs/output</code> The combined standard output and
+    ///    standard error of all actions run as part of the pipeline
+    ///    execution.</li>
+    ///    <li><code>/google/logs/action/*/stdout</code> The complete contents of
+    ///    each individual action's standard output.</li>
+    ///    <li><code>/google/logs/action/*/stderr</code> The complete contents of
+    ///    each individual action's standard error output.</li>
     /// </ul>
     #[prost(message, repeated, tag="9")]
     pub mounts: ::prost::alloc::vec::Vec<Mount>,
@@ -721,6 +721,7 @@ pub struct FailedEvent {
 pub mod workflows_service_v2_beta_client {
     #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
     use tonic::codegen::*;
+    use tonic::codegen::http::Uri;
     /// A service for running workflows, such as pipelines consisting of Docker
     /// containers.
     #[derive(Debug, Clone)]
@@ -736,6 +737,10 @@ pub mod workflows_service_v2_beta_client {
     {
         pub fn new(inner: T) -> Self {
             let inner = tonic::client::Grpc::new(inner);
+            Self { inner }
+        }
+        pub fn with_origin(inner: T, origin: Uri) -> Self {
+            let inner = tonic::client::Grpc::with_origin(inner, origin);
             Self { inner }
         }
         pub fn with_interceptor<F>(
@@ -759,19 +764,19 @@ pub mod workflows_service_v2_beta_client {
                 InterceptedService::new(inner, interceptor),
             )
         }
-        /// Compress requests with `gzip`.
+        /// Compress requests with the given encoding.
         ///
         /// This requires the server to support it otherwise it might respond with an
         /// error.
         #[must_use]
-        pub fn send_gzip(mut self) -> Self {
-            self.inner = self.inner.send_gzip();
+        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.send_compressed(encoding);
             self
         }
-        /// Enable decompressing responses with `gzip`.
+        /// Enable decompressing responses.
         #[must_use]
-        pub fn accept_gzip(mut self) -> Self {
-            self.inner = self.inner.accept_gzip();
+        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.accept_compressed(encoding);
             self
         }
         /// Runs a pipeline.  The returned Operation's [metadata]

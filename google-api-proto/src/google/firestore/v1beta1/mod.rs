@@ -1,3 +1,84 @@
+/// A set of field paths on a document.
+/// Used to restrict a get or update operation on a document to a subset of its
+/// fields.
+/// This is different from standard field masks, as this is always scoped to a
+/// \[Document][google.firestore.v1beta1.Document\], and takes in account the dynamic nature of \[Value][google.firestore.v1beta1.Value\].
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct DocumentMask {
+    /// The list of field paths in the mask. See \[Document.fields][google.firestore.v1beta1.Document.fields\] for a field
+    /// path syntax reference.
+    #[prost(string, repeated, tag="1")]
+    pub field_paths: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
+}
+/// A precondition on a document, used for conditional operations.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct Precondition {
+    /// The type of precondition.
+    #[prost(oneof="precondition::ConditionType", tags="1, 2")]
+    pub condition_type: ::core::option::Option<precondition::ConditionType>,
+}
+/// Nested message and enum types in `Precondition`.
+pub mod precondition {
+    /// The type of precondition.
+    #[derive(Clone, PartialEq, ::prost::Oneof)]
+    pub enum ConditionType {
+        /// When set to `true`, the target document must exist.
+        /// When set to `false`, the target document must not exist.
+        #[prost(bool, tag="1")]
+        Exists(bool),
+        /// When set, the target document must exist and have been last updated at
+        /// that time.
+        #[prost(message, tag="2")]
+        UpdateTime(::prost_types::Timestamp),
+    }
+}
+/// Options for creating a new transaction.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct TransactionOptions {
+    /// The mode of the transaction.
+    #[prost(oneof="transaction_options::Mode", tags="2, 3")]
+    pub mode: ::core::option::Option<transaction_options::Mode>,
+}
+/// Nested message and enum types in `TransactionOptions`.
+pub mod transaction_options {
+    /// Options for a transaction that can be used to read and write documents.
+    #[derive(Clone, PartialEq, ::prost::Message)]
+    pub struct ReadWrite {
+        /// An optional transaction to retry.
+        #[prost(bytes="bytes", tag="1")]
+        pub retry_transaction: ::prost::bytes::Bytes,
+    }
+    /// Options for a transaction that can only be used to read documents.
+    #[derive(Clone, PartialEq, ::prost::Message)]
+    pub struct ReadOnly {
+        /// The consistency mode for this transaction. If not set, defaults to strong
+        /// consistency.
+        #[prost(oneof="read_only::ConsistencySelector", tags="2")]
+        pub consistency_selector: ::core::option::Option<read_only::ConsistencySelector>,
+    }
+    /// Nested message and enum types in `ReadOnly`.
+    pub mod read_only {
+        /// The consistency mode for this transaction. If not set, defaults to strong
+        /// consistency.
+        #[derive(Clone, PartialEq, ::prost::Oneof)]
+        pub enum ConsistencySelector {
+            /// Reads documents at the given time.
+            /// This may not be older than 60 seconds.
+            #[prost(message, tag="2")]
+            ReadTime(::prost_types::Timestamp),
+        }
+    }
+    /// The mode of the transaction.
+    #[derive(Clone, PartialEq, ::prost::Oneof)]
+    pub enum Mode {
+        /// The transaction can only be used for read operations.
+        #[prost(message, tag="2")]
+        ReadOnly(ReadOnly),
+        /// The transaction can be used for both read and write operations.
+        #[prost(message, tag="3")]
+        ReadWrite(ReadWrite),
+    }
+}
 /// A Firestore document.
 ///
 /// Must not exceed 1 MiB - 4 bytes.
@@ -128,378 +209,6 @@ pub struct MapValue {
     #[prost(btree_map="string, message", tag="1")]
     pub fields: ::prost::alloc::collections::BTreeMap<::prost::alloc::string::String, Value>,
 }
-/// A Firestore query.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct StructuredQuery {
-    /// The projection to return.
-    #[prost(message, optional, tag="1")]
-    pub select: ::core::option::Option<structured_query::Projection>,
-    /// The collections to query.
-    #[prost(message, repeated, tag="2")]
-    pub from: ::prost::alloc::vec::Vec<structured_query::CollectionSelector>,
-    /// The filter to apply.
-    #[prost(message, optional, tag="3")]
-    pub r#where: ::core::option::Option<structured_query::Filter>,
-    /// The order to apply to the query results.
-    ///
-    /// Firestore guarantees a stable ordering through the following rules:
-    ///
-    ///  * Any field required to appear in `order_by`, that is not already
-    ///    specified in `order_by`, is appended to the order in field name order
-    ///    by default.
-    ///  * If an order on `__name__` is not specified, it is appended by default.
-    ///
-    /// Fields are appended with the same sort direction as the last order
-    /// specified, or 'ASCENDING' if no order was specified. For example:
-    ///
-    ///  * `SELECT * FROM Foo ORDER BY A` becomes
-    ///    `SELECT * FROM Foo ORDER BY A, __name__`
-    ///  * `SELECT * FROM Foo ORDER BY A DESC` becomes
-    ///    `SELECT * FROM Foo ORDER BY A DESC, __name__ DESC`
-    ///  * `SELECT * FROM Foo WHERE A > 1` becomes
-    ///    `SELECT * FROM Foo WHERE A > 1 ORDER BY A, __name__`
-    #[prost(message, repeated, tag="4")]
-    pub order_by: ::prost::alloc::vec::Vec<structured_query::Order>,
-    /// A starting point for the query results.
-    #[prost(message, optional, tag="7")]
-    pub start_at: ::core::option::Option<Cursor>,
-    /// A end point for the query results.
-    #[prost(message, optional, tag="8")]
-    pub end_at: ::core::option::Option<Cursor>,
-    /// The number of results to skip.
-    ///
-    /// Applies before limit, but after all other constraints. Must be >= 0 if
-    /// specified.
-    #[prost(int32, tag="6")]
-    pub offset: i32,
-    /// The maximum number of results to return.
-    ///
-    /// Applies after all other constraints.
-    /// Must be >= 0 if specified.
-    #[prost(message, optional, tag="5")]
-    pub limit: ::core::option::Option<i32>,
-}
-/// Nested message and enum types in `StructuredQuery`.
-pub mod structured_query {
-    /// A selection of a collection, such as `messages as m1`.
-    #[derive(Clone, PartialEq, ::prost::Message)]
-    pub struct CollectionSelector {
-        /// The collection ID.
-        /// When set, selects only collections with this ID.
-        #[prost(string, tag="2")]
-        pub collection_id: ::prost::alloc::string::String,
-        /// When false, selects only collections that are immediate children of
-        /// the `parent` specified in the containing `RunQueryRequest`.
-        /// When true, selects all descendant collections.
-        #[prost(bool, tag="3")]
-        pub all_descendants: bool,
-    }
-    /// A filter.
-    #[derive(Clone, PartialEq, ::prost::Message)]
-    pub struct Filter {
-        /// The type of filter.
-        #[prost(oneof="filter::FilterType", tags="1, 2, 3")]
-        pub filter_type: ::core::option::Option<filter::FilterType>,
-    }
-    /// Nested message and enum types in `Filter`.
-    pub mod filter {
-        /// The type of filter.
-        #[derive(Clone, PartialEq, ::prost::Oneof)]
-        pub enum FilterType {
-            /// A composite filter.
-            #[prost(message, tag="1")]
-            CompositeFilter(super::CompositeFilter),
-            /// A filter on a document field.
-            #[prost(message, tag="2")]
-            FieldFilter(super::FieldFilter),
-            /// A filter that takes exactly one argument.
-            #[prost(message, tag="3")]
-            UnaryFilter(super::UnaryFilter),
-        }
-    }
-    /// A filter that merges multiple other filters using the given operator.
-    #[derive(Clone, PartialEq, ::prost::Message)]
-    pub struct CompositeFilter {
-        /// The operator for combining multiple filters.
-        #[prost(enumeration="composite_filter::Operator", tag="1")]
-        pub op: i32,
-        /// The list of filters to combine.
-        /// Must contain at least one filter.
-        #[prost(message, repeated, tag="2")]
-        pub filters: ::prost::alloc::vec::Vec<Filter>,
-    }
-    /// Nested message and enum types in `CompositeFilter`.
-    pub mod composite_filter {
-        /// A composite filter operator.
-        #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
-        #[repr(i32)]
-        pub enum Operator {
-            /// Unspecified. This value must not be used.
-            Unspecified = 0,
-            /// The results are required to satisfy each of the combined filters.
-            And = 1,
-        }
-    }
-    /// A filter on a specific field.
-    #[derive(Clone, PartialEq, ::prost::Message)]
-    pub struct FieldFilter {
-        /// The field to filter by.
-        #[prost(message, optional, tag="1")]
-        pub field: ::core::option::Option<FieldReference>,
-        /// The operator to filter by.
-        #[prost(enumeration="field_filter::Operator", tag="2")]
-        pub op: i32,
-        /// The value to compare to.
-        #[prost(message, optional, tag="3")]
-        pub value: ::core::option::Option<super::Value>,
-    }
-    /// Nested message and enum types in `FieldFilter`.
-    pub mod field_filter {
-        /// A field filter operator.
-        #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
-        #[repr(i32)]
-        pub enum Operator {
-            /// Unspecified. This value must not be used.
-            Unspecified = 0,
-            /// The given `field` is less than the given `value`.
-            ///
-            /// Requires:
-            ///
-            /// * That `field` come first in `order_by`.
-            LessThan = 1,
-            /// The given `field` is less than or equal to the given `value`.
-            ///
-            /// Requires:
-            ///
-            /// * That `field` come first in `order_by`.
-            LessThanOrEqual = 2,
-            /// The given `field` is greater than the given `value`.
-            ///
-            /// Requires:
-            ///
-            /// * That `field` come first in `order_by`.
-            GreaterThan = 3,
-            /// The given `field` is greater than or equal to the given `value`.
-            ///
-            /// Requires:
-            ///
-            /// * That `field` come first in `order_by`.
-            GreaterThanOrEqual = 4,
-            /// The given `field` is equal to the given `value`.
-            Equal = 5,
-            /// The given `field` is not equal to the given `value`.
-            ///
-            /// Requires:
-            ///
-            /// * No other `NOT_EQUAL`, `NOT_IN`, `IS_NOT_NULL`, or `IS_NOT_NAN`.
-            /// * That `field` comes first in the `order_by`.
-            NotEqual = 6,
-            /// The given `field` is an array that contains the given `value`.
-            ArrayContains = 7,
-            /// The given `field` is equal to at least one value in the given array.
-            ///
-            /// Requires:
-            ///
-            /// * That `value` is a non-empty `ArrayValue` with at most 10 values.
-            /// * No other `IN` or `ARRAY_CONTAINS_ANY` or `NOT_IN`.
-            In = 8,
-            /// The given `field` is an array that contains any of the values in the
-            /// given array.
-            ///
-            /// Requires:
-            ///
-            /// * That `value` is a non-empty `ArrayValue` with at most 10 values.
-            /// * No other `IN` or `ARRAY_CONTAINS_ANY` or `NOT_IN`.
-            ArrayContainsAny = 9,
-            /// The value of the `field` is not in the given array.
-            ///
-            /// Requires:
-            ///
-            /// * That `value` is a non-empty `ArrayValue` with at most 10 values.
-            /// * No other `IN`, `ARRAY_CONTAINS_ANY`, `NOT_IN`, `NOT_EQUAL`,
-            ///   `IS_NOT_NULL`, or `IS_NOT_NAN`.
-            /// * That `field` comes first in the `order_by`.
-            NotIn = 10,
-        }
-    }
-    /// A filter with a single operand.
-    #[derive(Clone, PartialEq, ::prost::Message)]
-    pub struct UnaryFilter {
-        /// The unary operator to apply.
-        #[prost(enumeration="unary_filter::Operator", tag="1")]
-        pub op: i32,
-        /// The argument to the filter.
-        #[prost(oneof="unary_filter::OperandType", tags="2")]
-        pub operand_type: ::core::option::Option<unary_filter::OperandType>,
-    }
-    /// Nested message and enum types in `UnaryFilter`.
-    pub mod unary_filter {
-        /// A unary operator.
-        #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
-        #[repr(i32)]
-        pub enum Operator {
-            /// Unspecified. This value must not be used.
-            Unspecified = 0,
-            /// The given `field` is equal to `NaN`.
-            IsNan = 2,
-            /// The given `field` is equal to `NULL`.
-            IsNull = 3,
-            /// The given `field` is not equal to `NaN`.
-            ///
-            /// Requires:
-            ///
-            /// * No other `NOT_EQUAL`, `NOT_IN`, `IS_NOT_NULL`, or `IS_NOT_NAN`.
-            /// * That `field` comes first in the `order_by`.
-            IsNotNan = 4,
-            /// The given `field` is not equal to `NULL`.
-            ///
-            /// Requires:
-            ///
-            /// * A single `NOT_EQUAL`, `NOT_IN`, `IS_NOT_NULL`, or `IS_NOT_NAN`.
-            /// * That `field` comes first in the `order_by`.
-            IsNotNull = 5,
-        }
-        /// The argument to the filter.
-        #[derive(Clone, PartialEq, ::prost::Oneof)]
-        pub enum OperandType {
-            /// The field to which to apply the operator.
-            #[prost(message, tag="2")]
-            Field(super::FieldReference),
-        }
-    }
-    /// A reference to a field, such as `max(messages.time) as max_time`.
-    #[derive(Clone, PartialEq, ::prost::Message)]
-    pub struct FieldReference {
-        #[prost(string, tag="2")]
-        pub field_path: ::prost::alloc::string::String,
-    }
-    /// An order on a field.
-    #[derive(Clone, PartialEq, ::prost::Message)]
-    pub struct Order {
-        /// The field to order by.
-        #[prost(message, optional, tag="1")]
-        pub field: ::core::option::Option<FieldReference>,
-        /// The direction to order by. Defaults to `ASCENDING`.
-        #[prost(enumeration="Direction", tag="2")]
-        pub direction: i32,
-    }
-    /// The projection of document's fields to return.
-    #[derive(Clone, PartialEq, ::prost::Message)]
-    pub struct Projection {
-        /// The fields to return.
-        ///
-        /// If empty, all fields are returned. To only return the name
-        /// of the document, use `\['__name__'\]`.
-        #[prost(message, repeated, tag="2")]
-        pub fields: ::prost::alloc::vec::Vec<FieldReference>,
-    }
-    /// A sort direction.
-    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
-    #[repr(i32)]
-    pub enum Direction {
-        /// Unspecified.
-        Unspecified = 0,
-        /// Ascending.
-        Ascending = 1,
-        /// Descending.
-        Descending = 2,
-    }
-}
-/// A position in a query result set.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct Cursor {
-    /// The values that represent a position, in the order they appear in
-    /// the order by clause of a query.
-    ///
-    /// Can contain fewer values than specified in the order by clause.
-    #[prost(message, repeated, tag="1")]
-    pub values: ::prost::alloc::vec::Vec<Value>,
-    /// If the position is just before or just after the given values, relative
-    /// to the sort order defined by the query.
-    #[prost(bool, tag="2")]
-    pub before: bool,
-}
-/// A set of field paths on a document.
-/// Used to restrict a get or update operation on a document to a subset of its
-/// fields.
-/// This is different from standard field masks, as this is always scoped to a
-/// \[Document][google.firestore.v1beta1.Document\], and takes in account the dynamic nature of \[Value][google.firestore.v1beta1.Value\].
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct DocumentMask {
-    /// The list of field paths in the mask. See \[Document.fields][google.firestore.v1beta1.Document.fields\] for a field
-    /// path syntax reference.
-    #[prost(string, repeated, tag="1")]
-    pub field_paths: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
-}
-/// A precondition on a document, used for conditional operations.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct Precondition {
-    /// The type of precondition.
-    #[prost(oneof="precondition::ConditionType", tags="1, 2")]
-    pub condition_type: ::core::option::Option<precondition::ConditionType>,
-}
-/// Nested message and enum types in `Precondition`.
-pub mod precondition {
-    /// The type of precondition.
-    #[derive(Clone, PartialEq, ::prost::Oneof)]
-    pub enum ConditionType {
-        /// When set to `true`, the target document must exist.
-        /// When set to `false`, the target document must not exist.
-        #[prost(bool, tag="1")]
-        Exists(bool),
-        /// When set, the target document must exist and have been last updated at
-        /// that time.
-        #[prost(message, tag="2")]
-        UpdateTime(::prost_types::Timestamp),
-    }
-}
-/// Options for creating a new transaction.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct TransactionOptions {
-    /// The mode of the transaction.
-    #[prost(oneof="transaction_options::Mode", tags="2, 3")]
-    pub mode: ::core::option::Option<transaction_options::Mode>,
-}
-/// Nested message and enum types in `TransactionOptions`.
-pub mod transaction_options {
-    /// Options for a transaction that can be used to read and write documents.
-    #[derive(Clone, PartialEq, ::prost::Message)]
-    pub struct ReadWrite {
-        /// An optional transaction to retry.
-        #[prost(bytes="bytes", tag="1")]
-        pub retry_transaction: ::prost::bytes::Bytes,
-    }
-    /// Options for a transaction that can only be used to read documents.
-    #[derive(Clone, PartialEq, ::prost::Message)]
-    pub struct ReadOnly {
-        /// The consistency mode for this transaction. If not set, defaults to strong
-        /// consistency.
-        #[prost(oneof="read_only::ConsistencySelector", tags="2")]
-        pub consistency_selector: ::core::option::Option<read_only::ConsistencySelector>,
-    }
-    /// Nested message and enum types in `ReadOnly`.
-    pub mod read_only {
-        /// The consistency mode for this transaction. If not set, defaults to strong
-        /// consistency.
-        #[derive(Clone, PartialEq, ::prost::Oneof)]
-        pub enum ConsistencySelector {
-            /// Reads documents at the given time.
-            /// This may not be older than 60 seconds.
-            #[prost(message, tag="2")]
-            ReadTime(::prost_types::Timestamp),
-        }
-    }
-    /// The mode of the transaction.
-    #[derive(Clone, PartialEq, ::prost::Oneof)]
-    pub enum Mode {
-        /// The transaction can only be used for read operations.
-        #[prost(message, tag="2")]
-        ReadOnly(ReadOnly),
-        /// The transaction can be used for both read and write operations.
-        #[prost(message, tag="3")]
-        ReadWrite(ReadWrite),
-    }
-}
 /// A write on a document.
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct Write {
@@ -585,6 +294,18 @@ pub mod document_transform {
             /// precision. If used on multiple fields (same or different documents) in
             /// a transaction, all the fields will get the same server timestamp.
             RequestTime = 1,
+        }
+        impl ServerValue {
+            /// String value of the enum field names used in the ProtoBuf definition.
+            ///
+            /// The values are not transformed in any way and thus are considered stable
+            /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+            pub fn as_str_name(&self) -> &'static str {
+                match self {
+                    ServerValue::Unspecified => "SERVER_VALUE_UNSPECIFIED",
+                    ServerValue::RequestTime => "REQUEST_TIME",
+                }
+            }
         }
         /// The transformation to apply on the field.
         #[derive(Clone, PartialEq, ::prost::Oneof)]
@@ -752,6 +473,358 @@ pub struct ExistenceFilter {
     /// client must manually determine which documents no longer match the target.
     #[prost(int32, tag="2")]
     pub count: i32,
+}
+/// A Firestore query.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct StructuredQuery {
+    /// The projection to return.
+    #[prost(message, optional, tag="1")]
+    pub select: ::core::option::Option<structured_query::Projection>,
+    /// The collections to query.
+    #[prost(message, repeated, tag="2")]
+    pub from: ::prost::alloc::vec::Vec<structured_query::CollectionSelector>,
+    /// The filter to apply.
+    #[prost(message, optional, tag="3")]
+    pub r#where: ::core::option::Option<structured_query::Filter>,
+    /// The order to apply to the query results.
+    ///
+    /// Firestore guarantees a stable ordering through the following rules:
+    ///
+    ///   * Any field required to appear in `order_by`, that is not already
+    ///     specified in `order_by`, is appended to the order in field name order
+    ///     by default.
+    ///   * If an order on `__name__` is not specified, it is appended by default.
+    ///
+    /// Fields are appended with the same sort direction as the last order
+    /// specified, or 'ASCENDING' if no order was specified. For example:
+    ///
+    ///   * `SELECT * FROM Foo ORDER BY A` becomes
+    ///     `SELECT * FROM Foo ORDER BY A, __name__`
+    ///   * `SELECT * FROM Foo ORDER BY A DESC` becomes
+    ///     `SELECT * FROM Foo ORDER BY A DESC, __name__ DESC`
+    ///   * `SELECT * FROM Foo WHERE A > 1` becomes
+    ///     `SELECT * FROM Foo WHERE A > 1 ORDER BY A, __name__`
+    #[prost(message, repeated, tag="4")]
+    pub order_by: ::prost::alloc::vec::Vec<structured_query::Order>,
+    /// A starting point for the query results.
+    #[prost(message, optional, tag="7")]
+    pub start_at: ::core::option::Option<Cursor>,
+    /// A end point for the query results.
+    #[prost(message, optional, tag="8")]
+    pub end_at: ::core::option::Option<Cursor>,
+    /// The number of results to skip.
+    ///
+    /// Applies before limit, but after all other constraints. Must be >= 0 if
+    /// specified.
+    #[prost(int32, tag="6")]
+    pub offset: i32,
+    /// The maximum number of results to return.
+    ///
+    /// Applies after all other constraints.
+    /// Must be >= 0 if specified.
+    #[prost(message, optional, tag="5")]
+    pub limit: ::core::option::Option<i32>,
+}
+/// Nested message and enum types in `StructuredQuery`.
+pub mod structured_query {
+    /// A selection of a collection, such as `messages as m1`.
+    #[derive(Clone, PartialEq, ::prost::Message)]
+    pub struct CollectionSelector {
+        /// The collection ID.
+        /// When set, selects only collections with this ID.
+        #[prost(string, tag="2")]
+        pub collection_id: ::prost::alloc::string::String,
+        /// When false, selects only collections that are immediate children of
+        /// the `parent` specified in the containing `RunQueryRequest`.
+        /// When true, selects all descendant collections.
+        #[prost(bool, tag="3")]
+        pub all_descendants: bool,
+    }
+    /// A filter.
+    #[derive(Clone, PartialEq, ::prost::Message)]
+    pub struct Filter {
+        /// The type of filter.
+        #[prost(oneof="filter::FilterType", tags="1, 2, 3")]
+        pub filter_type: ::core::option::Option<filter::FilterType>,
+    }
+    /// Nested message and enum types in `Filter`.
+    pub mod filter {
+        /// The type of filter.
+        #[derive(Clone, PartialEq, ::prost::Oneof)]
+        pub enum FilterType {
+            /// A composite filter.
+            #[prost(message, tag="1")]
+            CompositeFilter(super::CompositeFilter),
+            /// A filter on a document field.
+            #[prost(message, tag="2")]
+            FieldFilter(super::FieldFilter),
+            /// A filter that takes exactly one argument.
+            #[prost(message, tag="3")]
+            UnaryFilter(super::UnaryFilter),
+        }
+    }
+    /// A filter that merges multiple other filters using the given operator.
+    #[derive(Clone, PartialEq, ::prost::Message)]
+    pub struct CompositeFilter {
+        /// The operator for combining multiple filters.
+        #[prost(enumeration="composite_filter::Operator", tag="1")]
+        pub op: i32,
+        /// The list of filters to combine.
+        /// Must contain at least one filter.
+        #[prost(message, repeated, tag="2")]
+        pub filters: ::prost::alloc::vec::Vec<Filter>,
+    }
+    /// Nested message and enum types in `CompositeFilter`.
+    pub mod composite_filter {
+        /// A composite filter operator.
+        #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+        #[repr(i32)]
+        pub enum Operator {
+            /// Unspecified. This value must not be used.
+            Unspecified = 0,
+            /// The results are required to satisfy each of the combined filters.
+            And = 1,
+        }
+        impl Operator {
+            /// String value of the enum field names used in the ProtoBuf definition.
+            ///
+            /// The values are not transformed in any way and thus are considered stable
+            /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+            pub fn as_str_name(&self) -> &'static str {
+                match self {
+                    Operator::Unspecified => "OPERATOR_UNSPECIFIED",
+                    Operator::And => "AND",
+                }
+            }
+        }
+    }
+    /// A filter on a specific field.
+    #[derive(Clone, PartialEq, ::prost::Message)]
+    pub struct FieldFilter {
+        /// The field to filter by.
+        #[prost(message, optional, tag="1")]
+        pub field: ::core::option::Option<FieldReference>,
+        /// The operator to filter by.
+        #[prost(enumeration="field_filter::Operator", tag="2")]
+        pub op: i32,
+        /// The value to compare to.
+        #[prost(message, optional, tag="3")]
+        pub value: ::core::option::Option<super::Value>,
+    }
+    /// Nested message and enum types in `FieldFilter`.
+    pub mod field_filter {
+        /// A field filter operator.
+        #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+        #[repr(i32)]
+        pub enum Operator {
+            /// Unspecified. This value must not be used.
+            Unspecified = 0,
+            /// The given `field` is less than the given `value`.
+            ///
+            /// Requires:
+            ///
+            /// * That `field` come first in `order_by`.
+            LessThan = 1,
+            /// The given `field` is less than or equal to the given `value`.
+            ///
+            /// Requires:
+            ///
+            /// * That `field` come first in `order_by`.
+            LessThanOrEqual = 2,
+            /// The given `field` is greater than the given `value`.
+            ///
+            /// Requires:
+            ///
+            /// * That `field` come first in `order_by`.
+            GreaterThan = 3,
+            /// The given `field` is greater than or equal to the given `value`.
+            ///
+            /// Requires:
+            ///
+            /// * That `field` come first in `order_by`.
+            GreaterThanOrEqual = 4,
+            /// The given `field` is equal to the given `value`.
+            Equal = 5,
+            /// The given `field` is not equal to the given `value`.
+            ///
+            /// Requires:
+            ///
+            /// * No other `NOT_EQUAL`, `NOT_IN`, `IS_NOT_NULL`, or `IS_NOT_NAN`.
+            /// * That `field` comes first in the `order_by`.
+            NotEqual = 6,
+            /// The given `field` is an array that contains the given `value`.
+            ArrayContains = 7,
+            /// The given `field` is equal to at least one value in the given array.
+            ///
+            /// Requires:
+            ///
+            /// * That `value` is a non-empty `ArrayValue` with at most 10 values.
+            /// * No other `IN` or `ARRAY_CONTAINS_ANY` or `NOT_IN`.
+            In = 8,
+            /// The given `field` is an array that contains any of the values in the
+            /// given array.
+            ///
+            /// Requires:
+            ///
+            /// * That `value` is a non-empty `ArrayValue` with at most 10 values.
+            /// * No other `IN` or `ARRAY_CONTAINS_ANY` or `NOT_IN`.
+            ArrayContainsAny = 9,
+            /// The value of the `field` is not in the given array.
+            ///
+            /// Requires:
+            ///
+            /// * That `value` is a non-empty `ArrayValue` with at most 10 values.
+            /// * No other `IN`, `ARRAY_CONTAINS_ANY`, `NOT_IN`, `NOT_EQUAL`,
+            ///    `IS_NOT_NULL`, or `IS_NOT_NAN`.
+            /// * That `field` comes first in the `order_by`.
+            NotIn = 10,
+        }
+        impl Operator {
+            /// String value of the enum field names used in the ProtoBuf definition.
+            ///
+            /// The values are not transformed in any way and thus are considered stable
+            /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+            pub fn as_str_name(&self) -> &'static str {
+                match self {
+                    Operator::Unspecified => "OPERATOR_UNSPECIFIED",
+                    Operator::LessThan => "LESS_THAN",
+                    Operator::LessThanOrEqual => "LESS_THAN_OR_EQUAL",
+                    Operator::GreaterThan => "GREATER_THAN",
+                    Operator::GreaterThanOrEqual => "GREATER_THAN_OR_EQUAL",
+                    Operator::Equal => "EQUAL",
+                    Operator::NotEqual => "NOT_EQUAL",
+                    Operator::ArrayContains => "ARRAY_CONTAINS",
+                    Operator::In => "IN",
+                    Operator::ArrayContainsAny => "ARRAY_CONTAINS_ANY",
+                    Operator::NotIn => "NOT_IN",
+                }
+            }
+        }
+    }
+    /// A filter with a single operand.
+    #[derive(Clone, PartialEq, ::prost::Message)]
+    pub struct UnaryFilter {
+        /// The unary operator to apply.
+        #[prost(enumeration="unary_filter::Operator", tag="1")]
+        pub op: i32,
+        /// The argument to the filter.
+        #[prost(oneof="unary_filter::OperandType", tags="2")]
+        pub operand_type: ::core::option::Option<unary_filter::OperandType>,
+    }
+    /// Nested message and enum types in `UnaryFilter`.
+    pub mod unary_filter {
+        /// A unary operator.
+        #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+        #[repr(i32)]
+        pub enum Operator {
+            /// Unspecified. This value must not be used.
+            Unspecified = 0,
+            /// The given `field` is equal to `NaN`.
+            IsNan = 2,
+            /// The given `field` is equal to `NULL`.
+            IsNull = 3,
+            /// The given `field` is not equal to `NaN`.
+            ///
+            /// Requires:
+            ///
+            /// * No other `NOT_EQUAL`, `NOT_IN`, `IS_NOT_NULL`, or `IS_NOT_NAN`.
+            /// * That `field` comes first in the `order_by`.
+            IsNotNan = 4,
+            /// The given `field` is not equal to `NULL`.
+            ///
+            /// Requires:
+            ///
+            /// * A single `NOT_EQUAL`, `NOT_IN`, `IS_NOT_NULL`, or `IS_NOT_NAN`.
+            /// * That `field` comes first in the `order_by`.
+            IsNotNull = 5,
+        }
+        impl Operator {
+            /// String value of the enum field names used in the ProtoBuf definition.
+            ///
+            /// The values are not transformed in any way and thus are considered stable
+            /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+            pub fn as_str_name(&self) -> &'static str {
+                match self {
+                    Operator::Unspecified => "OPERATOR_UNSPECIFIED",
+                    Operator::IsNan => "IS_NAN",
+                    Operator::IsNull => "IS_NULL",
+                    Operator::IsNotNan => "IS_NOT_NAN",
+                    Operator::IsNotNull => "IS_NOT_NULL",
+                }
+            }
+        }
+        /// The argument to the filter.
+        #[derive(Clone, PartialEq, ::prost::Oneof)]
+        pub enum OperandType {
+            /// The field to which to apply the operator.
+            #[prost(message, tag="2")]
+            Field(super::FieldReference),
+        }
+    }
+    /// A reference to a field, such as `max(messages.time) as max_time`.
+    #[derive(Clone, PartialEq, ::prost::Message)]
+    pub struct FieldReference {
+        #[prost(string, tag="2")]
+        pub field_path: ::prost::alloc::string::String,
+    }
+    /// An order on a field.
+    #[derive(Clone, PartialEq, ::prost::Message)]
+    pub struct Order {
+        /// The field to order by.
+        #[prost(message, optional, tag="1")]
+        pub field: ::core::option::Option<FieldReference>,
+        /// The direction to order by. Defaults to `ASCENDING`.
+        #[prost(enumeration="Direction", tag="2")]
+        pub direction: i32,
+    }
+    /// The projection of document's fields to return.
+    #[derive(Clone, PartialEq, ::prost::Message)]
+    pub struct Projection {
+        /// The fields to return.
+        ///
+        /// If empty, all fields are returned. To only return the name
+        /// of the document, use `\['__name__'\]`.
+        #[prost(message, repeated, tag="2")]
+        pub fields: ::prost::alloc::vec::Vec<FieldReference>,
+    }
+    /// A sort direction.
+    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+    #[repr(i32)]
+    pub enum Direction {
+        /// Unspecified.
+        Unspecified = 0,
+        /// Ascending.
+        Ascending = 1,
+        /// Descending.
+        Descending = 2,
+    }
+    impl Direction {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                Direction::Unspecified => "DIRECTION_UNSPECIFIED",
+                Direction::Ascending => "ASCENDING",
+                Direction::Descending => "DESCENDING",
+            }
+        }
+    }
+}
+/// A position in a query result set.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct Cursor {
+    /// The values that represent a position, in the order they appear in
+    /// the order by clause of a query.
+    ///
+    /// Can contain fewer values than specified in the order by clause.
+    #[prost(message, repeated, tag="1")]
+    pub values: ::prost::alloc::vec::Vec<Value>,
+    /// If the position is just before or just after the given values, relative
+    /// to the sort order defined by the query.
+    #[prost(bool, tag="2")]
+    pub before: bool,
 }
 /// The request for \[Firestore.GetDocument][google.firestore.v1beta1.Firestore.GetDocument\].
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -1159,8 +1232,8 @@ pub struct PartitionQueryRequest {
     ///
     /// For example, two subsequent calls using a page_token may return:
     ///
-    ///  * cursor B, cursor M, cursor Q
-    ///  * cursor A, cursor U, cursor W
+    ///   * cursor B, cursor M, cursor Q
+    ///   * cursor A, cursor U, cursor W
     ///
     /// To obtain a complete result set ordered with respect to the results of the
     /// query supplied to PartitionQuery, the results sets should be merged:
@@ -1207,9 +1280,9 @@ pub struct PartitionQueryResponse {
     /// running the following three queries will return the entire result set of
     /// the original query:
     ///
-    ///  * query, end_at A
-    ///  * query, start_at A, end_at B
-    ///  * query, start_at B
+    ///   * query, end_at A
+    ///   * query, start_at A, end_at B
+    ///   * query, start_at B
     ///
     /// An empty result may indicate that the query has too few results to be
     /// partitioned.
@@ -1504,6 +1577,21 @@ pub mod target_change {
         /// if the target was previously indicated to be `CURRENT`.
         Reset = 4,
     }
+    impl TargetChangeType {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                TargetChangeType::NoChange => "NO_CHANGE",
+                TargetChangeType::Add => "ADD",
+                TargetChangeType::Remove => "REMOVE",
+                TargetChangeType::Current => "CURRENT",
+                TargetChangeType::Reset => "RESET",
+            }
+        }
+    }
 }
 /// The request for \[Firestore.ListCollectionIds][google.firestore.v1beta1.Firestore.ListCollectionIds\].
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -1570,6 +1658,7 @@ pub struct BatchWriteResponse {
 pub mod firestore_client {
     #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
     use tonic::codegen::*;
+    use tonic::codegen::http::Uri;
     /// The Cloud Firestore service.
     ///
     /// Cloud Firestore is a fast, fully managed, serverless, cloud-native NoSQL
@@ -1593,6 +1682,10 @@ pub mod firestore_client {
             let inner = tonic::client::Grpc::new(inner);
             Self { inner }
         }
+        pub fn with_origin(inner: T, origin: Uri) -> Self {
+            let inner = tonic::client::Grpc::with_origin(inner, origin);
+            Self { inner }
+        }
         pub fn with_interceptor<F>(
             inner: T,
             interceptor: F,
@@ -1612,19 +1705,19 @@ pub mod firestore_client {
         {
             FirestoreClient::new(InterceptedService::new(inner, interceptor))
         }
-        /// Compress requests with `gzip`.
+        /// Compress requests with the given encoding.
         ///
         /// This requires the server to support it otherwise it might respond with an
         /// error.
         #[must_use]
-        pub fn send_gzip(mut self) -> Self {
-            self.inner = self.inner.send_gzip();
+        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.send_compressed(encoding);
             self
         }
-        /// Enable decompressing responses with `gzip`.
+        /// Enable decompressing responses.
         #[must_use]
-        pub fn accept_gzip(mut self) -> Self {
-            self.inner = self.inner.accept_gzip();
+        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.accept_compressed(encoding);
             self
         }
         /// Gets a single document.

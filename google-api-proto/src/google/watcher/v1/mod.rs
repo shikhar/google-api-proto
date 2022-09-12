@@ -10,15 +10,15 @@ pub struct Request {
     /// implementation-specific. However, some have predefined meaning
     /// and are listed here:
     ///
-    ///  * recursive = true|false \[default=false\]
-    ///    If set to true, indicates that the client wants to watch all elements
-    ///    of entities in the subtree rooted at the entity's name in `target`. For
-    ///    descendants that are not the immediate children of the target, the
-    ///    `Change.element` will contain slashes.
+    ///   * recursive = true|false \[default=false\]
+    ///     If set to true, indicates that the client wants to watch all elements
+    ///     of entities in the subtree rooted at the entity's name in `target`. For
+    ///     descendants that are not the immediate children of the target, the
+    ///     `Change.element` will contain slashes.
     ///
-    ///    Note that some namespaces and entities will not support recursive
-    ///    watching. When watching such an entity, a client must not set recursive
-    ///    to true. Otherwise, it will receive an `UNIMPLEMENTED` error.
+    ///     Note that some namespaces and entities will not support recursive
+    ///     watching. When watching such an entity, a client must not set recursive
+    ///     to true. Otherwise, it will receive an `UNIMPLEMENTED` error.
     ///
     /// Normal URL encoding must be used inside `target`.  For example, if a query
     /// parameter name or value, or the non-query parameter portion of `target`
@@ -33,25 +33,25 @@ pub struct Request {
     /// different semantics:
     ///
     /// *   Parameter is not specified or has the value "".
-    ///     Semantics: Fetch initial state.
-    ///     The client wants the entity's initial state to be delivered. See the
-    ///     description in "Initial State".
+    ///      Semantics: Fetch initial state.
+    ///      The client wants the entity's initial state to be delivered. See the
+    ///      description in "Initial State".
     ///
     /// *   Parameter is set to the string "now" (UTF-8 encoding).
-    ///     Semantics: Fetch new changes only.
-    ///     The client just wants to get the changes received by the system after
-    ///     the watch point. The system may deliver changes from before the watch
-    ///     point as well.
+    ///      Semantics: Fetch new changes only.
+    ///      The client just wants to get the changes received by the system after
+    ///      the watch point. The system may deliver changes from before the watch
+    ///      point as well.
     ///
     /// *   Parameter is set to a value received in an earlier
-    ///     `Change.resume_marker` field while watching the same entity.
-    ///     Semantics: Resume from a specific point.
-    ///     The client wants to receive the changes from a specific point; this
-    ///     value must correspond to a value received in the `Change.resume_marker`
-    ///     field. The system may deliver changes from before the `resume_marker`
-    ///     as well. If the system cannot resume the stream from this point (e.g.,
-    ///     if it is too far behind in the stream), it can raise the
-    ///     `FAILED_PRECONDITION` error.
+    ///      `Change.resume_marker` field while watching the same entity.
+    ///      Semantics: Resume from a specific point.
+    ///      The client wants to receive the changes from a specific point; this
+    ///      value must correspond to a value received in the `Change.resume_marker`
+    ///      field. The system may deliver changes from before the `resume_marker`
+    ///      as well. If the system cannot resume the stream from this point (e.g.,
+    ///      if it is too far behind in the stream), it can raise the
+    ///      `FAILED_PRECONDITION` error.
     ///
     /// An implementation MUST support an unspecified parameter and the
     /// empty string "" marker (initial state fetching) and the "now" marker.
@@ -113,11 +113,26 @@ pub mod change {
         /// proto (from \[google.rpc.Status][\])
         Error = 3,
     }
+    impl State {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                State::Exists => "EXISTS",
+                State::DoesNotExist => "DOES_NOT_EXIST",
+                State::InitialStateSkipped => "INITIAL_STATE_SKIPPED",
+                State::Error => "ERROR",
+            }
+        }
+    }
 }
 /// Generated client implementations.
 pub mod watcher_client {
     #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
     use tonic::codegen::*;
+    use tonic::codegen::http::Uri;
     /// The service that a client uses to connect to the watcher system.
     /// The errors returned by the service are in the canonical error space,
     /// see [google.rpc.Code][].
@@ -134,6 +149,10 @@ pub mod watcher_client {
     {
         pub fn new(inner: T) -> Self {
             let inner = tonic::client::Grpc::new(inner);
+            Self { inner }
+        }
+        pub fn with_origin(inner: T, origin: Uri) -> Self {
+            let inner = tonic::client::Grpc::with_origin(inner, origin);
             Self { inner }
         }
         pub fn with_interceptor<F>(
@@ -155,19 +174,19 @@ pub mod watcher_client {
         {
             WatcherClient::new(InterceptedService::new(inner, interceptor))
         }
-        /// Compress requests with `gzip`.
+        /// Compress requests with the given encoding.
         ///
         /// This requires the server to support it otherwise it might respond with an
         /// error.
         #[must_use]
-        pub fn send_gzip(mut self) -> Self {
-            self.inner = self.inner.send_gzip();
+        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.send_compressed(encoding);
             self
         }
-        /// Enable decompressing responses with `gzip`.
+        /// Enable decompressing responses.
         #[must_use]
-        pub fn accept_gzip(mut self) -> Self {
-            self.inner = self.inner.accept_gzip();
+        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.accept_compressed(encoding);
             self
         }
         /// Start a streaming RPC to get watch information from the server.

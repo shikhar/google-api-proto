@@ -137,6 +137,23 @@ pub mod access_string_filter {
         /// Partial match for the regular expression with the string value.
         PartialRegexp = 6,
     }
+    impl MatchType {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                MatchType::Unspecified => "MATCH_TYPE_UNSPECIFIED",
+                MatchType::Exact => "EXACT",
+                MatchType::BeginsWith => "BEGINS_WITH",
+                MatchType::EndsWith => "ENDS_WITH",
+                MatchType::Contains => "CONTAINS",
+                MatchType::FullRegexp => "FULL_REGEXP",
+                MatchType::PartialRegexp => "PARTIAL_REGEXP",
+            }
+        }
+    }
 }
 /// The result needs to be in a list of string values.
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -176,6 +193,22 @@ pub mod access_numeric_filter {
         GreaterThan = 4,
         /// Greater than or equal
         GreaterThanOrEqual = 5,
+    }
+    impl Operation {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                Operation::Unspecified => "OPERATION_UNSPECIFIED",
+                Operation::Equal => "EQUAL",
+                Operation::LessThan => "LESS_THAN",
+                Operation::LessThanOrEqual => "LESS_THAN_OR_EQUAL",
+                Operation::GreaterThan => "GREATER_THAN",
+                Operation::GreaterThanOrEqual => "GREATER_THAN_OR_EQUAL",
+            }
+        }
     }
 }
 /// To express that the result needs to be between two numbers (inclusive).
@@ -259,6 +292,20 @@ pub mod access_order_by {
             /// "25". Non-numeric dimension values all have equal ordering value below
             /// all numeric values.
             Numeric = 3,
+        }
+        impl OrderType {
+            /// String value of the enum field names used in the ProtoBuf definition.
+            ///
+            /// The values are not transformed in any way and thus are considered stable
+            /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+            pub fn as_str_name(&self) -> &'static str {
+                match self {
+                    OrderType::Unspecified => "ORDER_TYPE_UNSPECIFIED",
+                    OrderType::Alphanumeric => "ALPHANUMERIC",
+                    OrderType::CaseInsensitiveAlphanumeric => "CASE_INSENSITIVE_ALPHANUMERIC",
+                    OrderType::Numeric => "NUMERIC",
+                }
+            }
         }
     }
     /// Specify one type of order by for `OrderBy`.
@@ -419,6 +466,23 @@ pub mod audience_dimension_or_metric_filter {
             /// Partial regular expression matches with the string value.
             PartialRegexp = 6,
         }
+        impl MatchType {
+            /// String value of the enum field names used in the ProtoBuf definition.
+            ///
+            /// The values are not transformed in any way and thus are considered stable
+            /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+            pub fn as_str_name(&self) -> &'static str {
+                match self {
+                    MatchType::Unspecified => "MATCH_TYPE_UNSPECIFIED",
+                    MatchType::Exact => "EXACT",
+                    MatchType::BeginsWith => "BEGINS_WITH",
+                    MatchType::EndsWith => "ENDS_WITH",
+                    MatchType::Contains => "CONTAINS",
+                    MatchType::FullRegexp => "FULL_REGEXP",
+                    MatchType::PartialRegexp => "PARTIAL_REGEXP",
+                }
+            }
+        }
     }
     /// A filter for a string dimension that matches a particular list of options.
     #[derive(Clone, PartialEq, ::prost::Message)]
@@ -479,6 +543,22 @@ pub mod audience_dimension_or_metric_filter {
             GreaterThan = 4,
             /// Greater than or equal.
             GreaterThanOrEqual = 5,
+        }
+        impl Operation {
+            /// String value of the enum field names used in the ProtoBuf definition.
+            ///
+            /// The values are not transformed in any way and thus are considered stable
+            /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+            pub fn as_str_name(&self) -> &'static str {
+                match self {
+                    Operation::Unspecified => "OPERATION_UNSPECIFIED",
+                    Operation::Equal => "EQUAL",
+                    Operation::LessThan => "LESS_THAN",
+                    Operation::LessThanOrEqual => "LESS_THAN_OR_EQUAL",
+                    Operation::GreaterThan => "GREATER_THAN",
+                    Operation::GreaterThanOrEqual => "GREATER_THAN_OR_EQUAL",
+                }
+            }
         }
     }
     /// A filter for numeric or date values between certain values on a dimension
@@ -651,6 +731,19 @@ pub mod audience_filter_clause {
         /// Users will be excluded from the Audience if the filter clause is met.
         Exclude = 2,
     }
+    impl AudienceClauseType {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                AudienceClauseType::Unspecified => "AUDIENCE_CLAUSE_TYPE_UNSPECIFIED",
+                AudienceClauseType::Include => "INCLUDE",
+                AudienceClauseType::Exclude => "EXCLUDE",
+            }
+        }
+    }
     #[derive(Clone, PartialEq, ::prost::Oneof)]
     pub enum Filter {
         /// A simple filter that a user must satisfy to be a member of the Audience.
@@ -685,6 +778,19 @@ pub mod audience_event_trigger {
         /// The event should be logged whenever the Audience condition is met, even
         /// if the user is already a member of the Audience.
         AudienceMembershipRenewed = 2,
+    }
+    impl LogCondition {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                LogCondition::Unspecified => "LOG_CONDITION_UNSPECIFIED",
+                LogCondition::AudienceJoined => "AUDIENCE_JOINED",
+                LogCondition::AudienceMembershipRenewed => "AUDIENCE_MEMBERSHIP_RENEWED",
+            }
+        }
     }
 }
 /// A resource message representing a GA4 Audience.
@@ -737,6 +843,19 @@ pub mod audience {
         /// Exclude users from the Audience if they've ever met the filter clause.
         ExcludePermanently = 2,
     }
+    impl AudienceExclusionDurationMode {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                AudienceExclusionDurationMode::Unspecified => "AUDIENCE_EXCLUSION_DURATION_MODE_UNSPECIFIED",
+                AudienceExclusionDurationMode::ExcludeTemporarily => "EXCLUDE_TEMPORARILY",
+                AudienceExclusionDurationMode::ExcludePermanently => "EXCLUDE_PERMANENTLY",
+            }
+        }
+    }
 }
 /// Specifies how to evaluate users for joining an Audience.
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
@@ -753,6 +872,20 @@ pub enum AudienceFilterScope {
     /// User joins the Audience if the filter condition is met by any event
     /// across any session.
     AcrossAllSessions = 3,
+}
+impl AudienceFilterScope {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            AudienceFilterScope::Unspecified => "AUDIENCE_FILTER_SCOPE_UNSPECIFIED",
+            AudienceFilterScope::WithinSameEvent => "AUDIENCE_FILTER_SCOPE_WITHIN_SAME_EVENT",
+            AudienceFilterScope::WithinSameSession => "AUDIENCE_FILTER_SCOPE_WITHIN_SAME_SESSION",
+            AudienceFilterScope::AcrossAllSessions => "AUDIENCE_FILTER_SCOPE_ACROSS_ALL_SESSIONS",
+        }
+    }
 }
 /// A resource message representing a Google Analytics account.
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -934,6 +1067,20 @@ pub mod data_stream {
         AndroidAppDataStream = 2,
         /// iOS app data stream.
         IosAppDataStream = 3,
+    }
+    impl DataStreamType {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                DataStreamType::Unspecified => "DATA_STREAM_TYPE_UNSPECIFIED",
+                DataStreamType::WebDataStream => "WEB_DATA_STREAM",
+                DataStreamType::AndroidAppDataStream => "ANDROID_APP_DATA_STREAM",
+                DataStreamType::IosAppDataStream => "IOS_APP_DATA_STREAM",
+            }
+        }
     }
     /// Data for specific data stream types. The message that will be
     /// set corresponds to the type of this stream.
@@ -1451,6 +1598,19 @@ pub mod custom_dimension {
         /// Dimension scoped to a user.
         User = 2,
     }
+    impl DimensionScope {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                DimensionScope::Unspecified => "DIMENSION_SCOPE_UNSPECIFIED",
+                DimensionScope::Event => "EVENT",
+                DimensionScope::User => "USER",
+            }
+        }
+    }
 }
 /// A definition for a custom metric.
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -1523,6 +1683,27 @@ pub mod custom_metric {
         /// This metric measures hours.
         Hours = 10,
     }
+    impl MeasurementUnit {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                MeasurementUnit::Unspecified => "MEASUREMENT_UNIT_UNSPECIFIED",
+                MeasurementUnit::Standard => "STANDARD",
+                MeasurementUnit::Currency => "CURRENCY",
+                MeasurementUnit::Feet => "FEET",
+                MeasurementUnit::Meters => "METERS",
+                MeasurementUnit::Kilometers => "KILOMETERS",
+                MeasurementUnit::Miles => "MILES",
+                MeasurementUnit::Milliseconds => "MILLISECONDS",
+                MeasurementUnit::Seconds => "SECONDS",
+                MeasurementUnit::Minutes => "MINUTES",
+                MeasurementUnit::Hours => "HOURS",
+            }
+        }
+    }
     /// The scope of this metric.
     #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
     #[repr(i32)]
@@ -1531,6 +1712,18 @@ pub mod custom_metric {
         Unspecified = 0,
         /// Metric scoped to an event.
         Event = 1,
+    }
+    impl MetricScope {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                MetricScope::Unspecified => "METRIC_SCOPE_UNSPECIFIED",
+                MetricScope::Event => "EVENT",
+            }
+        }
     }
     /// Labels that mark the data in this custom metric as data that should be
     /// restricted to specific users.
@@ -1543,6 +1736,19 @@ pub mod custom_metric {
         CostData = 1,
         /// Metric reports revenue data.
         RevenueData = 2,
+    }
+    impl RestrictedMetricType {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                RestrictedMetricType::Unspecified => "RESTRICTED_METRIC_TYPE_UNSPECIFIED",
+                RestrictedMetricType::CostData => "COST_DATA",
+                RestrictedMetricType::RevenueData => "REVENUE_DATA",
+            }
+        }
     }
 }
 /// Settings values for data retention. This is a singleton resource.
@@ -1581,6 +1787,22 @@ pub mod data_retention_settings {
         /// The data retention time duration is 50 months.
         /// Available to 360 properties only.
         FiftyMonths = 6,
+    }
+    impl RetentionDuration {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                RetentionDuration::Unspecified => "RETENTION_DURATION_UNSPECIFIED",
+                RetentionDuration::TwoMonths => "TWO_MONTHS",
+                RetentionDuration::FourteenMonths => "FOURTEEN_MONTHS",
+                RetentionDuration::TwentySixMonths => "TWENTY_SIX_MONTHS",
+                RetentionDuration::ThirtyEightMonths => "THIRTY_EIGHT_MONTHS",
+                RetentionDuration::FiftyMonths => "FIFTY_MONTHS",
+            }
+        }
     }
 }
 /// The attribution settings used for a given property. This is a singleton
@@ -1624,6 +1846,19 @@ pub mod attribution_settings {
         /// 30-day lookback window.
         AcquisitionConversionEventLookbackWindow30Days = 2,
     }
+    impl AcquisitionConversionEventLookbackWindow {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                AcquisitionConversionEventLookbackWindow::Unspecified => "ACQUISITION_CONVERSION_EVENT_LOOKBACK_WINDOW_UNSPECIFIED",
+                AcquisitionConversionEventLookbackWindow::AcquisitionConversionEventLookbackWindow7Days => "ACQUISITION_CONVERSION_EVENT_LOOKBACK_WINDOW_7_DAYS",
+                AcquisitionConversionEventLookbackWindow::AcquisitionConversionEventLookbackWindow30Days => "ACQUISITION_CONVERSION_EVENT_LOOKBACK_WINDOW_30_DAYS",
+            }
+        }
+    }
     /// How far back in time events should be considered for inclusion in a
     /// converting path for all conversions other than first app install/first site
     /// visit.
@@ -1638,6 +1873,20 @@ pub mod attribution_settings {
         OtherConversionEventLookbackWindow60Days = 2,
         /// 90-day lookback window.
         OtherConversionEventLookbackWindow90Days = 3,
+    }
+    impl OtherConversionEventLookbackWindow {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                OtherConversionEventLookbackWindow::Unspecified => "OTHER_CONVERSION_EVENT_LOOKBACK_WINDOW_UNSPECIFIED",
+                OtherConversionEventLookbackWindow::OtherConversionEventLookbackWindow30Days => "OTHER_CONVERSION_EVENT_LOOKBACK_WINDOW_30_DAYS",
+                OtherConversionEventLookbackWindow::OtherConversionEventLookbackWindow60Days => "OTHER_CONVERSION_EVENT_LOOKBACK_WINDOW_60_DAYS",
+                OtherConversionEventLookbackWindow::OtherConversionEventLookbackWindow90Days => "OTHER_CONVERSION_EVENT_LOOKBACK_WINDOW_90_DAYS",
+            }
+        }
     }
     /// The reporting attribution model used to calculate conversion credit in this
     /// property's reports.
@@ -1670,6 +1919,24 @@ pub mod attribution_settings {
         /// Attributes 100% of the conversion value to the last Google Ads channel
         /// that the customer clicked through before converting.
         AdsPreferredLastClick = 7,
+    }
+    impl ReportingAttributionModel {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                ReportingAttributionModel::Unspecified => "REPORTING_ATTRIBUTION_MODEL_UNSPECIFIED",
+                ReportingAttributionModel::CrossChannelDataDriven => "CROSS_CHANNEL_DATA_DRIVEN",
+                ReportingAttributionModel::CrossChannelLastClick => "CROSS_CHANNEL_LAST_CLICK",
+                ReportingAttributionModel::CrossChannelFirstClick => "CROSS_CHANNEL_FIRST_CLICK",
+                ReportingAttributionModel::CrossChannelLinear => "CROSS_CHANNEL_LINEAR",
+                ReportingAttributionModel::CrossChannelPositionBased => "CROSS_CHANNEL_POSITION_BASED",
+                ReportingAttributionModel::CrossChannelTimeDecay => "CROSS_CHANNEL_TIME_DECAY",
+                ReportingAttributionModel::AdsPreferredLastClick => "ADS_PREFERRED_LAST_CLICK",
+            }
+        }
     }
 }
 /// The category selected for this property, used for industry benchmarking.
@@ -1731,6 +1998,43 @@ pub enum IndustryCategory {
     /// Shopping
     Shopping = 26,
 }
+impl IndustryCategory {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            IndustryCategory::Unspecified => "INDUSTRY_CATEGORY_UNSPECIFIED",
+            IndustryCategory::Automotive => "AUTOMOTIVE",
+            IndustryCategory::BusinessAndIndustrialMarkets => "BUSINESS_AND_INDUSTRIAL_MARKETS",
+            IndustryCategory::Finance => "FINANCE",
+            IndustryCategory::Healthcare => "HEALTHCARE",
+            IndustryCategory::Technology => "TECHNOLOGY",
+            IndustryCategory::Travel => "TRAVEL",
+            IndustryCategory::Other => "OTHER",
+            IndustryCategory::ArtsAndEntertainment => "ARTS_AND_ENTERTAINMENT",
+            IndustryCategory::BeautyAndFitness => "BEAUTY_AND_FITNESS",
+            IndustryCategory::BooksAndLiterature => "BOOKS_AND_LITERATURE",
+            IndustryCategory::FoodAndDrink => "FOOD_AND_DRINK",
+            IndustryCategory::Games => "GAMES",
+            IndustryCategory::HobbiesAndLeisure => "HOBBIES_AND_LEISURE",
+            IndustryCategory::HomeAndGarden => "HOME_AND_GARDEN",
+            IndustryCategory::InternetAndTelecom => "INTERNET_AND_TELECOM",
+            IndustryCategory::LawAndGovernment => "LAW_AND_GOVERNMENT",
+            IndustryCategory::News => "NEWS",
+            IndustryCategory::OnlineCommunities => "ONLINE_COMMUNITIES",
+            IndustryCategory::PeopleAndSociety => "PEOPLE_AND_SOCIETY",
+            IndustryCategory::PetsAndAnimals => "PETS_AND_ANIMALS",
+            IndustryCategory::RealEstate => "REAL_ESTATE",
+            IndustryCategory::Reference => "REFERENCE",
+            IndustryCategory::Science => "SCIENCE",
+            IndustryCategory::Sports => "SPORTS",
+            IndustryCategory::JobsAndEducation => "JOBS_AND_EDUCATION",
+            IndustryCategory::Shopping => "SHOPPING",
+        }
+    }
+}
 /// Various levels of service for Google Analytics.
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
 #[repr(i32)]
@@ -1741,6 +2045,19 @@ pub enum ServiceLevel {
     GoogleAnalyticsStandard = 1,
     /// The paid, premium version of Google Analytics.
     GoogleAnalytics360 = 2,
+}
+impl ServiceLevel {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            ServiceLevel::Unspecified => "SERVICE_LEVEL_UNSPECIFIED",
+            ServiceLevel::GoogleAnalyticsStandard => "GOOGLE_ANALYTICS_STANDARD",
+            ServiceLevel::GoogleAnalytics360 => "GOOGLE_ANALYTICS_360",
+        }
+    }
 }
 /// Different kinds of actors that can make changes to Google Analytics
 /// resources.
@@ -1756,6 +2073,20 @@ pub enum ActorType {
     /// Changes made by Google Analytics support team staff.
     Support = 3,
 }
+impl ActorType {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            ActorType::Unspecified => "ACTOR_TYPE_UNSPECIFIED",
+            ActorType::User => "USER",
+            ActorType::System => "SYSTEM",
+            ActorType::Support => "SUPPORT",
+        }
+    }
+}
 /// Types of actions that may change a resource.
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
 #[repr(i32)]
@@ -1768,6 +2099,20 @@ pub enum ActionType {
     Updated = 2,
     /// Resource was deleted in this change.
     Deleted = 3,
+}
+impl ActionType {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            ActionType::Unspecified => "ACTION_TYPE_UNSPECIFIED",
+            ActionType::Created => "CREATED",
+            ActionType::Updated => "UPDATED",
+            ActionType::Deleted => "DELETED",
+        }
+    }
 }
 /// Types of resources whose changes may be returned from change history.
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
@@ -1806,6 +2151,32 @@ pub enum ChangeHistoryResourceType {
     /// AttributionSettings resource
     AttributionSettings = 20,
 }
+impl ChangeHistoryResourceType {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            ChangeHistoryResourceType::Unspecified => "CHANGE_HISTORY_RESOURCE_TYPE_UNSPECIFIED",
+            ChangeHistoryResourceType::Account => "ACCOUNT",
+            ChangeHistoryResourceType::Property => "PROPERTY",
+            ChangeHistoryResourceType::FirebaseLink => "FIREBASE_LINK",
+            ChangeHistoryResourceType::GoogleAdsLink => "GOOGLE_ADS_LINK",
+            ChangeHistoryResourceType::GoogleSignalsSettings => "GOOGLE_SIGNALS_SETTINGS",
+            ChangeHistoryResourceType::ConversionEvent => "CONVERSION_EVENT",
+            ChangeHistoryResourceType::MeasurementProtocolSecret => "MEASUREMENT_PROTOCOL_SECRET",
+            ChangeHistoryResourceType::CustomDimension => "CUSTOM_DIMENSION",
+            ChangeHistoryResourceType::CustomMetric => "CUSTOM_METRIC",
+            ChangeHistoryResourceType::DataRetentionSettings => "DATA_RETENTION_SETTINGS",
+            ChangeHistoryResourceType::DisplayVideo360AdvertiserLink => "DISPLAY_VIDEO_360_ADVERTISER_LINK",
+            ChangeHistoryResourceType::DisplayVideo360AdvertiserLinkProposal => "DISPLAY_VIDEO_360_ADVERTISER_LINK_PROPOSAL",
+            ChangeHistoryResourceType::SearchAds360Link => "SEARCH_ADS_360_LINK",
+            ChangeHistoryResourceType::DataStream => "DATA_STREAM",
+            ChangeHistoryResourceType::AttributionSettings => "ATTRIBUTION_SETTINGS",
+        }
+    }
+}
 /// Status of the Google Signals settings (i.e., whether this feature has been
 /// enabled for the property).
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
@@ -1818,6 +2189,19 @@ pub enum GoogleSignalsState {
     GoogleSignalsEnabled = 1,
     /// Google Signals is disabled.
     GoogleSignalsDisabled = 2,
+}
+impl GoogleSignalsState {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            GoogleSignalsState::Unspecified => "GOOGLE_SIGNALS_STATE_UNSPECIFIED",
+            GoogleSignalsState::GoogleSignalsEnabled => "GOOGLE_SIGNALS_ENABLED",
+            GoogleSignalsState::GoogleSignalsDisabled => "GOOGLE_SIGNALS_DISABLED",
+        }
+    }
 }
 /// Consent field of the Google Signals settings (i.e., whether the user has
 /// consented to the Google Signals terms of service.)
@@ -1833,6 +2217,19 @@ pub enum GoogleSignalsConsent {
     /// Terms of service have not been accepted
     NotConsented = 1,
 }
+impl GoogleSignalsConsent {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            GoogleSignalsConsent::Unspecified => "GOOGLE_SIGNALS_CONSENT_UNSPECIFIED",
+            GoogleSignalsConsent::Consented => "GOOGLE_SIGNALS_CONSENT_CONSENTED",
+            GoogleSignalsConsent::NotConsented => "GOOGLE_SIGNALS_CONSENT_NOT_CONSENTED",
+        }
+    }
+}
 /// An indication of which product the user initiated a link proposal from.
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
 #[repr(i32)]
@@ -1844,6 +2241,19 @@ pub enum LinkProposalInitiatingProduct {
     /// This proposal was created by a user from a linked product (not Google
     /// Analytics).
     LinkedProduct = 2,
+}
+impl LinkProposalInitiatingProduct {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            LinkProposalInitiatingProduct::Unspecified => "LINK_PROPOSAL_INITIATING_PRODUCT_UNSPECIFIED",
+            LinkProposalInitiatingProduct::GoogleAnalytics => "GOOGLE_ANALYTICS",
+            LinkProposalInitiatingProduct::LinkedProduct => "LINKED_PRODUCT",
+        }
+    }
 }
 /// The state of a link proposal resource.
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
@@ -1872,6 +2282,23 @@ pub enum LinkProposalState {
     /// proposal will be automatically deleted after some time.
     Obsolete = 6,
 }
+impl LinkProposalState {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            LinkProposalState::Unspecified => "LINK_PROPOSAL_STATE_UNSPECIFIED",
+            LinkProposalState::AwaitingReviewFromGoogleAnalytics => "AWAITING_REVIEW_FROM_GOOGLE_ANALYTICS",
+            LinkProposalState::AwaitingReviewFromLinkedProduct => "AWAITING_REVIEW_FROM_LINKED_PRODUCT",
+            LinkProposalState::Withdrawn => "WITHDRAWN",
+            LinkProposalState::Declined => "DECLINED",
+            LinkProposalState::Expired => "EXPIRED",
+            LinkProposalState::Obsolete => "OBSOLETE",
+        }
+    }
+}
 /// Types of Property resources.
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
 #[repr(i32)]
@@ -1884,6 +2311,20 @@ pub enum PropertyType {
     Subproperty = 2,
     /// GA4 rollup property
     Rollup = 3,
+}
+impl PropertyType {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            PropertyType::Unspecified => "PROPERTY_TYPE_UNSPECIFIED",
+            PropertyType::Ordinary => "PROPERTY_TYPE_ORDINARY",
+            PropertyType::Subproperty => "PROPERTY_TYPE_SUBPROPERTY",
+            PropertyType::Rollup => "PROPERTY_TYPE_ROLLUP",
+        }
+    }
 }
 /// The request for a Data Access Record Report.
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -3197,6 +3638,7 @@ pub struct UpdateAttributionSettingsRequest {
 pub mod analytics_admin_service_client {
     #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
     use tonic::codegen::*;
+    use tonic::codegen::http::Uri;
     /// Service Interface for the Analytics Admin API (GA4).
     #[derive(Debug, Clone)]
     pub struct AnalyticsAdminServiceClient<T> {
@@ -3211,6 +3653,10 @@ pub mod analytics_admin_service_client {
     {
         pub fn new(inner: T) -> Self {
             let inner = tonic::client::Grpc::new(inner);
+            Self { inner }
+        }
+        pub fn with_origin(inner: T, origin: Uri) -> Self {
+            let inner = tonic::client::Grpc::with_origin(inner, origin);
             Self { inner }
         }
         pub fn with_interceptor<F>(
@@ -3232,19 +3678,19 @@ pub mod analytics_admin_service_client {
         {
             AnalyticsAdminServiceClient::new(InterceptedService::new(inner, interceptor))
         }
-        /// Compress requests with `gzip`.
+        /// Compress requests with the given encoding.
         ///
         /// This requires the server to support it otherwise it might respond with an
         /// error.
         #[must_use]
-        pub fn send_gzip(mut self) -> Self {
-            self.inner = self.inner.send_gzip();
+        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.send_compressed(encoding);
             self
         }
-        /// Enable decompressing responses with `gzip`.
+        /// Enable decompressing responses.
         #[must_use]
-        pub fn accept_gzip(mut self) -> Self {
-            self.inner = self.inner.accept_gzip();
+        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.accept_compressed(encoding);
             self
         }
         /// Lookup for a single Account.

@@ -1,61 +1,14 @@
-// If this field is populated and billing_tier is STANDARD, this is
-// indication of a point in the _past_ when a PREMIUM access ended.
-
-/// Billing settings
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct BillingSettings {
-    /// Output only. Billing tier selected by customer
-    #[prost(enumeration="BillingTier", tag="1")]
-    pub billing_tier: i32,
-    /// Output only. Type of billing method
-    #[prost(enumeration="BillingType", tag="2")]
-    pub billing_type: i32,
-    /// Output only. The absolute point in time when the subscription became effective.
-    /// Can be compared to expire_time value to determine full contract duration
-    #[prost(message, optional, tag="3")]
-    pub start_time: ::core::option::Option<::prost_types::Timestamp>,
-    /// Output only. The absolute point in time when the subscription expires.
-    ///
-    /// If this field is populated and billing_tier is STANDARD, this is
-    /// indication of a point in the _past_ when a PREMIUM access ended.
-    #[prost(message, optional, tag="4")]
-    pub expire_time: ::core::option::Option<::prost_types::Timestamp>,
-}
-/// Billing tier options
-#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
-#[repr(i32)]
-pub enum BillingTier {
-    /// Default value. This value is unused.
-    Unspecified = 0,
-    /// The standard billing tier.
-    Standard = 1,
-    /// The premium billing tier.
-    Premium = 2,
-}
-/// Billing type
-#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
-#[repr(i32)]
-pub enum BillingType {
-    /// Default billing type
-    Unspecified = 0,
-    /// Subscription for Premium billing tier
-    Subscription = 1,
-    /// Trial subscription for Premium billing tier
-    TrialSubscription = 2,
-    /// Alpha customer for Premium billing tier
-    Alpha = 3,
-}
 /// Component Settings for Security Command Center
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ComponentSettings {
     /// The relative resource name of the component settings.
     /// Formats:
-    ///  * `organizations/{organization}/components/{component}/settings`
-    ///  * `folders/{folder}/components/{component}/settings`
-    ///  * `projects/{project}/components/{component}/settings`
-    ///  * `projects/{project}/locations/{location}/clusters/{cluster}/components/{component}/settings`
-    ///  * `projects/{project}/regions/{region}/clusters/{cluster}/components/{component}/settings`
-    ///  * `projects/{project}/zones/{zone}/clusters/{cluster}/components/{component}/settings`
+    ///   * `organizations/{organization}/components/{component}/settings`
+    ///   * `folders/{folder}/components/{component}/settings`
+    ///   * `projects/{project}/components/{component}/settings`
+    ///   * `projects/{project}/locations/{location}/clusters/{cluster}/components/{component}/settings`
+    ///   * `projects/{project}/regions/{region}/clusters/{cluster}/components/{component}/settings`
+    ///   * `projects/{project}/zones/{zone}/clusters/{cluster}/components/{component}/settings`
     #[prost(string, tag="1")]
     pub name: ::prost::alloc::string::String,
     /// ENABLE to enable component, DISABLE to disable and INHERIT to inherit
@@ -145,9 +98,9 @@ pub mod security_health_analytics_settings {
         /// permissions on a project or the organization. Otherwise a finding will
         /// be created.
         /// A valid identity can be:
-        ///   *  a domain that starts with "@", e.g. "@yourdomain.com".
-        ///   *  a fully specified email address that does not start with "@", e.g.
-        ///   "abc@gmail.com"
+        ///    *  a domain that starts with "@", e.g. "@yourdomain.com".
+        ///    *  a fully specified email address that does not start with "@", e.g.
+        ///    "abc@gmail.com"
         /// Regular expressions are not supported.
         /// Service accounts are not examined by the scanner and will be omitted if
         /// added to the list.
@@ -162,11 +115,11 @@ pub mod security_health_analytics_settings {
         /// allowed to have Admin, Owner or Editor roles granted to them. Otherwise
         /// a finding will be created.
         /// A valid identity can be:
-        ///   *  a partilly specified service account that starts with "@", e.g.
-        ///   "@myproject.iam.gserviceaccount.com". This approves all the service
-        ///   accounts suffixed with the specified identity.
-        ///   *  a fully specified service account that does not start with "@", e.g.
-        ///   "myadmin@myproject.iam.gserviceaccount.com".
+        ///    *  a partilly specified service account that starts with "@", e.g.
+        ///    "@myproject.iam.gserviceaccount.com". This approves all the service
+        ///    accounts suffixed with the specified identity.
+        ///    *  a fully specified service account that does not start with "@", e.g.
+        ///    "myadmin@myproject.iam.gserviceaccount.com".
         /// Google-created service accounts are all approved.
         #[prost(string, repeated, tag="1")]
         pub approved_identities: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
@@ -185,6 +138,94 @@ pub enum ComponentEnablementState {
     /// Inherit the state from resources parent folder or organization.
     Inherit = 3,
 }
+impl ComponentEnablementState {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            ComponentEnablementState::Unspecified => "COMPONENT_ENABLEMENT_STATE_UNSPECIFIED",
+            ComponentEnablementState::Disable => "DISABLE",
+            ComponentEnablementState::Enable => "ENABLE",
+            ComponentEnablementState::Inherit => "INHERIT",
+        }
+    }
+}
+// If this field is populated and billing_tier is STANDARD, this is
+// indication of a point in the _past_ when a PREMIUM access ended.
+
+/// Billing settings
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct BillingSettings {
+    /// Output only. Billing tier selected by customer
+    #[prost(enumeration="BillingTier", tag="1")]
+    pub billing_tier: i32,
+    /// Output only. Type of billing method
+    #[prost(enumeration="BillingType", tag="2")]
+    pub billing_type: i32,
+    /// Output only. The absolute point in time when the subscription became effective.
+    /// Can be compared to expire_time value to determine full contract duration
+    #[prost(message, optional, tag="3")]
+    pub start_time: ::core::option::Option<::prost_types::Timestamp>,
+    /// Output only. The absolute point in time when the subscription expires.
+    ///
+    /// If this field is populated and billing_tier is STANDARD, this is
+    /// indication of a point in the _past_ when a PREMIUM access ended.
+    #[prost(message, optional, tag="4")]
+    pub expire_time: ::core::option::Option<::prost_types::Timestamp>,
+}
+/// Billing tier options
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+#[repr(i32)]
+pub enum BillingTier {
+    /// Default value. This value is unused.
+    Unspecified = 0,
+    /// The standard billing tier.
+    Standard = 1,
+    /// The premium billing tier.
+    Premium = 2,
+}
+impl BillingTier {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            BillingTier::Unspecified => "BILLING_TIER_UNSPECIFIED",
+            BillingTier::Standard => "STANDARD",
+            BillingTier::Premium => "PREMIUM",
+        }
+    }
+}
+/// Billing type
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+#[repr(i32)]
+pub enum BillingType {
+    /// Default billing type
+    Unspecified = 0,
+    /// Subscription for Premium billing tier
+    Subscription = 1,
+    /// Trial subscription for Premium billing tier
+    TrialSubscription = 2,
+    /// Alpha customer for Premium billing tier
+    Alpha = 3,
+}
+impl BillingType {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            BillingType::Unspecified => "BILLING_TYPE_UNSPECIFIED",
+            BillingType::Subscription => "SUBSCRIPTION",
+            BillingType::TrialSubscription => "TRIAL_SUBSCRIPTION",
+            BillingType::Alpha => "ALPHA",
+        }
+    }
+}
 /// Sink Settings for Security Command Center
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct SinkSettings {
@@ -196,45 +237,17 @@ pub struct SinkSettings {
     #[prost(string, tag="1")]
     pub logging_sink_project: ::prost::alloc::string::String,
 }
-/// Detector is a set of detectors or scanners act as individual checks done
-/// within a component e.g. bad IP, bad domains, IAM anomaly, cryptomining, open
-/// firewall, etc. Detector is independent of Organization, meaning each detector
-/// must be defined for a given Security Center component under a specified
-/// billing tier. Organizations can configure the list of detectors based on
-/// their subscribed billing tier.
-///
-/// Defines a detector, its billing tier and any applicable labels.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct Detector {
-    /// Output only. Detector Identifier
-    #[prost(string, tag="1")]
-    pub detector: ::prost::alloc::string::String,
-    /// Output only. Component that supports detector type.  Multiple components may support the
-    /// same detector.
-    #[prost(string, tag="2")]
-    pub component: ::prost::alloc::string::String,
-    /// Output only. The billing tier may be different for a detector of the same name in
-    /// another component.
-    #[prost(enumeration="BillingTier", tag="3")]
-    pub billing_tier: i32,
-    /// Output only. Google curated detector labels. These are alphanumeric tags that are not
-    /// necessarily human readable. Labels can be used to group detectors together
-    /// in the future. An example might be tagging all detectors “PCI” that help
-    /// with PCI compliance.
-    #[prost(string, repeated, tag="4")]
-    pub detector_labels: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
-}
 /// Common configuration settings for all of Security Center.
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct Settings {
     /// The relative resource name of the settings resource.
     /// Formats:
-    ///  * `organizations/{organization}/settings`
-    ///  * `folders/{folder}/settings`
-    ///  * `projects/{project}/settings`
-    ///  * `projects/{project}/locations/{location}/clusters/{cluster}/settings`
-    ///  * `projects/{project}/regions/{region}/clusters/{cluster}/settings`
-    ///  * `projects/{project}/zones/{zone}/clusters/{cluster}/settings`
+    ///   * `organizations/{organization}/settings`
+    ///   * `folders/{folder}/settings`
+    ///   * `projects/{project}/settings`
+    ///   * `projects/{project}/locations/{location}/clusters/{cluster}/settings`
+    ///   * `projects/{project}/regions/{region}/clusters/{cluster}/settings`
+    ///   * `projects/{project}/zones/{zone}/clusters/{cluster}/settings`
     #[prost(string, tag="1")]
     pub name: ::prost::alloc::string::String,
     /// Billing settings
@@ -300,13 +313,58 @@ pub mod settings {
         /// SCC's core Service Account was created
         OrgServiceAccountCreated = 6,
     }
+    impl OnboardingState {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                OnboardingState::Unspecified => "ONBOARDING_STATE_UNSPECIFIED",
+                OnboardingState::Enabled => "ENABLED",
+                OnboardingState::Disabled => "DISABLED",
+                OnboardingState::BillingSelected => "BILLING_SELECTED",
+                OnboardingState::ProvidersSelected => "PROVIDERS_SELECTED",
+                OnboardingState::ResourcesSelected => "RESOURCES_SELECTED",
+                OnboardingState::OrgServiceAccountCreated => "ORG_SERVICE_ACCOUNT_CREATED",
+            }
+        }
+    }
+}
+/// Detector is a set of detectors or scanners act as individual checks done
+/// within a component e.g. bad IP, bad domains, IAM anomaly, cryptomining, open
+/// firewall, etc. Detector is independent of Organization, meaning each detector
+/// must be defined for a given Security Center component under a specified
+/// billing tier. Organizations can configure the list of detectors based on
+/// their subscribed billing tier.
+///
+/// Defines a detector, its billing tier and any applicable labels.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct Detector {
+    /// Output only. Detector Identifier
+    #[prost(string, tag="1")]
+    pub detector: ::prost::alloc::string::String,
+    /// Output only. Component that supports detector type.  Multiple components may support the
+    /// same detector.
+    #[prost(string, tag="2")]
+    pub component: ::prost::alloc::string::String,
+    /// Output only. The billing tier may be different for a detector of the same name in
+    /// another component.
+    #[prost(enumeration="BillingTier", tag="3")]
+    pub billing_tier: i32,
+    /// Output only. Google curated detector labels. These are alphanumeric tags that are not
+    /// necessarily human readable. Labels can be used to group detectors together
+    /// in the future. An example might be tagging all detectors “PCI” that help
+    /// with PCI compliance.
+    #[prost(string, repeated, tag="4")]
+    pub detector_labels: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
 }
 /// Request message for GetServiceAccount.
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct GetServiceAccountRequest {
     /// Required. The relative resource name of the service account resource.
     /// Format:
-    ///  * `organizations/{organization}/serviceAccount`
+    ///   * `organizations/{organization}/serviceAccount`
     #[prost(string, tag="1")]
     pub name: ::prost::alloc::string::String,
 }
@@ -316,7 +374,7 @@ pub struct GetServiceAccountRequest {
 pub struct ServiceAccount {
     /// The relative resource name of the service account resource.
     /// Format:
-    ///  * `organizations/{organization}/serviceAccount`
+    ///   * `organizations/{organization}/serviceAccount`
     #[prost(string, tag="1")]
     pub name: ::prost::alloc::string::String,
     /// Security Center managed service account for the organization
@@ -331,12 +389,12 @@ pub struct ServiceAccount {
 pub struct GetSettingsRequest {
     /// Required. The name of the settings to retrieve.
     /// Formats:
-    ///  * `organizations/{organization}/settings`
-    ///  * `folders/{folder}/settings`
-    ///  * `projects/{project}/settings`
-    ///  * `projects/{project}/locations/{location}/clusters/{cluster}/settings`
-    ///  * `projects/{project}/regions/{region}/clusters/{cluster}/settings`
-    ///  * `projects/{project}/zones/{zone}/clusters/{cluster}/settings`
+    ///   * `organizations/{organization}/settings`
+    ///   * `folders/{folder}/settings`
+    ///   * `projects/{project}/settings`
+    ///   * `projects/{project}/locations/{location}/clusters/{cluster}/settings`
+    ///   * `projects/{project}/regions/{region}/clusters/{cluster}/settings`
+    ///   * `projects/{project}/zones/{zone}/clusters/{cluster}/settings`
     #[prost(string, tag="1")]
     pub name: ::prost::alloc::string::String,
 }
@@ -347,12 +405,12 @@ pub struct UpdateSettingsRequest {
     ///
     /// The settings' `name` field is used to identify the settings to be updated.
     /// Formats:
-    ///  * `organizations/{organization}/settings`
-    ///  * `folders/{folder}/settings`
-    ///  * `projects/{project}/settings`
-    ///  * `projects/{project}/locations/{location}/clusters/{cluster}/settings`
-    ///  * `projects/{project}/regions/{region}/clusters/{cluster}/settings`
-    ///  * `projects/{project}/zones/{zone}/clusters/{cluster}/settings`
+    ///   * `organizations/{organization}/settings`
+    ///   * `folders/{folder}/settings`
+    ///   * `projects/{project}/settings`
+    ///   * `projects/{project}/locations/{location}/clusters/{cluster}/settings`
+    ///   * `projects/{project}/regions/{region}/clusters/{cluster}/settings`
+    ///   * `projects/{project}/zones/{zone}/clusters/{cluster}/settings`
     #[prost(message, optional, tag="1")]
     pub settings: ::core::option::Option<Settings>,
     /// The list of fields to be updated on the settings.
@@ -364,12 +422,12 @@ pub struct UpdateSettingsRequest {
 pub struct ResetSettingsRequest {
     /// Required. The name of the settings to reset.
     /// Formats:
-    ///  * `organizations/{organization}/settings`
-    ///  * `folders/{folder}/settings`
-    ///  * `projects/{project}/settings`
-    ///  * `projects/{project}/locations/{location}/clusters/{cluster}/settings`
-    ///  * `projects/{project}/regions/{region}/clusters/{cluster}/settings`
-    ///  * `projects/{project}/zones/{zone}/clusters/{cluster}/settings`
+    ///   * `organizations/{organization}/settings`
+    ///   * `folders/{folder}/settings`
+    ///   * `projects/{project}/settings`
+    ///   * `projects/{project}/locations/{location}/clusters/{cluster}/settings`
+    ///   * `projects/{project}/regions/{region}/clusters/{cluster}/settings`
+    ///   * `projects/{project}/zones/{zone}/clusters/{cluster}/settings`
     #[prost(string, tag="1")]
     pub name: ::prost::alloc::string::String,
     /// A fingerprint used for optimistic concurrency. If none is provided,
@@ -383,18 +441,18 @@ pub struct BatchGetSettingsRequest {
     /// Required. The relative resource name of the organization shared by all of the
     /// settings being retrieved.
     /// Format:
-    ///  * `organizations/{organization}`
+    ///   * `organizations/{organization}`
     #[prost(string, tag="1")]
     pub parent: ::prost::alloc::string::String,
     /// The names of the settings to retrieve.
     /// A maximum of 1000 settings can be retrieved in a batch.
     /// Formats:
-    ///  * `organizations/{organization}/settings`
-    ///  * `folders/{folder}/settings`
-    ///  * `projects/{project}/settings`
-    ///  * `projects/{project}/locations/{location}/clusters/{cluster}/settings`
-    ///  * `projects/{project}/regions/{region}/clusters/{cluster}/settings`
-    ///  * `projects/{project}/zones/{zone}/clusters/{cluster}/settings`
+    ///   * `organizations/{organization}/settings`
+    ///   * `folders/{folder}/settings`
+    ///   * `projects/{project}/settings`
+    ///   * `projects/{project}/locations/{location}/clusters/{cluster}/settings`
+    ///   * `projects/{project}/regions/{region}/clusters/{cluster}/settings`
+    ///   * `projects/{project}/zones/{zone}/clusters/{cluster}/settings`
     #[prost(string, repeated, tag="2")]
     pub names: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
 }
@@ -410,12 +468,12 @@ pub struct BatchGetSettingsResponse {
 pub struct CalculateEffectiveSettingsRequest {
     /// Required. The name of the effective settings to retrieve.
     /// Formats:
-    ///  * `organizations/{organization}/effectiveSettings`
-    ///  * `folders/{folder}/effectiveSettings`
-    ///  * `projects/{project}/effectiveSettings`
-    ///  * `projects/{project}/locations/{location}/clusters/{cluster}/effectiveSettings`
-    ///  * `projects/{project}/regions/{region}/clusters/{cluster}/effectiveSettings`
-    ///  * `projects/{project}/zones/{zone}/clusters/{cluster}/effectiveSettings`
+    ///   * `organizations/{organization}/effectiveSettings`
+    ///   * `folders/{folder}/effectiveSettings`
+    ///   * `projects/{project}/effectiveSettings`
+    ///   * `projects/{project}/locations/{location}/clusters/{cluster}/effectiveSettings`
+    ///   * `projects/{project}/regions/{region}/clusters/{cluster}/effectiveSettings`
+    ///   * `projects/{project}/zones/{zone}/clusters/{cluster}/effectiveSettings`
     #[prost(string, tag="1")]
     pub name: ::prost::alloc::string::String,
 }
@@ -425,7 +483,7 @@ pub struct BatchCalculateEffectiveSettingsRequest {
     /// Required. The relative resource name of the organization shared by all of the
     /// settings being retrieved.
     /// Format:
-    ///  * `organizations/{organization}`
+    ///   * `organizations/{organization}`
     #[prost(string, tag="1")]
     pub parent: ::prost::alloc::string::String,
     /// The requests specifying the effective settings to retrieve.
@@ -446,12 +504,12 @@ pub struct GetComponentSettingsRequest {
     /// Required. The component settings to retrieve.
     ///
     /// Formats:
-    ///  * `organizations/{organization}/components/{component}/settings`
-    ///  * `folders/{folder}/components/{component}/settings`
-    ///  * `projects/{project}/components/{component}/settings`
-    ///  * `projects/{project}/locations/{location}/clusters/{cluster}/components/{component}/settings`
-    ///  * `projects/{project}/regions/{region}/clusters/{cluster}/components/{component}/settings`
-    ///  * `projects/{project}/zones/{zone}/clusters/{cluster}/components/{component}/settings`
+    ///   * `organizations/{organization}/components/{component}/settings`
+    ///   * `folders/{folder}/components/{component}/settings`
+    ///   * `projects/{project}/components/{component}/settings`
+    ///   * `projects/{project}/locations/{location}/clusters/{cluster}/components/{component}/settings`
+    ///   * `projects/{project}/regions/{region}/clusters/{cluster}/components/{component}/settings`
+    ///   * `projects/{project}/zones/{zone}/clusters/{cluster}/components/{component}/settings`
     #[prost(string, tag="1")]
     pub name: ::prost::alloc::string::String,
 }
@@ -462,12 +520,12 @@ pub struct UpdateComponentSettingsRequest {
     ///
     /// The component settings' `name` field is used to identify the component
     /// settings to be updated. Formats:
-    ///  * `organizations/{organization}/components/{component}/settings`
-    ///  * `folders/{folder}/components/{component}/settings`
-    ///  * `projects/{project}/components/{component}/settings`
-    ///  * `projects/{project}/locations/{location}/clusters/{cluster}/components/{component}/settings`
-    ///  * `projects/{project}/regions/{region}/clusters/{cluster}/components/{component}/settings`
-    ///  * `projects/{project}/zones/{zone}/clusters/{cluster}/components/{component}/settings`
+    ///   * `organizations/{organization}/components/{component}/settings`
+    ///   * `folders/{folder}/components/{component}/settings`
+    ///   * `projects/{project}/components/{component}/settings`
+    ///   * `projects/{project}/locations/{location}/clusters/{cluster}/components/{component}/settings`
+    ///   * `projects/{project}/regions/{region}/clusters/{cluster}/components/{component}/settings`
+    ///   * `projects/{project}/zones/{zone}/clusters/{cluster}/components/{component}/settings`
     #[prost(message, optional, tag="1")]
     pub component_settings: ::core::option::Option<ComponentSettings>,
     /// The list of fields to be updated on the component settings resource.
@@ -480,12 +538,12 @@ pub struct ResetComponentSettingsRequest {
     /// Required. The component settings to reset.
     ///
     /// Formats:
-    ///  * `organizations/{organization}/components/{component}/settings`
-    ///  * `folders/{folder}/components/{component}/settings`
-    ///  * `projects/{project}/components/{component}/settings`
-    ///  * `projects/{project}/locations/{location}/clusters/{cluster}/components/{component}/settings`
-    ///  * `projects/{project}/regions/{region}/clusters/{cluster}/components/{component}/settings`
-    ///  * `projects/{project}/zones/{zone}/clusters/{cluster}/components/{component}/settings`
+    ///   * `organizations/{organization}/components/{component}/settings`
+    ///   * `folders/{folder}/components/{component}/settings`
+    ///   * `projects/{project}/components/{component}/settings`
+    ///   * `projects/{project}/locations/{location}/clusters/{cluster}/components/{component}/settings`
+    ///   * `projects/{project}/regions/{region}/clusters/{cluster}/components/{component}/settings`
+    ///   * `projects/{project}/zones/{zone}/clusters/{cluster}/components/{component}/settings`
     #[prost(string, tag="1")]
     pub name: ::prost::alloc::string::String,
     /// An fingerprint used for optimistic concurrency. If none is provided,
@@ -499,12 +557,12 @@ pub struct CalculateEffectiveComponentSettingsRequest {
     /// Required. The effective component settings to retrieve.
     ///
     /// Formats:
-    ///  * `organizations/{organization}/components/{component}/settings`
-    ///  * `folders/{folder}/components/{component}/settings`
-    ///  * `projects/{project}/components/{component}/settings`
-    ///  * `projects/{project}/locations/{location}/clusters/{cluster}/components/{component}/settings`
-    ///  * `projects/{project}/regions/{region}/clusters/{cluster}/components/{component}/settings`
-    ///  * `projects/{project}/zones/{zone}/clusters/{cluster}/components/{component}/settings`
+    ///   * `organizations/{organization}/components/{component}/settings`
+    ///   * `folders/{folder}/components/{component}/settings`
+    ///   * `projects/{project}/components/{component}/settings`
+    ///   * `projects/{project}/locations/{location}/clusters/{cluster}/components/{component}/settings`
+    ///   * `projects/{project}/regions/{region}/clusters/{cluster}/components/{component}/settings`
+    ///   * `projects/{project}/zones/{zone}/clusters/{cluster}/components/{component}/settings`
     #[prost(string, tag="1")]
     pub name: ::prost::alloc::string::String,
 }
@@ -513,13 +571,13 @@ pub struct CalculateEffectiveComponentSettingsRequest {
 pub struct ListDetectorsRequest {
     /// Required. The parent, which owns this collection of detectors.
     /// Format:
-    ///  * `organizations/{organization}`
+    ///   * `organizations/{organization}`
     #[prost(string, tag="1")]
     pub parent: ::prost::alloc::string::String,
     /// Filters to apply on the response. Filters can be applied on:
-    ///  * components
-    ///  * labels
-    ///  * billing tiers
+    ///   * components
+    ///   * labels
+    ///   * billing tiers
     ///
     /// Component filters will retrieve only detectors for the components
     /// specified. Label filters will retrieve only detectors that match one of the
@@ -558,7 +616,7 @@ pub struct ListDetectorsResponse {
 pub struct ListComponentsRequest {
     /// Required. The parent, which owns this collection of components.
     /// Format:
-    ///  * `organizations/{organization}`
+    ///   * `organizations/{organization}`
     #[prost(string, tag="1")]
     pub parent: ::prost::alloc::string::String,
     /// The maximum number of components to return. The service may return fewer
@@ -589,6 +647,7 @@ pub struct ListComponentsResponse {
 pub mod security_center_settings_service_client {
     #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
     use tonic::codegen::*;
+    use tonic::codegen::http::Uri;
     /// ## API Overview
     ///
     /// The SecurityCenterSettingsService is a sub-api of
@@ -608,6 +667,10 @@ pub mod security_center_settings_service_client {
     {
         pub fn new(inner: T) -> Self {
             let inner = tonic::client::Grpc::new(inner);
+            Self { inner }
+        }
+        pub fn with_origin(inner: T, origin: Uri) -> Self {
+            let inner = tonic::client::Grpc::with_origin(inner, origin);
             Self { inner }
         }
         pub fn with_interceptor<F>(
@@ -631,19 +694,19 @@ pub mod security_center_settings_service_client {
                 InterceptedService::new(inner, interceptor),
             )
         }
-        /// Compress requests with `gzip`.
+        /// Compress requests with the given encoding.
         ///
         /// This requires the server to support it otherwise it might respond with an
         /// error.
         #[must_use]
-        pub fn send_gzip(mut self) -> Self {
-            self.inner = self.inner.send_gzip();
+        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.send_compressed(encoding);
             self
         }
-        /// Enable decompressing responses with `gzip`.
+        /// Enable decompressing responses.
         #[must_use]
-        pub fn accept_gzip(mut self) -> Self {
-            self.inner = self.inner.accept_gzip();
+        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.accept_compressed(encoding);
             self
         }
         /// Retrieves the organizations service account, if it exists, otherwise it

@@ -57,9 +57,9 @@ pub struct CreateAppGatewayRequest {
     #[prost(string, tag="1")]
     pub parent: ::prost::alloc::string::String,
     /// Optional. User-settable AppGateway resource ID.
-    ///  * Must start with a letter.
-    ///  * Must contain between 4-63 characters from `/\[a-z][0-9\]-/`.
-    ///  * Must end with a number or a letter.
+    ///   * Must start with a letter.
+    ///   * Must contain between 4-63 characters from `/\[a-z][0-9\]-/`.
+    ///   * Must end with a number or a letter.
     #[prost(string, tag="2")]
     pub app_gateway_id: ::prost::alloc::string::String,
     /// Required. A BeyondCorp AppGateway resource.
@@ -177,6 +177,18 @@ pub mod app_gateway {
         /// TCP Proxy based BeyondCorp Connection. API will default to this if unset.
         TcpProxy = 1,
     }
+    impl Type {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                Type::Unspecified => "TYPE_UNSPECIFIED",
+                Type::TcpProxy => "TCP_PROXY",
+            }
+        }
+    }
     /// Represents the different states of an AppGateway.
     #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
     #[repr(i32)]
@@ -195,6 +207,22 @@ pub mod app_gateway {
         /// This happens when CCFE sends ProjectState = OFF.
         Down = 5,
     }
+    impl State {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                State::Unspecified => "STATE_UNSPECIFIED",
+                State::Creating => "CREATING",
+                State::Created => "CREATED",
+                State::Updating => "UPDATING",
+                State::Deleting => "DELETING",
+                State::Down => "DOWN",
+            }
+        }
+    }
     /// Enum containing list of all possible host types supported by BeyondCorp
     /// Connection.
     #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
@@ -204,6 +232,18 @@ pub mod app_gateway {
         Unspecified = 0,
         /// AppGateway hosted in a GCP regional managed instance group.
         GcpRegionalMig = 1,
+    }
+    impl HostType {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                HostType::Unspecified => "HOST_TYPE_UNSPECIFIED",
+                HostType::GcpRegionalMig => "GCP_REGIONAL_MIG",
+            }
+        }
     }
 }
 /// Represents the metadata of the long-running operation.
@@ -239,6 +279,7 @@ pub struct AppGatewayOperationMetadata {
 pub mod app_gateways_service_client {
     #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
     use tonic::codegen::*;
+    use tonic::codegen::http::Uri;
     /// ## API Overview
     ///
     /// The `beyondcorp.googleapis.com` service implements the Google Cloud
@@ -268,6 +309,10 @@ pub mod app_gateways_service_client {
             let inner = tonic::client::Grpc::new(inner);
             Self { inner }
         }
+        pub fn with_origin(inner: T, origin: Uri) -> Self {
+            let inner = tonic::client::Grpc::with_origin(inner, origin);
+            Self { inner }
+        }
         pub fn with_interceptor<F>(
             inner: T,
             interceptor: F,
@@ -287,19 +332,19 @@ pub mod app_gateways_service_client {
         {
             AppGatewaysServiceClient::new(InterceptedService::new(inner, interceptor))
         }
-        /// Compress requests with `gzip`.
+        /// Compress requests with the given encoding.
         ///
         /// This requires the server to support it otherwise it might respond with an
         /// error.
         #[must_use]
-        pub fn send_gzip(mut self) -> Self {
-            self.inner = self.inner.send_gzip();
+        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.send_compressed(encoding);
             self
         }
-        /// Enable decompressing responses with `gzip`.
+        /// Enable decompressing responses.
         #[must_use]
-        pub fn accept_gzip(mut self) -> Self {
-            self.inner = self.inner.accept_gzip();
+        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.accept_compressed(encoding);
             self
         }
         /// Lists AppGateways in a given project and location.

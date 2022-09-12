@@ -41,6 +41,25 @@ pub mod build_status {
         /// The build was cancelled by a call to CancelBuild.
         Cancelled = 7,
     }
+    impl Result {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                Result::UnknownStatus => "UNKNOWN_STATUS",
+                Result::CommandSucceeded => "COMMAND_SUCCEEDED",
+                Result::CommandFailed => "COMMAND_FAILED",
+                Result::UserError => "USER_ERROR",
+                Result::SystemError => "SYSTEM_ERROR",
+                Result::ResourceExhausted => "RESOURCE_EXHAUSTED",
+                Result::InvocationDeadlineExceeded => "INVOCATION_DEADLINE_EXCEEDED",
+                Result::RequestDeadlineExceeded => "REQUEST_DEADLINE_EXCEEDED",
+                Result::Cancelled => "CANCELLED",
+            }
+        }
+    }
 }
 /// An event representing some state change that occurred in the build. This
 /// message does not include field for uniquely identifying an event.
@@ -145,6 +164,19 @@ pub mod build_event {
             /// BuildComponentStreamFinished event whose type equals FINISHED.
             Expired = 2,
         }
+        impl FinishType {
+            /// String value of the enum field names used in the ProtoBuf definition.
+            ///
+            /// The values are not transformed in any way and thus are considered stable
+            /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+            pub fn as_str_name(&self) -> &'static str {
+                match self {
+                    FinishType::Unspecified => "FINISH_TYPE_UNSPECIFIED",
+                    FinishType::Finished => "FINISHED",
+                    FinishType::Expired => "EXPIRED",
+                }
+            }
+        }
     }
     /// //////////////////////////////////////////////////////////////////////////
     /// Events that indicate a state change of a build request in the build
@@ -214,6 +246,20 @@ pub mod stream_id {
         /// A component that builds something.
         Tool = 3,
     }
+    impl BuildComponent {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                BuildComponent::UnknownComponent => "UNKNOWN_COMPONENT",
+                BuildComponent::Controller => "CONTROLLER",
+                BuildComponent::Worker => "WORKER",
+                BuildComponent::Tool => "TOOL",
+            }
+        }
+    }
 }
 /// The type of console output stream.
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
@@ -226,10 +272,23 @@ pub enum ConsoleOutputStream {
     /// Error output stream.
     Stderr = 2,
 }
+impl ConsoleOutputStream {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            ConsoleOutputStream::Unknown => "UNKNOWN",
+            ConsoleOutputStream::Stdout => "STDOUT",
+            ConsoleOutputStream::Stderr => "STDERR",
+        }
+    }
+}
 /// Publishes 'lifecycle events' that update the high-level state of a build:
 /// - BuildEnqueued: When a build is scheduled.
 /// - InvocationAttemptStarted: When work for a build starts; there can be
-///     multiple invocations for a build (e.g. retries).
+///      multiple invocations for a build (e.g. retries).
 /// - InvocationAttemptCompleted: When work for a build finishes.
 /// - BuildFinished: When a build is finished.
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -262,9 +321,9 @@ pub struct PublishLifecycleEventRequest {
     /// Whether to require a previously received matching parent lifecycle event
     /// for the current request's event before continuing processing.
     /// - InvocationAttemptStarted and BuildFinished events require a BuildEnqueued
-    ///   parent event.
+    ///    parent event.
     /// - InvocationAttemptFinished events require an InvocationAttemptStarted
-    ///   parent event.
+    ///    parent event.
     #[prost(bool, tag="7")]
     pub check_preceding_lifecycle_events_present: bool,
 }
@@ -281,6 +340,18 @@ pub mod publish_lifecycle_event_request {
         Noninteractive = 0,
         /// The events of an interactive build should be delivered with low latency.
         Interactive = 1,
+    }
+    impl ServiceLevel {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                ServiceLevel::Noninteractive => "NONINTERACTIVE",
+                ServiceLevel::Interactive => "INTERACTIVE",
+            }
+        }
     }
 }
 /// States which event has been committed. Any failure to commit will cause
@@ -339,6 +410,7 @@ pub struct PublishBuildToolEventStreamRequest {
 pub mod publish_build_event_client {
     #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
     use tonic::codegen::*;
+    use tonic::codegen::http::Uri;
     /// A service for publishing BuildEvents. BuildEvents are generated by Build
     /// Systems to record actions taken during a Build. Events occur in streams,
     /// are identified by a StreamId, and ordered by sequence number in a stream.
@@ -369,6 +441,10 @@ pub mod publish_build_event_client {
             let inner = tonic::client::Grpc::new(inner);
             Self { inner }
         }
+        pub fn with_origin(inner: T, origin: Uri) -> Self {
+            let inner = tonic::client::Grpc::with_origin(inner, origin);
+            Self { inner }
+        }
         pub fn with_interceptor<F>(
             inner: T,
             interceptor: F,
@@ -388,19 +464,19 @@ pub mod publish_build_event_client {
         {
             PublishBuildEventClient::new(InterceptedService::new(inner, interceptor))
         }
-        /// Compress requests with `gzip`.
+        /// Compress requests with the given encoding.
         ///
         /// This requires the server to support it otherwise it might respond with an
         /// error.
         #[must_use]
-        pub fn send_gzip(mut self) -> Self {
-            self.inner = self.inner.send_gzip();
+        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.send_compressed(encoding);
             self
         }
-        /// Enable decompressing responses with `gzip`.
+        /// Enable decompressing responses.
         #[must_use]
-        pub fn accept_gzip(mut self) -> Self {
-            self.inner = self.inner.accept_gzip();
+        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.accept_compressed(encoding);
             self
         }
         /// Publish a build event stating the new state of a build (typically from the

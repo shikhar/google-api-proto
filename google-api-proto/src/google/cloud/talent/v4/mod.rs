@@ -68,6 +68,27 @@ pub mod location {
         /// A street address level location.
         StreetAddress = 10,
     }
+    impl LocationType {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                LocationType::Unspecified => "LOCATION_TYPE_UNSPECIFIED",
+                LocationType::Country => "COUNTRY",
+                LocationType::AdministrativeArea => "ADMINISTRATIVE_AREA",
+                LocationType::SubAdministrativeArea => "SUB_ADMINISTRATIVE_AREA",
+                LocationType::Locality => "LOCALITY",
+                LocationType::PostalCode => "POSTAL_CODE",
+                LocationType::SubLocality => "SUB_LOCALITY",
+                LocationType::SubLocality1 => "SUB_LOCALITY_1",
+                LocationType::SubLocality2 => "SUB_LOCALITY_2",
+                LocationType::Neighborhood => "NEIGHBORHOOD",
+                LocationType::StreetAddress => "STREET_ADDRESS",
+            }
+        }
+    }
 }
 /// Meta information related to the job searcher or entity
 /// conducting the job search. This information is used to improve the
@@ -174,6 +195,23 @@ pub mod device_info {
         Bot = 5,
         /// Other devices types.
         Other = 6,
+    }
+    impl DeviceType {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                DeviceType::Unspecified => "DEVICE_TYPE_UNSPECIFIED",
+                DeviceType::Web => "WEB",
+                DeviceType::MobileWeb => "MOBILE_WEB",
+                DeviceType::Android => "ANDROID",
+                DeviceType::Ios => "IOS",
+                DeviceType::Bot => "BOT",
+                DeviceType::Other => "OTHER",
+            }
+        }
     }
 }
 /// Custom attribute values that are either filterable or non-filterable.
@@ -368,6 +406,25 @@ pub mod compensation_info {
         /// Other compensation type.
         OtherCompensationType = 8,
     }
+    impl CompensationType {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                CompensationType::Unspecified => "COMPENSATION_TYPE_UNSPECIFIED",
+                CompensationType::Base => "BASE",
+                CompensationType::Bonus => "BONUS",
+                CompensationType::SigningBonus => "SIGNING_BONUS",
+                CompensationType::Equity => "EQUITY",
+                CompensationType::ProfitSharing => "PROFIT_SHARING",
+                CompensationType::Commissions => "COMMISSIONS",
+                CompensationType::Tips => "TIPS",
+                CompensationType::OtherCompensationType => "OTHER_COMPENSATION_TYPE",
+            }
+        }
+    }
     /// Pay frequency.
     #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
     #[repr(i32)]
@@ -388,6 +445,24 @@ pub mod compensation_info {
         OneTime = 6,
         /// Other compensation units.
         OtherCompensationUnit = 7,
+    }
+    impl CompensationUnit {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                CompensationUnit::Unspecified => "COMPENSATION_UNIT_UNSPECIFIED",
+                CompensationUnit::Hourly => "HOURLY",
+                CompensationUnit::Daily => "DAILY",
+                CompensationUnit::Weekly => "WEEKLY",
+                CompensationUnit::Monthly => "MONTHLY",
+                CompensationUnit::Yearly => "YEARLY",
+                CompensationUnit::OneTime => "ONE_TIME",
+                CompensationUnit::OtherCompensationUnit => "OTHER_COMPENSATION_UNIT",
+            }
+        }
     }
 }
 /// Metadata used for long running operations returned by CTS batch APIs.
@@ -446,6 +521,23 @@ pub mod batch_operation_metadata {
         /// processed before cancelling are returned in the response.
         Cancelled = 6,
     }
+    impl State {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                State::Unspecified => "STATE_UNSPECIFIED",
+                State::Initializing => "INITIALIZING",
+                State::Processing => "PROCESSING",
+                State::Succeeded => "SUCCEEDED",
+                State::Failed => "FAILED",
+                State::Cancelling => "CANCELLING",
+                State::Cancelled => "CANCELLED",
+            }
+        }
+    }
 }
 /// An enum that represents the size of the company.
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
@@ -467,6 +559,24 @@ pub enum CompanySize {
     Bigger = 6,
     /// The company has 10,000 or more employees.
     Giant = 7,
+}
+impl CompanySize {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            CompanySize::Unspecified => "COMPANY_SIZE_UNSPECIFIED",
+            CompanySize::Mini => "MINI",
+            CompanySize::Small => "SMALL",
+            CompanySize::Smedium => "SMEDIUM",
+            CompanySize::Medium => "MEDIUM",
+            CompanySize::Big => "BIG",
+            CompanySize::Bigger => "BIGGER",
+            CompanySize::Giant => "GIANT",
+        }
+    }
 }
 /// An enum that represents employee benefits included with the job.
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
@@ -502,6 +612,28 @@ pub enum JobBenefit {
     /// The job includes vision services covered by a vision
     /// insurance plan.
     Vision = 11,
+}
+impl JobBenefit {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            JobBenefit::Unspecified => "JOB_BENEFIT_UNSPECIFIED",
+            JobBenefit::ChildCare => "CHILD_CARE",
+            JobBenefit::Dental => "DENTAL",
+            JobBenefit::DomesticPartner => "DOMESTIC_PARTNER",
+            JobBenefit::FlexibleHours => "FLEXIBLE_HOURS",
+            JobBenefit::Medical => "MEDICAL",
+            JobBenefit::LifeInsurance => "LIFE_INSURANCE",
+            JobBenefit::ParentalLeave => "PARENTAL_LEAVE",
+            JobBenefit::RetirementPlan => "RETIREMENT_PLAN",
+            JobBenefit::SickDays => "SICK_DAYS",
+            JobBenefit::Vacation => "VACATION",
+            JobBenefit::Vision => "VISION",
+        }
+    }
 }
 /// Educational degree level defined in International Standard Classification
 /// of Education (ISCED).
@@ -551,6 +683,25 @@ pub enum DegreeType {
     /// original research. ISCED code 8.
     DoctoralOrEquivalent = 8,
 }
+impl DegreeType {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            DegreeType::Unspecified => "DEGREE_TYPE_UNSPECIFIED",
+            DegreeType::PrimaryEducation => "PRIMARY_EDUCATION",
+            DegreeType::LowerSecondaryEducation => "LOWER_SECONDARY_EDUCATION",
+            DegreeType::UpperSecondaryEducation => "UPPER_SECONDARY_EDUCATION",
+            DegreeType::AdultRemedialEducation => "ADULT_REMEDIAL_EDUCATION",
+            DegreeType::AssociatesOrEquivalent => "ASSOCIATES_OR_EQUIVALENT",
+            DegreeType::BachelorsOrEquivalent => "BACHELORS_OR_EQUIVALENT",
+            DegreeType::MastersOrEquivalent => "MASTERS_OR_EQUIVALENT",
+            DegreeType::DoctoralOrEquivalent => "DOCTORAL_OR_EQUIVALENT",
+        }
+    }
+}
 /// An enum that represents the employment type of a job.
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
 #[repr(i32)]
@@ -591,6 +742,27 @@ pub enum EmploymentType {
     /// The job does not fit any of the other listed types.
     OtherEmploymentType = 10,
 }
+impl EmploymentType {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            EmploymentType::Unspecified => "EMPLOYMENT_TYPE_UNSPECIFIED",
+            EmploymentType::FullTime => "FULL_TIME",
+            EmploymentType::PartTime => "PART_TIME",
+            EmploymentType::Contractor => "CONTRACTOR",
+            EmploymentType::ContractToHire => "CONTRACT_TO_HIRE",
+            EmploymentType::Temporary => "TEMPORARY",
+            EmploymentType::Intern => "INTERN",
+            EmploymentType::Volunteer => "VOLUNTEER",
+            EmploymentType::PerDiem => "PER_DIEM",
+            EmploymentType::FlyInFlyOut => "FLY_IN_FLY_OUT",
+            EmploymentType::OtherEmploymentType => "OTHER_EMPLOYMENT_TYPE",
+        }
+    }
+}
 /// An enum that represents the required experience level required for the job.
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
 #[repr(i32)]
@@ -609,6 +781,22 @@ pub enum JobLevel {
     Director = 4,
     /// Executive-level managers and above, including C-level positions.
     Executive = 5,
+}
+impl JobLevel {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            JobLevel::Unspecified => "JOB_LEVEL_UNSPECIFIED",
+            JobLevel::EntryLevel => "ENTRY_LEVEL",
+            JobLevel::Experienced => "EXPERIENCED",
+            JobLevel::Manager => "MANAGER",
+            JobLevel::Director => "DIRECTOR",
+            JobLevel::Executive => "EXECUTIVE",
+        }
+    }
 }
 /// An enum that represents the categorization or primary focus of specific
 /// role. This value is different than the "industry" associated with a role,
@@ -680,6 +868,47 @@ pub enum JobCategory {
     /// A transportation or logistics job, such as Truck Driver.
     TransportationAndLogistics = 30,
 }
+impl JobCategory {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            JobCategory::Unspecified => "JOB_CATEGORY_UNSPECIFIED",
+            JobCategory::AccountingAndFinance => "ACCOUNTING_AND_FINANCE",
+            JobCategory::AdministrativeAndOffice => "ADMINISTRATIVE_AND_OFFICE",
+            JobCategory::AdvertisingAndMarketing => "ADVERTISING_AND_MARKETING",
+            JobCategory::AnimalCare => "ANIMAL_CARE",
+            JobCategory::ArtFashionAndDesign => "ART_FASHION_AND_DESIGN",
+            JobCategory::BusinessOperations => "BUSINESS_OPERATIONS",
+            JobCategory::CleaningAndFacilities => "CLEANING_AND_FACILITIES",
+            JobCategory::ComputerAndIt => "COMPUTER_AND_IT",
+            JobCategory::Construction => "CONSTRUCTION",
+            JobCategory::CustomerService => "CUSTOMER_SERVICE",
+            JobCategory::Education => "EDUCATION",
+            JobCategory::EntertainmentAndTravel => "ENTERTAINMENT_AND_TRAVEL",
+            JobCategory::FarmingAndOutdoors => "FARMING_AND_OUTDOORS",
+            JobCategory::Healthcare => "HEALTHCARE",
+            JobCategory::HumanResources => "HUMAN_RESOURCES",
+            JobCategory::InstallationMaintenanceAndRepair => "INSTALLATION_MAINTENANCE_AND_REPAIR",
+            JobCategory::Legal => "LEGAL",
+            JobCategory::Management => "MANAGEMENT",
+            JobCategory::ManufacturingAndWarehouse => "MANUFACTURING_AND_WAREHOUSE",
+            JobCategory::MediaCommunicationsAndWriting => "MEDIA_COMMUNICATIONS_AND_WRITING",
+            JobCategory::OilGasAndMining => "OIL_GAS_AND_MINING",
+            JobCategory::PersonalCareAndServices => "PERSONAL_CARE_AND_SERVICES",
+            JobCategory::ProtectiveServices => "PROTECTIVE_SERVICES",
+            JobCategory::RealEstate => "REAL_ESTATE",
+            JobCategory::RestaurantAndHospitality => "RESTAURANT_AND_HOSPITALITY",
+            JobCategory::SalesAndRetail => "SALES_AND_RETAIL",
+            JobCategory::ScienceAndEngineering => "SCIENCE_AND_ENGINEERING",
+            JobCategory::SocialServicesAndNonProfit => "SOCIAL_SERVICES_AND_NON_PROFIT",
+            JobCategory::SportsFitnessAndRecreation => "SPORTS_FITNESS_AND_RECREATION",
+            JobCategory::TransportationAndLogistics => "TRANSPORTATION_AND_LOGISTICS",
+        }
+    }
+}
 /// An enum that represents the job posting region. In most cases, job postings
 /// don't need to specify a region. If a region is given, jobs are
 /// eligible for searches in the specified region.
@@ -709,6 +938,20 @@ pub enum PostingRegion {
     /// considered as having a location, but telecommuting is allowed.
     Telecommute = 3,
 }
+impl PostingRegion {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            PostingRegion::Unspecified => "POSTING_REGION_UNSPECIFIED",
+            PostingRegion::AdministrativeArea => "ADMINISTRATIVE_AREA",
+            PostingRegion::Nation => "NATION",
+            PostingRegion::Telecommute => "TELECOMMUTE",
+        }
+    }
+}
 /// Deprecated. All resources are only visible to the owner.
 ///
 /// An enum that represents who has view access to the resource.
@@ -726,6 +969,20 @@ pub enum Visibility {
     /// clients.
     SharedWithPublic = 3,
 }
+impl Visibility {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            Visibility::Unspecified => "VISIBILITY_UNSPECIFIED",
+            Visibility::AccountOnly => "ACCOUNT_ONLY",
+            Visibility::SharedWithGoogle => "SHARED_WITH_GOOGLE",
+            Visibility::SharedWithPublic => "SHARED_WITH_PUBLIC",
+        }
+    }
+}
 /// Option for HTML content sanitization on user input fields, for example, job
 /// description. By setting this option, user can determine whether and how
 /// sanitization is performed on these fields.
@@ -739,6 +996,19 @@ pub enum HtmlSanitization {
     /// Sanitizes HTML input, only accepts bold, italic, ordered list, and
     /// unordered list markup tags.
     SimpleFormattingOnly = 2,
+}
+impl HtmlSanitization {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            HtmlSanitization::Unspecified => "HTML_SANITIZATION_UNSPECIFIED",
+            HtmlSanitization::Disabled => "HTML_SANITIZATION_DISABLED",
+            HtmlSanitization::SimpleFormattingOnly => "SIMPLE_FORMATTING_ONLY",
+        }
+    }
 }
 /// Method for commute. Walking, biking and wheelchair accessible transit is
 /// still in the Preview stage.
@@ -759,6 +1029,239 @@ pub enum CommuteMethod {
     /// Commute time is calculated based on public transit that is wheelchair
     /// accessible.
     TransitAccessible = 5,
+}
+impl CommuteMethod {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            CommuteMethod::Unspecified => "COMMUTE_METHOD_UNSPECIFIED",
+            CommuteMethod::Driving => "DRIVING",
+            CommuteMethod::Transit => "TRANSIT",
+            CommuteMethod::Walking => "WALKING",
+            CommuteMethod::Cycling => "CYCLING",
+            CommuteMethod::TransitAccessible => "TRANSIT_ACCESSIBLE",
+        }
+    }
+}
+/// Auto-complete parameters.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct CompleteQueryRequest {
+    /// Required. Resource name of tenant the completion is performed within.
+    ///
+    /// The format is "projects/{project_id}/tenants/{tenant_id}", for example,
+    /// "projects/foo/tenants/bar".
+    #[prost(string, tag="1")]
+    pub tenant: ::prost::alloc::string::String,
+    /// Required. The query used to generate suggestions.
+    ///
+    /// The maximum number of allowed characters is 255.
+    #[prost(string, tag="2")]
+    pub query: ::prost::alloc::string::String,
+    /// The list of languages of the query. This is
+    /// the BCP-47 language code, such as "en-US" or "sr-Latn".
+    /// For more information, see
+    /// [Tags for Identifying Languages](<https://tools.ietf.org/html/bcp47>).
+    ///
+    /// The maximum number of allowed characters is 255.
+    #[prost(string, repeated, tag="3")]
+    pub language_codes: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
+    /// Required. Completion result count.
+    ///
+    /// The maximum allowed page size is 10.
+    #[prost(int32, tag="4")]
+    pub page_size: i32,
+    /// If provided, restricts completion to specified company.
+    ///
+    /// The format is
+    /// "projects/{project_id}/tenants/{tenant_id}/companies/{company_id}", for
+    /// example, "projects/foo/tenants/bar/companies/baz".
+    #[prost(string, tag="5")]
+    pub company: ::prost::alloc::string::String,
+    /// The scope of the completion. The defaults is \[CompletionScope.PUBLIC][google.cloud.talent.v4.CompleteQueryRequest.CompletionScope.PUBLIC\].
+    #[prost(enumeration="complete_query_request::CompletionScope", tag="6")]
+    pub scope: i32,
+    /// The completion topic. The default is \[CompletionType.COMBINED][google.cloud.talent.v4.CompleteQueryRequest.CompletionType.COMBINED\].
+    #[prost(enumeration="complete_query_request::CompletionType", tag="7")]
+    pub r#type: i32,
+}
+/// Nested message and enum types in `CompleteQueryRequest`.
+pub mod complete_query_request {
+    /// Enum to specify the scope of completion.
+    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+    #[repr(i32)]
+    pub enum CompletionScope {
+        /// Default value.
+        Unspecified = 0,
+        /// Suggestions are based only on the data provided by the client.
+        Tenant = 1,
+        /// Suggestions are based on all jobs data in the system that's visible to
+        /// the client
+        Public = 2,
+    }
+    impl CompletionScope {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                CompletionScope::Unspecified => "COMPLETION_SCOPE_UNSPECIFIED",
+                CompletionScope::Tenant => "TENANT",
+                CompletionScope::Public => "PUBLIC",
+            }
+        }
+    }
+    /// Enum to specify auto-completion topics.
+    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+    #[repr(i32)]
+    pub enum CompletionType {
+        /// Default value.
+        Unspecified = 0,
+        /// Suggest job titles for jobs autocomplete.
+        ///
+        /// For \[CompletionType.JOB_TITLE][google.cloud.talent.v4.CompleteQueryRequest.CompletionType.JOB_TITLE\] type, only open jobs with the same
+        /// \[language_codes][google.cloud.talent.v4.CompleteQueryRequest.language_codes\] are returned.
+        JobTitle = 1,
+        /// Suggest company names for jobs autocomplete.
+        ///
+        /// For \[CompletionType.COMPANY_NAME][google.cloud.talent.v4.CompleteQueryRequest.CompletionType.COMPANY_NAME\] type,
+        /// only companies having open jobs with the same \[language_codes][google.cloud.talent.v4.CompleteQueryRequest.language_codes\] are
+        /// returned.
+        CompanyName = 2,
+        /// Suggest both job titles and company names for jobs autocomplete.
+        ///
+        /// For \[CompletionType.COMBINED][google.cloud.talent.v4.CompleteQueryRequest.CompletionType.COMBINED\] type, only open jobs with the same
+        /// \[language_codes][google.cloud.talent.v4.CompleteQueryRequest.language_codes\] or companies having open jobs with the same
+        /// \[language_codes][google.cloud.talent.v4.CompleteQueryRequest.language_codes\] are returned.
+        Combined = 3,
+    }
+    impl CompletionType {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                CompletionType::Unspecified => "COMPLETION_TYPE_UNSPECIFIED",
+                CompletionType::JobTitle => "JOB_TITLE",
+                CompletionType::CompanyName => "COMPANY_NAME",
+                CompletionType::Combined => "COMBINED",
+            }
+        }
+    }
+}
+/// Response of auto-complete query.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct CompleteQueryResponse {
+    /// Results of the matching job/company candidates.
+    #[prost(message, repeated, tag="1")]
+    pub completion_results: ::prost::alloc::vec::Vec<complete_query_response::CompletionResult>,
+    /// Additional information for the API invocation, such as the request
+    /// tracking id.
+    #[prost(message, optional, tag="2")]
+    pub metadata: ::core::option::Option<ResponseMetadata>,
+}
+/// Nested message and enum types in `CompleteQueryResponse`.
+pub mod complete_query_response {
+    /// Resource that represents completion results.
+    #[derive(Clone, PartialEq, ::prost::Message)]
+    pub struct CompletionResult {
+        /// The suggestion for the query.
+        #[prost(string, tag="1")]
+        pub suggestion: ::prost::alloc::string::String,
+        /// The completion topic.
+        #[prost(enumeration="super::complete_query_request::CompletionType", tag="2")]
+        pub r#type: i32,
+        /// The URI of the company image for
+        /// \[COMPANY_NAME][google.cloud.talent.v4.CompleteQueryRequest.CompletionType.COMPANY_NAME\].
+        #[prost(string, tag="3")]
+        pub image_uri: ::prost::alloc::string::String,
+    }
+}
+/// Generated client implementations.
+pub mod completion_client {
+    #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
+    use tonic::codegen::*;
+    use tonic::codegen::http::Uri;
+    /// A service handles auto completion.
+    #[derive(Debug, Clone)]
+    pub struct CompletionClient<T> {
+        inner: tonic::client::Grpc<T>,
+    }
+    impl<T> CompletionClient<T>
+    where
+        T: tonic::client::GrpcService<tonic::body::BoxBody>,
+        T::Error: Into<StdError>,
+        T::ResponseBody: Body<Data = Bytes> + Send + 'static,
+        <T::ResponseBody as Body>::Error: Into<StdError> + Send,
+    {
+        pub fn new(inner: T) -> Self {
+            let inner = tonic::client::Grpc::new(inner);
+            Self { inner }
+        }
+        pub fn with_origin(inner: T, origin: Uri) -> Self {
+            let inner = tonic::client::Grpc::with_origin(inner, origin);
+            Self { inner }
+        }
+        pub fn with_interceptor<F>(
+            inner: T,
+            interceptor: F,
+        ) -> CompletionClient<InterceptedService<T, F>>
+        where
+            F: tonic::service::Interceptor,
+            T::ResponseBody: Default,
+            T: tonic::codegen::Service<
+                http::Request<tonic::body::BoxBody>,
+                Response = http::Response<
+                    <T as tonic::client::GrpcService<tonic::body::BoxBody>>::ResponseBody,
+                >,
+            >,
+            <T as tonic::codegen::Service<
+                http::Request<tonic::body::BoxBody>,
+            >>::Error: Into<StdError> + Send + Sync,
+        {
+            CompletionClient::new(InterceptedService::new(inner, interceptor))
+        }
+        /// Compress requests with the given encoding.
+        ///
+        /// This requires the server to support it otherwise it might respond with an
+        /// error.
+        #[must_use]
+        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.send_compressed(encoding);
+            self
+        }
+        /// Enable decompressing responses.
+        #[must_use]
+        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.accept_compressed(encoding);
+            self
+        }
+        /// Completes the specified prefix with keyword suggestions.
+        /// Intended for use by a job search auto-complete search box.
+        pub async fn complete_query(
+            &mut self,
+            request: impl tonic::IntoRequest<super::CompleteQueryRequest>,
+        ) -> Result<tonic::Response<super::CompleteQueryResponse>, tonic::Status> {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/google.cloud.talent.v4.Completion/CompleteQuery",
+            );
+            self.inner.unary(request.into_request(), path, codec).await
+        }
+    }
 }
 /// A Tenant resource represents a tenant in the service. A tenant is a group or
 /// entity that shares common access with specific privileges for resources like
@@ -865,6 +1368,7 @@ pub struct ListTenantsResponse {
 pub mod tenant_service_client {
     #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
     use tonic::codegen::*;
+    use tonic::codegen::http::Uri;
     /// A service that handles tenant management, including CRUD and enumeration.
     #[derive(Debug, Clone)]
     pub struct TenantServiceClient<T> {
@@ -879,6 +1383,10 @@ pub mod tenant_service_client {
     {
         pub fn new(inner: T) -> Self {
             let inner = tonic::client::Grpc::new(inner);
+            Self { inner }
+        }
+        pub fn with_origin(inner: T, origin: Uri) -> Self {
+            let inner = tonic::client::Grpc::with_origin(inner, origin);
             Self { inner }
         }
         pub fn with_interceptor<F>(
@@ -900,19 +1408,19 @@ pub mod tenant_service_client {
         {
             TenantServiceClient::new(InterceptedService::new(inner, interceptor))
         }
-        /// Compress requests with `gzip`.
+        /// Compress requests with the given encoding.
         ///
         /// This requires the server to support it otherwise it might respond with an
         /// error.
         #[must_use]
-        pub fn send_gzip(mut self) -> Self {
-            self.inner = self.inner.send_gzip();
+        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.send_compressed(encoding);
             self
         }
-        /// Enable decompressing responses with `gzip`.
+        /// Enable decompressing responses.
         #[must_use]
-        pub fn accept_gzip(mut self) -> Self {
-            self.inner = self.inner.accept_gzip();
+        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.accept_compressed(encoding);
             self
         }
         /// Creates a new tenant entity.
@@ -1017,245 +1525,508 @@ pub mod tenant_service_client {
         }
     }
 }
-/// An event issued when an end user interacts with the application that
-/// implements Cloud Talent Solution. Providing this information improves the
-/// quality of results for the API clients, enabling the
-/// service to perform optimally. The number of events sent must be consistent
-/// with other calls, such as job searches, issued to the service by the client.
+/// A Company resource represents a company in the service. A company is the
+/// entity that owns job postings, that is, the hiring entity responsible for
+/// employing applicants for the job position.
 #[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ClientEvent {
-    /// Strongly recommended for the best service experience.
+pub struct Company {
+    /// Required during company update.
     ///
-    /// A unique ID generated in the API responses. It can be found in
-    /// \[ResponseMetadata.request_id][google.cloud.talent.v4.ResponseMetadata.request_id\].
-    #[prost(string, tag="1")]
-    pub request_id: ::prost::alloc::string::String,
-    /// Required. A unique identifier, generated by the client application.
-    #[prost(string, tag="2")]
-    pub event_id: ::prost::alloc::string::String,
-    /// Required. The timestamp of the event.
-    #[prost(message, optional, tag="4")]
-    pub create_time: ::core::option::Option<::prost_types::Timestamp>,
-    /// Notes about the event provided by recruiters or other users, for example,
-    /// feedback on why a job was bookmarked.
-    #[prost(string, tag="9")]
-    pub event_notes: ::prost::alloc::string::String,
-    /// Required.
-    ///
-    /// The detail information of a specific event type.
-    #[prost(oneof="client_event::Event", tags="5")]
-    pub event: ::core::option::Option<client_event::Event>,
-}
-/// Nested message and enum types in `ClientEvent`.
-pub mod client_event {
-    /// Required.
-    ///
-    /// The detail information of a specific event type.
-    #[derive(Clone, PartialEq, ::prost::Oneof)]
-    pub enum Event {
-        /// An event issued when a job seeker interacts with the application that
-        /// implements Cloud Talent Solution.
-        #[prost(message, tag="5")]
-        JobEvent(super::JobEvent),
-    }
-}
-/// An event issued when a job seeker interacts with the application that
-/// implements Cloud Talent Solution.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct JobEvent {
-    /// Required. The type of the event (see \[JobEventType][google.cloud.talent.v4.JobEvent.JobEventType\]).
-    #[prost(enumeration="job_event::JobEventType", tag="1")]
-    pub r#type: i32,
-    /// Required. The [job name(s)]\[google.cloud.talent.v4.Job.name\] associated with this event.
-    /// For example, if this is an \[impression][google.cloud.talent.v4.JobEvent.JobEventType.IMPRESSION\] event,
-    /// this field contains the identifiers of all jobs shown to the job seeker.
-    /// If this was a \[view][google.cloud.talent.v4.JobEvent.JobEventType.VIEW\] event, this field contains the
-    /// identifier of the viewed job.
+    /// The resource name for a company. This is generated by the service when a
+    /// company is created.
     ///
     /// The format is
-    /// "projects/{project_id}/tenants/{tenant_id}/jobs/{job_id}", for
-    /// example, "projects/foo/tenants/bar/jobs/baz".
-    #[prost(string, repeated, tag="2")]
-    pub jobs: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
+    /// "projects/{project_id}/tenants/{tenant_id}/companies/{company_id}", for
+    /// example, "projects/foo/tenants/bar/companies/baz".
+    #[prost(string, tag="1")]
+    pub name: ::prost::alloc::string::String,
+    /// Required. The display name of the company, for example, "Google LLC".
+    #[prost(string, tag="2")]
+    pub display_name: ::prost::alloc::string::String,
+    /// Required. Client side company identifier, used to uniquely identify the
+    /// company.
+    ///
+    /// The maximum number of allowed characters is 255.
+    #[prost(string, tag="3")]
+    pub external_id: ::prost::alloc::string::String,
+    /// The employer's company size.
+    #[prost(enumeration="CompanySize", tag="4")]
+    pub size: i32,
+    /// The street address of the company's main headquarters, which may be
+    /// different from the job location. The service attempts
+    /// to geolocate the provided address, and populates a more specific
+    /// location wherever possible in \[DerivedInfo.headquarters_location][google.cloud.talent.v4.Company.DerivedInfo.headquarters_location\].
+    #[prost(string, tag="5")]
+    pub headquarters_address: ::prost::alloc::string::String,
+    /// Set to true if it is the hiring agency that post jobs for other
+    /// employers.
+    ///
+    /// Defaults to false if not provided.
+    #[prost(bool, tag="6")]
+    pub hiring_agency: bool,
+    /// Equal Employment Opportunity legal disclaimer text to be
+    /// associated with all jobs, and typically to be displayed in all
+    /// roles.
+    ///
+    /// The maximum number of allowed characters is 500.
+    #[prost(string, tag="7")]
+    pub eeo_text: ::prost::alloc::string::String,
+    /// The URI representing the company's primary web site or home page,
+    /// for example, "<https://www.google.com".>
+    ///
+    /// The maximum number of allowed characters is 255.
+    #[prost(string, tag="8")]
+    pub website_uri: ::prost::alloc::string::String,
+    /// The URI to employer's career site or careers page on the employer's web
+    /// site, for example, "<https://careers.google.com".>
+    #[prost(string, tag="9")]
+    pub career_site_uri: ::prost::alloc::string::String,
+    /// A URI that hosts the employer's company logo.
+    #[prost(string, tag="10")]
+    pub image_uri: ::prost::alloc::string::String,
+    /// A list of keys of filterable \[Job.custom_attributes][google.cloud.talent.v4.Job.custom_attributes\], whose
+    /// corresponding `string_values` are used in keyword searches. Jobs with
+    /// `string_values` under these specified field keys are returned if any
+    /// of the values match the search keyword. Custom field values with
+    /// parenthesis, brackets and special symbols are not searchable as-is,
+    /// and those keyword queries must be surrounded by quotes.
+    #[prost(string, repeated, tag="11")]
+    pub keyword_searchable_job_custom_attributes: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
+    /// Output only. Derived details about the company.
+    #[prost(message, optional, tag="12")]
+    pub derived_info: ::core::option::Option<company::DerivedInfo>,
+    /// Output only. Indicates whether a company is flagged to be suspended from
+    /// public availability by the service when job content appears suspicious,
+    /// abusive, or spammy.
+    #[prost(bool, tag="13")]
+    pub suspended: bool,
 }
-/// Nested message and enum types in `JobEvent`.
-pub mod job_event {
-    /// An enumeration of an event attributed to the behavior of the end user,
-    /// such as a job seeker.
+/// Nested message and enum types in `Company`.
+pub mod company {
+    /// Derived details about the company.
+    #[derive(Clone, PartialEq, ::prost::Message)]
+    pub struct DerivedInfo {
+        /// A structured headquarters location of the company, resolved from
+        /// \[Company.headquarters_address][google.cloud.talent.v4.Company.headquarters_address\] if provided.
+        #[prost(message, optional, tag="1")]
+        pub headquarters_location: ::core::option::Option<super::Location>,
+    }
+}
+/// The query required to perform a search query.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct JobQuery {
+    /// The query string that matches against the job title, description, and
+    /// location fields.
+    ///
+    /// The maximum number of allowed characters is 255.
+    #[prost(string, tag="1")]
+    pub query: ::prost::alloc::string::String,
+    /// The language code of \[query][google.cloud.talent.v4.JobQuery.query\]. For example, "en-US". This field helps to
+    /// better interpret the query.
+    ///
+    /// If a value isn't specified, the query language code is automatically
+    /// detected, which may not be accurate.
+    ///
+    /// Language code should be in BCP-47 format, such as "en-US" or "sr-Latn".
+    /// For more information, see
+    /// [Tags for Identifying Languages](<https://tools.ietf.org/html/bcp47>).
+    #[prost(string, tag="14")]
+    pub query_language_code: ::prost::alloc::string::String,
+    /// This filter specifies the company entities to search against.
+    ///
+    /// If a value isn't specified, jobs are searched for against all
+    /// companies.
+    ///
+    /// If multiple values are specified, jobs are searched against the
+    /// companies specified.
+    ///
+    /// The format is
+    /// "projects/{project_id}/tenants/{tenant_id}/companies/{company_id}". For
+    /// example, "projects/foo/tenants/bar/companies/baz".
+    ///
+    /// At most 20 company filters are allowed.
+    #[prost(string, repeated, tag="2")]
+    pub companies: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
+    /// The location filter specifies geo-regions containing the jobs to
+    /// search against. See \[LocationFilter][google.cloud.talent.v4.LocationFilter\] for more information.
+    ///
+    /// If a location value isn't specified, jobs fitting the other search
+    /// criteria are retrieved regardless of where they're located.
+    ///
+    /// If multiple values are specified, jobs are retrieved from any of the
+    /// specified locations. If different values are specified for the
+    /// \[LocationFilter.distance_in_miles][google.cloud.talent.v4.LocationFilter.distance_in_miles\] parameter, the maximum provided
+    /// distance is used for all locations.
+    ///
+    /// At most 5 location filters are allowed.
+    #[prost(message, repeated, tag="3")]
+    pub location_filters: ::prost::alloc::vec::Vec<LocationFilter>,
+    /// The category filter specifies the categories of jobs to search against.
+    /// See \[JobCategory][google.cloud.talent.v4.JobCategory\] for more information.
+    ///
+    /// If a value isn't specified, jobs from any category are searched against.
+    ///
+    /// If multiple values are specified, jobs from any of the specified
+    /// categories are searched against.
+    #[prost(enumeration="JobCategory", repeated, tag="4")]
+    pub job_categories: ::prost::alloc::vec::Vec<i32>,
+    /// Allows filtering jobs by commute time with different travel methods (for
+    ///   example, driving or public transit).
+    ///
+    /// Note: This only works when you specify a \[CommuteMethod][google.cloud.talent.v4.CommuteMethod\]. In this case,
+    /// \[location_filters][google.cloud.talent.v4.JobQuery.location_filters\] is ignored.
+    ///
+    ///   Currently we don't support sorting by commute time.
+    #[prost(message, optional, tag="5")]
+    pub commute_filter: ::core::option::Option<CommuteFilter>,
+    /// This filter specifies the company \[Company.display_name][google.cloud.talent.v4.Company.display_name\]
+    /// of the jobs to search against. The company name must match the value
+    /// exactly.
+    ///
+    /// Alternatively, the value being searched for can be wrapped in different
+    /// match operators.
+    /// `SUBSTRING_MATCH(\[value\])`
+    /// The company name must contain a case insensitive substring match of the
+    /// value. Using this function may increase latency.
+    ///
+    /// Sample Value: `SUBSTRING_MATCH(google)`
+    ///
+    /// `MULTI_WORD_TOKEN_MATCH(\[value\])`
+    /// The value will be treated as a multi word token and the company name must
+    /// contain a case insensitive match of the value. Using this function may
+    /// increase latency.
+    ///
+    /// Sample Value: `MULTI_WORD_TOKEN_MATCH(google)`
+    ///
+    /// If a value isn't specified, jobs within the search results are
+    /// associated with any company.
+    ///
+    /// If multiple values are specified, jobs within the search results may be
+    /// associated with any of the specified companies.
+    ///
+    /// At most 20 company display name filters are allowed.
+    #[prost(string, repeated, tag="6")]
+    pub company_display_names: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
+    /// This search filter is applied only to
+    /// \[Job.compensation_info][google.cloud.talent.v4.Job.compensation_info\]. For example, if the filter is specified
+    /// as "Hourly job with per-hour compensation > $15", only jobs meeting
+    /// these criteria are searched. If a filter isn't defined, all open jobs
+    /// are searched.
+    #[prost(message, optional, tag="7")]
+    pub compensation_filter: ::core::option::Option<CompensationFilter>,
+    /// This filter specifies a structured syntax to match against the
+    /// \[Job.custom_attributes][google.cloud.talent.v4.Job.custom_attributes\] marked as `filterable`.
+    ///
+    /// The syntax for this expression is a subset of SQL syntax.
+    ///
+    /// Supported operators are: `=`, `!=`, `<`, `<=`, `>`, and `>=` where the
+    /// left of the operator is a custom field key and the right of the operator
+    /// is a number or a quoted string. You must escape backslash (\\) and
+    /// quote (\") characters.
+    ///
+    /// Supported functions are `LOWER(\[field_name\])` to
+    /// perform a case insensitive match and `EMPTY(\[field_name\])` to filter on the
+    /// existence of a key.
+    ///
+    /// Boolean expressions (AND/OR/NOT) are supported up to 3 levels of
+    /// nesting (for example, "((A AND B AND C) OR NOT D) AND E"), a maximum of 100
+    /// comparisons or functions are allowed in the expression. The expression
+    /// must be < 10000 bytes in length.
+    ///
+    /// Sample Query:
+    /// `(LOWER(driving_license)="class \"a\"" OR EMPTY(driving_license)) AND
+    /// driving_years > 10`
+    #[prost(string, tag="8")]
+    pub custom_attribute_filter: ::prost::alloc::string::String,
+    /// This flag controls the spell-check feature. If false, the
+    /// service attempts to correct a misspelled query,
+    /// for example, "enginee" is corrected to "engineer".
+    ///
+    /// Defaults to false: a spell check is performed.
+    #[prost(bool, tag="9")]
+    pub disable_spell_check: bool,
+    /// The employment type filter specifies the employment type of jobs to
+    /// search against, such as \[EmploymentType.FULL_TIME][google.cloud.talent.v4.EmploymentType.FULL_TIME\].
+    ///
+    /// If a value isn't specified, jobs in the search results includes any
+    /// employment type.
+    ///
+    /// If multiple values are specified, jobs in the search results include
+    /// any of the specified employment types.
+    #[prost(enumeration="EmploymentType", repeated, tag="10")]
+    pub employment_types: ::prost::alloc::vec::Vec<i32>,
+    /// This filter specifies the locale of jobs to search against,
+    /// for example, "en-US".
+    ///
+    /// If a value isn't specified, the search results can contain jobs in any
+    /// locale.
+    ///
+    ///
+    /// Language codes should be in BCP-47 format, such as "en-US" or "sr-Latn".
+    /// For more information, see
+    /// [Tags for Identifying Languages](<https://tools.ietf.org/html/bcp47>).
+    ///
+    /// At most 10 language code filters are allowed.
+    #[prost(string, repeated, tag="11")]
+    pub language_codes: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
+    /// Jobs published within a range specified by this filter are searched
+    /// against.
+    #[prost(message, optional, tag="12")]
+    pub publish_time_range: ::core::option::Option<TimestampRange>,
+    /// This filter specifies a list of job names to be excluded during search.
+    ///
+    /// At most 400 excluded job names are allowed.
+    #[prost(string, repeated, tag="13")]
+    pub excluded_jobs: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
+}
+/// Geographic region of the search.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct LocationFilter {
+    /// The address name, such as "Mountain View" or "Bay Area".
+    #[prost(string, tag="1")]
+    pub address: ::prost::alloc::string::String,
+    /// CLDR region code of the country/region. This field may be used in two ways:
+    ///
+    /// 1) If telecommute preference is not set, this field is used address
+    /// ambiguity of the user-input address. For example, "Liverpool" may refer to
+    /// "Liverpool, NY, US" or "Liverpool, UK". This region code biases the
+    /// address resolution toward a specific country or territory. If this field is
+    /// not set, address resolution is biased toward the United States by default.
+    ///
+    /// 2) If telecommute preference is set to TELECOMMUTE_ALLOWED, the
+    /// telecommute location filter will be limited to the region specified in this
+    /// field. If this field is not set, the telecommute job locations will not be
+    ///
+    /// See
+    /// <https://unicode-org.github.io/cldr-staging/charts/latest/supplemental/territory_information.html>
+    /// for details. Example: "CH" for Switzerland.
+    #[prost(string, tag="2")]
+    pub region_code: ::prost::alloc::string::String,
+    /// The latitude and longitude of the geographic center to search from. This
+    /// field is ignored if `address` is provided.
+    #[prost(message, optional, tag="3")]
+    pub lat_lng: ::core::option::Option<super::super::super::r#type::LatLng>,
+    /// The distance_in_miles is applied when the location being searched for is
+    /// identified as a city or smaller. This field is ignored if the location
+    /// being searched for is a state or larger.
+    #[prost(double, tag="4")]
+    pub distance_in_miles: f64,
+    /// Allows the client to return jobs without a
+    /// set location, specifically, telecommuting jobs (telecommuting is considered
+    /// by the service as a special location).
+    /// \[Job.posting_region][google.cloud.talent.v4.Job.posting_region\] indicates if a job permits telecommuting.
+    /// If this field is set to \[TelecommutePreference.TELECOMMUTE_ALLOWED][google.cloud.talent.v4.LocationFilter.TelecommutePreference.TELECOMMUTE_ALLOWED\],
+    /// telecommuting jobs are searched, and \[address][google.cloud.talent.v4.LocationFilter.address\] and \[lat_lng][google.cloud.talent.v4.LocationFilter.lat_lng\] are
+    /// ignored. If not set or set to
+    /// \[TelecommutePreference.TELECOMMUTE_EXCLUDED][google.cloud.talent.v4.LocationFilter.TelecommutePreference.TELECOMMUTE_EXCLUDED\], the telecommute status of
+    /// the jobs is ignored. Jobs that have \[PostingRegion.TELECOMMUTE][google.cloud.talent.v4.PostingRegion.TELECOMMUTE\] and have
+    /// additional \[Job.addresses][google.cloud.talent.v4.Job.addresses\] may still be matched based on other location
+    /// filters using \[address][google.cloud.talent.v4.LocationFilter.address\] or \[latlng][\].
+    ///
+    /// This filter can be used by itself to search exclusively for telecommuting
+    /// jobs, or it can be combined with another location
+    /// filter to search for a combination of job locations,
+    /// such as "Mountain View" or "telecommuting" jobs. However, when used in
+    /// combination with other location filters, telecommuting jobs can be
+    /// treated as less relevant than other jobs in the search response.
+    ///
+    /// This field is only used for job search requests.
+    #[prost(enumeration="location_filter::TelecommutePreference", tag="5")]
+    pub telecommute_preference: i32,
+}
+/// Nested message and enum types in `LocationFilter`.
+pub mod location_filter {
+    /// Specify whether to include telecommute jobs.
     #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
     #[repr(i32)]
-    pub enum JobEventType {
-        /// The event is unspecified by other provided values.
+    pub enum TelecommutePreference {
+        /// Default value if the telecommute preference isn't specified.
         Unspecified = 0,
-        /// The job seeker or other entity interacting with the service has
-        /// had a job rendered in their view, such as in a list of search results in
-        /// a compressed or clipped format. This event is typically associated with
-        /// the viewing of a jobs list on a single page by a job seeker.
-        Impression = 1,
-        /// The job seeker, or other entity interacting with the service, has
-        /// viewed the details of a job, including the full description. This
-        /// event doesn't apply to the viewing a snippet of a job appearing as a
-        /// part of the job search results. Viewing a snippet is associated with an
-        /// \[impression][google.cloud.talent.v4.JobEvent.JobEventType.IMPRESSION\]).
-        View = 2,
-        /// The job seeker or other entity interacting with the service
-        /// performed an action to view a job and was redirected to a different
-        /// website for job.
-        ViewRedirect = 3,
-        /// The job seeker or other entity interacting with the service
-        /// began the process or demonstrated the intention of applying for a job.
-        ApplicationStart = 4,
-        /// The job seeker or other entity interacting with the service
-        /// submitted an application for a job.
-        ApplicationFinish = 5,
-        /// The job seeker or other entity interacting with the service
-        /// submitted an application for a job with a single click without
-        /// entering information. If a job seeker performs this action, send only
-        /// this event to the service. Do not also send
-        /// \[JobEventType.APPLICATION_START][google.cloud.talent.v4.JobEvent.JobEventType.APPLICATION_START\] or \[JobEventType.APPLICATION_FINISH][google.cloud.talent.v4.JobEvent.JobEventType.APPLICATION_FINISH\]
-        /// events.
-        ApplicationQuickSubmission = 6,
-        /// The job seeker or other entity interacting with the service
-        /// performed an action to apply to a job and was redirected to a different
-        /// website to complete the application.
-        ApplicationRedirect = 7,
-        /// The job seeker or other entity interacting with the service began the
-        /// process or demonstrated the intention of applying for a job from the
-        /// search results page without viewing the details of the job posting.
-        /// If sending this event, JobEventType.VIEW event shouldn't be sent.
-        ApplicationStartFromSearch = 8,
-        /// The job seeker, or other entity interacting with the service, performs an
-        /// action with a single click from the search results page to apply to a job
-        /// (without viewing the details of the job posting), and is redirected
-        /// to a different website to complete the application. If a candidate
-        /// performs this action, send only this event to the service. Do not also
-        /// send \[JobEventType.APPLICATION_START][google.cloud.talent.v4.JobEvent.JobEventType.APPLICATION_START\],
-        /// \[JobEventType.APPLICATION_FINISH][google.cloud.talent.v4.JobEvent.JobEventType.APPLICATION_FINISH\] or \[JobEventType.VIEW][google.cloud.talent.v4.JobEvent.JobEventType.VIEW\] events.
-        ApplicationRedirectFromSearch = 9,
-        /// This event should be used when a company submits an application
-        /// on behalf of a job seeker. This event is intended for use by staffing
-        /// agencies attempting to place candidates.
-        ApplicationCompanySubmit = 10,
-        /// The job seeker or other entity interacting with the service demonstrated
-        /// an interest in a job by bookmarking or saving it.
-        Bookmark = 11,
-        /// The job seeker or other entity interacting with the service was
-        /// sent a notification, such as an email alert or device notification,
-        /// containing one or more jobs listings generated by the service.
-        Notification = 12,
-        /// The job seeker or other entity interacting with the service was
-        /// employed by the hiring entity (employer). Send this event
-        /// only if the job seeker was hired through an application that was
-        /// initiated by a search conducted through the Cloud Talent Solution
-        /// service.
-        Hired = 13,
-        /// A recruiter or staffing agency submitted an application on behalf of the
-        /// candidate after interacting with the service to identify a suitable job
-        /// posting.
-        SentCv = 14,
-        /// The entity interacting with the service (for example, the job seeker),
-        /// was granted an initial interview by the hiring entity (employer). This
-        /// event should only be sent if the job seeker was granted an interview as
-        /// part of an application that was initiated by a search conducted through /
-        /// recommendation provided by the Cloud Talent Solution service.
-        InterviewGranted = 15,
+        /// Deprecated: Ignore telecommute status of jobs. Use
+        /// TELECOMMUTE_JOBS_EXCLUDED if want to exclude telecommute jobs.
+        TelecommuteExcluded = 1,
+        /// Allow telecommute jobs.
+        TelecommuteAllowed = 2,
+        /// Exclude telecommute jobs.
+        TelecommuteJobsExcluded = 3,
     }
-}
-/// The report event request.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct CreateClientEventRequest {
-    /// Required. Resource name of the tenant under which the event is created.
-    ///
-    /// The format is "projects/{project_id}/tenants/{tenant_id}", for example,
-    /// "projects/foo/tenants/bar".
-    #[prost(string, tag="1")]
-    pub parent: ::prost::alloc::string::String,
-    /// Required. Events issued when end user interacts with customer's application that
-    /// uses Cloud Talent Solution.
-    #[prost(message, optional, tag="2")]
-    pub client_event: ::core::option::Option<ClientEvent>,
-}
-/// Generated client implementations.
-pub mod event_service_client {
-    #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
-    use tonic::codegen::*;
-    /// A service handles client event report.
-    #[derive(Debug, Clone)]
-    pub struct EventServiceClient<T> {
-        inner: tonic::client::Grpc<T>,
-    }
-    impl<T> EventServiceClient<T>
-    where
-        T: tonic::client::GrpcService<tonic::body::BoxBody>,
-        T::Error: Into<StdError>,
-        T::ResponseBody: Body<Data = Bytes> + Send + 'static,
-        <T::ResponseBody as Body>::Error: Into<StdError> + Send,
-    {
-        pub fn new(inner: T) -> Self {
-            let inner = tonic::client::Grpc::new(inner);
-            Self { inner }
-        }
-        pub fn with_interceptor<F>(
-            inner: T,
-            interceptor: F,
-        ) -> EventServiceClient<InterceptedService<T, F>>
-        where
-            F: tonic::service::Interceptor,
-            T::ResponseBody: Default,
-            T: tonic::codegen::Service<
-                http::Request<tonic::body::BoxBody>,
-                Response = http::Response<
-                    <T as tonic::client::GrpcService<tonic::body::BoxBody>>::ResponseBody,
-                >,
-            >,
-            <T as tonic::codegen::Service<
-                http::Request<tonic::body::BoxBody>,
-            >>::Error: Into<StdError> + Send + Sync,
-        {
-            EventServiceClient::new(InterceptedService::new(inner, interceptor))
-        }
-        /// Compress requests with `gzip`.
+    impl TelecommutePreference {
+        /// String value of the enum field names used in the ProtoBuf definition.
         ///
-        /// This requires the server to support it otherwise it might respond with an
-        /// error.
-        #[must_use]
-        pub fn send_gzip(mut self) -> Self {
-            self.inner = self.inner.send_gzip();
-            self
-        }
-        /// Enable decompressing responses with `gzip`.
-        #[must_use]
-        pub fn accept_gzip(mut self) -> Self {
-            self.inner = self.inner.accept_gzip();
-            self
-        }
-        /// Report events issued when end user interacts with customer's application
-        /// that uses Cloud Talent Solution. You may inspect the created events in
-        /// [self service
-        /// tools](https://console.cloud.google.com/talent-solution/overview).
-        /// [Learn
-        /// more](https://cloud.google.com/talent-solution/docs/management-tools)
-        /// about self service tools.
-        pub async fn create_client_event(
-            &mut self,
-            request: impl tonic::IntoRequest<super::CreateClientEventRequest>,
-        ) -> Result<tonic::Response<super::ClientEvent>, tonic::Status> {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/google.cloud.talent.v4.EventService/CreateClientEvent",
-            );
-            self.inner.unary(request.into_request(), path, codec).await
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                TelecommutePreference::Unspecified => "TELECOMMUTE_PREFERENCE_UNSPECIFIED",
+                TelecommutePreference::TelecommuteExcluded => "TELECOMMUTE_EXCLUDED",
+                TelecommutePreference::TelecommuteAllowed => "TELECOMMUTE_ALLOWED",
+                TelecommutePreference::TelecommuteJobsExcluded => "TELECOMMUTE_JOBS_EXCLUDED",
+            }
         }
     }
+}
+/// Filter on job compensation type and amount.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct CompensationFilter {
+    /// Required. Type of filter.
+    #[prost(enumeration="compensation_filter::FilterType", tag="1")]
+    pub r#type: i32,
+    /// Required. Specify desired `base compensation entry's`
+    /// \[CompensationInfo.CompensationUnit][google.cloud.talent.v4.CompensationInfo.CompensationUnit\].
+    #[prost(enumeration="compensation_info::CompensationUnit", repeated, packed="false", tag="2")]
+    pub units: ::prost::alloc::vec::Vec<i32>,
+    /// Compensation range.
+    #[prost(message, optional, tag="3")]
+    pub range: ::core::option::Option<compensation_info::CompensationRange>,
+    /// If set to true, jobs with unspecified compensation range fields are
+    /// included.
+    #[prost(bool, tag="4")]
+    pub include_jobs_with_unspecified_compensation_range: bool,
+}
+/// Nested message and enum types in `CompensationFilter`.
+pub mod compensation_filter {
+    /// Specify the type of filtering.
+    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+    #[repr(i32)]
+    pub enum FilterType {
+        /// Filter type unspecified. Position holder, INVALID, should never be used.
+        Unspecified = 0,
+        /// Filter by `base compensation entry's` unit. A job is a match if and
+        /// only if the job contains a base CompensationEntry and the base
+        /// CompensationEntry's unit matches provided \[units][google.cloud.talent.v4.CompensationFilter.units\].
+        /// Populate one or more \[units][google.cloud.talent.v4.CompensationFilter.units\].
+        ///
+        /// See \[CompensationInfo.CompensationEntry][google.cloud.talent.v4.CompensationInfo.CompensationEntry\] for definition of
+        /// base compensation entry.
+        UnitOnly = 1,
+        /// Filter by `base compensation entry's` unit and amount / range. A job
+        /// is a match if and only if the job contains a base CompensationEntry, and
+        /// the base entry's unit matches provided
+        /// \[CompensationUnit][google.cloud.talent.v4.CompensationInfo.CompensationUnit\] and
+        /// amount or range overlaps with provided
+        /// \[CompensationRange][google.cloud.talent.v4.CompensationInfo.CompensationRange\].
+        ///
+        /// See \[CompensationInfo.CompensationEntry][google.cloud.talent.v4.CompensationInfo.CompensationEntry\] for definition of
+        /// base compensation entry.
+        ///
+        /// Set exactly one \[units][google.cloud.talent.v4.CompensationFilter.units\] and populate \[range][google.cloud.talent.v4.CompensationFilter.range\].
+        UnitAndAmount = 2,
+        /// Filter by annualized base compensation amount and `base compensation
+        /// entry's` unit. Populate \[range][google.cloud.talent.v4.CompensationFilter.range\] and zero or more \[units][google.cloud.talent.v4.CompensationFilter.units\].
+        AnnualizedBaseAmount = 3,
+        /// Filter by annualized total compensation amount and `base compensation
+        /// entry's` unit . Populate \[range][google.cloud.talent.v4.CompensationFilter.range\] and zero or more \[units][google.cloud.talent.v4.CompensationFilter.units\].
+        AnnualizedTotalAmount = 4,
+    }
+    impl FilterType {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                FilterType::Unspecified => "FILTER_TYPE_UNSPECIFIED",
+                FilterType::UnitOnly => "UNIT_ONLY",
+                FilterType::UnitAndAmount => "UNIT_AND_AMOUNT",
+                FilterType::AnnualizedBaseAmount => "ANNUALIZED_BASE_AMOUNT",
+                FilterType::AnnualizedTotalAmount => "ANNUALIZED_TOTAL_AMOUNT",
+            }
+        }
+    }
+}
+/// Parameters needed for commute search.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct CommuteFilter {
+    /// Required. The method of transportation to calculate the commute time for.
+    #[prost(enumeration="CommuteMethod", tag="1")]
+    pub commute_method: i32,
+    /// Required. The latitude and longitude of the location to calculate the
+    /// commute time from.
+    #[prost(message, optional, tag="2")]
+    pub start_coordinates: ::core::option::Option<super::super::super::r#type::LatLng>,
+    /// Required. The maximum travel time in seconds. The maximum allowed value is `3600s`
+    /// (one hour). Format is `123s`.
+    #[prost(message, optional, tag="3")]
+    pub travel_duration: ::core::option::Option<::prost_types::Duration>,
+    /// If `true`, jobs without street level addresses may also be returned.
+    /// For city level addresses, the city center is used. For state and coarser
+    /// level addresses, text matching is used.
+    /// If this field is set to `false` or isn't specified, only jobs that include
+    /// street level addresses will be returned by commute search.
+    #[prost(bool, tag="4")]
+    pub allow_imprecise_addresses: bool,
+    /// Traffic factor to take into account while searching by commute.
+    #[prost(oneof="commute_filter::TrafficOption", tags="5, 6")]
+    pub traffic_option: ::core::option::Option<commute_filter::TrafficOption>,
+}
+/// Nested message and enum types in `CommuteFilter`.
+pub mod commute_filter {
+    /// The traffic density to use when calculating commute time.
+    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+    #[repr(i32)]
+    pub enum RoadTraffic {
+        /// Road traffic situation isn't specified.
+        Unspecified = 0,
+        /// Optimal commute time without considering any traffic impact.
+        TrafficFree = 1,
+        /// Commute time calculation takes in account the peak traffic impact.
+        BusyHour = 2,
+    }
+    impl RoadTraffic {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                RoadTraffic::Unspecified => "ROAD_TRAFFIC_UNSPECIFIED",
+                RoadTraffic::TrafficFree => "TRAFFIC_FREE",
+                RoadTraffic::BusyHour => "BUSY_HOUR",
+            }
+        }
+    }
+    /// Traffic factor to take into account while searching by commute.
+    #[derive(Clone, PartialEq, ::prost::Oneof)]
+    pub enum TrafficOption {
+        /// Specifies the traffic density to use when calculating commute time.
+        #[prost(enumeration="RoadTraffic", tag="5")]
+        RoadTraffic(i32),
+        /// The departure time used to calculate traffic impact, represented as
+        /// \[google.type.TimeOfDay][google.type.TimeOfDay\] in local time zone.
+        ///
+        /// Currently traffic model is restricted to hour level resolution.
+        #[prost(message, tag="6")]
+        DepartureTime(super::super::super::super::r#type::TimeOfDay),
+    }
+}
+/// The histogram request.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct HistogramQuery {
+    /// An expression specifies a histogram request against matching jobs for
+    /// searches.
+    ///
+    /// See \[SearchJobsRequest.histogram_queries][google.cloud.talent.v4.SearchJobsRequest.histogram_queries\] for details about syntax.
+    #[prost(string, tag="1")]
+    pub histogram_query: ::prost::alloc::string::String,
+}
+/// Histogram result that matches \[HistogramQuery][google.cloud.talent.v4.HistogramQuery\] specified in searches.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct HistogramQueryResult {
+    /// Requested histogram expression.
+    #[prost(string, tag="1")]
+    pub histogram_query: ::prost::alloc::string::String,
+    /// A map from the values of the facet associated with distinct values to the
+    /// number of matching entries with corresponding value.
+    ///
+    /// The key format is:
+    ///
+    /// * (for string histogram) string values stored in the field.
+    /// * (for named numeric bucket) name specified in `bucket()` function, like
+    ///    for `bucket(0, MAX, "non-negative")`, the key will be `non-negative`.
+    /// * (for anonymous numeric bucket) range formatted as `<low>-<high>`, for
+    ///    example, `0-1000`, `MIN-0`, and `0-MAX`.
+    #[prost(btree_map="string, int64", tag="2")]
+    pub histogram: ::prost::alloc::collections::BTreeMap<::prost::alloc::string::String, i64>,
 }
 /// A Job resource represents a job posting (also referred to as a "job listing"
 /// or "job requisition"). A job belongs to a \[Company][google.cloud.talent.v4.Company\], which is the hiring
@@ -1577,380 +2348,6 @@ pub mod job {
         pub html_sanitization: i32,
     }
 }
-/// The query required to perform a search query.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct JobQuery {
-    /// The query string that matches against the job title, description, and
-    /// location fields.
-    ///
-    /// The maximum number of allowed characters is 255.
-    #[prost(string, tag="1")]
-    pub query: ::prost::alloc::string::String,
-    /// The language code of \[query][google.cloud.talent.v4.JobQuery.query\]. For example, "en-US". This field helps to
-    /// better interpret the query.
-    ///
-    /// If a value isn't specified, the query language code is automatically
-    /// detected, which may not be accurate.
-    ///
-    /// Language code should be in BCP-47 format, such as "en-US" or "sr-Latn".
-    /// For more information, see
-    /// [Tags for Identifying Languages](<https://tools.ietf.org/html/bcp47>).
-    #[prost(string, tag="14")]
-    pub query_language_code: ::prost::alloc::string::String,
-    /// This filter specifies the company entities to search against.
-    ///
-    /// If a value isn't specified, jobs are searched for against all
-    /// companies.
-    ///
-    /// If multiple values are specified, jobs are searched against the
-    /// companies specified.
-    ///
-    /// The format is
-    /// "projects/{project_id}/tenants/{tenant_id}/companies/{company_id}". For
-    /// example, "projects/foo/tenants/bar/companies/baz".
-    ///
-    /// At most 20 company filters are allowed.
-    #[prost(string, repeated, tag="2")]
-    pub companies: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
-    /// The location filter specifies geo-regions containing the jobs to
-    /// search against. See \[LocationFilter][google.cloud.talent.v4.LocationFilter\] for more information.
-    ///
-    /// If a location value isn't specified, jobs fitting the other search
-    /// criteria are retrieved regardless of where they're located.
-    ///
-    /// If multiple values are specified, jobs are retrieved from any of the
-    /// specified locations. If different values are specified for the
-    /// \[LocationFilter.distance_in_miles][google.cloud.talent.v4.LocationFilter.distance_in_miles\] parameter, the maximum provided
-    /// distance is used for all locations.
-    ///
-    /// At most 5 location filters are allowed.
-    #[prost(message, repeated, tag="3")]
-    pub location_filters: ::prost::alloc::vec::Vec<LocationFilter>,
-    /// The category filter specifies the categories of jobs to search against.
-    /// See \[JobCategory][google.cloud.talent.v4.JobCategory\] for more information.
-    ///
-    /// If a value isn't specified, jobs from any category are searched against.
-    ///
-    /// If multiple values are specified, jobs from any of the specified
-    /// categories are searched against.
-    #[prost(enumeration="JobCategory", repeated, tag="4")]
-    pub job_categories: ::prost::alloc::vec::Vec<i32>,
-    /// Allows filtering jobs by commute time with different travel methods (for
-    ///  example, driving or public transit).
-    ///
-    /// Note: This only works when you specify a \[CommuteMethod][google.cloud.talent.v4.CommuteMethod\]. In this case,
-    /// \[location_filters][google.cloud.talent.v4.JobQuery.location_filters\] is ignored.
-    ///
-    ///  Currently we don't support sorting by commute time.
-    #[prost(message, optional, tag="5")]
-    pub commute_filter: ::core::option::Option<CommuteFilter>,
-    /// This filter specifies the company \[Company.display_name][google.cloud.talent.v4.Company.display_name\]
-    /// of the jobs to search against. The company name must match the value
-    /// exactly.
-    ///
-    /// Alternatively, the value being searched for can be wrapped in different
-    /// match operators.
-    /// `SUBSTRING_MATCH(\[value\])`
-    /// The company name must contain a case insensitive substring match of the
-    /// value. Using this function may increase latency.
-    ///
-    /// Sample Value: `SUBSTRING_MATCH(google)`
-    ///
-    /// `MULTI_WORD_TOKEN_MATCH(\[value\])`
-    /// The value will be treated as a multi word token and the company name must
-    /// contain a case insensitive match of the value. Using this function may
-    /// increase latency.
-    ///
-    /// Sample Value: `MULTI_WORD_TOKEN_MATCH(google)`
-    ///
-    /// If a value isn't specified, jobs within the search results are
-    /// associated with any company.
-    ///
-    /// If multiple values are specified, jobs within the search results may be
-    /// associated with any of the specified companies.
-    ///
-    /// At most 20 company display name filters are allowed.
-    #[prost(string, repeated, tag="6")]
-    pub company_display_names: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
-    /// This search filter is applied only to
-    /// \[Job.compensation_info][google.cloud.talent.v4.Job.compensation_info\]. For example, if the filter is specified
-    /// as "Hourly job with per-hour compensation > $15", only jobs meeting
-    /// these criteria are searched. If a filter isn't defined, all open jobs
-    /// are searched.
-    #[prost(message, optional, tag="7")]
-    pub compensation_filter: ::core::option::Option<CompensationFilter>,
-    /// This filter specifies a structured syntax to match against the
-    /// \[Job.custom_attributes][google.cloud.talent.v4.Job.custom_attributes\] marked as `filterable`.
-    ///
-    /// The syntax for this expression is a subset of SQL syntax.
-    ///
-    /// Supported operators are: `=`, `!=`, `<`, `<=`, `>`, and `>=` where the
-    /// left of the operator is a custom field key and the right of the operator
-    /// is a number or a quoted string. You must escape backslash (\\) and
-    /// quote (\") characters.
-    ///
-    /// Supported functions are `LOWER(\[field_name\])` to
-    /// perform a case insensitive match and `EMPTY(\[field_name\])` to filter on the
-    /// existence of a key.
-    ///
-    /// Boolean expressions (AND/OR/NOT) are supported up to 3 levels of
-    /// nesting (for example, "((A AND B AND C) OR NOT D) AND E"), a maximum of 100
-    /// comparisons or functions are allowed in the expression. The expression
-    /// must be < 10000 bytes in length.
-    ///
-    /// Sample Query:
-    /// `(LOWER(driving_license)="class \"a\"" OR EMPTY(driving_license)) AND
-    /// driving_years > 10`
-    #[prost(string, tag="8")]
-    pub custom_attribute_filter: ::prost::alloc::string::String,
-    /// This flag controls the spell-check feature. If false, the
-    /// service attempts to correct a misspelled query,
-    /// for example, "enginee" is corrected to "engineer".
-    ///
-    /// Defaults to false: a spell check is performed.
-    #[prost(bool, tag="9")]
-    pub disable_spell_check: bool,
-    /// The employment type filter specifies the employment type of jobs to
-    /// search against, such as \[EmploymentType.FULL_TIME][google.cloud.talent.v4.EmploymentType.FULL_TIME\].
-    ///
-    /// If a value isn't specified, jobs in the search results includes any
-    /// employment type.
-    ///
-    /// If multiple values are specified, jobs in the search results include
-    /// any of the specified employment types.
-    #[prost(enumeration="EmploymentType", repeated, tag="10")]
-    pub employment_types: ::prost::alloc::vec::Vec<i32>,
-    /// This filter specifies the locale of jobs to search against,
-    /// for example, "en-US".
-    ///
-    /// If a value isn't specified, the search results can contain jobs in any
-    /// locale.
-    ///
-    ///
-    /// Language codes should be in BCP-47 format, such as "en-US" or "sr-Latn".
-    /// For more information, see
-    /// [Tags for Identifying Languages](<https://tools.ietf.org/html/bcp47>).
-    ///
-    /// At most 10 language code filters are allowed.
-    #[prost(string, repeated, tag="11")]
-    pub language_codes: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
-    /// Jobs published within a range specified by this filter are searched
-    /// against.
-    #[prost(message, optional, tag="12")]
-    pub publish_time_range: ::core::option::Option<TimestampRange>,
-    /// This filter specifies a list of job names to be excluded during search.
-    ///
-    /// At most 400 excluded job names are allowed.
-    #[prost(string, repeated, tag="13")]
-    pub excluded_jobs: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
-}
-/// Geographic region of the search.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct LocationFilter {
-    /// The address name, such as "Mountain View" or "Bay Area".
-    #[prost(string, tag="1")]
-    pub address: ::prost::alloc::string::String,
-    /// CLDR region code of the country/region. This field may be used in two ways:
-    ///
-    /// 1) If telecommute preference is not set, this field is used address
-    /// ambiguity of the user-input address. For example, "Liverpool" may refer to
-    /// "Liverpool, NY, US" or "Liverpool, UK". This region code biases the
-    /// address resolution toward a specific country or territory. If this field is
-    /// not set, address resolution is biased toward the United States by default.
-    ///
-    /// 2) If telecommute preference is set to TELECOMMUTE_ALLOWED, the
-    /// telecommute location filter will be limited to the region specified in this
-    /// field. If this field is not set, the telecommute job locations will not be
-    ///
-    /// See
-    /// <https://unicode-org.github.io/cldr-staging/charts/latest/supplemental/territory_information.html>
-    /// for details. Example: "CH" for Switzerland.
-    #[prost(string, tag="2")]
-    pub region_code: ::prost::alloc::string::String,
-    /// The latitude and longitude of the geographic center to search from. This
-    /// field is ignored if `address` is provided.
-    #[prost(message, optional, tag="3")]
-    pub lat_lng: ::core::option::Option<super::super::super::r#type::LatLng>,
-    /// The distance_in_miles is applied when the location being searched for is
-    /// identified as a city or smaller. This field is ignored if the location
-    /// being searched for is a state or larger.
-    #[prost(double, tag="4")]
-    pub distance_in_miles: f64,
-    /// Allows the client to return jobs without a
-    /// set location, specifically, telecommuting jobs (telecommuting is considered
-    /// by the service as a special location).
-    /// \[Job.posting_region][google.cloud.talent.v4.Job.posting_region\] indicates if a job permits telecommuting.
-    /// If this field is set to \[TelecommutePreference.TELECOMMUTE_ALLOWED][google.cloud.talent.v4.LocationFilter.TelecommutePreference.TELECOMMUTE_ALLOWED\],
-    /// telecommuting jobs are searched, and \[address][google.cloud.talent.v4.LocationFilter.address\] and \[lat_lng][google.cloud.talent.v4.LocationFilter.lat_lng\] are
-    /// ignored. If not set or set to
-    /// \[TelecommutePreference.TELECOMMUTE_EXCLUDED][google.cloud.talent.v4.LocationFilter.TelecommutePreference.TELECOMMUTE_EXCLUDED\], the telecommute status of
-    /// the jobs is ignored. Jobs that have \[PostingRegion.TELECOMMUTE][google.cloud.talent.v4.PostingRegion.TELECOMMUTE\] and have
-    /// additional \[Job.addresses][google.cloud.talent.v4.Job.addresses\] may still be matched based on other location
-    /// filters using \[address][google.cloud.talent.v4.LocationFilter.address\] or \[latlng][\].
-    ///
-    /// This filter can be used by itself to search exclusively for telecommuting
-    /// jobs, or it can be combined with another location
-    /// filter to search for a combination of job locations,
-    /// such as "Mountain View" or "telecommuting" jobs. However, when used in
-    /// combination with other location filters, telecommuting jobs can be
-    /// treated as less relevant than other jobs in the search response.
-    ///
-    /// This field is only used for job search requests.
-    #[prost(enumeration="location_filter::TelecommutePreference", tag="5")]
-    pub telecommute_preference: i32,
-}
-/// Nested message and enum types in `LocationFilter`.
-pub mod location_filter {
-    /// Specify whether to include telecommute jobs.
-    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
-    #[repr(i32)]
-    pub enum TelecommutePreference {
-        /// Default value if the telecommute preference isn't specified.
-        Unspecified = 0,
-        /// Deprecated: Ignore telecommute status of jobs. Use
-        /// TELECOMMUTE_JOBS_EXCLUDED if want to exclude telecommute jobs.
-        TelecommuteExcluded = 1,
-        /// Allow telecommute jobs.
-        TelecommuteAllowed = 2,
-        /// Exclude telecommute jobs.
-        TelecommuteJobsExcluded = 3,
-    }
-}
-/// Filter on job compensation type and amount.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct CompensationFilter {
-    /// Required. Type of filter.
-    #[prost(enumeration="compensation_filter::FilterType", tag="1")]
-    pub r#type: i32,
-    /// Required. Specify desired `base compensation entry's`
-    /// \[CompensationInfo.CompensationUnit][google.cloud.talent.v4.CompensationInfo.CompensationUnit\].
-    #[prost(enumeration="compensation_info::CompensationUnit", repeated, packed="false", tag="2")]
-    pub units: ::prost::alloc::vec::Vec<i32>,
-    /// Compensation range.
-    #[prost(message, optional, tag="3")]
-    pub range: ::core::option::Option<compensation_info::CompensationRange>,
-    /// If set to true, jobs with unspecified compensation range fields are
-    /// included.
-    #[prost(bool, tag="4")]
-    pub include_jobs_with_unspecified_compensation_range: bool,
-}
-/// Nested message and enum types in `CompensationFilter`.
-pub mod compensation_filter {
-    /// Specify the type of filtering.
-    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
-    #[repr(i32)]
-    pub enum FilterType {
-        /// Filter type unspecified. Position holder, INVALID, should never be used.
-        Unspecified = 0,
-        /// Filter by `base compensation entry's` unit. A job is a match if and
-        /// only if the job contains a base CompensationEntry and the base
-        /// CompensationEntry's unit matches provided \[units][google.cloud.talent.v4.CompensationFilter.units\].
-        /// Populate one or more \[units][google.cloud.talent.v4.CompensationFilter.units\].
-        ///
-        /// See \[CompensationInfo.CompensationEntry][google.cloud.talent.v4.CompensationInfo.CompensationEntry\] for definition of
-        /// base compensation entry.
-        UnitOnly = 1,
-        /// Filter by `base compensation entry's` unit and amount / range. A job
-        /// is a match if and only if the job contains a base CompensationEntry, and
-        /// the base entry's unit matches provided
-        /// \[CompensationUnit][google.cloud.talent.v4.CompensationInfo.CompensationUnit\] and
-        /// amount or range overlaps with provided
-        /// \[CompensationRange][google.cloud.talent.v4.CompensationInfo.CompensationRange\].
-        ///
-        /// See \[CompensationInfo.CompensationEntry][google.cloud.talent.v4.CompensationInfo.CompensationEntry\] for definition of
-        /// base compensation entry.
-        ///
-        /// Set exactly one \[units][google.cloud.talent.v4.CompensationFilter.units\] and populate \[range][google.cloud.talent.v4.CompensationFilter.range\].
-        UnitAndAmount = 2,
-        /// Filter by annualized base compensation amount and `base compensation
-        /// entry's` unit. Populate \[range][google.cloud.talent.v4.CompensationFilter.range\] and zero or more \[units][google.cloud.talent.v4.CompensationFilter.units\].
-        AnnualizedBaseAmount = 3,
-        /// Filter by annualized total compensation amount and `base compensation
-        /// entry's` unit . Populate \[range][google.cloud.talent.v4.CompensationFilter.range\] and zero or more \[units][google.cloud.talent.v4.CompensationFilter.units\].
-        AnnualizedTotalAmount = 4,
-    }
-}
-/// Parameters needed for commute search.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct CommuteFilter {
-    /// Required. The method of transportation to calculate the commute time for.
-    #[prost(enumeration="CommuteMethod", tag="1")]
-    pub commute_method: i32,
-    /// Required. The latitude and longitude of the location to calculate the
-    /// commute time from.
-    #[prost(message, optional, tag="2")]
-    pub start_coordinates: ::core::option::Option<super::super::super::r#type::LatLng>,
-    /// Required. The maximum travel time in seconds. The maximum allowed value is `3600s`
-    /// (one hour). Format is `123s`.
-    #[prost(message, optional, tag="3")]
-    pub travel_duration: ::core::option::Option<::prost_types::Duration>,
-    /// If `true`, jobs without street level addresses may also be returned.
-    /// For city level addresses, the city center is used. For state and coarser
-    /// level addresses, text matching is used.
-    /// If this field is set to `false` or isn't specified, only jobs that include
-    /// street level addresses will be returned by commute search.
-    #[prost(bool, tag="4")]
-    pub allow_imprecise_addresses: bool,
-    /// Traffic factor to take into account while searching by commute.
-    #[prost(oneof="commute_filter::TrafficOption", tags="5, 6")]
-    pub traffic_option: ::core::option::Option<commute_filter::TrafficOption>,
-}
-/// Nested message and enum types in `CommuteFilter`.
-pub mod commute_filter {
-    /// The traffic density to use when calculating commute time.
-    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
-    #[repr(i32)]
-    pub enum RoadTraffic {
-        /// Road traffic situation isn't specified.
-        Unspecified = 0,
-        /// Optimal commute time without considering any traffic impact.
-        TrafficFree = 1,
-        /// Commute time calculation takes in account the peak traffic impact.
-        BusyHour = 2,
-    }
-    /// Traffic factor to take into account while searching by commute.
-    #[derive(Clone, PartialEq, ::prost::Oneof)]
-    pub enum TrafficOption {
-        /// Specifies the traffic density to use when calculating commute time.
-        #[prost(enumeration="RoadTraffic", tag="5")]
-        RoadTraffic(i32),
-        /// The departure time used to calculate traffic impact, represented as
-        /// \[google.type.TimeOfDay][google.type.TimeOfDay\] in local time zone.
-        ///
-        /// Currently traffic model is restricted to hour level resolution.
-        #[prost(message, tag="6")]
-        DepartureTime(super::super::super::super::r#type::TimeOfDay),
-    }
-}
-/// The histogram request.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct HistogramQuery {
-    /// An expression specifies a histogram request against matching jobs for
-    /// searches.
-    ///
-    /// See \[SearchJobsRequest.histogram_queries][google.cloud.talent.v4.SearchJobsRequest.histogram_queries\] for details about syntax.
-    #[prost(string, tag="1")]
-    pub histogram_query: ::prost::alloc::string::String,
-}
-/// Histogram result that matches \[HistogramQuery][google.cloud.talent.v4.HistogramQuery\] specified in searches.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct HistogramQueryResult {
-    /// Requested histogram expression.
-    #[prost(string, tag="1")]
-    pub histogram_query: ::prost::alloc::string::String,
-    /// A map from the values of the facet associated with distinct values to the
-    /// number of matching entries with corresponding value.
-    ///
-    /// The key format is:
-    ///
-    /// * (for string histogram) string values stored in the field.
-    /// * (for named numeric bucket) name specified in `bucket()` function, like
-    ///   for `bucket(0, MAX, "non-negative")`, the key will be `non-negative`.
-    /// * (for anonymous numeric bucket) range formatted as `<low>-<high>`, for
-    ///   example, `0-1000`, `MIN-0`, and `0-MAX`.
-    #[prost(btree_map="string, int64", tag="2")]
-    pub histogram: ::prost::alloc::collections::BTreeMap<::prost::alloc::string::String, i64>,
-}
 /// Create job request.
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct CreateJobRequest {
@@ -2135,57 +2532,57 @@ pub struct SearchJobsRequest {
     ///
     /// * company_display_name: histogram by \[Job.company_display_name][google.cloud.talent.v4.Job.company_display_name\].
     /// * employment_type: histogram by \[Job.employment_types][google.cloud.talent.v4.Job.employment_types\], for example,
-    ///   "FULL_TIME", "PART_TIME".
+    ///    "FULL_TIME", "PART_TIME".
     /// * company_size: histogram by \[CompanySize][google.cloud.talent.v4.CompanySize\], for example, "SMALL",
     /// "MEDIUM", "BIG".
     /// * publish_time_in_day: histogram by the \[Job.posting_publish_time][google.cloud.talent.v4.Job.posting_publish_time\]
-    ///   in days.
-    ///   Must specify list of numeric buckets in spec.
+    ///    in days.
+    ///    Must specify list of numeric buckets in spec.
     /// * publish_time_in_month: histogram by the \[Job.posting_publish_time][google.cloud.talent.v4.Job.posting_publish_time\]
-    ///   in months.
-    ///   Must specify list of numeric buckets in spec.
+    ///    in months.
+    ///    Must specify list of numeric buckets in spec.
     /// * publish_time_in_year: histogram by the \[Job.posting_publish_time][google.cloud.talent.v4.Job.posting_publish_time\]
-    ///   in years.
-    ///   Must specify list of numeric buckets in spec.
+    ///    in years.
+    ///    Must specify list of numeric buckets in spec.
     /// * degree_types: histogram by the \[Job.degree_types][google.cloud.talent.v4.Job.degree_types\], for example,
-    ///   "Bachelors", "Masters".
+    ///    "Bachelors", "Masters".
     /// * job_level: histogram by the \[Job.job_level][google.cloud.talent.v4.Job.job_level\], for example, "Entry
-    ///   Level".
+    ///    Level".
     /// * country: histogram by the country code of jobs, for example, "US", "FR".
     /// * admin1: histogram by the admin1 code of jobs, which is a global
-    ///   placeholder referring to the state, province, or the particular term a
-    ///   country uses to define the geographic structure below the country level,
-    ///   for example, "CA", "IL".
+    ///    placeholder referring to the state, province, or the particular term a
+    ///    country uses to define the geographic structure below the country level,
+    ///    for example, "CA", "IL".
     /// * city: histogram by a combination of the "city name, admin1 code". For
-    ///   example,  "Mountain View, CA", "New York, NY".
+    ///    example,  "Mountain View, CA", "New York, NY".
     /// * admin1_country: histogram by a combination of the "admin1 code, country",
-    ///   for example, "CA, US", "IL, US".
+    ///    for example, "CA, US", "IL, US".
     /// * city_coordinate: histogram by the city center's GPS coordinates (latitude
-    ///   and longitude), for example, 37.4038522,-122.0987765. Since the
-    ///   coordinates of a city center can change, customers may need to refresh
-    ///   them periodically.
+    ///    and longitude), for example, 37.4038522,-122.0987765. Since the
+    ///    coordinates of a city center can change, customers may need to refresh
+    ///    them periodically.
     /// * locale: histogram by the \[Job.language_code][google.cloud.talent.v4.Job.language_code\], for example, "en-US",
-    ///   "fr-FR".
+    ///    "fr-FR".
     /// * language: histogram by the language subtag of the \[Job.language_code][google.cloud.talent.v4.Job.language_code\],
-    ///   for example, "en", "fr".
+    ///    for example, "en", "fr".
     /// * category: histogram by the \[JobCategory][google.cloud.talent.v4.JobCategory\], for example,
-    ///   "COMPUTER_AND_IT", "HEALTHCARE".
+    ///    "COMPUTER_AND_IT", "HEALTHCARE".
     /// * base_compensation_unit: histogram by the
-    ///   \[CompensationInfo.CompensationUnit][google.cloud.talent.v4.CompensationInfo.CompensationUnit\] of base
-    ///   salary, for example, "WEEKLY", "MONTHLY".
+    ///    \[CompensationInfo.CompensationUnit][google.cloud.talent.v4.CompensationInfo.CompensationUnit\] of base
+    ///    salary, for example, "WEEKLY", "MONTHLY".
     /// * base_compensation: histogram by the base salary. Must specify list of
-    ///   numeric buckets to group results by.
+    ///    numeric buckets to group results by.
     /// * annualized_base_compensation: histogram by the base annualized salary.
-    ///   Must specify list of numeric buckets to group results by.
+    ///    Must specify list of numeric buckets to group results by.
     /// * annualized_total_compensation: histogram by the total annualized salary.
-    ///   Must specify list of numeric buckets to group results by.
+    ///    Must specify list of numeric buckets to group results by.
     /// * string_custom_attribute: histogram by string \[Job.custom_attributes][google.cloud.talent.v4.Job.custom_attributes\].
-    ///   Values can be accessed via square bracket notations like
-    ///   string_custom_attribute\["key1"\].
+    ///    Values can be accessed via square bracket notations like
+    ///    string_custom_attribute\["key1"\].
     /// * numeric_custom_attribute: histogram by numeric \[Job.custom_attributes][google.cloud.talent.v4.Job.custom_attributes\].
-    ///   Values can be accessed via square bracket notations like
-    ///   numeric_custom_attribute\["key1"\]. Must specify list of numeric buckets to
-    ///   group results by.
+    ///    Values can be accessed via square bracket notations like
+    ///    numeric_custom_attribute\["key1"\]. Must specify list of numeric buckets to
+    ///    group results by.
     ///
     /// Example expressions:
     ///
@@ -2194,7 +2591,7 @@ pub struct SearchJobsRequest {
     /// bucket(100000, MAX)])`
     /// * `count(string_custom_attribute\["some-string-custom-attribute"\])`
     /// * `count(numeric_custom_attribute\["some-numeric-custom-attribute"\],
-    ///   [bucket(MIN, 0, "negative"), bucket(0, MAX, "non-negative")])`
+    ///    [bucket(MIN, 0, "negative"), bucket(0, MAX, "non-negative")])`
     #[prost(message, repeated, tag="7")]
     pub histogram_queries: ::prost::alloc::vec::Vec<HistogramQuery>,
     /// The desired job attributes returned for jobs in the search response.
@@ -2229,50 +2626,50 @@ pub struct SearchJobsRequest {
     /// Supported options are:
     ///
     /// * `"relevance desc"`: By relevance descending, as determined by the API
-    ///   algorithms. Relevance thresholding of query results is only available
-    ///   with this ordering.
+    ///    algorithms. Relevance thresholding of query results is only available
+    ///    with this ordering.
     /// * `"posting_publish_time desc"`: By \[Job.posting_publish_time][google.cloud.talent.v4.Job.posting_publish_time\]
-    ///   descending.
+    ///    descending.
     /// * `"posting_update_time desc"`: By \[Job.posting_update_time][google.cloud.talent.v4.Job.posting_update_time\]
-    ///   descending.
+    ///    descending.
     /// * `"title"`: By \[Job.title][google.cloud.talent.v4.Job.title\] ascending.
     /// * `"title desc"`: By \[Job.title][google.cloud.talent.v4.Job.title\] descending.
     /// * `"annualized_base_compensation"`: By job's
-    ///   \[CompensationInfo.annualized_base_compensation_range][google.cloud.talent.v4.CompensationInfo.annualized_base_compensation_range\] ascending. Jobs
-    ///   whose annualized base compensation is unspecified are put at the end of
-    ///   search results.
+    ///    \[CompensationInfo.annualized_base_compensation_range][google.cloud.talent.v4.CompensationInfo.annualized_base_compensation_range\] ascending. Jobs
+    ///    whose annualized base compensation is unspecified are put at the end of
+    ///    search results.
     /// * `"annualized_base_compensation desc"`: By job's
-    ///   \[CompensationInfo.annualized_base_compensation_range][google.cloud.talent.v4.CompensationInfo.annualized_base_compensation_range\] descending. Jobs
-    ///   whose annualized base compensation is unspecified are put at the end of
-    ///   search results.
+    ///    \[CompensationInfo.annualized_base_compensation_range][google.cloud.talent.v4.CompensationInfo.annualized_base_compensation_range\] descending. Jobs
+    ///    whose annualized base compensation is unspecified are put at the end of
+    ///    search results.
     /// * `"annualized_total_compensation"`: By job's
-    ///   \[CompensationInfo.annualized_total_compensation_range][google.cloud.talent.v4.CompensationInfo.annualized_total_compensation_range\] ascending. Jobs
-    ///   whose annualized base compensation is unspecified are put at the end of
-    ///   search results.
+    ///    \[CompensationInfo.annualized_total_compensation_range][google.cloud.talent.v4.CompensationInfo.annualized_total_compensation_range\] ascending. Jobs
+    ///    whose annualized base compensation is unspecified are put at the end of
+    ///    search results.
     /// * `"annualized_total_compensation desc"`: By job's
-    ///   \[CompensationInfo.annualized_total_compensation_range][google.cloud.talent.v4.CompensationInfo.annualized_total_compensation_range\] descending. Jobs
-    ///   whose annualized base compensation is unspecified are put at the end of
-    ///   search results.
+    ///    \[CompensationInfo.annualized_total_compensation_range][google.cloud.talent.v4.CompensationInfo.annualized_total_compensation_range\] descending. Jobs
+    ///    whose annualized base compensation is unspecified are put at the end of
+    ///    search results.
     /// * `"custom_ranking desc"`: By the relevance score adjusted to the
-    ///   \[SearchJobsRequest.CustomRankingInfo.ranking_expression][google.cloud.talent.v4.SearchJobsRequest.CustomRankingInfo.ranking_expression\] with weight
-    ///   factor assigned by
-    ///   \[SearchJobsRequest.CustomRankingInfo.importance_level][google.cloud.talent.v4.SearchJobsRequest.CustomRankingInfo.importance_level\] in descending
-    ///   order.
+    ///    \[SearchJobsRequest.CustomRankingInfo.ranking_expression][google.cloud.talent.v4.SearchJobsRequest.CustomRankingInfo.ranking_expression\] with weight
+    ///    factor assigned by
+    ///    \[SearchJobsRequest.CustomRankingInfo.importance_level][google.cloud.talent.v4.SearchJobsRequest.CustomRankingInfo.importance_level\] in descending
+    ///    order.
     /// * Location sorting: Use the special syntax to order jobs by distance:<br>
-    ///   `"distance_from('Hawaii')"`: Order by distance from Hawaii.<br>
-    ///   `"distance_from(19.89, 155.5)"`: Order by distance from a coordinate.<br>
-    ///   `"distance_from('Hawaii'), distance_from('Puerto Rico')"`: Order by
-    ///   multiple locations. See details below.<br>
-    ///   `"distance_from('Hawaii'), distance_from(19.89, 155.5)"`: Order by
-    ///   multiple locations. See details below.<br>
-    ///   The string can have a maximum of 256 characters. When multiple distance
-    ///   centers are provided, a job that is close to any of the distance centers
-    ///   would have a high rank. When a job has multiple locations, the job
-    ///   location closest to one of the distance centers will be used. Jobs that
-    ///   don't have locations will be ranked at the bottom. Distance is calculated
-    ///   with a precision of 11.3 meters (37.4 feet). Diversification strategy is
-    ///   still applied unless explicitly disabled in
-    ///   \[diversification_level][google.cloud.talent.v4.SearchJobsRequest.diversification_level\].
+    ///    `"distance_from('Hawaii')"`: Order by distance from Hawaii.<br>
+    ///    `"distance_from(19.89, 155.5)"`: Order by distance from a coordinate.<br>
+    ///    `"distance_from('Hawaii'), distance_from('Puerto Rico')"`: Order by
+    ///    multiple locations. See details below.<br>
+    ///    `"distance_from('Hawaii'), distance_from(19.89, 155.5)"`: Order by
+    ///    multiple locations. See details below.<br>
+    ///    The string can have a maximum of 256 characters. When multiple distance
+    ///    centers are provided, a job that is close to any of the distance centers
+    ///    would have a high rank. When a job has multiple locations, the job
+    ///    location closest to one of the distance centers will be used. Jobs that
+    ///    don't have locations will be ranked at the bottom. Distance is calculated
+    ///    with a precision of 11.3 meters (37.4 feet). Diversification strategy is
+    ///    still applied unless explicitly disabled in
+    ///    \[diversification_level][google.cloud.talent.v4.SearchJobsRequest.diversification_level\].
     #[prost(string, tag="12")]
     pub order_by: ::prost::alloc::string::String,
     /// Controls whether highly similar jobs are returned next to each other in
@@ -2397,6 +2794,23 @@ pub mod search_jobs_request {
             /// score (determined by API algorithm) ignored.
             Extreme = 6,
         }
+        impl ImportanceLevel {
+            /// String value of the enum field names used in the ProtoBuf definition.
+            ///
+            /// The values are not transformed in any way and thus are considered stable
+            /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+            pub fn as_str_name(&self) -> &'static str {
+                match self {
+                    ImportanceLevel::Unspecified => "IMPORTANCE_LEVEL_UNSPECIFIED",
+                    ImportanceLevel::None => "NONE",
+                    ImportanceLevel::Low => "LOW",
+                    ImportanceLevel::Mild => "MILD",
+                    ImportanceLevel::Medium => "MEDIUM",
+                    ImportanceLevel::High => "HIGH",
+                    ImportanceLevel::Extreme => "EXTREME",
+                }
+            }
+        }
     }
     /// A string-represented enumeration of the job search mode. The service
     /// operate differently for different modes of service.
@@ -2415,6 +2829,19 @@ pub mod search_jobs_request {
         /// promotionValue (jobs with a higher promotionValue are returned higher up
         /// in the search results), with relevance being used as a tiebreaker.
         FeaturedJobSearch = 2,
+    }
+    impl SearchMode {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                SearchMode::Unspecified => "SEARCH_MODE_UNSPECIFIED",
+                SearchMode::JobSearch => "JOB_SEARCH",
+                SearchMode::FeaturedJobSearch => "FEATURED_JOB_SEARCH",
+            }
+        }
     }
     /// Controls whether highly similar jobs are returned next to each other in
     /// the search results. Jobs are identified as highly similar based on
@@ -2453,6 +2880,22 @@ pub mod search_jobs_request {
         /// recommended if SIMPLE diversification does not diversify enough.
         DiversifyByLooserSimilarity = 5,
     }
+    impl DiversificationLevel {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                DiversificationLevel::Unspecified => "DIVERSIFICATION_LEVEL_UNSPECIFIED",
+                DiversificationLevel::Disabled => "DISABLED",
+                DiversificationLevel::Simple => "SIMPLE",
+                DiversificationLevel::OnePerCompany => "ONE_PER_COMPANY",
+                DiversificationLevel::TwoPerCompany => "TWO_PER_COMPANY",
+                DiversificationLevel::DiversifyByLooserSimilarity => "DIVERSIFY_BY_LOOSER_SIMILARITY",
+            }
+        }
+    }
     /// Controls what keyword matching behavior the search has. When keyword
     /// matching is enabled, a keyword match returns jobs that may not match given
     /// category filters when there are matching keywords. For example, for the
@@ -2484,6 +2927,20 @@ pub mod search_jobs_request {
         KeywordMatchAll = 2,
         /// Only enable keyword matching over \[Job.title][google.cloud.talent.v4.Job.title\].
         KeywordMatchTitleOnly = 3,
+    }
+    impl KeywordMatchMode {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                KeywordMatchMode::Unspecified => "KEYWORD_MATCH_MODE_UNSPECIFIED",
+                KeywordMatchMode::KeywordMatchDisabled => "KEYWORD_MATCH_DISABLED",
+                KeywordMatchMode::KeywordMatchAll => "KEYWORD_MATCH_ALL",
+                KeywordMatchMode::KeywordMatchTitleOnly => "KEYWORD_MATCH_TITLE_ONLY",
+            }
+        }
     }
 }
 /// Response for SearchJob method.
@@ -2551,7 +3008,7 @@ pub mod search_jobs_response {
         #[prost(string, tag="4")]
         pub search_text_snippet: ::prost::alloc::string::String,
         /// Commute information which is generated based on specified
-        ///  \[CommuteFilter][google.cloud.talent.v4.CommuteFilter\].
+        ///   \[CommuteFilter][google.cloud.talent.v4.CommuteFilter\].
         #[prost(message, optional, tag="5")]
         pub commute_info: ::core::option::Option<CommuteInfo>,
     }
@@ -2697,10 +3154,26 @@ pub enum JobView {
     /// All available attributes are included in the search results.
     Full = 4,
 }
+impl JobView {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            JobView::Unspecified => "JOB_VIEW_UNSPECIFIED",
+            JobView::IdOnly => "JOB_VIEW_ID_ONLY",
+            JobView::Minimal => "JOB_VIEW_MINIMAL",
+            JobView::Small => "JOB_VIEW_SMALL",
+            JobView::Full => "JOB_VIEW_FULL",
+        }
+    }
+}
 /// Generated client implementations.
 pub mod job_service_client {
     #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
     use tonic::codegen::*;
+    use tonic::codegen::http::Uri;
     /// A service handles job management, including job CRUD, enumeration and search.
     #[derive(Debug, Clone)]
     pub struct JobServiceClient<T> {
@@ -2715,6 +3188,10 @@ pub mod job_service_client {
     {
         pub fn new(inner: T) -> Self {
             let inner = tonic::client::Grpc::new(inner);
+            Self { inner }
+        }
+        pub fn with_origin(inner: T, origin: Uri) -> Self {
+            let inner = tonic::client::Grpc::with_origin(inner, origin);
             Self { inner }
         }
         pub fn with_interceptor<F>(
@@ -2736,19 +3213,19 @@ pub mod job_service_client {
         {
             JobServiceClient::new(InterceptedService::new(inner, interceptor))
         }
-        /// Compress requests with `gzip`.
+        /// Compress requests with the given encoding.
         ///
         /// This requires the server to support it otherwise it might respond with an
         /// error.
         #[must_use]
-        pub fn send_gzip(mut self) -> Self {
-            self.inner = self.inner.send_gzip();
+        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.send_compressed(encoding);
             self
         }
-        /// Enable decompressing responses with `gzip`.
+        /// Enable decompressing responses.
         #[must_use]
-        pub fn accept_gzip(mut self) -> Self {
-            self.inner = self.inner.accept_gzip();
+        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.accept_compressed(encoding);
             self
         }
         /// Creates a new job.
@@ -2985,91 +3462,174 @@ pub mod job_service_client {
         }
     }
 }
-/// A Company resource represents a company in the service. A company is the
-/// entity that owns job postings, that is, the hiring entity responsible for
-/// employing applicants for the job position.
+/// An event issued when an end user interacts with the application that
+/// implements Cloud Talent Solution. Providing this information improves the
+/// quality of results for the API clients, enabling the
+/// service to perform optimally. The number of events sent must be consistent
+/// with other calls, such as job searches, issued to the service by the client.
 #[derive(Clone, PartialEq, ::prost::Message)]
-pub struct Company {
-    /// Required during company update.
+pub struct ClientEvent {
+    /// Strongly recommended for the best service experience.
     ///
-    /// The resource name for a company. This is generated by the service when a
-    /// company is created.
+    /// A unique ID generated in the API responses. It can be found in
+    /// \[ResponseMetadata.request_id][google.cloud.talent.v4.ResponseMetadata.request_id\].
+    #[prost(string, tag="1")]
+    pub request_id: ::prost::alloc::string::String,
+    /// Required. A unique identifier, generated by the client application.
+    #[prost(string, tag="2")]
+    pub event_id: ::prost::alloc::string::String,
+    /// Required. The timestamp of the event.
+    #[prost(message, optional, tag="4")]
+    pub create_time: ::core::option::Option<::prost_types::Timestamp>,
+    /// Notes about the event provided by recruiters or other users, for example,
+    /// feedback on why a job was bookmarked.
+    #[prost(string, tag="9")]
+    pub event_notes: ::prost::alloc::string::String,
+    /// Required.
+    ///
+    /// The detail information of a specific event type.
+    #[prost(oneof="client_event::Event", tags="5")]
+    pub event: ::core::option::Option<client_event::Event>,
+}
+/// Nested message and enum types in `ClientEvent`.
+pub mod client_event {
+    /// Required.
+    ///
+    /// The detail information of a specific event type.
+    #[derive(Clone, PartialEq, ::prost::Oneof)]
+    pub enum Event {
+        /// An event issued when a job seeker interacts with the application that
+        /// implements Cloud Talent Solution.
+        #[prost(message, tag="5")]
+        JobEvent(super::JobEvent),
+    }
+}
+/// An event issued when a job seeker interacts with the application that
+/// implements Cloud Talent Solution.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct JobEvent {
+    /// Required. The type of the event (see \[JobEventType][google.cloud.talent.v4.JobEvent.JobEventType\]).
+    #[prost(enumeration="job_event::JobEventType", tag="1")]
+    pub r#type: i32,
+    /// Required. The [job name(s)]\[google.cloud.talent.v4.Job.name\] associated with this event.
+    /// For example, if this is an \[impression][google.cloud.talent.v4.JobEvent.JobEventType.IMPRESSION\] event,
+    /// this field contains the identifiers of all jobs shown to the job seeker.
+    /// If this was a \[view][google.cloud.talent.v4.JobEvent.JobEventType.VIEW\] event, this field contains the
+    /// identifier of the viewed job.
     ///
     /// The format is
-    /// "projects/{project_id}/tenants/{tenant_id}/companies/{company_id}", for
-    /// example, "projects/foo/tenants/bar/companies/baz".
-    #[prost(string, tag="1")]
-    pub name: ::prost::alloc::string::String,
-    /// Required. The display name of the company, for example, "Google LLC".
-    #[prost(string, tag="2")]
-    pub display_name: ::prost::alloc::string::String,
-    /// Required. Client side company identifier, used to uniquely identify the
-    /// company.
-    ///
-    /// The maximum number of allowed characters is 255.
-    #[prost(string, tag="3")]
-    pub external_id: ::prost::alloc::string::String,
-    /// The employer's company size.
-    #[prost(enumeration="CompanySize", tag="4")]
-    pub size: i32,
-    /// The street address of the company's main headquarters, which may be
-    /// different from the job location. The service attempts
-    /// to geolocate the provided address, and populates a more specific
-    /// location wherever possible in \[DerivedInfo.headquarters_location][google.cloud.talent.v4.Company.DerivedInfo.headquarters_location\].
-    #[prost(string, tag="5")]
-    pub headquarters_address: ::prost::alloc::string::String,
-    /// Set to true if it is the hiring agency that post jobs for other
-    /// employers.
-    ///
-    /// Defaults to false if not provided.
-    #[prost(bool, tag="6")]
-    pub hiring_agency: bool,
-    /// Equal Employment Opportunity legal disclaimer text to be
-    /// associated with all jobs, and typically to be displayed in all
-    /// roles.
-    ///
-    /// The maximum number of allowed characters is 500.
-    #[prost(string, tag="7")]
-    pub eeo_text: ::prost::alloc::string::String,
-    /// The URI representing the company's primary web site or home page,
-    /// for example, "<https://www.google.com".>
-    ///
-    /// The maximum number of allowed characters is 255.
-    #[prost(string, tag="8")]
-    pub website_uri: ::prost::alloc::string::String,
-    /// The URI to employer's career site or careers page on the employer's web
-    /// site, for example, "<https://careers.google.com".>
-    #[prost(string, tag="9")]
-    pub career_site_uri: ::prost::alloc::string::String,
-    /// A URI that hosts the employer's company logo.
-    #[prost(string, tag="10")]
-    pub image_uri: ::prost::alloc::string::String,
-    /// A list of keys of filterable \[Job.custom_attributes][google.cloud.talent.v4.Job.custom_attributes\], whose
-    /// corresponding `string_values` are used in keyword searches. Jobs with
-    /// `string_values` under these specified field keys are returned if any
-    /// of the values match the search keyword. Custom field values with
-    /// parenthesis, brackets and special symbols are not searchable as-is,
-    /// and those keyword queries must be surrounded by quotes.
-    #[prost(string, repeated, tag="11")]
-    pub keyword_searchable_job_custom_attributes: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
-    /// Output only. Derived details about the company.
-    #[prost(message, optional, tag="12")]
-    pub derived_info: ::core::option::Option<company::DerivedInfo>,
-    /// Output only. Indicates whether a company is flagged to be suspended from
-    /// public availability by the service when job content appears suspicious,
-    /// abusive, or spammy.
-    #[prost(bool, tag="13")]
-    pub suspended: bool,
+    /// "projects/{project_id}/tenants/{tenant_id}/jobs/{job_id}", for
+    /// example, "projects/foo/tenants/bar/jobs/baz".
+    #[prost(string, repeated, tag="2")]
+    pub jobs: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
 }
-/// Nested message and enum types in `Company`.
-pub mod company {
-    /// Derived details about the company.
-    #[derive(Clone, PartialEq, ::prost::Message)]
-    pub struct DerivedInfo {
-        /// A structured headquarters location of the company, resolved from
-        /// \[Company.headquarters_address][google.cloud.talent.v4.Company.headquarters_address\] if provided.
-        #[prost(message, optional, tag="1")]
-        pub headquarters_location: ::core::option::Option<super::Location>,
+/// Nested message and enum types in `JobEvent`.
+pub mod job_event {
+    /// An enumeration of an event attributed to the behavior of the end user,
+    /// such as a job seeker.
+    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+    #[repr(i32)]
+    pub enum JobEventType {
+        /// The event is unspecified by other provided values.
+        Unspecified = 0,
+        /// The job seeker or other entity interacting with the service has
+        /// had a job rendered in their view, such as in a list of search results in
+        /// a compressed or clipped format. This event is typically associated with
+        /// the viewing of a jobs list on a single page by a job seeker.
+        Impression = 1,
+        /// The job seeker, or other entity interacting with the service, has
+        /// viewed the details of a job, including the full description. This
+        /// event doesn't apply to the viewing a snippet of a job appearing as a
+        /// part of the job search results. Viewing a snippet is associated with an
+        /// \[impression][google.cloud.talent.v4.JobEvent.JobEventType.IMPRESSION\]).
+        View = 2,
+        /// The job seeker or other entity interacting with the service
+        /// performed an action to view a job and was redirected to a different
+        /// website for job.
+        ViewRedirect = 3,
+        /// The job seeker or other entity interacting with the service
+        /// began the process or demonstrated the intention of applying for a job.
+        ApplicationStart = 4,
+        /// The job seeker or other entity interacting with the service
+        /// submitted an application for a job.
+        ApplicationFinish = 5,
+        /// The job seeker or other entity interacting with the service
+        /// submitted an application for a job with a single click without
+        /// entering information. If a job seeker performs this action, send only
+        /// this event to the service. Do not also send
+        /// \[JobEventType.APPLICATION_START][google.cloud.talent.v4.JobEvent.JobEventType.APPLICATION_START\] or \[JobEventType.APPLICATION_FINISH][google.cloud.talent.v4.JobEvent.JobEventType.APPLICATION_FINISH\]
+        /// events.
+        ApplicationQuickSubmission = 6,
+        /// The job seeker or other entity interacting with the service
+        /// performed an action to apply to a job and was redirected to a different
+        /// website to complete the application.
+        ApplicationRedirect = 7,
+        /// The job seeker or other entity interacting with the service began the
+        /// process or demonstrated the intention of applying for a job from the
+        /// search results page without viewing the details of the job posting.
+        /// If sending this event, JobEventType.VIEW event shouldn't be sent.
+        ApplicationStartFromSearch = 8,
+        /// The job seeker, or other entity interacting with the service, performs an
+        /// action with a single click from the search results page to apply to a job
+        /// (without viewing the details of the job posting), and is redirected
+        /// to a different website to complete the application. If a candidate
+        /// performs this action, send only this event to the service. Do not also
+        /// send \[JobEventType.APPLICATION_START][google.cloud.talent.v4.JobEvent.JobEventType.APPLICATION_START\],
+        /// \[JobEventType.APPLICATION_FINISH][google.cloud.talent.v4.JobEvent.JobEventType.APPLICATION_FINISH\] or \[JobEventType.VIEW][google.cloud.talent.v4.JobEvent.JobEventType.VIEW\] events.
+        ApplicationRedirectFromSearch = 9,
+        /// This event should be used when a company submits an application
+        /// on behalf of a job seeker. This event is intended for use by staffing
+        /// agencies attempting to place candidates.
+        ApplicationCompanySubmit = 10,
+        /// The job seeker or other entity interacting with the service demonstrated
+        /// an interest in a job by bookmarking or saving it.
+        Bookmark = 11,
+        /// The job seeker or other entity interacting with the service was
+        /// sent a notification, such as an email alert or device notification,
+        /// containing one or more jobs listings generated by the service.
+        Notification = 12,
+        /// The job seeker or other entity interacting with the service was
+        /// employed by the hiring entity (employer). Send this event
+        /// only if the job seeker was hired through an application that was
+        /// initiated by a search conducted through the Cloud Talent Solution
+        /// service.
+        Hired = 13,
+        /// A recruiter or staffing agency submitted an application on behalf of the
+        /// candidate after interacting with the service to identify a suitable job
+        /// posting.
+        SentCv = 14,
+        /// The entity interacting with the service (for example, the job seeker),
+        /// was granted an initial interview by the hiring entity (employer). This
+        /// event should only be sent if the job seeker was granted an interview as
+        /// part of an application that was initiated by a search conducted through /
+        /// recommendation provided by the Cloud Talent Solution service.
+        InterviewGranted = 15,
+    }
+    impl JobEventType {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                JobEventType::Unspecified => "JOB_EVENT_TYPE_UNSPECIFIED",
+                JobEventType::Impression => "IMPRESSION",
+                JobEventType::View => "VIEW",
+                JobEventType::ViewRedirect => "VIEW_REDIRECT",
+                JobEventType::ApplicationStart => "APPLICATION_START",
+                JobEventType::ApplicationFinish => "APPLICATION_FINISH",
+                JobEventType::ApplicationQuickSubmission => "APPLICATION_QUICK_SUBMISSION",
+                JobEventType::ApplicationRedirect => "APPLICATION_REDIRECT",
+                JobEventType::ApplicationStartFromSearch => "APPLICATION_START_FROM_SEARCH",
+                JobEventType::ApplicationRedirectFromSearch => "APPLICATION_REDIRECT_FROM_SEARCH",
+                JobEventType::ApplicationCompanySubmit => "APPLICATION_COMPANY_SUBMIT",
+                JobEventType::Bookmark => "BOOKMARK",
+                JobEventType::Notification => "NOTIFICATION",
+                JobEventType::Hired => "HIRED",
+                JobEventType::SentCv => "SENT_CV",
+                JobEventType::InterviewGranted => "INTERVIEW_GRANTED",
+            }
+        }
     }
 }
 /// The Request of the CreateCompany method.
@@ -3166,6 +3726,7 @@ pub struct ListCompaniesResponse {
 pub mod company_service_client {
     #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
     use tonic::codegen::*;
+    use tonic::codegen::http::Uri;
     /// A service that handles company management, including CRUD and enumeration.
     #[derive(Debug, Clone)]
     pub struct CompanyServiceClient<T> {
@@ -3180,6 +3741,10 @@ pub mod company_service_client {
     {
         pub fn new(inner: T) -> Self {
             let inner = tonic::client::Grpc::new(inner);
+            Self { inner }
+        }
+        pub fn with_origin(inner: T, origin: Uri) -> Self {
+            let inner = tonic::client::Grpc::with_origin(inner, origin);
             Self { inner }
         }
         pub fn with_interceptor<F>(
@@ -3201,19 +3766,19 @@ pub mod company_service_client {
         {
             CompanyServiceClient::new(InterceptedService::new(inner, interceptor))
         }
-        /// Compress requests with `gzip`.
+        /// Compress requests with the given encoding.
         ///
         /// This requires the server to support it otherwise it might respond with an
         /// error.
         #[must_use]
-        pub fn send_gzip(mut self) -> Self {
-            self.inner = self.inner.send_gzip();
+        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.send_compressed(encoding);
             self
         }
-        /// Enable decompressing responses with `gzip`.
+        /// Enable decompressing responses.
         #[must_use]
-        pub fn accept_gzip(mut self) -> Self {
-            self.inner = self.inner.accept_gzip();
+        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.accept_compressed(encoding);
             self
         }
         /// Creates a new company entity.
@@ -3319,124 +3884,31 @@ pub mod company_service_client {
         }
     }
 }
-/// Auto-complete parameters.
+/// The report event request.
 #[derive(Clone, PartialEq, ::prost::Message)]
-pub struct CompleteQueryRequest {
-    /// Required. Resource name of tenant the completion is performed within.
+pub struct CreateClientEventRequest {
+    /// Required. Resource name of the tenant under which the event is created.
     ///
     /// The format is "projects/{project_id}/tenants/{tenant_id}", for example,
     /// "projects/foo/tenants/bar".
     #[prost(string, tag="1")]
-    pub tenant: ::prost::alloc::string::String,
-    /// Required. The query used to generate suggestions.
-    ///
-    /// The maximum number of allowed characters is 255.
-    #[prost(string, tag="2")]
-    pub query: ::prost::alloc::string::String,
-    /// The list of languages of the query. This is
-    /// the BCP-47 language code, such as "en-US" or "sr-Latn".
-    /// For more information, see
-    /// [Tags for Identifying Languages](<https://tools.ietf.org/html/bcp47>).
-    ///
-    /// The maximum number of allowed characters is 255.
-    #[prost(string, repeated, tag="3")]
-    pub language_codes: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
-    /// Required. Completion result count.
-    ///
-    /// The maximum allowed page size is 10.
-    #[prost(int32, tag="4")]
-    pub page_size: i32,
-    /// If provided, restricts completion to specified company.
-    ///
-    /// The format is
-    /// "projects/{project_id}/tenants/{tenant_id}/companies/{company_id}", for
-    /// example, "projects/foo/tenants/bar/companies/baz".
-    #[prost(string, tag="5")]
-    pub company: ::prost::alloc::string::String,
-    /// The scope of the completion. The defaults is \[CompletionScope.PUBLIC][google.cloud.talent.v4.CompleteQueryRequest.CompletionScope.PUBLIC\].
-    #[prost(enumeration="complete_query_request::CompletionScope", tag="6")]
-    pub scope: i32,
-    /// The completion topic. The default is \[CompletionType.COMBINED][google.cloud.talent.v4.CompleteQueryRequest.CompletionType.COMBINED\].
-    #[prost(enumeration="complete_query_request::CompletionType", tag="7")]
-    pub r#type: i32,
-}
-/// Nested message and enum types in `CompleteQueryRequest`.
-pub mod complete_query_request {
-    /// Enum to specify the scope of completion.
-    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
-    #[repr(i32)]
-    pub enum CompletionScope {
-        /// Default value.
-        Unspecified = 0,
-        /// Suggestions are based only on the data provided by the client.
-        Tenant = 1,
-        /// Suggestions are based on all jobs data in the system that's visible to
-        /// the client
-        Public = 2,
-    }
-    /// Enum to specify auto-completion topics.
-    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
-    #[repr(i32)]
-    pub enum CompletionType {
-        /// Default value.
-        Unspecified = 0,
-        /// Suggest job titles for jobs autocomplete.
-        ///
-        /// For \[CompletionType.JOB_TITLE][google.cloud.talent.v4.CompleteQueryRequest.CompletionType.JOB_TITLE\] type, only open jobs with the same
-        /// \[language_codes][google.cloud.talent.v4.CompleteQueryRequest.language_codes\] are returned.
-        JobTitle = 1,
-        /// Suggest company names for jobs autocomplete.
-        ///
-        /// For \[CompletionType.COMPANY_NAME][google.cloud.talent.v4.CompleteQueryRequest.CompletionType.COMPANY_NAME\] type,
-        /// only companies having open jobs with the same \[language_codes][google.cloud.talent.v4.CompleteQueryRequest.language_codes\] are
-        /// returned.
-        CompanyName = 2,
-        /// Suggest both job titles and company names for jobs autocomplete.
-        ///
-        /// For \[CompletionType.COMBINED][google.cloud.talent.v4.CompleteQueryRequest.CompletionType.COMBINED\] type, only open jobs with the same
-        /// \[language_codes][google.cloud.talent.v4.CompleteQueryRequest.language_codes\] or companies having open jobs with the same
-        /// \[language_codes][google.cloud.talent.v4.CompleteQueryRequest.language_codes\] are returned.
-        Combined = 3,
-    }
-}
-/// Response of auto-complete query.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct CompleteQueryResponse {
-    /// Results of the matching job/company candidates.
-    #[prost(message, repeated, tag="1")]
-    pub completion_results: ::prost::alloc::vec::Vec<complete_query_response::CompletionResult>,
-    /// Additional information for the API invocation, such as the request
-    /// tracking id.
+    pub parent: ::prost::alloc::string::String,
+    /// Required. Events issued when end user interacts with customer's application that
+    /// uses Cloud Talent Solution.
     #[prost(message, optional, tag="2")]
-    pub metadata: ::core::option::Option<ResponseMetadata>,
-}
-/// Nested message and enum types in `CompleteQueryResponse`.
-pub mod complete_query_response {
-    /// Resource that represents completion results.
-    #[derive(Clone, PartialEq, ::prost::Message)]
-    pub struct CompletionResult {
-        /// The suggestion for the query.
-        #[prost(string, tag="1")]
-        pub suggestion: ::prost::alloc::string::String,
-        /// The completion topic.
-        #[prost(enumeration="super::complete_query_request::CompletionType", tag="2")]
-        pub r#type: i32,
-        /// The URI of the company image for
-        /// \[COMPANY_NAME][google.cloud.talent.v4.CompleteQueryRequest.CompletionType.COMPANY_NAME\].
-        #[prost(string, tag="3")]
-        pub image_uri: ::prost::alloc::string::String,
-    }
+    pub client_event: ::core::option::Option<ClientEvent>,
 }
 /// Generated client implementations.
-pub mod completion_client {
+pub mod event_service_client {
     #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
     use tonic::codegen::*;
-    /// A service handles auto completion.
+    use tonic::codegen::http::Uri;
+    /// A service handles client event report.
     #[derive(Debug, Clone)]
-    pub struct CompletionClient<T> {
+    pub struct EventServiceClient<T> {
         inner: tonic::client::Grpc<T>,
     }
-    impl<T> CompletionClient<T>
+    impl<T> EventServiceClient<T>
     where
         T: tonic::client::GrpcService<tonic::body::BoxBody>,
         T::Error: Into<StdError>,
@@ -3447,10 +3919,14 @@ pub mod completion_client {
             let inner = tonic::client::Grpc::new(inner);
             Self { inner }
         }
+        pub fn with_origin(inner: T, origin: Uri) -> Self {
+            let inner = tonic::client::Grpc::with_origin(inner, origin);
+            Self { inner }
+        }
         pub fn with_interceptor<F>(
             inner: T,
             interceptor: F,
-        ) -> CompletionClient<InterceptedService<T, F>>
+        ) -> EventServiceClient<InterceptedService<T, F>>
         where
             F: tonic::service::Interceptor,
             T::ResponseBody: Default,
@@ -3464,29 +3940,34 @@ pub mod completion_client {
                 http::Request<tonic::body::BoxBody>,
             >>::Error: Into<StdError> + Send + Sync,
         {
-            CompletionClient::new(InterceptedService::new(inner, interceptor))
+            EventServiceClient::new(InterceptedService::new(inner, interceptor))
         }
-        /// Compress requests with `gzip`.
+        /// Compress requests with the given encoding.
         ///
         /// This requires the server to support it otherwise it might respond with an
         /// error.
         #[must_use]
-        pub fn send_gzip(mut self) -> Self {
-            self.inner = self.inner.send_gzip();
+        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.send_compressed(encoding);
             self
         }
-        /// Enable decompressing responses with `gzip`.
+        /// Enable decompressing responses.
         #[must_use]
-        pub fn accept_gzip(mut self) -> Self {
-            self.inner = self.inner.accept_gzip();
+        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.accept_compressed(encoding);
             self
         }
-        /// Completes the specified prefix with keyword suggestions.
-        /// Intended for use by a job search auto-complete search box.
-        pub async fn complete_query(
+        /// Report events issued when end user interacts with customer's application
+        /// that uses Cloud Talent Solution. You may inspect the created events in
+        /// [self service
+        /// tools](https://console.cloud.google.com/talent-solution/overview).
+        /// [Learn
+        /// more](https://cloud.google.com/talent-solution/docs/management-tools)
+        /// about self service tools.
+        pub async fn create_client_event(
             &mut self,
-            request: impl tonic::IntoRequest<super::CompleteQueryRequest>,
-        ) -> Result<tonic::Response<super::CompleteQueryResponse>, tonic::Status> {
+            request: impl tonic::IntoRequest<super::CreateClientEventRequest>,
+        ) -> Result<tonic::Response<super::ClientEvent>, tonic::Status> {
             self.inner
                 .ready()
                 .await
@@ -3498,7 +3979,7 @@ pub mod completion_client {
                 })?;
             let codec = tonic::codec::ProstCodec::default();
             let path = http::uri::PathAndQuery::from_static(
-                "/google.cloud.talent.v4.Completion/CompleteQuery",
+                "/google.cloud.talent.v4.EventService/CreateClientEvent",
             );
             self.inner.unary(request.into_request(), path, codec).await
         }

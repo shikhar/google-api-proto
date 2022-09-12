@@ -98,6 +98,32 @@ pub mod logged_migration_job {
         /// The migration job is resuming.
         Resuming = 15,
     }
+    impl State {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                State::Unspecified => "STATE_UNSPECIFIED",
+                State::Maintenance => "MAINTENANCE",
+                State::Draft => "DRAFT",
+                State::Creating => "CREATING",
+                State::NotStarted => "NOT_STARTED",
+                State::Running => "RUNNING",
+                State::Failed => "FAILED",
+                State::Completed => "COMPLETED",
+                State::Deleting => "DELETING",
+                State::Stopping => "STOPPING",
+                State::Stopped => "STOPPED",
+                State::Deleted => "DELETED",
+                State::Updating => "UPDATING",
+                State::Starting => "STARTING",
+                State::Restarting => "RESTARTING",
+                State::Resuming => "RESUMING",
+            }
+        }
+    }
     /// The migration job phases enum.
     #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
     #[repr(i32)]
@@ -115,6 +141,22 @@ pub mod logged_migration_job {
         /// Only RDS flow - the sources writes stopped, waiting for dump to begin
         PreparingTheDump = 5,
     }
+    impl Phase {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                Phase::Unspecified => "PHASE_UNSPECIFIED",
+                Phase::FullDump => "FULL_DUMP",
+                Phase::Cdc => "CDC",
+                Phase::PromoteInProgress => "PROMOTE_IN_PROGRESS",
+                Phase::WaitingForSourceWritesToStop => "WAITING_FOR_SOURCE_WRITES_TO_STOP",
+                Phase::PreparingTheDump => "PREPARING_THE_DUMP",
+            }
+        }
+    }
     /// The migration job types.
     #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
     #[repr(i32)]
@@ -125,6 +167,19 @@ pub mod logged_migration_job {
         OneTime = 1,
         /// The migration job is a continuous migration.
         Continuous = 2,
+    }
+    impl Type {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                Type::Unspecified => "TYPE_UNSPECIFIED",
+                Type::OneTime => "ONE_TIME",
+                Type::Continuous => "CONTINUOUS",
+            }
+        }
     }
     /// Type of connectivity to source database.
     #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
@@ -138,6 +193,20 @@ pub mod logged_migration_job {
         ReverseSsh = 2,
         /// Use VPC Peering connectivity.
         VpcPeering = 3,
+    }
+    impl ConnectivityType {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                ConnectivityType::Unspecified => "CONNECTIVITY_TYPE_UNSPECIFIED",
+                ConnectivityType::StaticIp => "STATIC_IP",
+                ConnectivityType::ReverseSsh => "REVERSE_SSH",
+                ConnectivityType::VpcPeering => "VPC_PEERING",
+            }
+        }
     }
 }
 /// An MySQL database connection profile.
@@ -166,6 +235,21 @@ pub mod my_sql_connection_profile {
         V57 = 3,
         /// MySQL 8.0.
         V80 = 4,
+    }
+    impl Version {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                Version::Unspecified => "VERSION_UNSPECIFIED",
+                Version::V55 => "V5_5",
+                Version::V56 => "V5_6",
+                Version::V57 => "V5_7",
+                Version::V80 => "V8_0",
+            }
+        }
     }
 }
 /// An PostgreSQL connection profile.
@@ -196,6 +280,22 @@ pub mod postgre_sql_connection_profile {
         V12 = 4,
         /// PostgreSQL 13.
         V13 = 5,
+    }
+    impl Version {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                Version::Unspecified => "VERSION_UNSPECIFIED",
+                Version::V96 => "V9_6",
+                Version::V11 => "V11",
+                Version::V10 => "V10",
+                Version::V12 => "V12",
+                Version::V13 => "V13",
+            }
+        }
     }
 }
 /// A CloudSQL connection profile.
@@ -253,6 +353,24 @@ pub mod logged_connection_profile {
         Deleted = 6,
         /// The last action on the connection profile failed.
         Failed = 7,
+    }
+    impl State {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                State::Unspecified => "STATE_UNSPECIFIED",
+                State::Draft => "DRAFT",
+                State::Creating => "CREATING",
+                State::Ready => "READY",
+                State::Updating => "UPDATING",
+                State::Deleting => "DELETING",
+                State::Deleted => "DELETED",
+                State::Failed => "FAILED",
+            }
+        }
     }
     /// The connection profile definition
     #[derive(Clone, PartialEq, ::prost::Oneof)]
@@ -345,6 +463,20 @@ pub enum DatabaseEngine {
     /// The source engine is SQL Server.
     Sqlserver = 3,
 }
+impl DatabaseEngine {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            DatabaseEngine::Unspecified => "DATABASE_ENGINE_UNSPECIFIED",
+            DatabaseEngine::Mysql => "MYSQL",
+            DatabaseEngine::Postgresql => "POSTGRESQL",
+            DatabaseEngine::Sqlserver => "SQLSERVER",
+        }
+    }
+}
 /// The database providers.
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
 #[repr(i32)]
@@ -355,4 +487,17 @@ pub enum DatabaseProvider {
     Cloudsql = 1,
     /// RDS runs the database.
     Rds = 2,
+}
+impl DatabaseProvider {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            DatabaseProvider::Unspecified => "DATABASE_PROVIDER_UNSPECIFIED",
+            DatabaseProvider::Cloudsql => "CLOUDSQL",
+            DatabaseProvider::Rds => "RDS",
+        }
+    }
 }

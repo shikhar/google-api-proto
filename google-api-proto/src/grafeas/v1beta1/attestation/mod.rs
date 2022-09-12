@@ -45,6 +45,18 @@ pub mod pgp_signed_attestation {
         /// linked schema.
         SimpleSigningJson = 1,
     }
+    impl ContentType {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                ContentType::Unspecified => "CONTENT_TYPE_UNSPECIFIED",
+                ContentType::SimpleSigningJson => "SIMPLE_SIGNING_JSON",
+            }
+        }
+    }
     /// This field is used by verifiers to select the public key used to validate
     /// the signature. Note that the policy of the verifier ultimately determines
     /// which public keys verify a signature based on the context of the
@@ -65,7 +77,7 @@ pub mod pgp_signed_attestation {
         /// returned when calling --list-keys with --with-colons.  For example:
         /// ```
         /// gpg --with-colons --with-fingerprint --force-v4-certs \
-        ///     --list-keys attester@example.com
+        ///      --list-keys attester@example.com
         /// tru::1:1513631572:0:3:1:5
         /// pub:...<SNIP>...
         /// fpr:::::::::24FF6481B76AC91E66A00AC657A93A81EF3AE6FB:
@@ -112,6 +124,18 @@ pub mod generic_signed_attestation {
         /// The payload extracted in `plaintext` is a JSON blob conforming to the
         /// linked schema.
         SimpleSigningJson = 1,
+    }
+    impl ContentType {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                ContentType::Unspecified => "CONTENT_TYPE_UNSPECIFIED",
+                ContentType::SimpleSigningJson => "SIMPLE_SIGNING_JSON",
+            }
+        }
     }
 }
 /// Note kind that represents a logical attestation "role" or "authority". For

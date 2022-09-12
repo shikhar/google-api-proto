@@ -101,6 +101,18 @@ pub mod hash {
         /// A SHA-256 hash.
         Sha256 = 1,
     }
+    impl HashType {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                HashType::Unspecified => "HASH_TYPE_UNSPECIFIED",
+                HashType::Sha256 => "SHA256",
+            }
+        }
+    }
 }
 /// Command describes a step performed as part of the build pipeline.
 #[derive(Clone, PartialEq, ::prost::Message)]

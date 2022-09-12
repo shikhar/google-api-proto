@@ -5,42 +5,42 @@ pub struct DenyRule {
     /// Google Cloud resources. This field can contain the following values:
     ///
     /// * `principalSet://goog/public:all`: A special identifier that represents
-    ///   any principal that is on the internet, even if they do not have a Google
-    ///   Account or are not logged in.
+    ///    any principal that is on the internet, even if they do not have a Google
+    ///    Account or are not logged in.
     ///
     /// * `principal://goog/subject/{email_id}`: A specific Google Account.
-    ///   Includes Gmail, Cloud Identity, and Google Workspace user accounts. For
-    ///   example, `principal://goog/subject/alice@example.com`.
+    ///    Includes Gmail, Cloud Identity, and Google Workspace user accounts. For
+    ///    example, `principal://goog/subject/alice@example.com`.
     ///
     /// * `deleted:principal://goog/subject/{email_id}?uid={uid}`: A specific
-    ///   Google Account that was deleted recently. For example,
-    ///   `deleted:principal://goog/subject/alice@example.com?uid=1234567890`. If
-    ///   the Google Account is recovered, this identifier reverts to the standard
-    ///   identifier for a Google Account.
+    ///    Google Account that was deleted recently. For example,
+    ///    `deleted:principal://goog/subject/alice@example.com?uid=1234567890`. If
+    ///    the Google Account is recovered, this identifier reverts to the standard
+    ///    identifier for a Google Account.
     ///
     /// * `principalSet://goog/group/{group_id}`: A Google group. For example,
-    ///   `principalSet://goog/group/admins@example.com`.
+    ///    `principalSet://goog/group/admins@example.com`.
     ///
     /// * `deleted:principalSet://goog/group/{group_id}?uid={uid}`: A Google group
-    ///   that was deleted recently. For example,
-    ///   `deleted:principalSet://goog/group/admins@example.com?uid=1234567890`. If
-    ///   the Google group is restored, this identifier reverts to the standard
-    ///   identifier for a Google group.
+    ///    that was deleted recently. For example,
+    ///    `deleted:principalSet://goog/group/admins@example.com?uid=1234567890`. If
+    ///    the Google group is restored, this identifier reverts to the standard
+    ///    identifier for a Google group.
     ///
     /// * `principal://iam.googleapis.com/projects/-/serviceAccounts/{service_account_id}`:
-    ///   A Google Cloud service account. For example,
-    ///   `principal://iam.googleapis.com/projects/-/serviceAccounts/my-service-account@iam.gserviceaccount.com`.
+    ///    A Google Cloud service account. For example,
+    ///    `principal://iam.googleapis.com/projects/-/serviceAccounts/my-service-account@iam.gserviceaccount.com`.
     ///
     /// * `deleted:principal://iam.googleapis.com/projects/-/serviceAccounts/{service_account_id}?uid={uid}`:
-    ///   A Google Cloud service account that was deleted recently. For example,
-    ///   `deleted:principal://iam.googleapis.com/projects/-/serviceAccounts/my-service-account@iam.gserviceaccount.com?uid=1234567890`.
-    ///   If the service account is undeleted, this identifier reverts to the
-    ///   standard identifier for a service account.
+    ///    A Google Cloud service account that was deleted recently. For example,
+    ///    `deleted:principal://iam.googleapis.com/projects/-/serviceAccounts/my-service-account@iam.gserviceaccount.com?uid=1234567890`.
+    ///    If the service account is undeleted, this identifier reverts to the
+    ///    standard identifier for a service account.
     ///
     /// * `principalSet://goog/cloudIdentityCustomerId/{customer_id}`: All of the
-    ///   principals associated with the specified Google Workspace or Cloud
-    ///   Identity customer ID. For example,
-    ///   `principalSet://goog/cloudIdentityCustomerId/C01Abc35`.
+    ///    principals associated with the specified Google Workspace or Cloud
+    ///    Identity customer ID. For example,
+    ///    `principalSet://goog/cloudIdentityCustomerId/C01Abc35`.
     #[prost(string, repeated, tag="1")]
     pub denied_principals: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
     /// The identities that are excluded from the deny rule, even if they are
@@ -283,9 +283,9 @@ pub struct DeletePolicyRequest {
 /// Example:
 /// ```
 /// {
-///    attachment_point:
-///    'cloudresourcemanager.googleapis.com%2Forganizations%2F212345678901'
-///    filter: 'kind:denyPolicies'
+///     attachment_point:
+///     'cloudresourcemanager.googleapis.com%2Forganizations%2F212345678901'
+///     filter: 'kind:denyPolicies'
 /// }
 /// ```
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -352,6 +352,7 @@ pub struct PolicyOperationMetadata {
 pub mod policies_client {
     #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
     use tonic::codegen::*;
+    use tonic::codegen::http::Uri;
     /// An interface for managing Identity and Access Management (IAM) policies.
     #[derive(Debug, Clone)]
     pub struct PoliciesClient<T> {
@@ -366,6 +367,10 @@ pub mod policies_client {
     {
         pub fn new(inner: T) -> Self {
             let inner = tonic::client::Grpc::new(inner);
+            Self { inner }
+        }
+        pub fn with_origin(inner: T, origin: Uri) -> Self {
+            let inner = tonic::client::Grpc::with_origin(inner, origin);
             Self { inner }
         }
         pub fn with_interceptor<F>(
@@ -387,19 +392,19 @@ pub mod policies_client {
         {
             PoliciesClient::new(InterceptedService::new(inner, interceptor))
         }
-        /// Compress requests with `gzip`.
+        /// Compress requests with the given encoding.
         ///
         /// This requires the server to support it otherwise it might respond with an
         /// error.
         #[must_use]
-        pub fn send_gzip(mut self) -> Self {
-            self.inner = self.inner.send_gzip();
+        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.send_compressed(encoding);
             self
         }
-        /// Enable decompressing responses with `gzip`.
+        /// Enable decompressing responses.
         #[must_use]
-        pub fn accept_gzip(mut self) -> Self {
-            self.inner = self.inner.accept_gzip();
+        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.accept_compressed(encoding);
             self
         }
         /// Retrieves the policies of the specified kind that are attached to a

@@ -111,6 +111,23 @@ pub enum AutoscalerState {
     /// The Autoscaler is initializing.
     Initializing = 5,
 }
+impl AutoscalerState {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            AutoscalerState::Unspecified => "AUTOSCALER_STATE_UNSPECIFIED",
+            AutoscalerState::Cooldown => "COOLDOWN",
+            AutoscalerState::Recommending => "RECOMMENDING",
+            AutoscalerState::Scaling => "SCALING",
+            AutoscalerState::Stopped => "STOPPED",
+            AutoscalerState::Failed => "FAILED",
+            AutoscalerState::Initializing => "INITIALIZING",
+        }
+    }
+}
 /// The Autoscaling decision type.
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
 #[repr(i32)]
@@ -124,6 +141,21 @@ pub enum ScalingDecisionType {
     NoScale = 3,
     /// Scale the primary and secondary worker groups in different directions.
     Mixed = 4,
+}
+impl ScalingDecisionType {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            ScalingDecisionType::Unspecified => "SCALING_DECISION_TYPE_UNSPECIFIED",
+            ScalingDecisionType::ScaleUp => "SCALE_UP",
+            ScalingDecisionType::ScaleDown => "SCALE_DOWN",
+            ScalingDecisionType::NoScale => "NO_SCALE",
+            ScalingDecisionType::Mixed => "MIXED",
+        }
+    }
 }
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
 #[repr(i32)]
@@ -140,4 +172,18 @@ pub enum ConstrainingFactor {
     /// issued if workers were able to be removed from another group that had not
     /// reached minimum size.
     ReachedMinimumClusterSize = 3,
+}
+impl ConstrainingFactor {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            ConstrainingFactor::Unspecified => "CONSTRAINING_FACTOR_UNSPECIFIED",
+            ConstrainingFactor::ScalingCappedDueToLackOfQuota => "SCALING_CAPPED_DUE_TO_LACK_OF_QUOTA",
+            ConstrainingFactor::ReachedMaximumClusterSize => "REACHED_MAXIMUM_CLUSTER_SIZE",
+            ConstrainingFactor::ReachedMinimumClusterSize => "REACHED_MINIMUM_CLUSTER_SIZE",
+        }
+    }
 }

@@ -34,6 +34,19 @@ pub mod document {
         /// HTML
         Html = 2,
     }
+    impl Type {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                Type::Unspecified => "TYPE_UNSPECIFIED",
+                Type::PlainText => "PLAIN_TEXT",
+                Type::Html => "HTML",
+            }
+        }
+    }
     /// The source of the document: a string containing the content or a
     /// Google Cloud Storage URI.
     #[derive(Clone, PartialEq, ::prost::Oneof)]
@@ -169,6 +182,29 @@ pub mod entity {
         /// The metadata identifies the `value` and `currency`.
         Price = 13,
     }
+    impl Type {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                Type::Unknown => "UNKNOWN",
+                Type::Person => "PERSON",
+                Type::Location => "LOCATION",
+                Type::Organization => "ORGANIZATION",
+                Type::Event => "EVENT",
+                Type::WorkOfArt => "WORK_OF_ART",
+                Type::ConsumerGood => "CONSUMER_GOOD",
+                Type::Other => "OTHER",
+                Type::PhoneNumber => "PHONE_NUMBER",
+                Type::Address => "ADDRESS",
+                Type::Date => "DATE",
+                Type::Number => "NUMBER",
+                Type::Price => "PRICE",
+            }
+        }
+    }
 }
 /// Represents the smallest syntactic building block of the text.
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -276,6 +312,30 @@ pub mod part_of_speech {
         /// Affix
         Affix = 13,
     }
+    impl Tag {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                Tag::Unknown => "UNKNOWN",
+                Tag::Adj => "ADJ",
+                Tag::Adp => "ADP",
+                Tag::Adv => "ADV",
+                Tag::Conj => "CONJ",
+                Tag::Det => "DET",
+                Tag::Noun => "NOUN",
+                Tag::Num => "NUM",
+                Tag::Pron => "PRON",
+                Tag::Prt => "PRT",
+                Tag::Punct => "PUNCT",
+                Tag::Verb => "VERB",
+                Tag::X => "X",
+                Tag::Affix => "AFFIX",
+            }
+        }
+    }
     /// The characteristic of a verb that expresses time flow during an event.
     #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
     #[repr(i32)]
@@ -288,6 +348,20 @@ pub mod part_of_speech {
         Imperfective = 2,
         /// Progressive
         Progressive = 3,
+    }
+    impl Aspect {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                Aspect::Unknown => "ASPECT_UNKNOWN",
+                Aspect::Perfective => "PERFECTIVE",
+                Aspect::Imperfective => "IMPERFECTIVE",
+                Aspect::Progressive => "PROGRESSIVE",
+            }
+        }
     }
     /// The grammatical function performed by a noun or pronoun in a phrase,
     /// clause, or sentence. In some languages, other parts of speech, such as
@@ -326,6 +400,31 @@ pub mod part_of_speech {
         /// Vocative
         Vocative = 14,
     }
+    impl Case {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                Case::Unknown => "CASE_UNKNOWN",
+                Case::Accusative => "ACCUSATIVE",
+                Case::Adverbial => "ADVERBIAL",
+                Case::Complementive => "COMPLEMENTIVE",
+                Case::Dative => "DATIVE",
+                Case::Genitive => "GENITIVE",
+                Case::Instrumental => "INSTRUMENTAL",
+                Case::Locative => "LOCATIVE",
+                Case::Nominative => "NOMINATIVE",
+                Case::Oblique => "OBLIQUE",
+                Case::Partitive => "PARTITIVE",
+                Case::Prepositional => "PREPOSITIONAL",
+                Case::ReflexiveCase => "REFLEXIVE_CASE",
+                Case::RelativeCase => "RELATIVE_CASE",
+                Case::Vocative => "VOCATIVE",
+            }
+        }
+    }
     /// Depending on the language, Form can be categorizing different forms of
     /// verbs, adjectives, adverbs, etc. For example, categorizing inflected
     /// endings of verbs and adjectives or distinguishing between short and long
@@ -358,6 +457,28 @@ pub mod part_of_speech {
         /// Specific form
         Specific = 11,
     }
+    impl Form {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                Form::Unknown => "FORM_UNKNOWN",
+                Form::Adnomial => "ADNOMIAL",
+                Form::Auxiliary => "AUXILIARY",
+                Form::Complementizer => "COMPLEMENTIZER",
+                Form::FinalEnding => "FINAL_ENDING",
+                Form::Gerund => "GERUND",
+                Form::Realis => "REALIS",
+                Form::Irrealis => "IRREALIS",
+                Form::Short => "SHORT",
+                Form::Long => "LONG",
+                Form::Order => "ORDER",
+                Form::Specific => "SPECIFIC",
+            }
+        }
+    }
     /// Gender classes of nouns reflected in the behaviour of associated words.
     #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
     #[repr(i32)]
@@ -370,6 +491,20 @@ pub mod part_of_speech {
         Masculine = 2,
         /// Neuter
         Neuter = 3,
+    }
+    impl Gender {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                Gender::Unknown => "GENDER_UNKNOWN",
+                Gender::Feminine => "FEMININE",
+                Gender::Masculine => "MASCULINE",
+                Gender::Neuter => "NEUTER",
+            }
+        }
     }
     /// The grammatical feature of verbs, used for showing modality and attitude.
     #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
@@ -390,6 +525,23 @@ pub mod part_of_speech {
         /// Subjunctive
         Subjunctive = 6,
     }
+    impl Mood {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                Mood::Unknown => "MOOD_UNKNOWN",
+                Mood::ConditionalMood => "CONDITIONAL_MOOD",
+                Mood::Imperative => "IMPERATIVE",
+                Mood::Indicative => "INDICATIVE",
+                Mood::Interrogative => "INTERROGATIVE",
+                Mood::Jussive => "JUSSIVE",
+                Mood::Subjunctive => "SUBJUNCTIVE",
+            }
+        }
+    }
     /// Count distinctions.
     #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
     #[repr(i32)]
@@ -402,6 +554,20 @@ pub mod part_of_speech {
         Plural = 2,
         /// Dual
         Dual = 3,
+    }
+    impl Number {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                Number::Unknown => "NUMBER_UNKNOWN",
+                Number::Singular => "SINGULAR",
+                Number::Plural => "PLURAL",
+                Number::Dual => "DUAL",
+            }
+        }
     }
     /// The distinction between the speaker, second person, third person, etc.
     #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
@@ -418,6 +584,21 @@ pub mod part_of_speech {
         /// Reflexive
         ReflexivePerson = 4,
     }
+    impl Person {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                Person::Unknown => "PERSON_UNKNOWN",
+                Person::First => "FIRST",
+                Person::Second => "SECOND",
+                Person::Third => "THIRD",
+                Person::ReflexivePerson => "REFLEXIVE_PERSON",
+            }
+        }
+    }
     /// This category shows if the token is part of a proper name.
     #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
     #[repr(i32)]
@@ -428,6 +609,19 @@ pub mod part_of_speech {
         Proper = 1,
         /// Not proper
         NotProper = 2,
+    }
+    impl Proper {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                Proper::Unknown => "PROPER_UNKNOWN",
+                Proper::Proper => "PROPER",
+                Proper::NotProper => "NOT_PROPER",
+            }
+        }
     }
     /// Reciprocal features of a pronoun.
     #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
@@ -440,6 +634,19 @@ pub mod part_of_speech {
         Reciprocal = 1,
         /// Non-reciprocal
         NonReciprocal = 2,
+    }
+    impl Reciprocity {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                Reciprocity::Unknown => "RECIPROCITY_UNKNOWN",
+                Reciprocity::Reciprocal => "RECIPROCAL",
+                Reciprocity::NonReciprocal => "NON_RECIPROCAL",
+            }
+        }
     }
     /// Time reference.
     #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
@@ -460,6 +667,23 @@ pub mod part_of_speech {
         /// Pluperfect
         Pluperfect = 6,
     }
+    impl Tense {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                Tense::Unknown => "TENSE_UNKNOWN",
+                Tense::ConditionalTense => "CONDITIONAL_TENSE",
+                Tense::Future => "FUTURE",
+                Tense::Past => "PAST",
+                Tense::Present => "PRESENT",
+                Tense::Imperfect => "IMPERFECT",
+                Tense::Pluperfect => "PLUPERFECT",
+            }
+        }
+    }
     /// The relationship between the action that a verb expresses and the
     /// participants identified by its arguments.
     #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
@@ -473,6 +697,20 @@ pub mod part_of_speech {
         Causative = 2,
         /// Passive
         Passive = 3,
+    }
+    impl Voice {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                Voice::Unknown => "VOICE_UNKNOWN",
+                Voice::Active => "ACTIVE",
+                Voice::Causative => "CAUSATIVE",
+                Voice::Passive => "PASSIVE",
+            }
+        }
     }
 }
 /// Represents dependency parse tree information for a token.
@@ -662,6 +900,99 @@ pub mod dependency_edge {
         /// Nominal complement of a noun
         Ncomp = 82,
     }
+    impl Label {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                Label::Unknown => "UNKNOWN",
+                Label::Abbrev => "ABBREV",
+                Label::Acomp => "ACOMP",
+                Label::Advcl => "ADVCL",
+                Label::Advmod => "ADVMOD",
+                Label::Amod => "AMOD",
+                Label::Appos => "APPOS",
+                Label::Attr => "ATTR",
+                Label::Aux => "AUX",
+                Label::Auxpass => "AUXPASS",
+                Label::Cc => "CC",
+                Label::Ccomp => "CCOMP",
+                Label::Conj => "CONJ",
+                Label::Csubj => "CSUBJ",
+                Label::Csubjpass => "CSUBJPASS",
+                Label::Dep => "DEP",
+                Label::Det => "DET",
+                Label::Discourse => "DISCOURSE",
+                Label::Dobj => "DOBJ",
+                Label::Expl => "EXPL",
+                Label::Goeswith => "GOESWITH",
+                Label::Iobj => "IOBJ",
+                Label::Mark => "MARK",
+                Label::Mwe => "MWE",
+                Label::Mwv => "MWV",
+                Label::Neg => "NEG",
+                Label::Nn => "NN",
+                Label::Npadvmod => "NPADVMOD",
+                Label::Nsubj => "NSUBJ",
+                Label::Nsubjpass => "NSUBJPASS",
+                Label::Num => "NUM",
+                Label::Number => "NUMBER",
+                Label::P => "P",
+                Label::Parataxis => "PARATAXIS",
+                Label::Partmod => "PARTMOD",
+                Label::Pcomp => "PCOMP",
+                Label::Pobj => "POBJ",
+                Label::Poss => "POSS",
+                Label::Postneg => "POSTNEG",
+                Label::Precomp => "PRECOMP",
+                Label::Preconj => "PRECONJ",
+                Label::Predet => "PREDET",
+                Label::Pref => "PREF",
+                Label::Prep => "PREP",
+                Label::Pronl => "PRONL",
+                Label::Prt => "PRT",
+                Label::Ps => "PS",
+                Label::Quantmod => "QUANTMOD",
+                Label::Rcmod => "RCMOD",
+                Label::Rcmodrel => "RCMODREL",
+                Label::Rdrop => "RDROP",
+                Label::Ref => "REF",
+                Label::Remnant => "REMNANT",
+                Label::Reparandum => "REPARANDUM",
+                Label::Root => "ROOT",
+                Label::Snum => "SNUM",
+                Label::Suff => "SUFF",
+                Label::Tmod => "TMOD",
+                Label::Topic => "TOPIC",
+                Label::Vmod => "VMOD",
+                Label::Vocative => "VOCATIVE",
+                Label::Xcomp => "XCOMP",
+                Label::Suffix => "SUFFIX",
+                Label::Title => "TITLE",
+                Label::Advphmod => "ADVPHMOD",
+                Label::Auxcaus => "AUXCAUS",
+                Label::Auxvv => "AUXVV",
+                Label::Dtmod => "DTMOD",
+                Label::Foreign => "FOREIGN",
+                Label::Kw => "KW",
+                Label::List => "LIST",
+                Label::Nomc => "NOMC",
+                Label::Nomcsubj => "NOMCSUBJ",
+                Label::Nomcsubjpass => "NOMCSUBJPASS",
+                Label::Numc => "NUMC",
+                Label::Cop => "COP",
+                Label::Dislocated => "DISLOCATED",
+                Label::Asp => "ASP",
+                Label::Gmod => "GMOD",
+                Label::Gobj => "GOBJ",
+                Label::Infmod => "INFMOD",
+                Label::Mes => "MES",
+                Label::Ncomp => "NCOMP",
+            }
+        }
+    }
 }
 /// Represents a mention for an entity in the text. Currently, proper noun
 /// mentions are supported.
@@ -692,6 +1023,19 @@ pub mod entity_mention {
         Proper = 1,
         /// Common noun (or noun compound)
         Common = 2,
+    }
+    impl Type {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                Type::Unknown => "TYPE_UNKNOWN",
+                Type::Proper => "PROPER",
+                Type::Common => "COMMON",
+            }
+        }
     }
 }
 /// Represents an output piece of text.
@@ -921,10 +1265,25 @@ pub enum EncodingType {
     /// that uses this encoding natively.
     Utf32 = 3,
 }
+impl EncodingType {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            EncodingType::None => "NONE",
+            EncodingType::Utf8 => "UTF8",
+            EncodingType::Utf16 => "UTF16",
+            EncodingType::Utf32 => "UTF32",
+        }
+    }
+}
 /// Generated client implementations.
 pub mod language_service_client {
     #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
     use tonic::codegen::*;
+    use tonic::codegen::http::Uri;
     /// Provides text analysis operations such as sentiment analysis and entity
     /// recognition.
     #[derive(Debug, Clone)]
@@ -940,6 +1299,10 @@ pub mod language_service_client {
     {
         pub fn new(inner: T) -> Self {
             let inner = tonic::client::Grpc::new(inner);
+            Self { inner }
+        }
+        pub fn with_origin(inner: T, origin: Uri) -> Self {
+            let inner = tonic::client::Grpc::with_origin(inner, origin);
             Self { inner }
         }
         pub fn with_interceptor<F>(
@@ -961,19 +1324,19 @@ pub mod language_service_client {
         {
             LanguageServiceClient::new(InterceptedService::new(inner, interceptor))
         }
-        /// Compress requests with `gzip`.
+        /// Compress requests with the given encoding.
         ///
         /// This requires the server to support it otherwise it might respond with an
         /// error.
         #[must_use]
-        pub fn send_gzip(mut self) -> Self {
-            self.inner = self.inner.send_gzip();
+        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.send_compressed(encoding);
             self
         }
-        /// Enable decompressing responses with `gzip`.
+        /// Enable decompressing responses.
         #[must_use]
-        pub fn accept_gzip(mut self) -> Self {
-            self.inner = self.inner.accept_gzip();
+        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.accept_compressed(encoding);
             self
         }
         /// Analyzes the sentiment of the provided text.

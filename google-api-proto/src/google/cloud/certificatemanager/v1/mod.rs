@@ -459,6 +459,19 @@ pub mod certificate {
                 /// system. Provisioning may take longer to complete.
                 RateLimited = 2,
             }
+            impl Reason {
+                /// String value of the enum field names used in the ProtoBuf definition.
+                ///
+                /// The values are not transformed in any way and thus are considered stable
+                /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+                pub fn as_str_name(&self) -> &'static str {
+                    match self {
+                        Reason::Unspecified => "REASON_UNSPECIFIED",
+                        Reason::AuthorizationIssue => "AUTHORIZATION_ISSUE",
+                        Reason::RateLimited => "RATE_LIMITED",
+                    }
+                }
+            }
         }
         /// State of the latest attempt to authorize a domain for certificate
         /// issuance.
@@ -495,6 +508,20 @@ pub mod certificate {
                 /// See `failure_reason` and `details` fields for more information.
                 Failed = 7,
             }
+            impl State {
+                /// String value of the enum field names used in the ProtoBuf definition.
+                ///
+                /// The values are not transformed in any way and thus are considered stable
+                /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+                pub fn as_str_name(&self) -> &'static str {
+                    match self {
+                        State::Unspecified => "STATE_UNSPECIFIED",
+                        State::Authorizing => "AUTHORIZING",
+                        State::Authorized => "AUTHORIZED",
+                        State::Failed => "FAILED",
+                    }
+                }
+            }
             #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
             #[repr(i32)]
             pub enum FailureReason {
@@ -508,6 +535,20 @@ pub mod certificate {
                 /// Reached a CA or internal rate-limit for the domain,
                 /// e.g. for certificates per top-level private domain.
                 RateLimited = 3,
+            }
+            impl FailureReason {
+                /// String value of the enum field names used in the ProtoBuf definition.
+                ///
+                /// The values are not transformed in any way and thus are considered stable
+                /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+                pub fn as_str_name(&self) -> &'static str {
+                    match self {
+                        FailureReason::Unspecified => "FAILURE_REASON_UNSPECIFIED",
+                        FailureReason::Config => "CONFIG",
+                        FailureReason::Caa => "CAA",
+                        FailureReason::RateLimited => "RATE_LIMITED",
+                    }
+                }
             }
         }
         #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
@@ -527,6 +568,20 @@ pub mod certificate {
             /// provisioned.
             Active = 3,
         }
+        impl State {
+            /// String value of the enum field names used in the ProtoBuf definition.
+            ///
+            /// The values are not transformed in any way and thus are considered stable
+            /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+            pub fn as_str_name(&self) -> &'static str {
+                match self {
+                    State::Unspecified => "STATE_UNSPECIFIED",
+                    State::Provisioning => "PROVISIONING",
+                    State::Failed => "FAILED",
+                    State::Active => "ACTIVE",
+                }
+            }
+        }
     }
     /// Certificate scope.
     #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
@@ -538,6 +593,18 @@ pub mod certificate {
         /// Certificates with scope EDGE_CACHE are special-purposed certificates,
         /// served from non-core Google data centers.
         EdgeCache = 1,
+    }
+    impl Scope {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                Scope::Default => "DEFAULT",
+                Scope::EdgeCache => "EDGE_CACHE",
+            }
+        }
     }
     #[derive(Clone, PartialEq, ::prost::Oneof)]
     pub enum Type {
@@ -656,6 +723,18 @@ pub mod certificate_map_entry {
         /// request or SNI couldn't be found in the map.
         Primary = 1,
     }
+    impl Matcher {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                Matcher::Unspecified => "MATCHER_UNSPECIFIED",
+                Matcher::Primary => "PRIMARY",
+            }
+        }
+    }
     #[derive(Clone, PartialEq, ::prost::Oneof)]
     pub enum Match {
         /// A Hostname (FQDN, e.g. `example.com`) or a wildcard hostname expression
@@ -729,10 +808,24 @@ pub enum ServingState {
     /// Update is in progress. Some frontends may serve this configuration.
     Pending = 2,
 }
+impl ServingState {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            ServingState::Unspecified => "SERVING_STATE_UNSPECIFIED",
+            ServingState::Active => "ACTIVE",
+            ServingState::Pending => "PENDING",
+        }
+    }
+}
 /// Generated client implementations.
 pub mod certificate_manager_client {
     #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
     use tonic::codegen::*;
+    use tonic::codegen::http::Uri;
     /// API Overview
     ///
     /// Certificates Manager API allows customers to see and manage all their TLS
@@ -774,6 +867,10 @@ pub mod certificate_manager_client {
             let inner = tonic::client::Grpc::new(inner);
             Self { inner }
         }
+        pub fn with_origin(inner: T, origin: Uri) -> Self {
+            let inner = tonic::client::Grpc::with_origin(inner, origin);
+            Self { inner }
+        }
         pub fn with_interceptor<F>(
             inner: T,
             interceptor: F,
@@ -793,19 +890,19 @@ pub mod certificate_manager_client {
         {
             CertificateManagerClient::new(InterceptedService::new(inner, interceptor))
         }
-        /// Compress requests with `gzip`.
+        /// Compress requests with the given encoding.
         ///
         /// This requires the server to support it otherwise it might respond with an
         /// error.
         #[must_use]
-        pub fn send_gzip(mut self) -> Self {
-            self.inner = self.inner.send_gzip();
+        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.send_compressed(encoding);
             self
         }
-        /// Enable decompressing responses with `gzip`.
+        /// Enable decompressing responses.
         #[must_use]
-        pub fn accept_gzip(mut self) -> Self {
-            self.inner = self.inner.accept_gzip();
+        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.accept_compressed(encoding);
             self
         }
         /// Lists Certificates in a given project and location.

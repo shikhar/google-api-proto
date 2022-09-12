@@ -1,3 +1,27 @@
+/// Structure resource represents an instance of enterprise managed home or hotel
+/// room.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct Structure {
+    /// Output only. The resource name of the structure. For example:
+    /// "enterprises/XYZ/structures/ABC".
+    #[prost(string, tag="1")]
+    pub name: ::prost::alloc::string::String,
+    /// Structure traits.
+    #[prost(message, optional, tag="2")]
+    pub traits: ::core::option::Option<::prost_types::Struct>,
+}
+/// Room resource represents an instance of sub-space within a structure such as
+/// rooms in a hotel suite or rental apartment.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct Room {
+    /// Output only. The resource name of the room. For example:
+    /// "enterprises/XYZ/structures/ABC/rooms/123".
+    #[prost(string, tag="1")]
+    pub name: ::prost::alloc::string::String,
+    /// Room traits.
+    #[prost(message, optional, tag="2")]
+    pub traits: ::core::option::Option<::prost_types::Struct>,
+}
 /// Device resource represents an instance of enterprise managed device in the
 /// property.
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -32,30 +56,6 @@ pub struct ParentRelation {
     /// the device is assigned to.
     #[prost(string, tag="2")]
     pub display_name: ::prost::alloc::string::String,
-}
-/// Structure resource represents an instance of enterprise managed home or hotel
-/// room.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct Structure {
-    /// Output only. The resource name of the structure. For example:
-    /// "enterprises/XYZ/structures/ABC".
-    #[prost(string, tag="1")]
-    pub name: ::prost::alloc::string::String,
-    /// Structure traits.
-    #[prost(message, optional, tag="2")]
-    pub traits: ::core::option::Option<::prost_types::Struct>,
-}
-/// Room resource represents an instance of sub-space within a structure such as
-/// rooms in a hotel suite or rental apartment.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct Room {
-    /// Output only. The resource name of the room. For example:
-    /// "enterprises/XYZ/structures/ABC/rooms/123".
-    #[prost(string, tag="1")]
-    pub name: ::prost::alloc::string::String,
-    /// Room traits.
-    #[prost(message, optional, tag="2")]
-    pub traits: ::core::option::Option<::prost_types::Struct>,
 }
 /// Request message for SmartDeviceManagementService.GetDevice
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -193,6 +193,7 @@ pub struct ListRoomsResponse {
 pub mod smart_device_management_service_client {
     #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
     use tonic::codegen::*;
+    use tonic::codegen::http::Uri;
     /// A service that allows API consumers to provision and manage Google
     /// Home structures and devices for enterprise use cases.
     #[derive(Debug, Clone)]
@@ -208,6 +209,10 @@ pub mod smart_device_management_service_client {
     {
         pub fn new(inner: T) -> Self {
             let inner = tonic::client::Grpc::new(inner);
+            Self { inner }
+        }
+        pub fn with_origin(inner: T, origin: Uri) -> Self {
+            let inner = tonic::client::Grpc::with_origin(inner, origin);
             Self { inner }
         }
         pub fn with_interceptor<F>(
@@ -231,19 +236,19 @@ pub mod smart_device_management_service_client {
                 InterceptedService::new(inner, interceptor),
             )
         }
-        /// Compress requests with `gzip`.
+        /// Compress requests with the given encoding.
         ///
         /// This requires the server to support it otherwise it might respond with an
         /// error.
         #[must_use]
-        pub fn send_gzip(mut self) -> Self {
-            self.inner = self.inner.send_gzip();
+        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.send_compressed(encoding);
             self
         }
-        /// Enable decompressing responses with `gzip`.
+        /// Enable decompressing responses.
         #[must_use]
-        pub fn accept_gzip(mut self) -> Self {
-            self.inner = self.inner.accept_gzip();
+        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.accept_compressed(encoding);
             self
         }
         /// Gets a device managed by the enterprise.

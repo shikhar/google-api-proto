@@ -1,3 +1,60 @@
+/// The severity of the event described in a log entry, expressed as one of the
+/// standard severity levels listed below.  For your reference, the levels are
+/// assigned the listed numeric values. The effect of using numeric values other
+/// than those listed is undefined.
+///
+/// You can filter for log entries by severity.  For example, the following
+/// filter expression will match log entries with severities `INFO`, `NOTICE`,
+/// and `WARNING`:
+///
+///      severity > DEBUG AND severity <= WARNING
+///
+/// If you are writing log entries, you should map other severity encodings to
+/// one of these standard levels. For example, you might map all of Java's FINE,
+/// FINER, and FINEST levels to `LogSeverity.DEBUG`. You can preserve the
+/// original severity level in the log entry payload if you wish.
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+#[repr(i32)]
+pub enum LogSeverity {
+    /// (0) The log entry has no assigned severity level.
+    Default = 0,
+    /// (100) Debug or trace information.
+    Debug = 100,
+    /// (200) Routine information, such as ongoing status or performance.
+    Info = 200,
+    /// (300) Normal but significant events, such as start up, shut down, or
+    /// a configuration change.
+    Notice = 300,
+    /// (400) Warning events might cause problems.
+    Warning = 400,
+    /// (500) Error events are likely to cause problems.
+    Error = 500,
+    /// (600) Critical events cause more severe problems or outages.
+    Critical = 600,
+    /// (700) A person must take an action immediately.
+    Alert = 700,
+    /// (800) One or more systems are unusable.
+    Emergency = 800,
+}
+impl LogSeverity {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            LogSeverity::Default => "DEFAULT",
+            LogSeverity::Debug => "DEBUG",
+            LogSeverity::Info => "INFO",
+            LogSeverity::Notice => "NOTICE",
+            LogSeverity::Warning => "WARNING",
+            LogSeverity::Error => "ERROR",
+            LogSeverity::Critical => "CRITICAL",
+            LogSeverity::Alert => "ALERT",
+            LogSeverity::Emergency => "EMERGENCY",
+        }
+    }
+}
 /// A common proto for logging HTTP requests. Only contains semantics
 /// defined by the HTTP specification. Product-specific logging
 /// information MUST be defined in a separate message.
@@ -66,42 +123,4 @@ pub struct HttpRequest {
     /// Protocol used for the request. Examples: "HTTP/1.1", "HTTP/2", "websocket"
     #[prost(string, tag="15")]
     pub protocol: ::prost::alloc::string::String,
-}
-/// The severity of the event described in a log entry, expressed as one of the
-/// standard severity levels listed below.  For your reference, the levels are
-/// assigned the listed numeric values. The effect of using numeric values other
-/// than those listed is undefined.
-///
-/// You can filter for log entries by severity.  For example, the following
-/// filter expression will match log entries with severities `INFO`, `NOTICE`,
-/// and `WARNING`:
-///
-///     severity > DEBUG AND severity <= WARNING
-///
-/// If you are writing log entries, you should map other severity encodings to
-/// one of these standard levels. For example, you might map all of Java's FINE,
-/// FINER, and FINEST levels to `LogSeverity.DEBUG`. You can preserve the
-/// original severity level in the log entry payload if you wish.
-#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
-#[repr(i32)]
-pub enum LogSeverity {
-    /// (0) The log entry has no assigned severity level.
-    Default = 0,
-    /// (100) Debug or trace information.
-    Debug = 100,
-    /// (200) Routine information, such as ongoing status or performance.
-    Info = 200,
-    /// (300) Normal but significant events, such as start up, shut down, or
-    /// a configuration change.
-    Notice = 300,
-    /// (400) Warning events might cause problems.
-    Warning = 400,
-    /// (500) Error events are likely to cause problems.
-    Error = 500,
-    /// (600) Critical events cause more severe problems or outages.
-    Critical = 600,
-    /// (700) A person must take an action immediately.
-    Alert = 700,
-    /// (800) One or more systems are unusable.
-    Emergency = 800,
 }

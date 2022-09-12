@@ -418,6 +418,20 @@ pub mod pipeline_resources {
             /// See <https://cloud.google.com/compute/docs/disks/local-ssd> for details.
             LocalSsd = 3,
         }
+        impl Type {
+            /// String value of the enum field names used in the ProtoBuf definition.
+            ///
+            /// The values are not transformed in any way and thus are considered stable
+            /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+            pub fn as_str_name(&self) -> &'static str {
+                match self {
+                    Type::Unspecified => "TYPE_UNSPECIFIED",
+                    Type::PersistentHdd => "PERSISTENT_HDD",
+                    Type::PersistentSsd => "PERSISTENT_SSD",
+                    Type::LocalSsd => "LOCAL_SSD",
+                }
+            }
+        }
     }
 }
 /// Parameters facilitate setting and delivering data into the
@@ -463,50 +477,50 @@ pub mod pipeline_resources {
 /// map, such as:
 ///
 /// ```
-///   inputs\["input_file"\] = "gs://my-bucket/bar.txt"
+///    inputs\["input_file"\] = "gs://my-bucket/bar.txt"
 /// ```
 ///
 /// This would generate the following gsutil call:
 ///
 /// ```
-///   gsutil cp gs://my-bucket/bar.txt /mnt/pd1/file.txt
+///    gsutil cp gs://my-bucket/bar.txt /mnt/pd1/file.txt
 /// ```
 ///
 /// The file `/mnt/pd1/file.txt` maps to `/mnt/disk/file.txt` in the
 /// Docker container. Acceptable paths are:
 ///
 /// <table>
-///   <thead>
-///     <tr><th>Google Cloud storage path</th><th>Local path</th></tr>
-///   </thead>
-///   <tbody>
-///     <tr><td>file</td><td>file</td></tr>
-///     <tr><td>glob</td><td>directory</td></tr>
-///   </tbody>
+///    <thead>
+///      <tr><th>Google Cloud storage path</th><th>Local path</th></tr>
+///    </thead>
+///    <tbody>
+///      <tr><td>file</td><td>file</td></tr>
+///      <tr><td>glob</td><td>directory</td></tr>
+///    </tbody>
 /// </table>
 ///
 /// For outputs, the direction of the copy is reversed:
 ///
 /// ```
-///   gsutil cp /mnt/disk/file.txt gs://my-bucket/bar.txt
+///    gsutil cp /mnt/disk/file.txt gs://my-bucket/bar.txt
 /// ```
 ///
 /// Acceptable paths are:
 ///
 /// <table>
-///   <thead>
-///     <tr><th>Local path</th><th>Google Cloud Storage path</th></tr>
-///   </thead>
-///   <tbody>
-///     <tr><td>file</td><td>file</td></tr>
-///     <tr>
-///       <td>file</td>
-///       <td>directory - directory must already exist</td>
-///     </tr>
-///     <tr>
-///       <td>glob</td>
-///       <td>directory - directory will be created if it doesn't exist</td></tr>
-///   </tbody>
+///    <thead>
+///      <tr><th>Local path</th><th>Google Cloud Storage path</th></tr>
+///    </thead>
+///    <tbody>
+///      <tr><td>file</td><td>file</td></tr>
+///      <tr>
+///        <td>file</td>
+///        <td>directory - directory must already exist</td>
+///      </tr>
+///      <tr>
+///        <td>glob</td>
+///        <td>directory - directory will be created if it doesn't exist</td></tr>
+///    </tbody>
 /// </table>
 ///
 /// One restriction due to docker limitations, is that for outputs that are found
@@ -572,6 +586,7 @@ pub struct DockerExecutor {
 pub mod pipelines_v1_alpha2_client {
     #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
     use tonic::codegen::*;
+    use tonic::codegen::http::Uri;
     /// A service for running genomics pipelines.
     #[derive(Debug, Clone)]
     pub struct PipelinesV1Alpha2Client<T> {
@@ -586,6 +601,10 @@ pub mod pipelines_v1_alpha2_client {
     {
         pub fn new(inner: T) -> Self {
             let inner = tonic::client::Grpc::new(inner);
+            Self { inner }
+        }
+        pub fn with_origin(inner: T, origin: Uri) -> Self {
+            let inner = tonic::client::Grpc::with_origin(inner, origin);
             Self { inner }
         }
         pub fn with_interceptor<F>(
@@ -607,19 +626,19 @@ pub mod pipelines_v1_alpha2_client {
         {
             PipelinesV1Alpha2Client::new(InterceptedService::new(inner, interceptor))
         }
-        /// Compress requests with `gzip`.
+        /// Compress requests with the given encoding.
         ///
         /// This requires the server to support it otherwise it might respond with an
         /// error.
         #[must_use]
-        pub fn send_gzip(mut self) -> Self {
-            self.inner = self.inner.send_gzip();
+        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.send_compressed(encoding);
             self
         }
-        /// Enable decompressing responses with `gzip`.
+        /// Enable decompressing responses.
         #[must_use]
-        pub fn accept_gzip(mut self) -> Self {
-            self.inner = self.inner.accept_gzip();
+        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.accept_compressed(encoding);
             self
         }
         /// Creates a pipeline that can be run later. Create takes a Pipeline that

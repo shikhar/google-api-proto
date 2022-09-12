@@ -54,6 +54,21 @@ pub mod annotate_assessment_request {
         /// INCORRECT_PASSWORD through the reasons field instead.
         PasswordIncorrect = 4,
     }
+    impl Annotation {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                Annotation::Unspecified => "ANNOTATION_UNSPECIFIED",
+                Annotation::Legitimate => "LEGITIMATE",
+                Annotation::Fraudulent => "FRAUDULENT",
+                Annotation::PasswordCorrect => "PASSWORD_CORRECT",
+                Annotation::PasswordIncorrect => "PASSWORD_INCORRECT",
+            }
+        }
+    }
     /// Enum that represents potential reasons for annotating an assessment.
     #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
     #[repr(i32)]
@@ -89,6 +104,26 @@ pub mod annotate_assessment_request {
         CorrectPassword = 5,
         /// Indicates the user provided an incorrect password.
         IncorrectPassword = 6,
+    }
+    impl Reason {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                Reason::Unspecified => "REASON_UNSPECIFIED",
+                Reason::Chargeback => "CHARGEBACK",
+                Reason::ChargebackFraud => "CHARGEBACK_FRAUD",
+                Reason::ChargebackDispute => "CHARGEBACK_DISPUTE",
+                Reason::PaymentHeuristics => "PAYMENT_HEURISTICS",
+                Reason::InitiatedTwoFactor => "INITIATED_TWO_FACTOR",
+                Reason::PassedTwoFactor => "PASSED_TWO_FACTOR",
+                Reason::FailedTwoFactor => "FAILED_TWO_FACTOR",
+                Reason::CorrectPassword => "CORRECT_PASSWORD",
+                Reason::IncorrectPassword => "INCORRECT_PASSWORD",
+            }
+        }
     }
 }
 /// Empty response for AnnotateAssessment.
@@ -180,6 +215,22 @@ pub mod risk_analysis {
         /// quality risk analysis.
         LowConfidenceScore = 5,
     }
+    impl ClassificationReason {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                ClassificationReason::Unspecified => "CLASSIFICATION_REASON_UNSPECIFIED",
+                ClassificationReason::Automation => "AUTOMATION",
+                ClassificationReason::UnexpectedEnvironment => "UNEXPECTED_ENVIRONMENT",
+                ClassificationReason::TooMuchTraffic => "TOO_MUCH_TRAFFIC",
+                ClassificationReason::UnexpectedUsagePatterns => "UNEXPECTED_USAGE_PATTERNS",
+                ClassificationReason::LowConfidenceScore => "LOW_CONFIDENCE_SCORE",
+            }
+        }
+    }
 }
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct TokenProperties {
@@ -225,6 +276,23 @@ pub mod token_properties {
         /// Could easily be simulated by an attacker.
         BrowserError = 6,
     }
+    impl InvalidReason {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                InvalidReason::Unspecified => "INVALID_REASON_UNSPECIFIED",
+                InvalidReason::UnknownInvalidReason => "UNKNOWN_INVALID_REASON",
+                InvalidReason::Malformed => "MALFORMED",
+                InvalidReason::Expired => "EXPIRED",
+                InvalidReason::Dupe => "DUPE",
+                InvalidReason::Missing => "MISSING",
+                InvalidReason::BrowserError => "BROWSER_ERROR",
+            }
+        }
+    }
 }
 /// Account Defender risk assessment.
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -253,6 +321,21 @@ pub mod account_defender_assessment {
         /// not necessarily imply that the account is bad but could require
         /// investigating.
         RelatedAccountsNumberHigh = 4,
+    }
+    impl AccountDefenderLabel {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                AccountDefenderLabel::Unspecified => "ACCOUNT_DEFENDER_LABEL_UNSPECIFIED",
+                AccountDefenderLabel::ProfileMatch => "PROFILE_MATCH",
+                AccountDefenderLabel::SuspiciousLoginActivity => "SUSPICIOUS_LOGIN_ACTIVITY",
+                AccountDefenderLabel::SuspiciousAccountCreation => "SUSPICIOUS_ACCOUNT_CREATION",
+                AccountDefenderLabel::RelatedAccountsNumberHigh => "RELATED_ACCOUNTS_NUMBER_HIGH",
+            }
+        }
     }
 }
 /// Private password leak verification info.
@@ -455,6 +538,19 @@ pub mod testing_options {
         /// challenge.
         UnsolvableChallenge = 2,
     }
+    impl TestingChallenge {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                TestingChallenge::Unspecified => "TESTING_CHALLENGE_UNSPECIFIED",
+                TestingChallenge::Nocaptcha => "NOCAPTCHA",
+                TestingChallenge::UnsolvableChallenge => "UNSOLVABLE_CHALLENGE",
+            }
+        }
+    }
 }
 /// Settings specific to keys that can be used by websites.
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -501,6 +597,20 @@ pub mod web_key_settings {
         /// challenges after risk analysis.
         Invisible = 3,
     }
+    impl IntegrationType {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                IntegrationType::Unspecified => "INTEGRATION_TYPE_UNSPECIFIED",
+                IntegrationType::Score => "SCORE",
+                IntegrationType::Checkbox => "CHECKBOX",
+                IntegrationType::Invisible => "INVISIBLE",
+            }
+        }
+    }
     /// Enum that represents the possible challenge frequency and difficulty
     /// configurations for a web key.
     #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
@@ -514,6 +624,20 @@ pub mod web_key_settings {
         Balance = 2,
         /// Key tends to show more and harder challenges.
         Security = 3,
+    }
+    impl ChallengeSecurityPreference {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                ChallengeSecurityPreference::Unspecified => "CHALLENGE_SECURITY_PREFERENCE_UNSPECIFIED",
+                ChallengeSecurityPreference::Usability => "USABILITY",
+                ChallengeSecurityPreference::Balance => "BALANCE",
+                ChallengeSecurityPreference::Security => "SECURITY",
+            }
+        }
     }
 }
 /// Settings specific to keys that can be used by Android apps.
@@ -731,6 +855,20 @@ pub mod waf_settings {
         /// Use reCAPTCHA action-tokens to protect user actions.
         ActionToken = 3,
     }
+    impl WafFeature {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                WafFeature::Unspecified => "WAF_FEATURE_UNSPECIFIED",
+                WafFeature::ChallengePage => "CHALLENGE_PAGE",
+                WafFeature::SessionToken => "SESSION_TOKEN",
+                WafFeature::ActionToken => "ACTION_TOKEN",
+            }
+        }
+    }
     /// Web Application Firewalls supported by reCAPTCHA Enterprise.
     #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
     #[repr(i32)]
@@ -740,11 +878,24 @@ pub mod waf_settings {
         /// Cloud Armor
         Ca = 1,
     }
+    impl WafService {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                WafService::Unspecified => "WAF_SERVICE_UNSPECIFIED",
+                WafService::Ca => "CA",
+            }
+        }
+    }
 }
 /// Generated client implementations.
 pub mod recaptcha_enterprise_service_client {
     #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
     use tonic::codegen::*;
+    use tonic::codegen::http::Uri;
     /// Service to determine the likelihood an event is legitimate.
     #[derive(Debug, Clone)]
     pub struct RecaptchaEnterpriseServiceClient<T> {
@@ -759,6 +910,10 @@ pub mod recaptcha_enterprise_service_client {
     {
         pub fn new(inner: T) -> Self {
             let inner = tonic::client::Grpc::new(inner);
+            Self { inner }
+        }
+        pub fn with_origin(inner: T, origin: Uri) -> Self {
+            let inner = tonic::client::Grpc::with_origin(inner, origin);
             Self { inner }
         }
         pub fn with_interceptor<F>(
@@ -782,19 +937,19 @@ pub mod recaptcha_enterprise_service_client {
                 InterceptedService::new(inner, interceptor),
             )
         }
-        /// Compress requests with `gzip`.
+        /// Compress requests with the given encoding.
         ///
         /// This requires the server to support it otherwise it might respond with an
         /// error.
         #[must_use]
-        pub fn send_gzip(mut self) -> Self {
-            self.inner = self.inner.send_gzip();
+        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.send_compressed(encoding);
             self
         }
-        /// Enable decompressing responses with `gzip`.
+        /// Enable decompressing responses.
         #[must_use]
-        pub fn accept_gzip(mut self) -> Self {
-            self.inner = self.inner.accept_gzip();
+        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.accept_compressed(encoding);
             self
         }
         /// Creates an Assessment of the likelihood an event is legitimate.

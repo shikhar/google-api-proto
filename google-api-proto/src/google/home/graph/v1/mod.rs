@@ -131,21 +131,21 @@ pub struct RequestSyncDevicesResponse {
 ///
 /// ```json
 /// {
-///   "requestId": "ff36a3cc-ec34-11e6-b1a0-64510650abcf",
-///   "agentUserId": "1234",
-///   "payload": {
-///     "devices": {
-///       "states": {
-///         "123": {
-///           "on": true
-///         },
-///         "456": {
-///           "on": true,
-///           "brightness": 10
-///         }
-///       },
-///     }
-///   }
+///    "requestId": "ff36a3cc-ec34-11e6-b1a0-64510650abcf",
+///    "agentUserId": "1234",
+///    "payload": {
+///      "devices": {
+///        "states": {
+///          "123": {
+///            "on": true
+///          },
+///          "456": {
+///            "on": true,
+///            "brightness": 10
+///          }
+///        },
+///      }
+///    }
 /// }
 /// ```
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -259,24 +259,24 @@ pub struct AgentDeviceId {
 ///
 /// ```json
 /// {
-///   "requestId": "ff36a3cc-ec34-11e6-b1a0-64510650abcf",
-///   "payload": {
-///     "devices": {
-///       "123": {
-///         "on": true,
-///         "online": true
-///       },
-///       "456": {
-///         "on": true,
-///         "online": true,
-///         "brightness": 80,
-///         "color": {
-///           "name": "cerulean",
-///           "spectrumRGB": 31655
-///         }
-///       }
-///     }
-///   }
+///    "requestId": "ff36a3cc-ec34-11e6-b1a0-64510650abcf",
+///    "payload": {
+///      "devices": {
+///        "123": {
+///          "on": true,
+///          "online": true
+///        },
+///        "456": {
+///          "on": true,
+///          "online": true,
+///          "brightness": 80,
+///          "color": {
+///            "name": "cerulean",
+///            "spectrumRGB": 31655
+///          }
+///        }
+///      }
+///    }
 /// }
 /// ```
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -316,34 +316,34 @@ pub struct SyncRequest {
 ///
 /// ```json
 /// {
-///   "requestId": "ff36a3cc-ec34-11e6-b1a0-64510650abcf",
-///   "payload": {
-///     "agentUserId": "1836.15267389",
-///     "devices": [{
-///       "id": "123",
-///       "type": "action.devices.types.OUTLET",
-///       "traits": [
-///         "action.devices.traits.OnOff"
-///       ],
-///       "name": {
-///         "defaultNames": ["My Outlet 1234"],
-///         "name": "Night light",
-///         "nicknames": ["wall plug"]
-///       },
-///       "willReportState": false,
-///       "deviceInfo": {
-///         "manufacturer": "lights-out-inc",
-///         "model": "hs1234",
-///         "hwVersion": "3.2",
-///         "swVersion": "11.4"
-///       },
-///       "customData": {
-///         "fooValue": 74,
-///         "barValue": true,
-///         "bazValue": "foo"
-///       }
-///     }]
-///   }
+///    "requestId": "ff36a3cc-ec34-11e6-b1a0-64510650abcf",
+///    "payload": {
+///      "agentUserId": "1836.15267389",
+///      "devices": [{
+///        "id": "123",
+///        "type": "action.devices.types.OUTLET",
+///        "traits": [
+///          "action.devices.traits.OnOff"
+///        ],
+///        "name": {
+///          "defaultNames": ["My Outlet 1234"],
+///          "name": "Night light",
+///          "nicknames": ["wall plug"]
+///        },
+///        "willReportState": false,
+///        "deviceInfo": {
+///          "manufacturer": "lights-out-inc",
+///          "model": "hs1234",
+///          "hwVersion": "3.2",
+///          "swVersion": "11.4"
+///        },
+///        "customData": {
+///          "fooValue": 74,
+///          "barValue": true,
+///          "bazValue": "foo"
+///        }
+///      }]
+///    }
 /// }
 /// ```
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -369,6 +369,7 @@ pub struct SyncResponsePayload {
 pub mod home_graph_api_service_client {
     #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
     use tonic::codegen::*;
+    use tonic::codegen::http::Uri;
     /// Google Home Graph API service. The Home Graph service provides support for
     /// accessing first-party and third-party devices stored in Google's Home Graph.
     /// The Home Graph database provides contextual data about the relationships
@@ -391,6 +392,10 @@ pub mod home_graph_api_service_client {
             let inner = tonic::client::Grpc::new(inner);
             Self { inner }
         }
+        pub fn with_origin(inner: T, origin: Uri) -> Self {
+            let inner = tonic::client::Grpc::with_origin(inner, origin);
+            Self { inner }
+        }
         pub fn with_interceptor<F>(
             inner: T,
             interceptor: F,
@@ -410,19 +415,19 @@ pub mod home_graph_api_service_client {
         {
             HomeGraphApiServiceClient::new(InterceptedService::new(inner, interceptor))
         }
-        /// Compress requests with `gzip`.
+        /// Compress requests with the given encoding.
         ///
         /// This requires the server to support it otherwise it might respond with an
         /// error.
         #[must_use]
-        pub fn send_gzip(mut self) -> Self {
-            self.inner = self.inner.send_gzip();
+        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.send_compressed(encoding);
             self
         }
-        /// Enable decompressing responses with `gzip`.
+        /// Enable decompressing responses.
         #[must_use]
-        pub fn accept_gzip(mut self) -> Self {
-            self.inner = self.inner.accept_gzip();
+        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.accept_compressed(encoding);
             self
         }
         /// Requests Google to send an `action.devices.SYNC`

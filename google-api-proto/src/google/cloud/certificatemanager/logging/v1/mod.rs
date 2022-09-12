@@ -30,4 +30,17 @@ pub mod certificates_expiry {
         /// Certificate is expired.
         Expired = 2,
     }
+    impl State {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                State::Unspecified => "STATE_UNSPECIFIED",
+                State::CloseToExpiry => "CLOSE_TO_EXPIRY",
+                State::Expired => "EXPIRED",
+            }
+        }
+    }
 }

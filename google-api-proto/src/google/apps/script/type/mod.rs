@@ -102,6 +102,24 @@ pub mod add_on_widget_set {
         /// A Gmail add-on action that applies to the addon compose UI.
         AddonComposeUiAction = 7,
     }
+    impl WidgetType {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                WidgetType::Unspecified => "WIDGET_TYPE_UNSPECIFIED",
+                WidgetType::DatePicker => "DATE_PICKER",
+                WidgetType::StyledButtons => "STYLED_BUTTONS",
+                WidgetType::PersistentForms => "PERSISTENT_FORMS",
+                WidgetType::FixedFooter => "FIXED_FOOTER",
+                WidgetType::UpdateSubjectAndRecipients => "UPDATE_SUBJECT_AND_RECIPIENTS",
+                WidgetType::GridWidget => "GRID_WIDGET",
+                WidgetType::AddonComposeUiAction => "ADDON_COMPOSE_UI_ACTION",
+            }
+        }
+    }
 }
 /// Add-on configuration that is shared across all add-on host applications.
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -180,4 +198,18 @@ pub enum HttpAuthorizationHeader {
     UserIdToken = 2,
     /// Do not send an Authentication header
     None = 3,
+}
+impl HttpAuthorizationHeader {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            HttpAuthorizationHeader::Unspecified => "HTTP_AUTHORIZATION_HEADER_UNSPECIFIED",
+            HttpAuthorizationHeader::SystemIdToken => "SYSTEM_ID_TOKEN",
+            HttpAuthorizationHeader::UserIdToken => "USER_ID_TOKEN",
+            HttpAuthorizationHeader::None => "NONE",
+        }
+    }
 }

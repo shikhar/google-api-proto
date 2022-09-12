@@ -1,13 +1,13 @@
 /// Trace represents one simulated packet forwarding path.
 ///
-///   * Each trace contains multiple ordered steps.
-///   * Each step is in a particular state with associated configuration.
-///   * State is categorized as final or non-final states.
-///   * Each final state has a reason associated.
-///   * Each trace must end with a final state (the last step).
+///    * Each trace contains multiple ordered steps.
+///    * Each step is in a particular state with associated configuration.
+///    * State is categorized as final or non-final states.
+///    * Each final state has a reason associated.
+///    * Each trace must end with a final state (the last step).
 /// ```
-///   |---------------------Trace----------------------|
-///   Step1(State) Step2(State) ---  StepN(State(final))
+///    |---------------------Trace----------------------|
+///    Step1(State) Step2(State) ---  StepN(State(final))
 /// ```
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct Trace {
@@ -114,6 +114,39 @@ pub mod step {
         /// Special state: viewer of the test result does not have permission to
         /// see the configuration in this step.
         ViewerPermissionMissing = 20,
+    }
+    impl State {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                State::Unspecified => "STATE_UNSPECIFIED",
+                State::StartFromInstance => "START_FROM_INSTANCE",
+                State::StartFromInternet => "START_FROM_INTERNET",
+                State::StartFromPrivateNetwork => "START_FROM_PRIVATE_NETWORK",
+                State::StartFromGkeMaster => "START_FROM_GKE_MASTER",
+                State::StartFromCloudSqlInstance => "START_FROM_CLOUD_SQL_INSTANCE",
+                State::ApplyIngressFirewallRule => "APPLY_INGRESS_FIREWALL_RULE",
+                State::ApplyEgressFirewallRule => "APPLY_EGRESS_FIREWALL_RULE",
+                State::ApplyRoute => "APPLY_ROUTE",
+                State::ApplyForwardingRule => "APPLY_FORWARDING_RULE",
+                State::SpoofingApproved => "SPOOFING_APPROVED",
+                State::ArriveAtInstance => "ARRIVE_AT_INSTANCE",
+                State::ArriveAtInternalLoadBalancer => "ARRIVE_AT_INTERNAL_LOAD_BALANCER",
+                State::ArriveAtExternalLoadBalancer => "ARRIVE_AT_EXTERNAL_LOAD_BALANCER",
+                State::ArriveAtVpnGateway => "ARRIVE_AT_VPN_GATEWAY",
+                State::ArriveAtVpnTunnel => "ARRIVE_AT_VPN_TUNNEL",
+                State::Nat => "NAT",
+                State::ProxyConnection => "PROXY_CONNECTION",
+                State::Deliver => "DELIVER",
+                State::Drop => "DROP",
+                State::Forward => "FORWARD",
+                State::Abort => "ABORT",
+                State::ViewerPermissionMissing => "VIEWER_PERMISSION_MISSING",
+            }
+        }
     }
     /// Configuration or metadata associated with each step.
     /// The configuration is filtered based on viewer's permission. If a viewer
@@ -275,6 +308,20 @@ pub mod firewall_info {
         /// rules](<https://cloud.google.com/vpc/docs/firewalls#default_firewall_rules>).
         ImpliedVpcFirewallRule = 3,
     }
+    impl FirewallRuleType {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                FirewallRuleType::Unspecified => "FIREWALL_RULE_TYPE_UNSPECIFIED",
+                FirewallRuleType::HierarchicalFirewallPolicyRule => "HIERARCHICAL_FIREWALL_POLICY_RULE",
+                FirewallRuleType::VpcFirewallRule => "VPC_FIREWALL_RULE",
+                FirewallRuleType::ImpliedVpcFirewallRule => "IMPLIED_VPC_FIREWALL_RULE",
+            }
+        }
+    }
 }
 /// For display only. Metadata associated with a Compute Engine route.
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -332,6 +379,23 @@ pub mod route_info {
         /// A dynamic route received from peering network.
         PeeringDynamic = 6,
     }
+    impl RouteType {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                RouteType::Unspecified => "ROUTE_TYPE_UNSPECIFIED",
+                RouteType::Subnet => "SUBNET",
+                RouteType::Static => "STATIC",
+                RouteType::Dynamic => "DYNAMIC",
+                RouteType::PeeringSubnet => "PEERING_SUBNET",
+                RouteType::PeeringStatic => "PEERING_STATIC",
+                RouteType::PeeringDynamic => "PEERING_DYNAMIC",
+            }
+        }
+    }
     /// Type of next hop:
     #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
     #[repr(i32)]
@@ -366,6 +430,28 @@ pub mod route_info {
         /// [router appliance
         /// instance](<https://cloud.google.com/network-connectivity/docs/network-connectivity-center/concepts/ra-overview>).
         NextHopRouterAppliance = 11,
+    }
+    impl NextHopType {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                NextHopType::Unspecified => "NEXT_HOP_TYPE_UNSPECIFIED",
+                NextHopType::NextHopIp => "NEXT_HOP_IP",
+                NextHopType::NextHopInstance => "NEXT_HOP_INSTANCE",
+                NextHopType::NextHopNetwork => "NEXT_HOP_NETWORK",
+                NextHopType::NextHopPeering => "NEXT_HOP_PEERING",
+                NextHopType::NextHopInterconnect => "NEXT_HOP_INTERCONNECT",
+                NextHopType::NextHopVpnTunnel => "NEXT_HOP_VPN_TUNNEL",
+                NextHopType::NextHopVpnGateway => "NEXT_HOP_VPN_GATEWAY",
+                NextHopType::NextHopInternetGateway => "NEXT_HOP_INTERNET_GATEWAY",
+                NextHopType::NextHopBlackhole => "NEXT_HOP_BLACKHOLE",
+                NextHopType::NextHopIlb => "NEXT_HOP_ILB",
+                NextHopType::NextHopRouterAppliance => "NEXT_HOP_ROUTER_APPLIANCE",
+            }
+        }
     }
 }
 /// For display only. Metadata associated with a Compute Engine forwarding rule.
@@ -431,6 +517,22 @@ pub mod load_balancer_info {
         /// SSL proxy load balancer.
         SslProxy = 5,
     }
+    impl LoadBalancerType {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                LoadBalancerType::Unspecified => "LOAD_BALANCER_TYPE_UNSPECIFIED",
+                LoadBalancerType::InternalTcpUdp => "INTERNAL_TCP_UDP",
+                LoadBalancerType::NetworkTcpUdp => "NETWORK_TCP_UDP",
+                LoadBalancerType::HttpProxy => "HTTP_PROXY",
+                LoadBalancerType::TcpProxy => "TCP_PROXY",
+                LoadBalancerType::SslProxy => "SSL_PROXY",
+            }
+        }
+    }
     /// The type definition for a load balancer backend configuration:
     #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
     #[repr(i32)]
@@ -441,6 +543,19 @@ pub mod load_balancer_info {
         BackendService = 1,
         /// Target Pool as the load balancer's backend.
         TargetPool = 2,
+    }
+    impl BackendType {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                BackendType::Unspecified => "BACKEND_TYPE_UNSPECIFIED",
+                BackendType::BackendService => "BACKEND_SERVICE",
+                BackendType::TargetPool => "TARGET_POOL",
+            }
+        }
     }
 }
 /// For display only. Metadata associated with a specific load balancer backend.
@@ -479,6 +594,19 @@ pub mod load_balancer_backend {
         /// the health check to the backend will fail. Then, the backend will be
         /// marked unhealthy and will not receive traffic sent to the load balancer.
         Misconfigured = 2,
+    }
+    impl HealthCheckFirewallState {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                HealthCheckFirewallState::Unspecified => "HEALTH_CHECK_FIREWALL_STATE_UNSPECIFIED",
+                HealthCheckFirewallState::Configured => "CONFIGURED",
+                HealthCheckFirewallState::Misconfigured => "MISCONFIGURED",
+            }
+        }
     }
 }
 /// For display only. Metadata associated with a Compute Engine VPN gateway.
@@ -552,6 +680,20 @@ pub mod vpn_tunnel_info {
         /// Dynamic (BGP) routing.
         Dynamic = 3,
     }
+    impl RoutingType {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                RoutingType::Unspecified => "ROUTING_TYPE_UNSPECIFIED",
+                RoutingType::RouteBased => "ROUTE_BASED",
+                RoutingType::PolicyBased => "POLICY_BASED",
+                RoutingType::Dynamic => "DYNAMIC",
+            }
+        }
+    }
 }
 /// For display only. The specification of the endpoints for the test.
 /// EndpointInfo is derived from source and destination Endpoint and validated
@@ -609,6 +751,22 @@ pub mod deliver_info {
         /// Target is a Cloud SQL instance.
         CloudSqlInstance = 5,
     }
+    impl Target {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                Target::Unspecified => "TARGET_UNSPECIFIED",
+                Target::Instance => "INSTANCE",
+                Target::Internet => "INTERNET",
+                Target::GoogleApi => "GOOGLE_API",
+                Target::GkeMaster => "GKE_MASTER",
+                Target::CloudSqlInstance => "CLOUD_SQL_INSTANCE",
+            }
+        }
+    }
 }
 /// Details of the final state "forward" and associated resource.
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -640,6 +798,23 @@ pub mod forward_info {
         ImportedCustomRouteNextHop = 5,
         /// Forwarded to a Cloud SQL instance.
         CloudSqlInstance = 6,
+    }
+    impl Target {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                Target::Unspecified => "TARGET_UNSPECIFIED",
+                Target::PeeringVpc => "PEERING_VPC",
+                Target::VpnGateway => "VPN_GATEWAY",
+                Target::Interconnect => "INTERCONNECT",
+                Target::GkeMaster => "GKE_MASTER",
+                Target::ImportedCustomRouteNextHop => "IMPORTED_CUSTOM_ROUTE_NEXT_HOP",
+                Target::CloudSqlInstance => "CLOUD_SQL_INSTANCE",
+            }
+        }
     }
 }
 /// Details of the final state "abort" and associated resource.
@@ -710,6 +885,32 @@ pub mod abort_info {
         MismatchedDestinationNetwork = 14,
         /// Aborted because the test scenario is not supported.
         Unsupported = 15,
+    }
+    impl Cause {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                Cause::Unspecified => "CAUSE_UNSPECIFIED",
+                Cause::UnknownNetwork => "UNKNOWN_NETWORK",
+                Cause::UnknownIp => "UNKNOWN_IP",
+                Cause::UnknownProject => "UNKNOWN_PROJECT",
+                Cause::PermissionDenied => "PERMISSION_DENIED",
+                Cause::NoSourceLocation => "NO_SOURCE_LOCATION",
+                Cause::InvalidArgument => "INVALID_ARGUMENT",
+                Cause::NoExternalIp => "NO_EXTERNAL_IP",
+                Cause::UnintendedDestination => "UNINTENDED_DESTINATION",
+                Cause::TraceTooLong => "TRACE_TOO_LONG",
+                Cause::InternalError => "INTERNAL_ERROR",
+                Cause::SourceEndpointNotFound => "SOURCE_ENDPOINT_NOT_FOUND",
+                Cause::MismatchedSourceNetwork => "MISMATCHED_SOURCE_NETWORK",
+                Cause::DestinationEndpointNotFound => "DESTINATION_ENDPOINT_NOT_FOUND",
+                Cause::MismatchedDestinationNetwork => "MISMATCHED_DESTINATION_NETWORK",
+                Cause::Unsupported => "UNSUPPORTED",
+            }
+        }
     }
 }
 /// Details of the final state "drop" and associated resource.
@@ -800,6 +1001,38 @@ pub mod drop_info {
         /// nor a public IP address.
         CloudSqlInstanceNoIpAddress = 21,
     }
+    impl Cause {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                Cause::Unspecified => "CAUSE_UNSPECIFIED",
+                Cause::UnknownExternalAddress => "UNKNOWN_EXTERNAL_ADDRESS",
+                Cause::ForeignIpDisallowed => "FOREIGN_IP_DISALLOWED",
+                Cause::FirewallRule => "FIREWALL_RULE",
+                Cause::NoRoute => "NO_ROUTE",
+                Cause::RouteBlackhole => "ROUTE_BLACKHOLE",
+                Cause::RouteWrongNetwork => "ROUTE_WRONG_NETWORK",
+                Cause::PrivateTrafficToInternet => "PRIVATE_TRAFFIC_TO_INTERNET",
+                Cause::PrivateGoogleAccessDisallowed => "PRIVATE_GOOGLE_ACCESS_DISALLOWED",
+                Cause::NoExternalAddress => "NO_EXTERNAL_ADDRESS",
+                Cause::UnknownInternalAddress => "UNKNOWN_INTERNAL_ADDRESS",
+                Cause::ForwardingRuleMismatch => "FORWARDING_RULE_MISMATCH",
+                Cause::ForwardingRuleNoInstances => "FORWARDING_RULE_NO_INSTANCES",
+                Cause::FirewallBlockingLoadBalancerBackendHealthCheck => "FIREWALL_BLOCKING_LOAD_BALANCER_BACKEND_HEALTH_CHECK",
+                Cause::InstanceNotRunning => "INSTANCE_NOT_RUNNING",
+                Cause::TrafficTypeBlocked => "TRAFFIC_TYPE_BLOCKED",
+                Cause::GkeMasterUnauthorizedAccess => "GKE_MASTER_UNAUTHORIZED_ACCESS",
+                Cause::CloudSqlInstanceUnauthorizedAccess => "CLOUD_SQL_INSTANCE_UNAUTHORIZED_ACCESS",
+                Cause::DroppedInsideGkeService => "DROPPED_INSIDE_GKE_SERVICE",
+                Cause::DroppedInsideCloudSqlService => "DROPPED_INSIDE_CLOUD_SQL_SERVICE",
+                Cause::GoogleManagedServiceNoPeering => "GOOGLE_MANAGED_SERVICE_NO_PEERING",
+                Cause::CloudSqlInstanceNoIpAddress => "CLOUD_SQL_INSTANCE_NO_IP_ADDRESS",
+            }
+        }
+    }
 }
 /// For display only. Metadata associated with a Google Kubernetes Engine (GKE)
 /// cluster master.
@@ -845,7 +1078,7 @@ pub struct CloudSqlInstanceInfo {
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ConnectivityTest {
     /// Required. Unique name of the resource using the form:
-    ///     `projects/{project_id}/locations/global/connectivityTests/{test_id}`
+    ///      `projects/{project_id}/locations/global/connectivityTests/{test_id}`
     #[prost(string, tag="1")]
     pub name: ::prost::alloc::string::String,
     /// The user-supplied description of the Connectivity Test.
@@ -981,6 +1214,19 @@ pub mod endpoint {
         /// provider.
         NonGcpNetwork = 2,
     }
+    impl NetworkType {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                NetworkType::Unspecified => "NETWORK_TYPE_UNSPECIFIED",
+                NetworkType::GcpNetwork => "GCP_NETWORK",
+                NetworkType::NonGcpNetwork => "NON_GCP_NETWORK",
+            }
+        }
+    }
 }
 /// Results of the configuration analysis from the last run of the test.
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -1011,10 +1257,10 @@ pub mod reachability_details {
         /// Possible scenarios are:
         ///
         /// * The configuration analysis determined that a packet originating from
-        ///   the source is expected to reach the destination.
+        ///    the source is expected to reach the destination.
         /// * The analysis didn't complete because the user lacks permission for
-        ///   some of the resources in the trace. However, at the time the user's
-        ///   permission became insufficient, the trace had been successful so far.
+        ///    some of the resources in the trace. However, at the time the user's
+        ///    permission became insufficient, the trace had been successful so far.
         Reachable = 1,
         /// A packet originating from the source is expected to be dropped before
         /// reaching the destination.
@@ -1027,18 +1273,33 @@ pub mod reachability_details {
         /// The configuration analysis did not complete. Possible reasons are:
         ///
         /// * A permissions error occurred--for example, the user might not have
-        ///   read permission for all of the resources named in the test.
+        ///    read permission for all of the resources named in the test.
         /// * An internal error occurred.
         /// * The analyzer received an invalid or unsupported argument or was unable
-        ///   to identify a known endpoint.
+        ///    to identify a known endpoint.
         Undetermined = 5,
+    }
+    impl Result {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                Result::Unspecified => "RESULT_UNSPECIFIED",
+                Result::Reachable => "REACHABLE",
+                Result::Unreachable => "UNREACHABLE",
+                Result::Ambiguous => "AMBIGUOUS",
+                Result::Undetermined => "UNDETERMINED",
+            }
+        }
     }
 }
 /// Request for the `ListConnectivityTests` method.
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ListConnectivityTestsRequest {
     /// Required. The parent resource of the Connectivity Tests:
-    ///     `projects/{project_id}/locations/global`
+    ///      `projects/{project_id}/locations/global`
     #[prost(string, tag="1")]
     pub parent: ::prost::alloc::string::String,
     /// Number of `ConnectivityTests` to return.
@@ -1058,13 +1319,13 @@ pub struct ListConnectivityTestsRequest {
     ///
     /// Examples:
     /// - Filter by name:
-    ///   name = "projects/proj-1/locations/global/connectivityTests/test-1
+    ///    name = "projects/proj-1/locations/global/connectivityTests/test-1
     ///
     /// - Filter by labels:
-    ///   - Resources that have a key called `foo`
-    ///     labels.foo:*
-    ///   - Resources that have a key called `foo` whose value is `bar`
-    ///     labels.foo = bar
+    ///    - Resources that have a key called `foo`
+    ///      labels.foo:*
+    ///    - Resources that have a key called `foo` whose value is `bar`
+    ///      labels.foo = bar
     #[prost(string, tag="4")]
     pub filter: ::prost::alloc::string::String,
     /// Field to use to sort the list.
@@ -1088,7 +1349,7 @@ pub struct ListConnectivityTestsResponse {
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct GetConnectivityTestRequest {
     /// Required. `ConnectivityTest` resource name using the form:
-    ///     `projects/{project_id}/locations/global/connectivityTests/{test_id}`
+    ///      `projects/{project_id}/locations/global/connectivityTests/{test_id}`
     #[prost(string, tag="1")]
     pub name: ::prost::alloc::string::String,
 }
@@ -1096,7 +1357,7 @@ pub struct GetConnectivityTestRequest {
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct CreateConnectivityTestRequest {
     /// Required. The parent resource of the Connectivity Test to create:
-    ///     `projects/{project_id}/locations/global`
+    ///      `projects/{project_id}/locations/global`
     #[prost(string, tag="1")]
     pub parent: ::prost::alloc::string::String,
     /// Required. The logical name of the Connectivity Test in your project
@@ -1128,7 +1389,7 @@ pub struct UpdateConnectivityTestRequest {
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct DeleteConnectivityTestRequest {
     /// Required. Connectivity Test resource name using the form:
-    ///     `projects/{project_id}/locations/global/connectivityTests/{test_id}`
+    ///      `projects/{project_id}/locations/global/connectivityTests/{test_id}`
     #[prost(string, tag="1")]
     pub name: ::prost::alloc::string::String,
 }
@@ -1136,7 +1397,7 @@ pub struct DeleteConnectivityTestRequest {
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct RerunConnectivityTestRequest {
     /// Required. Connectivity Test resource name using the form:
-    ///     `projects/{project_id}/locations/global/connectivityTests/{test_id}`
+    ///      `projects/{project_id}/locations/global/connectivityTests/{test_id}`
     #[prost(string, tag="1")]
     pub name: ::prost::alloc::string::String,
 }
@@ -1170,6 +1431,7 @@ pub struct OperationMetadata {
 pub mod reachability_service_client {
     #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
     use tonic::codegen::*;
+    use tonic::codegen::http::Uri;
     /// The Reachability service in the Google Cloud Network Management API provides
     /// services that analyze the reachability within a single Google Virtual Private
     /// Cloud (VPC) network, between peered VPC networks, between VPC and on-premises
@@ -1193,6 +1455,10 @@ pub mod reachability_service_client {
             let inner = tonic::client::Grpc::new(inner);
             Self { inner }
         }
+        pub fn with_origin(inner: T, origin: Uri) -> Self {
+            let inner = tonic::client::Grpc::with_origin(inner, origin);
+            Self { inner }
+        }
         pub fn with_interceptor<F>(
             inner: T,
             interceptor: F,
@@ -1212,19 +1478,19 @@ pub mod reachability_service_client {
         {
             ReachabilityServiceClient::new(InterceptedService::new(inner, interceptor))
         }
-        /// Compress requests with `gzip`.
+        /// Compress requests with the given encoding.
         ///
         /// This requires the server to support it otherwise it might respond with an
         /// error.
         #[must_use]
-        pub fn send_gzip(mut self) -> Self {
-            self.inner = self.inner.send_gzip();
+        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.send_compressed(encoding);
             self
         }
-        /// Enable decompressing responses with `gzip`.
+        /// Enable decompressing responses.
         #[must_use]
-        pub fn accept_gzip(mut self) -> Self {
-            self.inner = self.inner.accept_gzip();
+        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.accept_compressed(encoding);
             self
         }
         /// Lists all Connectivity Tests owned by a project.

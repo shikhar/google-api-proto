@@ -255,6 +255,20 @@ pub mod transfer_activity_log {
         /// Deleting files or objects at destination.
         Delete = 3,
     }
+    impl Action {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                Action::Unspecified => "ACTION_UNSPECIFIED",
+                Action::Find => "FIND",
+                Action::Copy => "COPY",
+                Action::Delete => "DELETE",
+            }
+        }
+    }
 }
 /// Type of the storage system.
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
@@ -272,4 +286,20 @@ pub enum StorageSystemType {
     PosixFs = 4,
     /// HTTP/HTTPS servers.
     Http = 5,
+}
+impl StorageSystemType {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            StorageSystemType::Unspecified => "STORAGE_SYSTEM_TYPE_UNSPECIFIED",
+            StorageSystemType::AwsS3 => "AWS_S3",
+            StorageSystemType::AzureBlob => "AZURE_BLOB",
+            StorageSystemType::Gcs => "GCS",
+            StorageSystemType::PosixFs => "POSIX_FS",
+            StorageSystemType::Http => "HTTP",
+        }
+    }
 }

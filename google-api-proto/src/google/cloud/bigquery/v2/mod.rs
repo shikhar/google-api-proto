@@ -13,24 +13,16 @@ pub struct ModelReference {
     #[prost(string, tag="3")]
     pub model_id: ::prost::alloc::string::String,
 }
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct EncryptionConfiguration {
-    /// Optional. Describes the Cloud KMS encryption key that will be used to
-    /// protect destination BigQuery table. The BigQuery Service Account associated
-    /// with your project requires access to this encryption key.
-    #[prost(message, optional, tag="1")]
-    pub kms_key_name: ::core::option::Option<::prost::alloc::string::String>,
-}
 /// The type of a variable, e.g., a function argument.
 /// Examples:
 /// INT64: {type_kind="INT64"}
 /// ARRAY<STRING>: {type_kind="ARRAY", array_element_type="STRING"}
 /// STRUCT<x STRING, y ARRAY<DATE>>:
-///   {type_kind="STRUCT",
-///    struct_type={fields=[
-///      {name="x", type={type_kind="STRING"}},
-///      {name="y", type={type_kind="ARRAY", array_element_type="DATE"}}
-///    ]}}
+///    {type_kind="STRUCT",
+///     struct_type={fields=[
+///       {name="x", type={type_kind="STRING"}},
+///       {name="y", type={type_kind="ARRAY", array_element_type="DATE"}}
+///     ]}}
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct StandardSqlDataType {
     /// Required. The top level type of this field.
@@ -82,6 +74,33 @@ pub mod standard_sql_data_type {
         /// because a JSON object cannot have duplicate field names.
         Struct = 17,
     }
+    impl TypeKind {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                TypeKind::Unspecified => "TYPE_KIND_UNSPECIFIED",
+                TypeKind::Int64 => "INT64",
+                TypeKind::Bool => "BOOL",
+                TypeKind::Float64 => "FLOAT64",
+                TypeKind::String => "STRING",
+                TypeKind::Bytes => "BYTES",
+                TypeKind::Timestamp => "TIMESTAMP",
+                TypeKind::Date => "DATE",
+                TypeKind::Time => "TIME",
+                TypeKind::Datetime => "DATETIME",
+                TypeKind::Interval => "INTERVAL",
+                TypeKind::Geography => "GEOGRAPHY",
+                TypeKind::Numeric => "NUMERIC",
+                TypeKind::Bignumeric => "BIGNUMERIC",
+                TypeKind::Json => "JSON",
+                TypeKind::Array => "ARRAY",
+                TypeKind::Struct => "STRUCT",
+            }
+        }
+    }
     #[derive(Clone, PartialEq, ::prost::Oneof)]
     pub enum SubType {
         /// The type of the array's elements, if type_kind = "ARRAY".
@@ -115,6 +134,14 @@ pub struct StandardSqlTableType {
     /// The columns in this table type
     #[prost(message, repeated, tag="1")]
     pub columns: ::prost::alloc::vec::Vec<StandardSqlField>,
+}
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct EncryptionConfiguration {
+    /// Optional. Describes the Cloud KMS encryption key that will be used to
+    /// protect destination BigQuery table. The BigQuery Service Account associated
+    /// with your project requires access to this encryption key.
+    #[prost(message, optional, tag="1")]
+    pub kms_key_name: ::core::option::Option<::prost::alloc::string::String>,
 }
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct TableReference {
@@ -231,6 +258,23 @@ pub mod model {
             /// Yearly period, 365 days or irregular.
             Yearly = 6,
         }
+        impl SeasonalPeriodType {
+            /// String value of the enum field names used in the ProtoBuf definition.
+            ///
+            /// The values are not transformed in any way and thus are considered stable
+            /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+            pub fn as_str_name(&self) -> &'static str {
+                match self {
+                    SeasonalPeriodType::Unspecified => "SEASONAL_PERIOD_TYPE_UNSPECIFIED",
+                    SeasonalPeriodType::NoSeasonality => "NO_SEASONALITY",
+                    SeasonalPeriodType::Daily => "DAILY",
+                    SeasonalPeriodType::Weekly => "WEEKLY",
+                    SeasonalPeriodType::Monthly => "MONTHLY",
+                    SeasonalPeriodType::Quarterly => "QUARTERLY",
+                    SeasonalPeriodType::Yearly => "YEARLY",
+                }
+            }
+        }
     }
     #[derive(Clone, PartialEq, ::prost::Message)]
     pub struct KmeansEnums {
@@ -251,6 +295,20 @@ pub mod model {
             Custom = 2,
             /// Initializes with kmeans++.
             KmeansPlusPlus = 3,
+        }
+        impl KmeansInitializationMethod {
+            /// String value of the enum field names used in the ProtoBuf definition.
+            ///
+            /// The values are not transformed in any way and thus are considered stable
+            /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+            pub fn as_str_name(&self) -> &'static str {
+                match self {
+                    KmeansInitializationMethod::Unspecified => "KMEANS_INITIALIZATION_METHOD_UNSPECIFIED",
+                    KmeansInitializationMethod::Random => "RANDOM",
+                    KmeansInitializationMethod::Custom => "CUSTOM",
+                    KmeansInitializationMethod::KmeansPlusPlus => "KMEANS_PLUS_PLUS",
+                }
+            }
         }
     }
     /// Evaluation metrics for regression and explicit feedback type matrix
@@ -1044,6 +1102,30 @@ pub mod model {
         /// New name for the ARIMA model.
         ArimaPlus = 19,
     }
+    impl ModelType {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                ModelType::Unspecified => "MODEL_TYPE_UNSPECIFIED",
+                ModelType::LinearRegression => "LINEAR_REGRESSION",
+                ModelType::LogisticRegression => "LOGISTIC_REGRESSION",
+                ModelType::Kmeans => "KMEANS",
+                ModelType::MatrixFactorization => "MATRIX_FACTORIZATION",
+                ModelType::DnnClassifier => "DNN_CLASSIFIER",
+                ModelType::Tensorflow => "TENSORFLOW",
+                ModelType::DnnRegressor => "DNN_REGRESSOR",
+                ModelType::BoostedTreeRegressor => "BOOSTED_TREE_REGRESSOR",
+                ModelType::BoostedTreeClassifier => "BOOSTED_TREE_CLASSIFIER",
+                ModelType::Arima => "ARIMA",
+                ModelType::AutomlRegressor => "AUTOML_REGRESSOR",
+                ModelType::AutomlClassifier => "AUTOML_CLASSIFIER",
+                ModelType::ArimaPlus => "ARIMA_PLUS",
+            }
+        }
+    }
     /// Loss metric to evaluate model training performance.
     #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
     #[repr(i32)]
@@ -1054,6 +1136,19 @@ pub mod model {
         /// Mean log loss, used for logistic regression.
         MeanLogLoss = 2,
     }
+    impl LossType {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                LossType::Unspecified => "LOSS_TYPE_UNSPECIFIED",
+                LossType::MeanSquaredLoss => "MEAN_SQUARED_LOSS",
+                LossType::MeanLogLoss => "MEAN_LOG_LOSS",
+            }
+        }
+    }
     /// Distance metric used to compute the distance between two points.
     #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
     #[repr(i32)]
@@ -1063,6 +1158,19 @@ pub mod model {
         Euclidean = 1,
         /// Cosine distance.
         Cosine = 2,
+    }
+    impl DistanceType {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                DistanceType::Unspecified => "DISTANCE_TYPE_UNSPECIFIED",
+                DistanceType::Euclidean => "EUCLIDEAN",
+                DistanceType::Cosine => "COSINE",
+            }
+        }
     }
     /// Indicates the method to split input data into multiple tables.
     #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
@@ -1080,6 +1188,22 @@ pub mod model {
         /// Splits data automatically: Uses NO_SPLIT if the data size is small.
         /// Otherwise uses RANDOM.
         AutoSplit = 5,
+    }
+    impl DataSplitMethod {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                DataSplitMethod::Unspecified => "DATA_SPLIT_METHOD_UNSPECIFIED",
+                DataSplitMethod::Random => "RANDOM",
+                DataSplitMethod::Custom => "CUSTOM",
+                DataSplitMethod::Sequential => "SEQUENTIAL",
+                DataSplitMethod::NoSplit => "NO_SPLIT",
+                DataSplitMethod::AutoSplit => "AUTO_SPLIT",
+            }
+        }
     }
     /// Type of supported data frequency for time series forecasting models.
     #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
@@ -1102,6 +1226,25 @@ pub mod model {
         Hourly = 7,
         /// Per-minute data.
         PerMinute = 8,
+    }
+    impl DataFrequency {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                DataFrequency::Unspecified => "DATA_FREQUENCY_UNSPECIFIED",
+                DataFrequency::AutoFrequency => "AUTO_FREQUENCY",
+                DataFrequency::Yearly => "YEARLY",
+                DataFrequency::Quarterly => "QUARTERLY",
+                DataFrequency::Monthly => "MONTHLY",
+                DataFrequency::Weekly => "WEEKLY",
+                DataFrequency::Daily => "DAILY",
+                DataFrequency::Hourly => "HOURLY",
+                DataFrequency::PerMinute => "PER_MINUTE",
+            }
+        }
     }
     /// Type of supported holiday regions for time series forecasting models.
     #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
@@ -1247,6 +1390,85 @@ pub mod model {
         /// South Africa
         Za = 68,
     }
+    impl HolidayRegion {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                HolidayRegion::Unspecified => "HOLIDAY_REGION_UNSPECIFIED",
+                HolidayRegion::Global => "GLOBAL",
+                HolidayRegion::Na => "NA",
+                HolidayRegion::Japac => "JAPAC",
+                HolidayRegion::Emea => "EMEA",
+                HolidayRegion::Lac => "LAC",
+                HolidayRegion::Ae => "AE",
+                HolidayRegion::Ar => "AR",
+                HolidayRegion::At => "AT",
+                HolidayRegion::Au => "AU",
+                HolidayRegion::Be => "BE",
+                HolidayRegion::Br => "BR",
+                HolidayRegion::Ca => "CA",
+                HolidayRegion::Ch => "CH",
+                HolidayRegion::Cl => "CL",
+                HolidayRegion::Cn => "CN",
+                HolidayRegion::Co => "CO",
+                HolidayRegion::Cs => "CS",
+                HolidayRegion::Cz => "CZ",
+                HolidayRegion::De => "DE",
+                HolidayRegion::Dk => "DK",
+                HolidayRegion::Dz => "DZ",
+                HolidayRegion::Ec => "EC",
+                HolidayRegion::Ee => "EE",
+                HolidayRegion::Eg => "EG",
+                HolidayRegion::Es => "ES",
+                HolidayRegion::Fi => "FI",
+                HolidayRegion::Fr => "FR",
+                HolidayRegion::Gb => "GB",
+                HolidayRegion::Gr => "GR",
+                HolidayRegion::Hk => "HK",
+                HolidayRegion::Hu => "HU",
+                HolidayRegion::Id => "ID",
+                HolidayRegion::Ie => "IE",
+                HolidayRegion::Il => "IL",
+                HolidayRegion::In => "IN",
+                HolidayRegion::Ir => "IR",
+                HolidayRegion::It => "IT",
+                HolidayRegion::Jp => "JP",
+                HolidayRegion::Kr => "KR",
+                HolidayRegion::Lv => "LV",
+                HolidayRegion::Ma => "MA",
+                HolidayRegion::Mx => "MX",
+                HolidayRegion::My => "MY",
+                HolidayRegion::Ng => "NG",
+                HolidayRegion::Nl => "NL",
+                HolidayRegion::No => "NO",
+                HolidayRegion::Nz => "NZ",
+                HolidayRegion::Pe => "PE",
+                HolidayRegion::Ph => "PH",
+                HolidayRegion::Pk => "PK",
+                HolidayRegion::Pl => "PL",
+                HolidayRegion::Pt => "PT",
+                HolidayRegion::Ro => "RO",
+                HolidayRegion::Rs => "RS",
+                HolidayRegion::Ru => "RU",
+                HolidayRegion::Sa => "SA",
+                HolidayRegion::Se => "SE",
+                HolidayRegion::Sg => "SG",
+                HolidayRegion::Si => "SI",
+                HolidayRegion::Sk => "SK",
+                HolidayRegion::Th => "TH",
+                HolidayRegion::Tr => "TR",
+                HolidayRegion::Tw => "TW",
+                HolidayRegion::Ua => "UA",
+                HolidayRegion::Us => "US",
+                HolidayRegion::Ve => "VE",
+                HolidayRegion::Vn => "VN",
+                HolidayRegion::Za => "ZA",
+            }
+        }
+    }
     /// Indicates the learning rate optimization strategy to use.
     #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
     #[repr(i32)]
@@ -1256,6 +1478,19 @@ pub mod model {
         LineSearch = 1,
         /// Use a constant learning rate.
         Constant = 2,
+    }
+    impl LearnRateStrategy {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                LearnRateStrategy::Unspecified => "LEARN_RATE_STRATEGY_UNSPECIFIED",
+                LearnRateStrategy::LineSearch => "LINE_SEARCH",
+                LearnRateStrategy::Constant => "CONSTANT",
+            }
+        }
     }
     /// Indicates the optimization strategy used for training.
     #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
@@ -1267,6 +1502,19 @@ pub mod model {
         /// Uses a normal equation to solve linear regression problem.
         NormalEquation = 2,
     }
+    impl OptimizationStrategy {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                OptimizationStrategy::Unspecified => "OPTIMIZATION_STRATEGY_UNSPECIFIED",
+                OptimizationStrategy::BatchGradientDescent => "BATCH_GRADIENT_DESCENT",
+                OptimizationStrategy::NormalEquation => "NORMAL_EQUATION",
+            }
+        }
+    }
     /// Indicates the training algorithm to use for matrix factorization models.
     #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
     #[repr(i32)]
@@ -1276,6 +1524,19 @@ pub mod model {
         Implicit = 1,
         /// Use nonweighted-als for explicit feedback problems.
         Explicit = 2,
+    }
+    impl FeedbackType {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                FeedbackType::Unspecified => "FEEDBACK_TYPE_UNSPECIFIED",
+                FeedbackType::Implicit => "IMPLICIT",
+                FeedbackType::Explicit => "EXPLICIT",
+            }
+        }
     }
 }
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -1351,6 +1612,7 @@ pub struct ListModelsResponse {
 pub mod model_service_client {
     #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
     use tonic::codegen::*;
+    use tonic::codegen::http::Uri;
     #[derive(Debug, Clone)]
     pub struct ModelServiceClient<T> {
         inner: tonic::client::Grpc<T>,
@@ -1364,6 +1626,10 @@ pub mod model_service_client {
     {
         pub fn new(inner: T) -> Self {
             let inner = tonic::client::Grpc::new(inner);
+            Self { inner }
+        }
+        pub fn with_origin(inner: T, origin: Uri) -> Self {
+            let inner = tonic::client::Grpc::with_origin(inner, origin);
             Self { inner }
         }
         pub fn with_interceptor<F>(
@@ -1385,19 +1651,19 @@ pub mod model_service_client {
         {
             ModelServiceClient::new(InterceptedService::new(inner, interceptor))
         }
-        /// Compress requests with `gzip`.
+        /// Compress requests with the given encoding.
         ///
         /// This requires the server to support it otherwise it might respond with an
         /// error.
         #[must_use]
-        pub fn send_gzip(mut self) -> Self {
-            self.inner = self.inner.send_gzip();
+        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.send_compressed(encoding);
             self
         }
-        /// Enable decompressing responses with `gzip`.
+        /// Enable decompressing responses.
         #[must_use]
-        pub fn accept_gzip(mut self) -> Self {
-            self.inner = self.inner.accept_gzip();
+        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.accept_compressed(encoding);
             self
         }
         /// Gets the specified model resource by model ID.

@@ -6,9 +6,9 @@ pub struct Membership {
     ///
     /// `membership_id` must be a valid RFC 1123 compliant DNS label:
     ///
-    ///   1. At most 63 characters in length
-    ///   2. It must consist of lower case alphanumeric characters or `-`
-    ///   3. It must start and end with an alphanumeric character
+    ///    1. At most 63 characters in length
+    ///    2. It must consist of lower case alphanumeric characters or `-`
+    ///    3. It must start and end with an alphanumeric character
     ///
     /// Which can be expressed as the regex: `\[a-z0-9]([-a-z0-9]*[a-z0-9\])?`,
     /// with a maximum length of 63 characters.
@@ -88,6 +88,19 @@ pub mod membership {
         /// Public cloud infrastructure.
         MultiCloud = 2,
     }
+    impl InfrastructureType {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                InfrastructureType::Unspecified => "INFRASTRUCTURE_TYPE_UNSPECIFIED",
+                InfrastructureType::OnPrem => "ON_PREM",
+                InfrastructureType::MultiCloud => "MULTI_CLOUD",
+            }
+        }
+    }
     /// Type of resource represented by this Membership
     #[derive(Clone, PartialEq, ::prost::Oneof)]
     pub enum Type {
@@ -106,11 +119,11 @@ pub struct MembershipEndpoint {
     /// Optional. The in-cluster Kubernetes Resources that should be applied for a correctly
     /// registered cluster, in the steady state. These resources:
     ///
-    ///   * Ensure that the cluster is exclusively registered to one and only one
-    ///     Hub Membership.
-    ///   * Propagate Workload Pool Information available in the Membership
-    ///     Authority field.
-    ///   * Ensure proper initial configuration of default Hub Features.
+    ///    * Ensure that the cluster is exclusively registered to one and only one
+    ///      Hub Membership.
+    ///    * Propagate Workload Pool Information available in the Membership
+    ///      Authority field.
+    ///    * Ensure proper initial configuration of default Hub Features.
     #[prost(message, optional, tag="3")]
     pub kubernetes_resource: ::core::option::Option<KubernetesResource>,
     /// Cluster information of the registered cluster.
@@ -195,7 +208,7 @@ pub struct ResourceOptions {
 pub struct GkeCluster {
     /// Immutable. Self-link of the GCP resource for the GKE cluster. For example:
     ///
-    ///     //container.googleapis.com/projects/my-project/locations/us-west1-a/clusters/my-cluster
+    ///      //container.googleapis.com/projects/my-project/locations/us-west1-a/clusters/my-cluster
     ///
     /// Zonal clusters are also supported.
     #[prost(string, tag="1")]
@@ -210,8 +223,8 @@ pub struct GkeCluster {
 pub struct OnPremCluster {
     /// Immutable. Self-link of the GCP resource for the GKE On-Prem cluster. For example:
     ///
-    ///  //gkeonprem.googleapis.com/projects/my-project/locations/us-west1-a/vmwareClusters/my-cluster
-    ///  //gkeonprem.googleapis.com/projects/my-project/locations/us-west1-a/bareMetalClusters/my-cluster
+    ///   //gkeonprem.googleapis.com/projects/my-project/locations/us-west1-a/vmwareClusters/my-cluster
+    ///   //gkeonprem.googleapis.com/projects/my-project/locations/us-west1-a/bareMetalClusters/my-cluster
     #[prost(string, tag="1")]
     pub resource_link: ::prost::alloc::string::String,
     /// Output only. If cluster_missing is set then it denotes that
@@ -229,8 +242,8 @@ pub struct MultiCloudCluster {
     /// Immutable. Self-link of the GCP resource for the GKE Multi-Cloud cluster. For
     /// example:
     ///
-    ///  //gkemulticloud.googleapis.com/projects/my-project/locations/us-west1-a/awsClusters/my-cluster
-    ///  //gkemulticloud.googleapis.com/projects/my-project/locations/us-west1-a/azureClusters/my-cluster
+    ///   //gkemulticloud.googleapis.com/projects/my-project/locations/us-west1-a/awsClusters/my-cluster
+    ///   //gkemulticloud.googleapis.com/projects/my-project/locations/us-west1-a/azureClusters/my-cluster
     #[prost(string, tag="1")]
     pub resource_link: ::prost::alloc::string::String,
     /// Output only. If cluster_missing is set then it denotes that
@@ -333,6 +346,22 @@ pub mod membership_state {
         /// The Membership is being updated by the Hub Service.
         ServiceUpdating = 5,
     }
+    impl Code {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                Code::Unspecified => "CODE_UNSPECIFIED",
+                Code::Creating => "CREATING",
+                Code::Ready => "READY",
+                Code::Deleting => "DELETING",
+                Code::Updating => "UPDATING",
+                Code::ServiceUpdating => "SERVICE_UPDATING",
+            }
+        }
+    }
 }
 /// Request message for `GkeHub.ListMemberships` method.
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -356,21 +385,21 @@ pub struct ListMembershipsRequest {
     ///
     /// Examples:
     ///
-    ///   - Name is `bar` in project `foo-proj` and location `global`:
+    ///    - Name is `bar` in project `foo-proj` and location `global`:
     ///
-    ///       name = "projects/foo-proj/locations/global/membership/bar"
+    ///        name = "projects/foo-proj/locations/global/membership/bar"
     ///
-    ///   - Memberships that have a label called `foo`:
+    ///    - Memberships that have a label called `foo`:
     ///
-    ///       labels.foo:*
+    ///        labels.foo:*
     ///
-    ///   - Memberships that have a label called `foo` whose value is `bar`:
+    ///    - Memberships that have a label called `foo` whose value is `bar`:
     ///
-    ///       labels.foo = bar
+    ///        labels.foo = bar
     ///
-    ///   - Memberships in the CREATING state:
+    ///    - Memberships in the CREATING state:
     ///
-    ///       state = CREATING
+    ///        state = CREATING
     #[prost(string, tag="4")]
     pub filter: ::prost::alloc::string::String,
     /// Optional. One or more fields to compare and use to sort the output.
@@ -411,9 +440,9 @@ pub struct CreateMembershipRequest {
     /// Required. Client chosen ID for the membership. `membership_id` must be a valid RFC
     /// 1123 compliant DNS label:
     ///
-    ///   1. At most 63 characters in length
-    ///   2. It must consist of lower case alphanumeric characters or `-`
-    ///   3. It must start and end with an alphanumeric character
+    ///    1. At most 63 characters in length
+    ///    2. It must consist of lower case alphanumeric characters or `-`
+    ///    3. It must start and end with an alphanumeric character
     ///
     /// Which can be expressed as the regex: `\[a-z0-9]([-a-z0-9]*[a-z0-9\])?`,
     /// with a maximum length of 63 characters.
@@ -549,7 +578,7 @@ pub struct InitializeHubRequest {
 pub struct InitializeHubResponse {
     /// Name of the Hub default service identity, in the format:
     ///
-    ///     service-<project-number>@gcp-sa-gkehub.iam.gserviceaccount.com
+    ///      service-<project-number>@gcp-sa-gkehub.iam.gserviceaccount.com
     ///
     /// The service account has `roles/gkehub.serviceAgent` in the Hub project.
     #[prost(string, tag="1")]
@@ -591,6 +620,7 @@ pub struct OperationMetadata {
 pub mod gke_hub_client {
     #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
     use tonic::codegen::*;
+    use tonic::codegen::http::Uri;
     /// The GKE Hub service handles the registration of many Kubernetes
     /// clusters to Google Cloud, represented with the [Membership][google.cloud.gkehub.v1alpha2.Membership] resource.
     ///
@@ -614,6 +644,10 @@ pub mod gke_hub_client {
             let inner = tonic::client::Grpc::new(inner);
             Self { inner }
         }
+        pub fn with_origin(inner: T, origin: Uri) -> Self {
+            let inner = tonic::client::Grpc::with_origin(inner, origin);
+            Self { inner }
+        }
         pub fn with_interceptor<F>(
             inner: T,
             interceptor: F,
@@ -633,19 +667,19 @@ pub mod gke_hub_client {
         {
             GkeHubClient::new(InterceptedService::new(inner, interceptor))
         }
-        /// Compress requests with `gzip`.
+        /// Compress requests with the given encoding.
         ///
         /// This requires the server to support it otherwise it might respond with an
         /// error.
         #[must_use]
-        pub fn send_gzip(mut self) -> Self {
-            self.inner = self.inner.send_gzip();
+        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.send_compressed(encoding);
             self
         }
-        /// Enable decompressing responses with `gzip`.
+        /// Enable decompressing responses.
         #[must_use]
-        pub fn accept_gzip(mut self) -> Self {
-            self.inner = self.inner.accept_gzip();
+        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.accept_compressed(encoding);
             self
         }
         /// Lists Memberships in a given project and location.

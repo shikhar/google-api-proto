@@ -52,6 +52,20 @@ pub mod migration_progress_event {
         /// Optimistic concurrency with entity groups.
         OptimisticWithEntityGroups = 3,
     }
+    impl ConcurrencyMode {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                ConcurrencyMode::Unspecified => "CONCURRENCY_MODE_UNSPECIFIED",
+                ConcurrencyMode::Pessimistic => "PESSIMISTIC",
+                ConcurrencyMode::Optimistic => "OPTIMISTIC",
+                ConcurrencyMode::OptimisticWithEntityGroups => "OPTIMISTIC_WITH_ENTITY_GROUPS",
+            }
+        }
+    }
     /// Details about this step.
     #[derive(Clone, PartialEq, ::prost::Oneof)]
     pub enum StepDetails {
@@ -76,6 +90,20 @@ pub enum MigrationState {
     /// The migration is complete.
     Complete = 3,
 }
+impl MigrationState {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            MigrationState::Unspecified => "MIGRATION_STATE_UNSPECIFIED",
+            MigrationState::Running => "RUNNING",
+            MigrationState::Paused => "PAUSED",
+            MigrationState::Complete => "COMPLETE",
+        }
+    }
+}
 /// Steps in a migration.
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
 #[repr(i32)]
@@ -97,6 +125,24 @@ pub enum MigrationStep {
     RedirectStronglyConsistentReads = 4,
     /// Writes are redirected to Cloud Firestore.
     RedirectWrites = 5,
+}
+impl MigrationStep {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            MigrationStep::Unspecified => "MIGRATION_STEP_UNSPECIFIED",
+            MigrationStep::Prepare => "PREPARE",
+            MigrationStep::Start => "START",
+            MigrationStep::ApplyWritesSynchronously => "APPLY_WRITES_SYNCHRONOUSLY",
+            MigrationStep::CopyAndVerify => "COPY_AND_VERIFY",
+            MigrationStep::RedirectEventuallyConsistentReads => "REDIRECT_EVENTUALLY_CONSISTENT_READS",
+            MigrationStep::RedirectStronglyConsistentReads => "REDIRECT_STRONGLY_CONSISTENT_READS",
+            MigrationStep::RedirectWrites => "REDIRECT_WRITES",
+        }
+    }
 }
 /// Datastore composite index definition.
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -144,6 +190,19 @@ pub mod index {
         /// Include all the entity's ancestors in the index.
         AllAncestors = 2,
     }
+    impl AncestorMode {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                AncestorMode::Unspecified => "ANCESTOR_MODE_UNSPECIFIED",
+                AncestorMode::None => "NONE",
+                AncestorMode::AllAncestors => "ALL_ANCESTORS",
+            }
+        }
+    }
     /// The direction determines how a property is indexed.
     #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
     #[repr(i32)]
@@ -156,6 +215,19 @@ pub mod index {
         /// The property's values are indexed so as to support sequencing in
         /// descending order and also query by <, >, <=, >=, and =.
         Descending = 2,
+    }
+    impl Direction {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                Direction::Unspecified => "DIRECTION_UNSPECIFIED",
+                Direction::Ascending => "ASCENDING",
+                Direction::Descending => "DESCENDING",
+            }
+        }
     }
     /// The possible set of states of an index.
     #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
@@ -184,6 +256,21 @@ pub mod index {
         /// The index is not updated when writing an entity.
         /// Some index data may exist.
         Error = 4,
+    }
+    impl State {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                State::Unspecified => "STATE_UNSPECIFIED",
+                State::Creating => "CREATING",
+                State::Ready => "READY",
+                State::Deleting => "DELETING",
+                State::Error => "ERROR",
+            }
+        }
     }
 }
 /// Metadata common to all Datastore Admin operations.
@@ -231,6 +318,24 @@ pub mod common_metadata {
         /// Request has finished being cancelled after user called
         /// google.longrunning.Operations.CancelOperation.
         Cancelled = 7,
+    }
+    impl State {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                State::Unspecified => "STATE_UNSPECIFIED",
+                State::Initializing => "INITIALIZING",
+                State::Processing => "PROCESSING",
+                State::Cancelling => "CANCELLING",
+                State::Finalizing => "FINALIZING",
+                State::Successful => "SUCCESSFUL",
+                State::Failed => "FAILED",
+                State::Cancelled => "CANCELLED",
+            }
+        }
     }
 }
 /// Measures the progress of a particular metric.
@@ -371,19 +476,19 @@ pub struct ImportEntitiesMetadata {
 /// Example usage:
 ///
 /// Entire project:
-///   kinds=[], namespace_ids=[]
+///    kinds=[], namespace_ids=[]
 ///
 /// Kinds Foo and Bar in all namespaces:
-///   kinds=['Foo', 'Bar'], namespace_ids=[]
+///    kinds=['Foo', 'Bar'], namespace_ids=[]
 ///
 /// Kinds Foo and Bar only in the default namespace:
-///   kinds=['Foo', 'Bar'], namespace_ids=\[''\]
+///    kinds=['Foo', 'Bar'], namespace_ids=\[''\]
 ///
 /// Kinds Foo and Bar in both the default and Baz namespaces:
-///   kinds=['Foo', 'Bar'], namespace_ids=['', 'Baz']
+///    kinds=['Foo', 'Bar'], namespace_ids=['', 'Baz']
 ///
 /// The entire Baz namespace:
-///   kinds=[], namespace_ids=\['Baz'\]
+///    kinds=[], namespace_ids=\['Baz'\]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct EntityFilter {
     /// If empty, then this represents all kinds.
@@ -507,10 +612,26 @@ pub enum OperationType {
     /// DeleteIndex.
     DeleteIndex = 4,
 }
+impl OperationType {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            OperationType::Unspecified => "OPERATION_TYPE_UNSPECIFIED",
+            OperationType::ExportEntities => "EXPORT_ENTITIES",
+            OperationType::ImportEntities => "IMPORT_ENTITIES",
+            OperationType::CreateIndex => "CREATE_INDEX",
+            OperationType::DeleteIndex => "DELETE_INDEX",
+        }
+    }
+}
 /// Generated client implementations.
 pub mod datastore_admin_client {
     #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
     use tonic::codegen::*;
+    use tonic::codegen::http::Uri;
     /// Google Cloud Datastore Admin API
     ///
     ///
@@ -587,6 +708,10 @@ pub mod datastore_admin_client {
             let inner = tonic::client::Grpc::new(inner);
             Self { inner }
         }
+        pub fn with_origin(inner: T, origin: Uri) -> Self {
+            let inner = tonic::client::Grpc::with_origin(inner, origin);
+            Self { inner }
+        }
         pub fn with_interceptor<F>(
             inner: T,
             interceptor: F,
@@ -606,19 +731,19 @@ pub mod datastore_admin_client {
         {
             DatastoreAdminClient::new(InterceptedService::new(inner, interceptor))
         }
-        /// Compress requests with `gzip`.
+        /// Compress requests with the given encoding.
         ///
         /// This requires the server to support it otherwise it might respond with an
         /// error.
         #[must_use]
-        pub fn send_gzip(mut self) -> Self {
-            self.inner = self.inner.send_gzip();
+        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.send_compressed(encoding);
             self
         }
-        /// Enable decompressing responses with `gzip`.
+        /// Enable decompressing responses.
         #[must_use]
-        pub fn accept_gzip(mut self) -> Self {
-            self.inner = self.inner.accept_gzip();
+        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.accept_compressed(encoding);
             self
         }
         /// Exports a copy of all or a subset of entities from Google Cloud Datastore

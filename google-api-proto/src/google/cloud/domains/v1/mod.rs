@@ -100,6 +100,24 @@ pub mod registration {
         /// this state are not automatically renewed by Cloud Domains.
         Exported = 8,
     }
+    impl State {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                State::Unspecified => "STATE_UNSPECIFIED",
+                State::RegistrationPending => "REGISTRATION_PENDING",
+                State::RegistrationFailed => "REGISTRATION_FAILED",
+                State::TransferPending => "TRANSFER_PENDING",
+                State::TransferFailed => "TRANSFER_FAILED",
+                State::Active => "ACTIVE",
+                State::Suspended => "SUSPENDED",
+                State::Exported => "EXPORTED",
+            }
+        }
+    }
     /// Possible issues with a `Registration` that require attention.
     #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
     #[repr(i32)]
@@ -117,6 +135,19 @@ pub mod registration {
         /// verification email, call ConfigureContactSettings and provide the current
         /// `registrant_contact.email`.
         UnverifiedEmail = 2,
+    }
+    impl Issue {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                Issue::Unspecified => "ISSUE_UNSPECIFIED",
+                Issue::ContactSupport => "CONTACT_SUPPORT",
+                Issue::UnverifiedEmail => "UNVERIFIED_EMAIL",
+            }
+        }
     }
 }
 /// Defines renewal, billing, and transfer settings for a `Registration`.
@@ -149,6 +180,19 @@ pub mod management_settings {
         /// To manage the domain's current billing and
         /// renewal settings, go to [Google Domains](<https://domains.google/>).
         ManualRenewal = 2,
+    }
+    impl RenewalMethod {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                RenewalMethod::Unspecified => "RENEWAL_METHOD_UNSPECIFIED",
+                RenewalMethod::AutomaticRenewal => "AUTOMATIC_RENEWAL",
+                RenewalMethod::ManualRenewal => "MANUAL_RENEWAL",
+            }
+        }
     }
 }
 /// Defines the DNS configuration of a `Registration`, including name servers,
@@ -262,6 +306,34 @@ pub mod dns_settings {
             /// Private algorithm OID. Cannot be used for new deployments.
             Privateoid = 254,
         }
+        impl Algorithm {
+            /// String value of the enum field names used in the ProtoBuf definition.
+            ///
+            /// The values are not transformed in any way and thus are considered stable
+            /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+            pub fn as_str_name(&self) -> &'static str {
+                match self {
+                    Algorithm::Unspecified => "ALGORITHM_UNSPECIFIED",
+                    Algorithm::Rsamd5 => "RSAMD5",
+                    Algorithm::Dh => "DH",
+                    Algorithm::Dsa => "DSA",
+                    Algorithm::Ecc => "ECC",
+                    Algorithm::Rsasha1 => "RSASHA1",
+                    Algorithm::Dsansec3sha1 => "DSANSEC3SHA1",
+                    Algorithm::Rsasha1nsec3sha1 => "RSASHA1NSEC3SHA1",
+                    Algorithm::Rsasha256 => "RSASHA256",
+                    Algorithm::Rsasha512 => "RSASHA512",
+                    Algorithm::Eccgost => "ECCGOST",
+                    Algorithm::Ecdsap256sha256 => "ECDSAP256SHA256",
+                    Algorithm::Ecdsap384sha384 => "ECDSAP384SHA384",
+                    Algorithm::Ed25519 => "ED25519",
+                    Algorithm::Ed448 => "ED448",
+                    Algorithm::Indirect => "INDIRECT",
+                    Algorithm::Privatedns => "PRIVATEDNS",
+                    Algorithm::Privateoid => "PRIVATEOID",
+                }
+            }
+        }
         /// List of hash functions that may have been used to generate a digest of a
         /// DNSKEY.
         #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
@@ -277,6 +349,21 @@ pub mod dns_settings {
             Gost3411 = 3,
             /// SHA-384.
             Sha384 = 4,
+        }
+        impl DigestType {
+            /// String value of the enum field names used in the ProtoBuf definition.
+            ///
+            /// The values are not transformed in any way and thus are considered stable
+            /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+            pub fn as_str_name(&self) -> &'static str {
+                match self {
+                    DigestType::Unspecified => "DIGEST_TYPE_UNSPECIFIED",
+                    DigestType::Sha1 => "SHA1",
+                    DigestType::Sha256 => "SHA256",
+                    DigestType::Gost3411 => "GOST3411",
+                    DigestType::Sha384 => "SHA384",
+                }
+            }
         }
     }
     /// Defines a host on your domain that is a DNS name server for your domain
@@ -315,6 +402,19 @@ pub mod dns_settings {
         /// DNS zone referenced in the `Registration`'s `dns_provider` field is
         /// already DNSSEC-signed.
         DsRecordsPublished = 2,
+    }
+    impl DsState {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                DsState::Unspecified => "DS_STATE_UNSPECIFIED",
+                DsState::DsRecordsUnpublished => "DS_RECORDS_UNPUBLISHED",
+                DsState::DsRecordsPublished => "DS_RECORDS_PUBLISHED",
+            }
+        }
     }
     /// The DNS provider of the registration.
     #[derive(Clone, PartialEq, ::prost::Oneof)]
@@ -692,6 +792,21 @@ pub mod register_parameters {
         /// due to system maintenance at the domain name registry.
         Unknown = 4,
     }
+    impl Availability {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                Availability::Unspecified => "AVAILABILITY_UNSPECIFIED",
+                Availability::Available => "AVAILABLE",
+                Availability::Unavailable => "UNAVAILABLE",
+                Availability::Unsupported => "UNSUPPORTED",
+                Availability::Unknown => "UNKNOWN",
+            }
+        }
+    }
 }
 /// Parameters required to transfer a domain from another registrar.
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -774,6 +889,20 @@ pub enum ContactPrivacy {
     /// article](<https://support.google.com/domains/answer/3251242>).
     RedactedContactData = 3,
 }
+impl ContactPrivacy {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            ContactPrivacy::Unspecified => "CONTACT_PRIVACY_UNSPECIFIED",
+            ContactPrivacy::PublicContactData => "PUBLIC_CONTACT_DATA",
+            ContactPrivacy::PrivateContactData => "PRIVATE_CONTACT_DATA",
+            ContactPrivacy::RedactedContactData => "REDACTED_CONTACT_DATA",
+        }
+    }
+}
 /// Notices about special properties of certain domains.
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
 #[repr(i32)]
@@ -787,6 +916,18 @@ pub enum DomainNotice {
     /// certificate](<https://support.google.com/domains/answer/7638036>).
     HstsPreloaded = 1,
 }
+impl DomainNotice {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            DomainNotice::Unspecified => "DOMAIN_NOTICE_UNSPECIFIED",
+            DomainNotice::HstsPreloaded => "HSTS_PRELOADED",
+        }
+    }
+}
 /// Notices related to contact information.
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
 #[repr(i32)]
@@ -796,6 +937,18 @@ pub enum ContactNotice {
     /// Required when setting the `privacy` field of `ContactSettings` to
     /// `PUBLIC_CONTACT_DATA`, which exposes contact data publicly.
     PublicContactDataAcknowledgement = 1,
+}
+impl ContactNotice {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            ContactNotice::Unspecified => "CONTACT_NOTICE_UNSPECIFIED",
+            ContactNotice::PublicContactDataAcknowledgement => "PUBLIC_CONTACT_DATA_ACKNOWLEDGEMENT",
+        }
+    }
 }
 /// Possible states of a `Registration`'s transfer lock.
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
@@ -808,10 +961,24 @@ pub enum TransferLockState {
     /// The domain is locked and cannot be transferred to another registrar.
     Locked = 2,
 }
+impl TransferLockState {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            TransferLockState::Unspecified => "TRANSFER_LOCK_STATE_UNSPECIFIED",
+            TransferLockState::Unlocked => "UNLOCKED",
+            TransferLockState::Locked => "LOCKED",
+        }
+    }
+}
 /// Generated client implementations.
 pub mod domains_client {
     #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
     use tonic::codegen::*;
+    use tonic::codegen::http::Uri;
     /// The Cloud Domains API enables management and configuration of domain names.
     #[derive(Debug, Clone)]
     pub struct DomainsClient<T> {
@@ -826,6 +993,10 @@ pub mod domains_client {
     {
         pub fn new(inner: T) -> Self {
             let inner = tonic::client::Grpc::new(inner);
+            Self { inner }
+        }
+        pub fn with_origin(inner: T, origin: Uri) -> Self {
+            let inner = tonic::client::Grpc::with_origin(inner, origin);
             Self { inner }
         }
         pub fn with_interceptor<F>(
@@ -847,19 +1018,19 @@ pub mod domains_client {
         {
             DomainsClient::new(InterceptedService::new(inner, interceptor))
         }
-        /// Compress requests with `gzip`.
+        /// Compress requests with the given encoding.
         ///
         /// This requires the server to support it otherwise it might respond with an
         /// error.
         #[must_use]
-        pub fn send_gzip(mut self) -> Self {
-            self.inner = self.inner.send_gzip();
+        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.send_compressed(encoding);
             self
         }
-        /// Enable decompressing responses with `gzip`.
+        /// Enable decompressing responses.
         #[must_use]
-        pub fn accept_gzip(mut self) -> Self {
-            self.inner = self.inner.accept_gzip();
+        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.accept_compressed(encoding);
             self
         }
         /// Searches for available domain names similar to the provided query.

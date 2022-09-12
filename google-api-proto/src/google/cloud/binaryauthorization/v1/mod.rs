@@ -63,6 +63,19 @@ pub mod policy {
         /// Disables system policy evaluation.
         Disable = 2,
     }
+    impl GlobalPolicyEvaluationMode {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                GlobalPolicyEvaluationMode::Unspecified => "GLOBAL_POLICY_EVALUATION_MODE_UNSPECIFIED",
+                GlobalPolicyEvaluationMode::Enable => "ENABLE",
+                GlobalPolicyEvaluationMode::Disable => "DISABLE",
+            }
+        }
+    }
 }
 /// An [admission allowlist pattern]\[google.cloud.binaryauthorization.v1.AdmissionWhitelistPattern\] exempts images
 /// from checks by [admission rules]\[google.cloud.binaryauthorization.v1.AdmissionRule\].
@@ -117,6 +130,20 @@ pub mod admission_rule {
         /// This rule denies all pod creations.
         AlwaysDeny = 3,
     }
+    impl EvaluationMode {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                EvaluationMode::Unspecified => "EVALUATION_MODE_UNSPECIFIED",
+                EvaluationMode::AlwaysAllow => "ALWAYS_ALLOW",
+                EvaluationMode::RequireAttestation => "REQUIRE_ATTESTATION",
+                EvaluationMode::AlwaysDeny => "ALWAYS_DENY",
+            }
+        }
+    }
     /// Defines the possible actions when a pod creation is denied by an admission
     /// rule.
     #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
@@ -129,6 +156,19 @@ pub mod admission_rule {
         /// Dryrun mode: Audit logging only.  This will allow the pod creation as if
         /// the admission request had specified break-glass.
         DryrunAuditLogOnly = 2,
+    }
+    impl EnforcementMode {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                EnforcementMode::Unspecified => "ENFORCEMENT_MODE_UNSPECIFIED",
+                EnforcementMode::EnforcedBlockAndAuditLog => "ENFORCED_BLOCK_AND_AUDIT_LOG",
+                EnforcementMode::DryrunAuditLogOnly => "DRYRUN_AUDIT_LOG_ONLY",
+            }
+        }
     }
 }
 /// An \[attestor][google.cloud.binaryauthorization.v1.Attestor\] that attests to container image
@@ -249,6 +289,28 @@ pub mod pkix_public_key {
         EcdsaP384Sha384 = 10,
         /// ECDSA on the NIST P-521 curve with a SHA512 digest.
         EcdsaP521Sha512 = 11,
+    }
+    impl SignatureAlgorithm {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                SignatureAlgorithm::Unspecified => "SIGNATURE_ALGORITHM_UNSPECIFIED",
+                SignatureAlgorithm::RsaPss2048Sha256 => "RSA_PSS_2048_SHA256",
+                SignatureAlgorithm::RsaPss3072Sha256 => "RSA_PSS_3072_SHA256",
+                SignatureAlgorithm::RsaPss4096Sha256 => "RSA_PSS_4096_SHA256",
+                SignatureAlgorithm::RsaPss4096Sha512 => "RSA_PSS_4096_SHA512",
+                SignatureAlgorithm::RsaSignPkcs12048Sha256 => "RSA_SIGN_PKCS1_2048_SHA256",
+                SignatureAlgorithm::RsaSignPkcs13072Sha256 => "RSA_SIGN_PKCS1_3072_SHA256",
+                SignatureAlgorithm::RsaSignPkcs14096Sha256 => "RSA_SIGN_PKCS1_4096_SHA256",
+                SignatureAlgorithm::RsaSignPkcs14096Sha512 => "RSA_SIGN_PKCS1_4096_SHA512",
+                SignatureAlgorithm::EcdsaP256Sha256 => "ECDSA_P256_SHA256",
+                SignatureAlgorithm::EcdsaP384Sha384 => "ECDSA_P384_SHA384",
+                SignatureAlgorithm::EcdsaP521Sha512 => "ECDSA_P521_SHA512",
+            }
+        }
     }
 }
 /// An [attestor public key]\[google.cloud.binaryauthorization.v1.AttestorPublicKey\] that will be used to verify
@@ -436,11 +498,25 @@ pub mod validate_attestation_occurrence_response {
         /// The Attestation was not able to verified by the Attestor.
         AttestationNotVerifiable = 2,
     }
+    impl Result {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                Result::Unspecified => "RESULT_UNSPECIFIED",
+                Result::Verified => "VERIFIED",
+                Result::AttestationNotVerifiable => "ATTESTATION_NOT_VERIFIABLE",
+            }
+        }
+    }
 }
 /// Generated client implementations.
 pub mod binauthz_management_service_v1_client {
     #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
     use tonic::codegen::*;
+    use tonic::codegen::http::Uri;
     /// Google Cloud Management Service for Binary Authorization admission policies
     /// and attestation authorities.
     ///
@@ -461,6 +537,10 @@ pub mod binauthz_management_service_v1_client {
     {
         pub fn new(inner: T) -> Self {
             let inner = tonic::client::Grpc::new(inner);
+            Self { inner }
+        }
+        pub fn with_origin(inner: T, origin: Uri) -> Self {
+            let inner = tonic::client::Grpc::with_origin(inner, origin);
             Self { inner }
         }
         pub fn with_interceptor<F>(
@@ -484,19 +564,19 @@ pub mod binauthz_management_service_v1_client {
                 InterceptedService::new(inner, interceptor),
             )
         }
-        /// Compress requests with `gzip`.
+        /// Compress requests with the given encoding.
         ///
         /// This requires the server to support it otherwise it might respond with an
         /// error.
         #[must_use]
-        pub fn send_gzip(mut self) -> Self {
-            self.inner = self.inner.send_gzip();
+        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.send_compressed(encoding);
             self
         }
-        /// Enable decompressing responses with `gzip`.
+        /// Enable decompressing responses.
         #[must_use]
-        pub fn accept_gzip(mut self) -> Self {
-            self.inner = self.inner.accept_gzip();
+        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.accept_compressed(encoding);
             self
         }
         /// A [policy][google.cloud.binaryauthorization.v1.Policy] specifies the [attestors][google.cloud.binaryauthorization.v1.Attestor] that must attest to
@@ -662,6 +742,7 @@ pub mod binauthz_management_service_v1_client {
 pub mod system_policy_v1_client {
     #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
     use tonic::codegen::*;
+    use tonic::codegen::http::Uri;
     /// API for working with the system policy.
     #[derive(Debug, Clone)]
     pub struct SystemPolicyV1Client<T> {
@@ -676,6 +757,10 @@ pub mod system_policy_v1_client {
     {
         pub fn new(inner: T) -> Self {
             let inner = tonic::client::Grpc::new(inner);
+            Self { inner }
+        }
+        pub fn with_origin(inner: T, origin: Uri) -> Self {
+            let inner = tonic::client::Grpc::with_origin(inner, origin);
             Self { inner }
         }
         pub fn with_interceptor<F>(
@@ -697,19 +782,19 @@ pub mod system_policy_v1_client {
         {
             SystemPolicyV1Client::new(InterceptedService::new(inner, interceptor))
         }
-        /// Compress requests with `gzip`.
+        /// Compress requests with the given encoding.
         ///
         /// This requires the server to support it otherwise it might respond with an
         /// error.
         #[must_use]
-        pub fn send_gzip(mut self) -> Self {
-            self.inner = self.inner.send_gzip();
+        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.send_compressed(encoding);
             self
         }
-        /// Enable decompressing responses with `gzip`.
+        /// Enable decompressing responses.
         #[must_use]
-        pub fn accept_gzip(mut self) -> Self {
-            self.inner = self.inner.accept_gzip();
+        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.accept_compressed(encoding);
             self
         }
         /// Gets the current system policy in the specified location.
@@ -738,6 +823,7 @@ pub mod system_policy_v1_client {
 pub mod validation_helper_v1_client {
     #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
     use tonic::codegen::*;
+    use tonic::codegen::http::Uri;
     /// BinAuthz Attestor verification
     #[derive(Debug, Clone)]
     pub struct ValidationHelperV1Client<T> {
@@ -752,6 +838,10 @@ pub mod validation_helper_v1_client {
     {
         pub fn new(inner: T) -> Self {
             let inner = tonic::client::Grpc::new(inner);
+            Self { inner }
+        }
+        pub fn with_origin(inner: T, origin: Uri) -> Self {
+            let inner = tonic::client::Grpc::with_origin(inner, origin);
             Self { inner }
         }
         pub fn with_interceptor<F>(
@@ -773,19 +863,19 @@ pub mod validation_helper_v1_client {
         {
             ValidationHelperV1Client::new(InterceptedService::new(inner, interceptor))
         }
-        /// Compress requests with `gzip`.
+        /// Compress requests with the given encoding.
         ///
         /// This requires the server to support it otherwise it might respond with an
         /// error.
         #[must_use]
-        pub fn send_gzip(mut self) -> Self {
-            self.inner = self.inner.send_gzip();
+        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.send_compressed(encoding);
             self
         }
-        /// Enable decompressing responses with `gzip`.
+        /// Enable decompressing responses.
         #[must_use]
-        pub fn accept_gzip(mut self) -> Self {
-            self.inner = self.inner.accept_gzip();
+        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.accept_compressed(encoding);
             self
         }
         /// Returns whether the given Attestation for the given image URI

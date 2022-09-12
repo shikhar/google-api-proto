@@ -35,6 +35,19 @@ pub mod ssl_config {
         /// 'client_certificate') specified.
         ServerClient = 2,
     }
+    impl SslType {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                SslType::Unspecified => "SSL_TYPE_UNSPECIFIED",
+                SslType::ServerOnly => "SERVER_ONLY",
+                SslType::ServerClient => "SERVER_CLIENT",
+            }
+        }
+    }
 }
 /// Specifies connection parameters required specifically for MySQL databases.
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -253,6 +266,19 @@ pub mod cloud_sql_settings {
         /// The instance should never spin up.
         Never = 2,
     }
+    impl SqlActivationPolicy {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                SqlActivationPolicy::Unspecified => "SQL_ACTIVATION_POLICY_UNSPECIFIED",
+                SqlActivationPolicy::Always => "ALWAYS",
+                SqlActivationPolicy::Never => "NEVER",
+            }
+        }
+    }
     /// The storage options for Cloud SQL databases.
     #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
     #[repr(i32)]
@@ -263,6 +289,19 @@ pub mod cloud_sql_settings {
         PdSsd = 1,
         /// HDD disk.
         PdHdd = 2,
+    }
+    impl SqlDataDiskType {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                SqlDataDiskType::Unspecified => "SQL_DATA_DISK_TYPE_UNSPECIFIED",
+                SqlDataDiskType::PdSsd => "PD_SSD",
+                SqlDataDiskType::PdHdd => "PD_HDD",
+            }
+        }
     }
     /// The database engine type and version.
     #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
@@ -286,6 +325,25 @@ pub mod cloud_sql_settings {
         Postgres12 = 7,
         /// PostgreSQL 13.
         Postgres13 = 8,
+    }
+    impl SqlDatabaseVersion {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                SqlDatabaseVersion::Unspecified => "SQL_DATABASE_VERSION_UNSPECIFIED",
+                SqlDatabaseVersion::Mysql56 => "MYSQL_5_6",
+                SqlDatabaseVersion::Mysql57 => "MYSQL_5_7",
+                SqlDatabaseVersion::Postgres96 => "POSTGRES_9_6",
+                SqlDatabaseVersion::Postgres11 => "POSTGRES_11",
+                SqlDatabaseVersion::Postgres10 => "POSTGRES_10",
+                SqlDatabaseVersion::Mysql80 => "MYSQL_8_0",
+                SqlDatabaseVersion::Postgres12 => "POSTGRES_12",
+                SqlDatabaseVersion::Postgres13 => "POSTGRES_13",
+            }
+        }
     }
 }
 /// The source database will allow incoming connections from the destination
@@ -443,6 +501,32 @@ pub mod migration_job {
         /// The migration job is resuming.
         Resuming = 15,
     }
+    impl State {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                State::Unspecified => "STATE_UNSPECIFIED",
+                State::Maintenance => "MAINTENANCE",
+                State::Draft => "DRAFT",
+                State::Creating => "CREATING",
+                State::NotStarted => "NOT_STARTED",
+                State::Running => "RUNNING",
+                State::Failed => "FAILED",
+                State::Completed => "COMPLETED",
+                State::Deleting => "DELETING",
+                State::Stopping => "STOPPING",
+                State::Stopped => "STOPPED",
+                State::Deleted => "DELETED",
+                State::Updating => "UPDATING",
+                State::Starting => "STARTING",
+                State::Restarting => "RESTARTING",
+                State::Resuming => "RESUMING",
+            }
+        }
+    }
     /// The current migration job phase.
     #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
     #[repr(i32)]
@@ -460,6 +544,22 @@ pub mod migration_job {
         /// Only RDS flow - the sources writes stopped, waiting for dump to begin
         PreparingTheDump = 5,
     }
+    impl Phase {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                Phase::Unspecified => "PHASE_UNSPECIFIED",
+                Phase::FullDump => "FULL_DUMP",
+                Phase::Cdc => "CDC",
+                Phase::PromoteInProgress => "PROMOTE_IN_PROGRESS",
+                Phase::WaitingForSourceWritesToStop => "WAITING_FOR_SOURCE_WRITES_TO_STOP",
+                Phase::PreparingTheDump => "PREPARING_THE_DUMP",
+            }
+        }
+    }
     /// The type of migration job (one-time or continuous).
     #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
     #[repr(i32)]
@@ -470,6 +570,19 @@ pub mod migration_job {
         OneTime = 1,
         /// The migration job is a continuous migration.
         Continuous = 2,
+    }
+    impl Type {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                Type::Unspecified => "TYPE_UNSPECIFIED",
+                Type::OneTime => "ONE_TIME",
+                Type::Continuous => "CONTINUOUS",
+            }
+        }
     }
     /// The connectivity method.
     #[derive(Clone, PartialEq, ::prost::Oneof)]
@@ -549,6 +662,24 @@ pub mod connection_profile {
         /// The last action on the connection profile failed.
         Failed = 7,
     }
+    impl State {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                State::Unspecified => "STATE_UNSPECIFIED",
+                State::Draft => "DRAFT",
+                State::Creating => "CREATING",
+                State::Ready => "READY",
+                State::Updating => "UPDATING",
+                State::Deleting => "DELETING",
+                State::Deleted => "DELETED",
+                State::Failed => "FAILED",
+            }
+        }
+    }
     /// The connection profile definition.
     #[derive(Clone, PartialEq, ::prost::Oneof)]
     pub enum ConnectionProfile {
@@ -626,6 +757,36 @@ pub mod migration_job_verification_error {
         /// Migration is already running at the time of restart request.
         CantRestartRunningMigration = 21,
     }
+    impl ErrorCode {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                ErrorCode::Unspecified => "ERROR_CODE_UNSPECIFIED",
+                ErrorCode::ConnectionFailure => "CONNECTION_FAILURE",
+                ErrorCode::AuthenticationFailure => "AUTHENTICATION_FAILURE",
+                ErrorCode::InvalidConnectionProfileConfig => "INVALID_CONNECTION_PROFILE_CONFIG",
+                ErrorCode::VersionIncompatibility => "VERSION_INCOMPATIBILITY",
+                ErrorCode::ConnectionProfileTypesIncompatibility => "CONNECTION_PROFILE_TYPES_INCOMPATIBILITY",
+                ErrorCode::NoPglogicalInstalled => "NO_PGLOGICAL_INSTALLED",
+                ErrorCode::PglogicalNodeAlreadyExists => "PGLOGICAL_NODE_ALREADY_EXISTS",
+                ErrorCode::InvalidWalLevel => "INVALID_WAL_LEVEL",
+                ErrorCode::InvalidSharedPreloadLibrary => "INVALID_SHARED_PRELOAD_LIBRARY",
+                ErrorCode::InsufficientMaxReplicationSlots => "INSUFFICIENT_MAX_REPLICATION_SLOTS",
+                ErrorCode::InsufficientMaxWalSenders => "INSUFFICIENT_MAX_WAL_SENDERS",
+                ErrorCode::InsufficientMaxWorkerProcesses => "INSUFFICIENT_MAX_WORKER_PROCESSES",
+                ErrorCode::UnsupportedExtensions => "UNSUPPORTED_EXTENSIONS",
+                ErrorCode::UnsupportedMigrationType => "UNSUPPORTED_MIGRATION_TYPE",
+                ErrorCode::InvalidRdsLogicalReplication => "INVALID_RDS_LOGICAL_REPLICATION",
+                ErrorCode::UnsupportedGtidMode => "UNSUPPORTED_GTID_MODE",
+                ErrorCode::UnsupportedTableDefinition => "UNSUPPORTED_TABLE_DEFINITION",
+                ErrorCode::UnsupportedDefiner => "UNSUPPORTED_DEFINER",
+                ErrorCode::CantRestartRunningMigration => "CANT_RESTART_RUNNING_MIGRATION",
+            }
+        }
+    }
 }
 /// The database engine types.
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
@@ -638,6 +799,19 @@ pub enum DatabaseEngine {
     /// The source engine is PostgreSQL.
     Postgresql = 2,
 }
+impl DatabaseEngine {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            DatabaseEngine::Unspecified => "DATABASE_ENGINE_UNSPECIFIED",
+            DatabaseEngine::Mysql => "MYSQL",
+            DatabaseEngine::Postgresql => "POSTGRESQL",
+        }
+    }
+}
 /// The database providers.
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
 #[repr(i32)]
@@ -648,6 +822,19 @@ pub enum DatabaseProvider {
     Cloudsql = 1,
     /// RDS runs the database.
     Rds = 2,
+}
+impl DatabaseProvider {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            DatabaseProvider::Unspecified => "DATABASE_PROVIDER_UNSPECIFIED",
+            DatabaseProvider::Cloudsql => "CLOUDSQL",
+            DatabaseProvider::Rds => "RDS",
+        }
+    }
 }
 /// Retrieve a list of all migration jobs in a given project and location.
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -1018,6 +1205,7 @@ pub struct OperationMetadata {
 pub mod data_migration_service_client {
     #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
     use tonic::codegen::*;
+    use tonic::codegen::http::Uri;
     /// Database Migration service
     #[derive(Debug, Clone)]
     pub struct DataMigrationServiceClient<T> {
@@ -1032,6 +1220,10 @@ pub mod data_migration_service_client {
     {
         pub fn new(inner: T) -> Self {
             let inner = tonic::client::Grpc::new(inner);
+            Self { inner }
+        }
+        pub fn with_origin(inner: T, origin: Uri) -> Self {
+            let inner = tonic::client::Grpc::with_origin(inner, origin);
             Self { inner }
         }
         pub fn with_interceptor<F>(
@@ -1053,19 +1245,19 @@ pub mod data_migration_service_client {
         {
             DataMigrationServiceClient::new(InterceptedService::new(inner, interceptor))
         }
-        /// Compress requests with `gzip`.
+        /// Compress requests with the given encoding.
         ///
         /// This requires the server to support it otherwise it might respond with an
         /// error.
         #[must_use]
-        pub fn send_gzip(mut self) -> Self {
-            self.inner = self.inner.send_gzip();
+        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.send_compressed(encoding);
             self
         }
-        /// Enable decompressing responses with `gzip`.
+        /// Enable decompressing responses.
         #[must_use]
-        pub fn accept_gzip(mut self) -> Self {
-            self.inner = self.inner.accept_gzip();
+        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.accept_compressed(encoding);
             self
         }
         /// Lists migration jobs in a given project and location.

@@ -130,10 +130,29 @@ pub enum ProfileType {
     /// collection pressure to see if those can be optimized.
     HeapAlloc = 7,
 }
+impl ProfileType {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            ProfileType::Unspecified => "PROFILE_TYPE_UNSPECIFIED",
+            ProfileType::Cpu => "CPU",
+            ProfileType::Wall => "WALL",
+            ProfileType::Heap => "HEAP",
+            ProfileType::Threads => "THREADS",
+            ProfileType::Contention => "CONTENTION",
+            ProfileType::PeakHeap => "PEAK_HEAP",
+            ProfileType::HeapAlloc => "HEAP_ALLOC",
+        }
+    }
+}
 /// Generated client implementations.
 pub mod profiler_service_client {
     #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
     use tonic::codegen::*;
+    use tonic::codegen::http::Uri;
     /// Manage the collection of continuous profiling data provided by profiling
     /// agents running in the cloud or by an offline provider of profiling data.
     ///
@@ -155,6 +174,10 @@ pub mod profiler_service_client {
             let inner = tonic::client::Grpc::new(inner);
             Self { inner }
         }
+        pub fn with_origin(inner: T, origin: Uri) -> Self {
+            let inner = tonic::client::Grpc::with_origin(inner, origin);
+            Self { inner }
+        }
         pub fn with_interceptor<F>(
             inner: T,
             interceptor: F,
@@ -174,19 +197,19 @@ pub mod profiler_service_client {
         {
             ProfilerServiceClient::new(InterceptedService::new(inner, interceptor))
         }
-        /// Compress requests with `gzip`.
+        /// Compress requests with the given encoding.
         ///
         /// This requires the server to support it otherwise it might respond with an
         /// error.
         #[must_use]
-        pub fn send_gzip(mut self) -> Self {
-            self.inner = self.inner.send_gzip();
+        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.send_compressed(encoding);
             self
         }
-        /// Enable decompressing responses with `gzip`.
+        /// Enable decompressing responses.
         #[must_use]
-        pub fn accept_gzip(mut self) -> Self {
-            self.inner = self.inner.accept_gzip();
+        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.accept_compressed(encoding);
             self
         }
         /// CreateProfile creates a new profile resource in the online mode.

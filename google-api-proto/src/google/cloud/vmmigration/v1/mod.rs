@@ -127,6 +127,28 @@ pub mod migrating_vm {
         /// aborted.
         Error = 13,
     }
+    impl State {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                State::Unspecified => "STATE_UNSPECIFIED",
+                State::Pending => "PENDING",
+                State::Ready => "READY",
+                State::FirstSync => "FIRST_SYNC",
+                State::Active => "ACTIVE",
+                State::CuttingOver => "CUTTING_OVER",
+                State::Cutover => "CUTOVER",
+                State::FinalSync => "FINAL_SYNC",
+                State::Paused => "PAUSED",
+                State::Finalizing => "FINALIZING",
+                State::Finalized => "FINALIZED",
+                State::Error => "ERROR",
+            }
+        }
+    }
     /// The default configuration of the target VM that will be created in GCP as a
     /// result of the migration.
     #[derive(Clone, PartialEq, ::prost::Oneof)]
@@ -196,6 +218,24 @@ pub mod clone_job {
         /// OS adaptation is running as part of the clone job to generate license.
         AdaptingOs = 7,
     }
+    impl State {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                State::Unspecified => "STATE_UNSPECIFIED",
+                State::Pending => "PENDING",
+                State::Active => "ACTIVE",
+                State::Failed => "FAILED",
+                State::Succeeded => "SUCCEEDED",
+                State::Cancelled => "CANCELLED",
+                State::Cancelling => "CANCELLING",
+                State::AdaptingOs => "ADAPTING_OS",
+            }
+        }
+    }
     /// Details of the VM to create as the target of this clone job.
     #[derive(Clone, PartialEq, ::prost::Oneof)]
     pub enum TargetVmDetails {
@@ -263,6 +303,24 @@ pub mod cutover_job {
         Active = 6,
         /// OS adaptation is running as part of the cutover job to generate license.
         AdaptingOs = 7,
+    }
+    impl State {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                State::Unspecified => "STATE_UNSPECIFIED",
+                State::Pending => "PENDING",
+                State::Failed => "FAILED",
+                State::Succeeded => "SUCCEEDED",
+                State::Cancelled => "CANCELLED",
+                State::Cancelling => "CANCELLING",
+                State::Active => "ACTIVE",
+                State::AdaptingOs => "ADAPTING_OS",
+            }
+        }
     }
     /// Details of the VM to create as the target of this cutover job.
     #[derive(Clone, PartialEq, ::prost::Oneof)]
@@ -487,6 +545,21 @@ pub mod datacenter_connector {
         /// The source exists and its credentials were verified.
         Active = 4,
     }
+    impl State {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                State::Unspecified => "STATE_UNSPECIFIED",
+                State::Pending => "PENDING",
+                State::Offline => "OFFLINE",
+                State::Failed => "FAILED",
+                State::Active => "ACTIVE",
+            }
+        }
+    }
 }
 /// UpgradeStatus contains information about upgradeAppliance operation.
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -521,6 +594,20 @@ pub mod upgrade_status {
         Failed = 2,
         /// The upgrade finished successfully.
         Succeeded = 3,
+    }
+    impl State {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                State::Unspecified => "STATE_UNSPECIFIED",
+                State::Running => "RUNNING",
+                State::Failed => "FAILED",
+                State::Succeeded => "SUCCEEDED",
+            }
+        }
     }
 }
 /// Holds informatiom about the available versions for upgrade.
@@ -749,6 +836,20 @@ pub mod vmware_vm_details {
         /// The VM is suspended. This is similar to hibernation or sleep mode.
         Suspended = 3,
     }
+    impl PowerState {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                PowerState::Unspecified => "POWER_STATE_UNSPECIFIED",
+                PowerState::On => "ON",
+                PowerState::Off => "OFF",
+                PowerState::Suspended => "SUSPENDED",
+            }
+        }
+    }
     /// Possible values for vm boot option.
     #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
     #[repr(i32)]
@@ -759,6 +860,19 @@ pub mod vmware_vm_details {
         Efi = 1,
         /// The boot option is BIOS.
         Bios = 2,
+    }
+    impl BootOption {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                BootOption::Unspecified => "BOOT_OPTION_UNSPECIFIED",
+                BootOption::Efi => "EFI",
+                BootOption::Bios => "BIOS",
+            }
+        }
     }
 }
 /// VmwareVmsDetails describes VMs in vCenter.
@@ -846,6 +960,20 @@ pub mod utilization_report {
         /// Report creation failed.
         Failed = 3,
     }
+    impl State {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                State::Unspecified => "STATE_UNSPECIFIED",
+                State::Creating => "CREATING",
+                State::Succeeded => "SUCCEEDED",
+                State::Failed => "FAILED",
+            }
+        }
+    }
     /// Report time frame options.
     #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
     #[repr(i32)]
@@ -858,6 +986,20 @@ pub mod utilization_report {
         Month = 2,
         /// One year.
         Year = 3,
+    }
+    impl TimeFrame {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                TimeFrame::Unspecified => "TIME_FRAME_UNSPECIFIED",
+                TimeFrame::Week => "WEEK",
+                TimeFrame::Month => "MONTH",
+                TimeFrame::Year => "YEAR",
+            }
+        }
     }
 }
 /// Utilization information of a single VM.
@@ -1312,6 +1454,20 @@ pub mod applied_license {
         /// The license type is is Bring Your Own License type.
         Byol = 3,
     }
+    impl Type {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                Type::Unspecified => "TYPE_UNSPECIFIED",
+                Type::None => "NONE",
+                Type::Payg => "PAYG",
+                Type::Byol => "BYOL",
+            }
+        }
+    }
 }
 /// Node Affinity: the configuration of desired nodes onto which this Instance
 /// could be scheduled. Based on
@@ -1342,6 +1498,19 @@ pub mod scheduling_node_affinity {
         In = 1,
         /// The node resource group should not be in these resources affinity.
         NotIn = 2,
+    }
+    impl Operator {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                Operator::Unspecified => "OPERATOR_UNSPECIFIED",
+                Operator::In => "IN",
+                Operator::NotIn => "NOT_IN",
+            }
+        }
     }
 }
 /// Scheduling information for VM on maintenance/restart behaviour and
@@ -1382,6 +1551,19 @@ pub mod compute_scheduling {
         /// Migrate the instance when the host machine undergoes maintenance.
         Migrate = 2,
     }
+    impl OnHostMaintenance {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                OnHostMaintenance::Unspecified => "ON_HOST_MAINTENANCE_UNSPECIFIED",
+                OnHostMaintenance::Terminate => "TERMINATE",
+                OnHostMaintenance::Migrate => "MIGRATE",
+            }
+        }
+    }
     /// Defines whether the Instance should be automatically restarted whenever
     /// it is terminated by Compute Engine (not terminated by user).
     #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
@@ -1395,6 +1577,19 @@ pub mod compute_scheduling {
         /// The Instance isn't automatically restarted whenever it is
         /// terminated by Compute Engine.
         NoAutomaticRestart = 2,
+    }
+    impl RestartType {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                RestartType::Unspecified => "RESTART_TYPE_UNSPECIFIED",
+                RestartType::AutomaticRestart => "AUTOMATIC_RESTART",
+                RestartType::NoAutomaticRestart => "NO_AUTOMATIC_RESTART",
+            }
+        }
     }
 }
 /// A policy for scheduling replications.
@@ -2057,6 +2252,26 @@ pub mod migration_error {
         /// Migrate for Compute encountered an error during appliance upgrade.
         ApplianceUpgradeError = 9,
     }
+    impl ErrorCode {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                ErrorCode::Unspecified => "ERROR_CODE_UNSPECIFIED",
+                ErrorCode::UnknownError => "UNKNOWN_ERROR",
+                ErrorCode::SourceValidationError => "SOURCE_VALIDATION_ERROR",
+                ErrorCode::SourceReplicationError => "SOURCE_REPLICATION_ERROR",
+                ErrorCode::TargetReplicationError => "TARGET_REPLICATION_ERROR",
+                ErrorCode::OsAdaptationError => "OS_ADAPTATION_ERROR",
+                ErrorCode::CloneError => "CLONE_ERROR",
+                ErrorCode::CutoverError => "CUTOVER_ERROR",
+                ErrorCode::UtilizationReportError => "UTILIZATION_REPORT_ERROR",
+                ErrorCode::ApplianceUpgradeError => "APPLIANCE_UPGRADE_ERROR",
+            }
+        }
+    }
 }
 /// Controls the level of details of a Utilization Report.
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
@@ -2072,6 +2287,19 @@ pub enum UtilizationReportView {
     /// Include everything.
     Full = 2,
 }
+impl UtilizationReportView {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            UtilizationReportView::Unspecified => "UTILIZATION_REPORT_VIEW_UNSPECIFIED",
+            UtilizationReportView::Basic => "BASIC",
+            UtilizationReportView::Full => "FULL",
+        }
+    }
+}
 /// Controls the level of details of a Migrating VM.
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
 #[repr(i32)]
@@ -2084,6 +2312,19 @@ pub enum MigratingVmView {
     Basic = 1,
     /// Include everything.
     Full = 2,
+}
+impl MigratingVmView {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            MigratingVmView::Unspecified => "MIGRATING_VM_VIEW_UNSPECIFIED",
+            MigratingVmView::Basic => "MIGRATING_VM_VIEW_BASIC",
+            MigratingVmView::Full => "MIGRATING_VM_VIEW_FULL",
+        }
+    }
 }
 /// Types of disks supported for Compute Engine VM.
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
@@ -2099,6 +2340,20 @@ pub enum ComputeEngineDiskType {
     /// cost.
     Balanced = 3,
 }
+impl ComputeEngineDiskType {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            ComputeEngineDiskType::Unspecified => "COMPUTE_ENGINE_DISK_TYPE_UNSPECIFIED",
+            ComputeEngineDiskType::Standard => "COMPUTE_ENGINE_DISK_TYPE_STANDARD",
+            ComputeEngineDiskType::Ssd => "COMPUTE_ENGINE_DISK_TYPE_SSD",
+            ComputeEngineDiskType::Balanced => "COMPUTE_ENGINE_DISK_TYPE_BALANCED",
+        }
+    }
+}
 /// Types of licenses used in OS adaptation.
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
 #[repr(i32)]
@@ -2109,6 +2364,19 @@ pub enum ComputeEngineLicenseType {
     Payg = 1,
     /// The license type is Bring Your Own License type.
     Byol = 2,
+}
+impl ComputeEngineLicenseType {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            ComputeEngineLicenseType::Default => "COMPUTE_ENGINE_LICENSE_TYPE_DEFAULT",
+            ComputeEngineLicenseType::Payg => "COMPUTE_ENGINE_LICENSE_TYPE_PAYG",
+            ComputeEngineLicenseType::Byol => "COMPUTE_ENGINE_LICENSE_TYPE_BYOL",
+        }
+    }
 }
 /// Possible values for vm boot option.
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
@@ -2121,10 +2389,24 @@ pub enum ComputeEngineBootOption {
     /// The boot option is BIOS.
     Bios = 2,
 }
+impl ComputeEngineBootOption {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            ComputeEngineBootOption::Unspecified => "COMPUTE_ENGINE_BOOT_OPTION_UNSPECIFIED",
+            ComputeEngineBootOption::Efi => "COMPUTE_ENGINE_BOOT_OPTION_EFI",
+            ComputeEngineBootOption::Bios => "COMPUTE_ENGINE_BOOT_OPTION_BIOS",
+        }
+    }
+}
 /// Generated client implementations.
 pub mod vm_migration_client {
     #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
     use tonic::codegen::*;
+    use tonic::codegen::http::Uri;
     /// VM Migration Service
     #[derive(Debug, Clone)]
     pub struct VmMigrationClient<T> {
@@ -2139,6 +2421,10 @@ pub mod vm_migration_client {
     {
         pub fn new(inner: T) -> Self {
             let inner = tonic::client::Grpc::new(inner);
+            Self { inner }
+        }
+        pub fn with_origin(inner: T, origin: Uri) -> Self {
+            let inner = tonic::client::Grpc::with_origin(inner, origin);
             Self { inner }
         }
         pub fn with_interceptor<F>(
@@ -2160,19 +2446,19 @@ pub mod vm_migration_client {
         {
             VmMigrationClient::new(InterceptedService::new(inner, interceptor))
         }
-        /// Compress requests with `gzip`.
+        /// Compress requests with the given encoding.
         ///
         /// This requires the server to support it otherwise it might respond with an
         /// error.
         #[must_use]
-        pub fn send_gzip(mut self) -> Self {
-            self.inner = self.inner.send_gzip();
+        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.send_compressed(encoding);
             self
         }
-        /// Enable decompressing responses with `gzip`.
+        /// Enable decompressing responses.
         #[must_use]
-        pub fn accept_gzip(mut self) -> Self {
-            self.inner = self.inner.accept_gzip();
+        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.accept_compressed(encoding);
             self
         }
         /// Lists Sources in a given project and location.

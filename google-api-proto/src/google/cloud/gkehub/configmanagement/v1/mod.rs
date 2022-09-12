@@ -286,6 +286,24 @@ pub mod sync_state {
         /// Cluster could not be reached
         Unreachable = 7,
     }
+    impl SyncCode {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                SyncCode::Unspecified => "SYNC_CODE_UNSPECIFIED",
+                SyncCode::Synced => "SYNCED",
+                SyncCode::Pending => "PENDING",
+                SyncCode::Error => "ERROR",
+                SyncCode::NotConfigured => "NOT_CONFIGURED",
+                SyncCode::NotInstalled => "NOT_INSTALLED",
+                SyncCode::Unauthorized => "UNAUTHORIZED",
+                SyncCode::Unreachable => "UNREACHABLE",
+            }
+        }
+    }
 }
 /// An ACM created error representing a problem syncing configurations
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -369,4 +387,18 @@ pub enum DeploymentState {
     Installed = 2,
     /// Deployment was attempted to be installed, but has errors
     Error = 3,
+}
+impl DeploymentState {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            DeploymentState::Unspecified => "DEPLOYMENT_STATE_UNSPECIFIED",
+            DeploymentState::NotInstalled => "NOT_INSTALLED",
+            DeploymentState::Installed => "INSTALLED",
+            DeploymentState::Error => "ERROR",
+        }
+    }
 }

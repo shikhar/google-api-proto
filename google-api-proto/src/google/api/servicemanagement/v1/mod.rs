@@ -58,6 +58,22 @@ pub mod operation_metadata {
         /// The operation or step has completed with cancellation.
         Cancelled = 5,
     }
+    impl Status {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                Status::Unspecified => "STATUS_UNSPECIFIED",
+                Status::Done => "DONE",
+                Status::NotStarted => "NOT_STARTED",
+                Status::InProgress => "IN_PROGRESS",
+                Status::Failed => "FAILED",
+                Status::Cancelled => "CANCELLED",
+            }
+        }
+    }
 }
 /// Represents a diagnostic message (error or warning)
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -82,6 +98,18 @@ pub mod diagnostic {
         Warning = 0,
         /// Only errors
         Error = 1,
+    }
+    impl Kind {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                Kind::Warning => "WARNING",
+                Kind::Error => "ERROR",
+            }
+        }
     }
 }
 /// Represents a source file which is used to generate the service configuration
@@ -138,6 +166,22 @@ pub mod config_file {
         /// file of this type can only be included if at least one file of type
         /// FILE_DESCRIPTOR_SET_PROTO is included.
         ProtoFile = 6,
+    }
+    impl FileType {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                FileType::Unspecified => "FILE_TYPE_UNSPECIFIED",
+                FileType::ServiceConfigYaml => "SERVICE_CONFIG_YAML",
+                FileType::OpenApiJson => "OPEN_API_JSON",
+                FileType::OpenApiYaml => "OPEN_API_YAML",
+                FileType::FileDescriptorSetProto => "FILE_DESCRIPTOR_SET_PROTO",
+                FileType::ProtoFile => "PROTO_FILE",
+            }
+        }
     }
 }
 /// Represents a service configuration with its name and id.
@@ -210,26 +254,26 @@ pub mod rollout {
     /// strategy:
     /// Day 1
     ///
-    ///     Rollout {
-    ///       id: "example.googleapis.com/rollout_20160206"
-    ///       traffic_percent_strategy {
-    ///         percentages: {
-    ///           "example.googleapis.com/20160201": 70.00
-    ///           "example.googleapis.com/20160206": 30.00
-    ///         }
-    ///       }
-    ///     }
+    ///      Rollout {
+    ///        id: "example.googleapis.com/rollout_20160206"
+    ///        traffic_percent_strategy {
+    ///          percentages: {
+    ///            "example.googleapis.com/20160201": 70.00
+    ///            "example.googleapis.com/20160206": 30.00
+    ///          }
+    ///        }
+    ///      }
     ///
     /// Day 2
     ///
-    ///     Rollout {
-    ///       id: "example.googleapis.com/rollout_20160207"
-    ///       traffic_percent_strategy: {
-    ///         percentages: {
-    ///           "example.googleapis.com/20160206": 100.00
-    ///         }
-    ///       }
-    ///     }
+    ///      Rollout {
+    ///        id: "example.googleapis.com/rollout_20160207"
+    ///        traffic_percent_strategy: {
+    ///          percentages: {
+    ///            "example.googleapis.com/20160206": 100.00
+    ///          }
+    ///        }
+    ///      }
     #[derive(Clone, PartialEq, ::prost::Message)]
     pub struct TrafficPercentStrategy {
         /// Maps service configuration IDs to their corresponding traffic percentage.
@@ -263,6 +307,23 @@ pub mod rollout {
         /// The Rollout has failed and rolled back to the previous successful
         /// Rollout.
         FailedRolledBack = 6,
+    }
+    impl RolloutStatus {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                RolloutStatus::Unspecified => "ROLLOUT_STATUS_UNSPECIFIED",
+                RolloutStatus::InProgress => "IN_PROGRESS",
+                RolloutStatus::Success => "SUCCESS",
+                RolloutStatus::Cancelled => "CANCELLED",
+                RolloutStatus::Failed => "FAILED",
+                RolloutStatus::Pending => "PENDING",
+                RolloutStatus::FailedRolledBack => "FAILED_ROLLED_BACK",
+            }
+        }
     }
     /// Strategy that defines which versions of service configurations should be
     /// pushed
@@ -384,6 +445,18 @@ pub mod get_service_config_request {
         /// SubmitConfigSource method.
         Full = 1,
     }
+    impl ConfigView {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                ConfigView::Basic => "BASIC",
+                ConfigView::Full => "FULL",
+            }
+        }
+    }
 }
 /// Request message for ListServiceConfigs method.
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -476,12 +549,12 @@ pub struct ListServiceRolloutsRequest {
     pub page_size: i32,
     /// Required. Use `filter` to return subset of rollouts.
     /// The following filters are supported:
-    ///   -- To limit the results to only those in
-    ///      status (google.api.servicemanagement.v1.RolloutStatus) 'SUCCESS',
-    ///      use filter='status=SUCCESS'
-    ///   -- To limit the results to those in
-    ///      status (google.api.servicemanagement.v1.RolloutStatus) 'CANCELLED'
-    ///      or 'FAILED', use filter='status=CANCELLED OR status=FAILED'
+    ///    -- To limit the results to only those in
+    ///       status (google.api.servicemanagement.v1.RolloutStatus) 'SUCCESS',
+    ///       use filter='status=SUCCESS'
+    ///    -- To limit the results to those in
+    ///       status (google.api.servicemanagement.v1.RolloutStatus) 'CANCELLED'
+    ///       or 'FAILED', use filter='status=CANCELLED OR status=FAILED'
     #[prost(string, tag="4")]
     pub filter: ::prost::alloc::string::String,
 }
@@ -548,6 +621,7 @@ pub struct GenerateConfigReportResponse {
 pub mod service_manager_client {
     #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
     use tonic::codegen::*;
+    use tonic::codegen::http::Uri;
     /// [Google Service Management
     /// API](https://cloud.google.com/service-infrastructure/docs/overview)
     #[derive(Debug, Clone)]
@@ -563,6 +637,10 @@ pub mod service_manager_client {
     {
         pub fn new(inner: T) -> Self {
             let inner = tonic::client::Grpc::new(inner);
+            Self { inner }
+        }
+        pub fn with_origin(inner: T, origin: Uri) -> Self {
+            let inner = tonic::client::Grpc::with_origin(inner, origin);
             Self { inner }
         }
         pub fn with_interceptor<F>(
@@ -584,19 +662,19 @@ pub mod service_manager_client {
         {
             ServiceManagerClient::new(InterceptedService::new(inner, interceptor))
         }
-        /// Compress requests with `gzip`.
+        /// Compress requests with the given encoding.
         ///
         /// This requires the server to support it otherwise it might respond with an
         /// error.
         #[must_use]
-        pub fn send_gzip(mut self) -> Self {
-            self.inner = self.inner.send_gzip();
+        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.send_compressed(encoding);
             self
         }
-        /// Enable decompressing responses with `gzip`.
+        /// Enable decompressing responses.
         #[must_use]
-        pub fn accept_gzip(mut self) -> Self {
-            self.inner = self.inner.accept_gzip();
+        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.accept_compressed(encoding);
             self
         }
         /// Lists managed services.

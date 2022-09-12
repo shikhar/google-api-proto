@@ -350,6 +350,18 @@ pub enum AnnotationSource {
     /// Answer is provided by a human contributor.
     Operator = 3,
 }
+impl AnnotationSource {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            AnnotationSource::Unspecified => "ANNOTATION_SOURCE_UNSPECIFIED",
+            AnnotationSource::Operator => "OPERATOR",
+        }
+    }
+}
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
 #[repr(i32)]
 pub enum AnnotationSentiment {
@@ -358,6 +370,19 @@ pub enum AnnotationSentiment {
     Negative = 1,
     /// This label describes positively about the data.
     Positive = 2,
+}
+impl AnnotationSentiment {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            AnnotationSentiment::Unspecified => "ANNOTATION_SENTIMENT_UNSPECIFIED",
+            AnnotationSentiment::Negative => "NEGATIVE",
+            AnnotationSentiment::Positive => "POSITIVE",
+        }
+    }
 }
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
 #[repr(i32)]
@@ -391,6 +416,30 @@ pub enum AnnotationType {
     TextEntityExtractionAnnotation = 9,
     /// General classification. Allowed for continuous evaluation.
     GeneralClassificationAnnotation = 14,
+}
+impl AnnotationType {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            AnnotationType::Unspecified => "ANNOTATION_TYPE_UNSPECIFIED",
+            AnnotationType::ImageClassificationAnnotation => "IMAGE_CLASSIFICATION_ANNOTATION",
+            AnnotationType::ImageBoundingBoxAnnotation => "IMAGE_BOUNDING_BOX_ANNOTATION",
+            AnnotationType::ImageOrientedBoundingBoxAnnotation => "IMAGE_ORIENTED_BOUNDING_BOX_ANNOTATION",
+            AnnotationType::ImageBoundingPolyAnnotation => "IMAGE_BOUNDING_POLY_ANNOTATION",
+            AnnotationType::ImagePolylineAnnotation => "IMAGE_POLYLINE_ANNOTATION",
+            AnnotationType::ImageSegmentationAnnotation => "IMAGE_SEGMENTATION_ANNOTATION",
+            AnnotationType::VideoShotsClassificationAnnotation => "VIDEO_SHOTS_CLASSIFICATION_ANNOTATION",
+            AnnotationType::VideoObjectTrackingAnnotation => "VIDEO_OBJECT_TRACKING_ANNOTATION",
+            AnnotationType::VideoObjectDetectionAnnotation => "VIDEO_OBJECT_DETECTION_ANNOTATION",
+            AnnotationType::VideoEventAnnotation => "VIDEO_EVENT_ANNOTATION",
+            AnnotationType::TextClassificationAnnotation => "TEXT_CLASSIFICATION_ANNOTATION",
+            AnnotationType::TextEntityExtractionAnnotation => "TEXT_ENTITY_EXTRACTION_ANNOTATION",
+            AnnotationType::GeneralClassificationAnnotation => "GENERAL_CLASSIFICATION_ANNOTATION",
+        }
+    }
 }
 /// Container of information about an image.
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -641,6 +690,20 @@ pub enum StringAggregationType {
     UnanimousVote = 2,
     /// Preserve all answers by crowd compute.
     NoAggregation = 3,
+}
+impl StringAggregationType {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            StringAggregationType::Unspecified => "STRING_AGGREGATION_TYPE_UNSPECIFIED",
+            StringAggregationType::MajorityVote => "MAJORITY_VOTE",
+            StringAggregationType::UnanimousVote => "UNANIMOUS_VOTE",
+            StringAggregationType::NoAggregation => "NO_AGGREGATION",
+        }
+    }
 }
 /// Dataset is the resource to hold your data. You can request multiple labeling
 /// tasks for a dataset while each one will generate an AnnotatedDataset.
@@ -987,62 +1050,20 @@ pub enum DataType {
     /// Allowed for continuous evaluation.
     GeneralData = 6,
 }
-/// Instruction of how to perform the labeling task for human operators.
-/// Currently only PDF instruction is supported.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct Instruction {
-    /// Output only. Instruction resource name, format:
-    /// projects/{project_id}/instructions/{instruction_id}
-    #[prost(string, tag="1")]
-    pub name: ::prost::alloc::string::String,
-    /// Required. The display name of the instruction. Maximum of 64 characters.
-    #[prost(string, tag="2")]
-    pub display_name: ::prost::alloc::string::String,
-    /// Optional. User-provided description of the instruction.
-    /// The description can be up to 10000 characters long.
-    #[prost(string, tag="3")]
-    pub description: ::prost::alloc::string::String,
-    /// Output only. Creation time of instruction.
-    #[prost(message, optional, tag="4")]
-    pub create_time: ::core::option::Option<::prost_types::Timestamp>,
-    /// Output only. Last update time of instruction.
-    #[prost(message, optional, tag="5")]
-    pub update_time: ::core::option::Option<::prost_types::Timestamp>,
-    /// Required. The data type of this instruction.
-    #[prost(enumeration="DataType", tag="6")]
-    pub data_type: i32,
-    /// Deprecated: this instruction format is not supported any more.
-    /// Instruction from a CSV file, such as for classification task.
-    /// The CSV file should have exact two columns, in the following format:
+impl DataType {
+    /// String value of the enum field names used in the ProtoBuf definition.
     ///
-    /// * The first column is labeled data, such as an image reference, text.
-    /// * The second column is comma separated labels associated with data.
-    #[deprecated]
-    #[prost(message, optional, tag="7")]
-    pub csv_instruction: ::core::option::Option<CsvInstruction>,
-    /// Instruction from a PDF document. The PDF should be in a Cloud Storage
-    /// bucket.
-    #[prost(message, optional, tag="9")]
-    pub pdf_instruction: ::core::option::Option<PdfInstruction>,
-    /// Output only. The names of any related resources that are blocking changes
-    /// to the instruction.
-    #[prost(string, repeated, tag="10")]
-    pub blocking_resources: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
-}
-/// Deprecated: this instruction format is not supported any more.
-/// Instruction from a CSV file.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct CsvInstruction {
-    /// CSV file for the instruction. Only gcs path is allowed.
-    #[prost(string, tag="1")]
-    pub gcs_file_uri: ::prost::alloc::string::String,
-}
-/// Instruction from a PDF file.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct PdfInstruction {
-    /// PDF file for the instruction. Only gcs path is allowed.
-    #[prost(string, tag="1")]
-    pub gcs_file_uri: ::prost::alloc::string::String,
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            DataType::Unspecified => "DATA_TYPE_UNSPECIFIED",
+            DataType::Image => "IMAGE",
+            DataType::Video => "VIDEO",
+            DataType::Text => "TEXT",
+            DataType::GeneralData => "GENERAL_DATA",
+        }
+    }
 }
 /// Response used for ImportData longrunning operation.
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -1560,24 +1581,24 @@ pub mod evaluation_job {
         /// does several things:
         ///
         /// 1. If you have configured your job to use Data Labeling Service for
-        ///    ground truth labeling, the service creates a
-        ///    \[Dataset][google.cloud.datalabeling.v1beta1.Dataset\] and a labeling task for all data sampled
-        ///    since the last time the job ran. Human labelers provide ground truth
-        ///    labels for your data. Human labeling may take hours, or even days,
-        ///    depending on how much data has been sampled. The job remains in the
-        ///    `RUNNING` state during this time, and it can even be running multiple
-        ///    times in parallel if it gets triggered again (for example 24 hours
-        ///    later) before the earlier run has completed. When human labelers have
-        ///    finished labeling the data, the next step occurs.
-        ///    <br><br>
-        ///    If you have configured your job to provide your own ground truth
-        ///    labels, Data Labeling Service still creates a \[Dataset][google.cloud.datalabeling.v1beta1.Dataset\] for newly
-        ///    sampled data, but it expects that you have already added ground truth
-        ///    labels to the BigQuery table by this time. The next step occurs
-        ///    immediately.
+        ///     ground truth labeling, the service creates a
+        ///     \[Dataset][google.cloud.datalabeling.v1beta1.Dataset\] and a labeling task for all data sampled
+        ///     since the last time the job ran. Human labelers provide ground truth
+        ///     labels for your data. Human labeling may take hours, or even days,
+        ///     depending on how much data has been sampled. The job remains in the
+        ///     `RUNNING` state during this time, and it can even be running multiple
+        ///     times in parallel if it gets triggered again (for example 24 hours
+        ///     later) before the earlier run has completed. When human labelers have
+        ///     finished labeling the data, the next step occurs.
+        ///     <br><br>
+        ///     If you have configured your job to provide your own ground truth
+        ///     labels, Data Labeling Service still creates a \[Dataset][google.cloud.datalabeling.v1beta1.Dataset\] for newly
+        ///     sampled data, but it expects that you have already added ground truth
+        ///     labels to the BigQuery table by this time. The next step occurs
+        ///     immediately.
         ///
         /// 2. Data Labeling Service creates an \[Evaluation][google.cloud.datalabeling.v1beta1.Evaluation\] by comparing your
-        ///    model version's predictions with the ground truth labels.
+        ///     model version's predictions with the ground truth labels.
         ///
         /// If the job remains in this state for a long time, it continues to sample
         /// prediction data into your BigQuery table and will run again at the next
@@ -1590,6 +1611,21 @@ pub mod evaluation_job {
         /// The job has this state right before it is deleted.
         Stopped = 4,
     }
+    impl State {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                State::Unspecified => "STATE_UNSPECIFIED",
+                State::Scheduled => "SCHEDULED",
+                State::Running => "RUNNING",
+                State::Paused => "PAUSED",
+                State::Stopped => "STOPPED",
+            }
+        }
+    }
 }
 /// Configures specific details of how a continuous evaluation job works. Provide
 /// this configuration when you create an EvaluationJob.
@@ -1600,10 +1636,10 @@ pub struct EvaluationJobConfig {
     ///
     /// * `dataType` must be one of `IMAGE`, `TEXT`, or `GENERAL_DATA`.
     /// * `annotationType` must be one of `IMAGE_CLASSIFICATION_ANNOTATION`,
-    ///   `TEXT_CLASSIFICATION_ANNOTATION`, `GENERAL_CLASSIFICATION_ANNOTATION`,
-    ///   or `IMAGE_BOUNDING_BOX_ANNOTATION` (image object detection).
+    ///    `TEXT_CLASSIFICATION_ANNOTATION`, `GENERAL_CLASSIFICATION_ANNOTATION`,
+    ///    or `IMAGE_BOUNDING_BOX_ANNOTATION` (image object detection).
     /// * If your machine learning model performs classification, you must specify
-    ///   `classificationMetadata.isMultiLabel`.
+    ///    `classificationMetadata.isMultiLabel`.
     /// * You must specify `bigquerySource` (not `gcsSource`).
     #[prost(message, optional, tag="1")]
     pub input_config: ::core::option::Option<InputConfig>,
@@ -1633,13 +1669,13 @@ pub struct EvaluationJobConfig {
     /// You can provide the following entries in this field:
     ///
     /// * `data_json_key`: the data key for prediction input. You must provide
-    ///   either this key or `reference_json_key`.
+    ///    either this key or `reference_json_key`.
     /// * `reference_json_key`: the data reference key for prediction input. You
-    ///   must provide either this key or `data_json_key`.
+    ///    must provide either this key or `data_json_key`.
     /// * `label_json_key`: the label key for prediction output. Required.
     /// * `label_score_json_key`: the score key for prediction output. Required.
     /// * `bounding_box_json_key`: the bounding box key for prediction output.
-    ///   Required if your model version perform image object detection.
+    ///    Required if your model version perform image object detection.
     ///
     /// Learn [how to configure prediction
     /// keys](/ml-engine/docs/continuous-evaluation/create-job#prediction-keys).
@@ -1722,6 +1758,63 @@ pub struct Attempt {
     /// Details of errors that occurred.
     #[prost(message, repeated, tag="2")]
     pub partial_failures: ::prost::alloc::vec::Vec<super::super::super::rpc::Status>,
+}
+/// Instruction of how to perform the labeling task for human operators.
+/// Currently only PDF instruction is supported.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct Instruction {
+    /// Output only. Instruction resource name, format:
+    /// projects/{project_id}/instructions/{instruction_id}
+    #[prost(string, tag="1")]
+    pub name: ::prost::alloc::string::String,
+    /// Required. The display name of the instruction. Maximum of 64 characters.
+    #[prost(string, tag="2")]
+    pub display_name: ::prost::alloc::string::String,
+    /// Optional. User-provided description of the instruction.
+    /// The description can be up to 10000 characters long.
+    #[prost(string, tag="3")]
+    pub description: ::prost::alloc::string::String,
+    /// Output only. Creation time of instruction.
+    #[prost(message, optional, tag="4")]
+    pub create_time: ::core::option::Option<::prost_types::Timestamp>,
+    /// Output only. Last update time of instruction.
+    #[prost(message, optional, tag="5")]
+    pub update_time: ::core::option::Option<::prost_types::Timestamp>,
+    /// Required. The data type of this instruction.
+    #[prost(enumeration="DataType", tag="6")]
+    pub data_type: i32,
+    /// Deprecated: this instruction format is not supported any more.
+    /// Instruction from a CSV file, such as for classification task.
+    /// The CSV file should have exact two columns, in the following format:
+    ///
+    /// * The first column is labeled data, such as an image reference, text.
+    /// * The second column is comma separated labels associated with data.
+    #[deprecated]
+    #[prost(message, optional, tag="7")]
+    pub csv_instruction: ::core::option::Option<CsvInstruction>,
+    /// Instruction from a PDF document. The PDF should be in a Cloud Storage
+    /// bucket.
+    #[prost(message, optional, tag="9")]
+    pub pdf_instruction: ::core::option::Option<PdfInstruction>,
+    /// Output only. The names of any related resources that are blocking changes
+    /// to the instruction.
+    #[prost(string, repeated, tag="10")]
+    pub blocking_resources: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
+}
+/// Deprecated: this instruction format is not supported any more.
+/// Instruction from a CSV file.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct CsvInstruction {
+    /// CSV file for the instruction. Only gcs path is allowed.
+    #[prost(string, tag="1")]
+    pub gcs_file_uri: ::prost::alloc::string::String,
+}
+/// Instruction from a PDF file.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct PdfInstruction {
+    /// PDF file for the instruction. Only gcs path is allowed.
+    #[prost(string, tag="1")]
+    pub gcs_file_uri: ::prost::alloc::string::String,
 }
 /// Request message for CreateDataset.
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -1954,6 +2047,23 @@ pub mod label_image_request {
         /// poly since it is more fine-grained, pixel level annotation.
         Segmentation = 5,
     }
+    impl Feature {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                Feature::Unspecified => "FEATURE_UNSPECIFIED",
+                Feature::Classification => "CLASSIFICATION",
+                Feature::BoundingBox => "BOUNDING_BOX",
+                Feature::OrientedBoundingBox => "ORIENTED_BOUNDING_BOX",
+                Feature::BoundingPoly => "BOUNDING_POLY",
+                Feature::Polyline => "POLYLINE",
+                Feature::Segmentation => "SEGMENTATION",
+            }
+        }
+    }
     /// Required. Config for labeling tasks. The type of request config must
     /// match the selected feature.
     #[derive(Clone, PartialEq, ::prost::Oneof)]
@@ -2014,6 +2124,21 @@ pub mod label_video_request {
         /// Label the range of video for the specified events.
         Event = 4,
     }
+    impl Feature {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                Feature::Unspecified => "FEATURE_UNSPECIFIED",
+                Feature::Classification => "CLASSIFICATION",
+                Feature::ObjectDetection => "OBJECT_DETECTION",
+                Feature::ObjectTracking => "OBJECT_TRACKING",
+                Feature::Event => "EVENT",
+            }
+        }
+    }
     /// Required. Config for labeling tasks. The type of request config must
     /// match the selected feature.
     #[derive(Clone, PartialEq, ::prost::Oneof)]
@@ -2069,6 +2194,19 @@ pub mod label_text_request {
         TextClassification = 1,
         /// Label entities and their span in text.
         TextEntityExtraction = 2,
+    }
+    impl Feature {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                Feature::Unspecified => "FEATURE_UNSPECIFIED",
+                Feature::TextClassification => "TEXT_CLASSIFICATION",
+                Feature::TextEntityExtraction => "TEXT_ENTITY_EXTRACTION",
+            }
+        }
     }
     /// Required. Config for labeling tasks. The type of request config must
     /// match the selected feature.
@@ -2273,21 +2411,21 @@ pub struct SearchEvaluationsRequest {
     /// Optional. To search evaluations, you can filter by the following:
     ///
     /// * evaluation<span>_</span>job.evaluation_job_id (the last part of
-    ///   \[EvaluationJob.name][google.cloud.datalabeling.v1beta1.EvaluationJob.name\])
+    ///    \[EvaluationJob.name][google.cloud.datalabeling.v1beta1.EvaluationJob.name\])
     /// * evaluation<span>_</span>job.model_id (the <var>{model_name}</var> portion
-    ///   of \[EvaluationJob.modelVersion][google.cloud.datalabeling.v1beta1.EvaluationJob.model_version\])
+    ///    of \[EvaluationJob.modelVersion][google.cloud.datalabeling.v1beta1.EvaluationJob.model_version\])
     /// * evaluation<span>_</span>job.evaluation_job_run_time_start (Minimum
-    ///   threshold for the
-    ///   \[evaluationJobRunTime][google.cloud.datalabeling.v1beta1.Evaluation.evaluation_job_run_time\] that created
-    ///   the evaluation)
+    ///    threshold for the
+    ///    \[evaluationJobRunTime][google.cloud.datalabeling.v1beta1.Evaluation.evaluation_job_run_time\] that created
+    ///    the evaluation)
     /// * evaluation<span>_</span>job.evaluation_job_run_time_end (Maximum
-    ///   threshold for the
-    ///   \[evaluationJobRunTime][google.cloud.datalabeling.v1beta1.Evaluation.evaluation_job_run_time\] that created
-    ///   the evaluation)
+    ///    threshold for the
+    ///    \[evaluationJobRunTime][google.cloud.datalabeling.v1beta1.Evaluation.evaluation_job_run_time\] that created
+    ///    the evaluation)
     /// * evaluation<span>_</span>job.job_state (\[EvaluationJob.state][google.cloud.datalabeling.v1beta1.EvaluationJob.state\])
     /// * annotation<span>_</span>spec.display_name (the Evaluation contains a
-    ///   metric for the annotation spec with this
-    ///   \[displayName][google.cloud.datalabeling.v1beta1.AnnotationSpec.display_name\])
+    ///    metric for the annotation spec with this
+    ///    \[displayName][google.cloud.datalabeling.v1beta1.AnnotationSpec.display_name\])
     ///
     /// To filter by multiple critiera, use the `AND` operator or the `OR`
     /// operator. The following examples shows a string that filters by several
@@ -2482,6 +2620,7 @@ pub struct ListEvaluationJobsResponse {
 pub mod data_labeling_service_client {
     #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
     use tonic::codegen::*;
+    use tonic::codegen::http::Uri;
     /// Service for the AI Platform Data Labeling API.
     #[derive(Debug, Clone)]
     pub struct DataLabelingServiceClient<T> {
@@ -2496,6 +2635,10 @@ pub mod data_labeling_service_client {
     {
         pub fn new(inner: T) -> Self {
             let inner = tonic::client::Grpc::new(inner);
+            Self { inner }
+        }
+        pub fn with_origin(inner: T, origin: Uri) -> Self {
+            let inner = tonic::client::Grpc::with_origin(inner, origin);
             Self { inner }
         }
         pub fn with_interceptor<F>(
@@ -2517,19 +2660,19 @@ pub mod data_labeling_service_client {
         {
             DataLabelingServiceClient::new(InterceptedService::new(inner, interceptor))
         }
-        /// Compress requests with `gzip`.
+        /// Compress requests with the given encoding.
         ///
         /// This requires the server to support it otherwise it might respond with an
         /// error.
         #[must_use]
-        pub fn send_gzip(mut self) -> Self {
-            self.inner = self.inner.send_gzip();
+        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.send_compressed(encoding);
             self
         }
-        /// Enable decompressing responses with `gzip`.
+        /// Enable decompressing responses.
         #[must_use]
-        pub fn accept_gzip(mut self) -> Self {
-            self.inner = self.inner.accept_gzip();
+        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.accept_compressed(encoding);
             self
         }
         /// Creates dataset. If success return a Dataset resource.

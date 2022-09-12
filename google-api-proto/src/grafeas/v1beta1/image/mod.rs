@@ -51,6 +51,34 @@ pub mod layer {
         /// <https://docs.docker.com/engine/reference/builder/>
         Shell = 17,
     }
+    impl Directive {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                Directive::Unspecified => "DIRECTIVE_UNSPECIFIED",
+                Directive::Maintainer => "MAINTAINER",
+                Directive::Run => "RUN",
+                Directive::Cmd => "CMD",
+                Directive::Label => "LABEL",
+                Directive::Expose => "EXPOSE",
+                Directive::Env => "ENV",
+                Directive::Add => "ADD",
+                Directive::Copy => "COPY",
+                Directive::Entrypoint => "ENTRYPOINT",
+                Directive::Volume => "VOLUME",
+                Directive::User => "USER",
+                Directive::Workdir => "WORKDIR",
+                Directive::Arg => "ARG",
+                Directive::Onbuild => "ONBUILD",
+                Directive::Stopsignal => "STOPSIGNAL",
+                Directive::Healthcheck => "HEALTHCHECK",
+                Directive::Shell => "SHELL",
+            }
+        }
+    }
 }
 /// A set of properties that uniquely identify a given Docker image.
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -63,8 +91,8 @@ pub struct Fingerprint {
     #[prost(string, repeated, tag="2")]
     pub v2_blob: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
     /// Output only. The name of the image's v2 blobs computed via:
-    ///   \[bottom\] := v2_blob\[bottom\]
-    ///   \[N\] := sha256(v2_blob\[N\] + " " + v2_name\[N+1\])
+    ///    \[bottom\] := v2_blob\[bottom\]
+    ///    \[N\] := sha256(v2_blob\[N\] + " " + v2_name\[N+1\])
     /// Only the name of the final blob is kept.
     #[prost(string, tag="3")]
     pub v2_name: ::prost::alloc::string::String,
@@ -72,7 +100,7 @@ pub struct Fingerprint {
 /// Basis describes the base image portion (Note) of the DockerImage
 /// relationship. Linked occurrences are derived from this or an
 /// equivalent image via:
-///   FROM <Basis.resource_url>
+///    FROM <Basis.resource_url>
 /// Or an equivalent reference, e.g. a tag of the resource_url.
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct Basis {

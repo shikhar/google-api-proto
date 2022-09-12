@@ -93,6 +93,20 @@ pub mod address {
         Internal = 279295677,
         UnspecifiedType = 53933922,
     }
+    impl AddressType {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                AddressType::UndefinedAddressType => "UNDEFINED_ADDRESS_TYPE",
+                AddressType::External => "EXTERNAL",
+                AddressType::Internal => "INTERNAL",
+                AddressType::UnspecifiedType => "UNSPECIFIED_TYPE",
+            }
+        }
+    }
     /// The IP version that will be used by this address. Valid options are IPV4 or IPV6. This can only be specified for a global address.
     #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
     #[repr(i32)]
@@ -102,6 +116,20 @@ pub mod address {
         Ipv4 = 2254341,
         Ipv6 = 2254343,
         UnspecifiedVersion = 21850000,
+    }
+    impl IpVersion {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                IpVersion::UndefinedIpVersion => "UNDEFINED_IP_VERSION",
+                IpVersion::Ipv4 => "IPV4",
+                IpVersion::Ipv6 => "IPV6",
+                IpVersion::UnspecifiedVersion => "UNSPECIFIED_VERSION",
+            }
+        }
     }
     /// This signifies the networking tier used for configuring this address and can only take the following values: PREMIUM or STANDARD. Global forwarding rules can only be Premium Tier. Regional forwarding rules can be either Premium or Standard Tier. Standard Tier addresses applied to regional forwarding rules can be used with any external load balancer. Regional forwarding rules in Premium Tier can only be used with a network load balancer.
     ///
@@ -113,6 +141,19 @@ pub mod address {
         UndefinedNetworkTier = 0,
         Premium = 399530551,
         Standard = 484642493,
+    }
+    impl NetworkTier {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                NetworkTier::UndefinedNetworkTier => "UNDEFINED_NETWORK_TIER",
+                NetworkTier::Premium => "PREMIUM",
+                NetworkTier::Standard => "STANDARD",
+            }
+        }
     }
     /// The purpose of this resource, which can be one of the following values:
     /// - `GCE_ENDPOINT` for addresses that are used by VM instances, alias IP ranges, internal load balancers, and similar resources.
@@ -129,6 +170,21 @@ pub mod address {
         NatAuto = 163666477,
         VpcPeering = 400800170,
     }
+    impl Purpose {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                Purpose::UndefinedPurpose => "UNDEFINED_PURPOSE",
+                Purpose::DnsResolver => "DNS_RESOLVER",
+                Purpose::GceEndpoint => "GCE_ENDPOINT",
+                Purpose::NatAuto => "NAT_AUTO",
+                Purpose::VpcPeering => "VPC_PEERING",
+            }
+        }
+    }
     /// [Output Only] The status of the address, which can be one of RESERVING, RESERVED, or IN_USE. An address that is RESERVING is currently in the process of being reserved. A RESERVED address is currently reserved and available to use. An IN_USE address is currently being used by another resource and is not available.
     #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
     #[repr(i32)]
@@ -138,6 +194,20 @@ pub mod address {
         InUse = 17393485,
         Reserved = 432241448,
         Reserving = 514587225,
+    }
+    impl Status {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                Status::UndefinedStatus => "UNDEFINED_STATUS",
+                Status::InUse => "IN_USE",
+                Status::Reserved => "RESERVED",
+                Status::Reserving => "RESERVING",
+            }
+        }
     }
 }
 ///
@@ -439,6 +509,20 @@ pub mod operation {
         Pending = 35394935,
         Running = 121282975,
     }
+    impl Status {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                Status::UndefinedStatus => "UNDEFINED_STATUS",
+                Status::Done => "DONE",
+                Status::Pending => "PENDING",
+                Status::Running => "RUNNING",
+            }
+        }
+    }
 }
 /// A request message for RegionOperations.Wait. See the method description for details.
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -500,6 +584,40 @@ pub mod warning {
         UndeclaredProperties = 390513439,
         Unreachable = 13328052,
     }
+    impl Code {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                Code::UndefinedCode => "UNDEFINED_CODE",
+                Code::CleanupFailed => "CLEANUP_FAILED",
+                Code::DeprecatedResourceUsed => "DEPRECATED_RESOURCE_USED",
+                Code::DeprecatedTypeUsed => "DEPRECATED_TYPE_USED",
+                Code::DiskSizeLargerThanImageSize => "DISK_SIZE_LARGER_THAN_IMAGE_SIZE",
+                Code::ExperimentalTypeUsed => "EXPERIMENTAL_TYPE_USED",
+                Code::ExternalApiWarning => "EXTERNAL_API_WARNING",
+                Code::FieldValueOverriden => "FIELD_VALUE_OVERRIDEN",
+                Code::InjectedKernelsDeprecated => "INJECTED_KERNELS_DEPRECATED",
+                Code::MissingTypeDependency => "MISSING_TYPE_DEPENDENCY",
+                Code::NextHopAddressNotAssigned => "NEXT_HOP_ADDRESS_NOT_ASSIGNED",
+                Code::NextHopCannotIpForward => "NEXT_HOP_CANNOT_IP_FORWARD",
+                Code::NextHopInstanceNotFound => "NEXT_HOP_INSTANCE_NOT_FOUND",
+                Code::NextHopInstanceNotOnNetwork => "NEXT_HOP_INSTANCE_NOT_ON_NETWORK",
+                Code::NextHopNotRunning => "NEXT_HOP_NOT_RUNNING",
+                Code::NotCriticalError => "NOT_CRITICAL_ERROR",
+                Code::NoResultsOnPage => "NO_RESULTS_ON_PAGE",
+                Code::RequiredTosAgreement => "REQUIRED_TOS_AGREEMENT",
+                Code::ResourceInUseByOtherResourceWarning => "RESOURCE_IN_USE_BY_OTHER_RESOURCE_WARNING",
+                Code::ResourceNotDeleted => "RESOURCE_NOT_DELETED",
+                Code::SchemaValidationIgnored => "SCHEMA_VALIDATION_IGNORED",
+                Code::SingleInstancePropertyTemplate => "SINGLE_INSTANCE_PROPERTY_TEMPLATE",
+                Code::UndeclaredProperties => "UNDECLARED_PROPERTIES",
+                Code::Unreachable => "UNREACHABLE",
+            }
+        }
+    }
 }
 ///
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -548,11 +666,46 @@ pub mod warnings {
         UndeclaredProperties = 390513439,
         Unreachable = 13328052,
     }
+    impl Code {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                Code::UndefinedCode => "UNDEFINED_CODE",
+                Code::CleanupFailed => "CLEANUP_FAILED",
+                Code::DeprecatedResourceUsed => "DEPRECATED_RESOURCE_USED",
+                Code::DeprecatedTypeUsed => "DEPRECATED_TYPE_USED",
+                Code::DiskSizeLargerThanImageSize => "DISK_SIZE_LARGER_THAN_IMAGE_SIZE",
+                Code::ExperimentalTypeUsed => "EXPERIMENTAL_TYPE_USED",
+                Code::ExternalApiWarning => "EXTERNAL_API_WARNING",
+                Code::FieldValueOverriden => "FIELD_VALUE_OVERRIDEN",
+                Code::InjectedKernelsDeprecated => "INJECTED_KERNELS_DEPRECATED",
+                Code::MissingTypeDependency => "MISSING_TYPE_DEPENDENCY",
+                Code::NextHopAddressNotAssigned => "NEXT_HOP_ADDRESS_NOT_ASSIGNED",
+                Code::NextHopCannotIpForward => "NEXT_HOP_CANNOT_IP_FORWARD",
+                Code::NextHopInstanceNotFound => "NEXT_HOP_INSTANCE_NOT_FOUND",
+                Code::NextHopInstanceNotOnNetwork => "NEXT_HOP_INSTANCE_NOT_ON_NETWORK",
+                Code::NextHopNotRunning => "NEXT_HOP_NOT_RUNNING",
+                Code::NotCriticalError => "NOT_CRITICAL_ERROR",
+                Code::NoResultsOnPage => "NO_RESULTS_ON_PAGE",
+                Code::RequiredTosAgreement => "REQUIRED_TOS_AGREEMENT",
+                Code::ResourceInUseByOtherResourceWarning => "RESOURCE_IN_USE_BY_OTHER_RESOURCE_WARNING",
+                Code::ResourceNotDeleted => "RESOURCE_NOT_DELETED",
+                Code::SchemaValidationIgnored => "SCHEMA_VALIDATION_IGNORED",
+                Code::SingleInstancePropertyTemplate => "SINGLE_INSTANCE_PROPERTY_TEMPLATE",
+                Code::UndeclaredProperties => "UNDECLARED_PROPERTIES",
+                Code::Unreachable => "UNREACHABLE",
+            }
+        }
+    }
 }
 /// Generated client implementations.
 pub mod addresses_client {
     #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
     use tonic::codegen::*;
+    use tonic::codegen::http::Uri;
     ///
     /// Services
     ///
@@ -570,6 +723,10 @@ pub mod addresses_client {
     {
         pub fn new(inner: T) -> Self {
             let inner = tonic::client::Grpc::new(inner);
+            Self { inner }
+        }
+        pub fn with_origin(inner: T, origin: Uri) -> Self {
+            let inner = tonic::client::Grpc::with_origin(inner, origin);
             Self { inner }
         }
         pub fn with_interceptor<F>(
@@ -591,19 +748,19 @@ pub mod addresses_client {
         {
             AddressesClient::new(InterceptedService::new(inner, interceptor))
         }
-        /// Compress requests with `gzip`.
+        /// Compress requests with the given encoding.
         ///
         /// This requires the server to support it otherwise it might respond with an
         /// error.
         #[must_use]
-        pub fn send_gzip(mut self) -> Self {
-            self.inner = self.inner.send_gzip();
+        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.send_compressed(encoding);
             self
         }
-        /// Enable decompressing responses with `gzip`.
+        /// Enable decompressing responses.
         #[must_use]
-        pub fn accept_gzip(mut self) -> Self {
-            self.inner = self.inner.accept_gzip();
+        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.accept_compressed(encoding);
             self
         }
         /// Retrieves an aggregated list of addresses.
@@ -692,6 +849,7 @@ pub mod addresses_client {
 pub mod region_operations_client {
     #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
     use tonic::codegen::*;
+    use tonic::codegen::http::Uri;
     /// The RegionOperations API.
     #[derive(Debug, Clone)]
     pub struct RegionOperationsClient<T> {
@@ -706,6 +864,10 @@ pub mod region_operations_client {
     {
         pub fn new(inner: T) -> Self {
             let inner = tonic::client::Grpc::new(inner);
+            Self { inner }
+        }
+        pub fn with_origin(inner: T, origin: Uri) -> Self {
+            let inner = tonic::client::Grpc::with_origin(inner, origin);
             Self { inner }
         }
         pub fn with_interceptor<F>(
@@ -727,19 +889,19 @@ pub mod region_operations_client {
         {
             RegionOperationsClient::new(InterceptedService::new(inner, interceptor))
         }
-        /// Compress requests with `gzip`.
+        /// Compress requests with the given encoding.
         ///
         /// This requires the server to support it otherwise it might respond with an
         /// error.
         #[must_use]
-        pub fn send_gzip(mut self) -> Self {
-            self.inner = self.inner.send_gzip();
+        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.send_compressed(encoding);
             self
         }
-        /// Enable decompressing responses with `gzip`.
+        /// Enable decompressing responses.
         #[must_use]
-        pub fn accept_gzip(mut self) -> Self {
-            self.inner = self.inner.accept_gzip();
+        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.accept_compressed(encoding);
             self
         }
         /// Retrieves the specified region-specific Operations resource.

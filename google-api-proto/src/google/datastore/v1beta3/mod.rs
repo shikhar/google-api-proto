@@ -238,6 +238,20 @@ pub mod entity_result {
         /// Only the key.
         KeyOnly = 3,
     }
+    impl ResultType {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                ResultType::Unspecified => "RESULT_TYPE_UNSPECIFIED",
+                ResultType::Full => "FULL",
+                ResultType::Projection => "PROJECTION",
+                ResultType::KeyOnly => "KEY_ONLY",
+            }
+        }
+    }
 }
 /// A query for entities.
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -328,6 +342,19 @@ pub mod property_order {
         /// Descending.
         Descending = 2,
     }
+    impl Direction {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                Direction::Unspecified => "DIRECTION_UNSPECIFIED",
+                Direction::Ascending => "ASCENDING",
+                Direction::Descending => "DESCENDING",
+            }
+        }
+    }
 }
 /// A holder for any type of filter.
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -371,6 +398,18 @@ pub mod composite_filter {
         /// The results are required to satisfy each of the combined filters.
         And = 1,
     }
+    impl Operator {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                Operator::Unspecified => "OPERATOR_UNSPECIFIED",
+                Operator::And => "AND",
+            }
+        }
+    }
 }
 /// A filter on a specific property.
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -405,6 +444,23 @@ pub mod property_filter {
         Equal = 5,
         /// Has ancestor.
         HasAncestor = 11,
+    }
+    impl Operator {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                Operator::Unspecified => "OPERATOR_UNSPECIFIED",
+                Operator::LessThan => "LESS_THAN",
+                Operator::LessThanOrEqual => "LESS_THAN_OR_EQUAL",
+                Operator::GreaterThan => "GREATER_THAN",
+                Operator::GreaterThanOrEqual => "GREATER_THAN_OR_EQUAL",
+                Operator::Equal => "EQUAL",
+                Operator::HasAncestor => "HAS_ANCESTOR",
+            }
+        }
     }
 }
 /// A [GQL
@@ -508,6 +564,21 @@ pub mod query_result_batch {
         MoreResultsAfterCursor = 4,
         /// The query is finished, and there are no more results.
         NoMoreResults = 3,
+    }
+    impl MoreResultsType {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                MoreResultsType::Unspecified => "MORE_RESULTS_TYPE_UNSPECIFIED",
+                MoreResultsType::NotFinished => "NOT_FINISHED",
+                MoreResultsType::MoreResultsAfterLimit => "MORE_RESULTS_AFTER_LIMIT",
+                MoreResultsType::MoreResultsAfterCursor => "MORE_RESULTS_AFTER_CURSOR",
+                MoreResultsType::NoMoreResults => "NO_MORE_RESULTS",
+            }
+        }
     }
 }
 /// The request for
@@ -669,6 +740,19 @@ pub mod commit_request {
         /// Non-transactional: The mutations may not apply as all or none.
         NonTransactional = 2,
     }
+    impl Mode {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                Mode::Unspecified => "MODE_UNSPECIFIED",
+                Mode::Transactional => "TRANSACTIONAL",
+                Mode::NonTransactional => "NON_TRANSACTIONAL",
+            }
+        }
+    }
     /// Must be set when mode is `TRANSACTIONAL`.
     #[derive(Clone, PartialEq, ::prost::Oneof)]
     pub enum TransactionSelector {
@@ -741,9 +825,9 @@ pub struct Mutation {
     /// For `insert`, `update`, and `upsert`:
     /// - The entity's key must not be reserved/read-only.
     /// - No property in the entity may have a reserved name,
-    ///   not even a property in an entity in a value.
+    ///    not even a property in an entity in a value.
     /// - No value in the entity may have meaning 18,
-    ///   not even a value in an entity in another value.
+    ///    not even a value in an entity in another value.
     #[prost(oneof="mutation::Operation", tags="4, 5, 6, 7")]
     pub operation: ::core::option::Option<mutation::Operation>,
     /// When set, the server will detect whether or not this mutation conflicts
@@ -759,9 +843,9 @@ pub mod mutation {
     /// For `insert`, `update`, and `upsert`:
     /// - The entity's key must not be reserved/read-only.
     /// - No property in the entity may have a reserved name,
-    ///   not even a property in an entity in a value.
+    ///    not even a property in an entity in a value.
     /// - No value in the entity may have meaning 18,
-    ///   not even a value in an entity in another value.
+    ///    not even a value in an entity in another value.
     #[derive(Clone, PartialEq, ::prost::Oneof)]
     pub enum Operation {
         /// The entity to insert. The entity must not already exist.
@@ -833,6 +917,19 @@ pub mod read_options {
         /// Eventual consistency.
         Eventual = 2,
     }
+    impl ReadConsistency {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                ReadConsistency::Unspecified => "READ_CONSISTENCY_UNSPECIFIED",
+                ReadConsistency::Strong => "STRONG",
+                ReadConsistency::Eventual => "EVENTUAL",
+            }
+        }
+    }
     /// If not specified, lookups and ancestor queries default to
     /// `read_consistency`=`STRONG`, global queries default to
     /// `read_consistency`=`EVENTUAL`.
@@ -892,6 +989,7 @@ pub mod transaction_options {
 pub mod datastore_client {
     #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
     use tonic::codegen::*;
+    use tonic::codegen::http::Uri;
     /// Each RPC normalizes the partition IDs of the keys in its input entities,
     /// and always returns entities with keys with normalized partition IDs.
     /// This applies to all keys and entities, including those in values, except keys
@@ -914,6 +1012,10 @@ pub mod datastore_client {
             let inner = tonic::client::Grpc::new(inner);
             Self { inner }
         }
+        pub fn with_origin(inner: T, origin: Uri) -> Self {
+            let inner = tonic::client::Grpc::with_origin(inner, origin);
+            Self { inner }
+        }
         pub fn with_interceptor<F>(
             inner: T,
             interceptor: F,
@@ -933,19 +1035,19 @@ pub mod datastore_client {
         {
             DatastoreClient::new(InterceptedService::new(inner, interceptor))
         }
-        /// Compress requests with `gzip`.
+        /// Compress requests with the given encoding.
         ///
         /// This requires the server to support it otherwise it might respond with an
         /// error.
         #[must_use]
-        pub fn send_gzip(mut self) -> Self {
-            self.inner = self.inner.send_gzip();
+        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.send_compressed(encoding);
             self
         }
-        /// Enable decompressing responses with `gzip`.
+        /// Enable decompressing responses.
         #[must_use]
-        pub fn accept_gzip(mut self) -> Self {
-            self.inner = self.inner.accept_gzip();
+        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.accept_compressed(encoding);
             self
         }
         /// Looks up entities by key.

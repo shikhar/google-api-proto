@@ -196,6 +196,23 @@ pub mod string_filter {
         /// Partial match for the regular expression with the string value.
         PartialRegexp = 6,
     }
+    impl MatchType {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                MatchType::Unspecified => "MATCH_TYPE_UNSPECIFIED",
+                MatchType::Exact => "EXACT",
+                MatchType::BeginsWith => "BEGINS_WITH",
+                MatchType::EndsWith => "ENDS_WITH",
+                MatchType::Contains => "CONTAINS",
+                MatchType::FullRegexp => "FULL_REGEXP",
+                MatchType::PartialRegexp => "PARTIAL_REGEXP",
+            }
+        }
+    }
 }
 /// The result needs to be in a list of string values.
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -236,6 +253,22 @@ pub mod numeric_filter {
         GreaterThan = 4,
         /// Greater than or equal
         GreaterThanOrEqual = 5,
+    }
+    impl Operation {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                Operation::Unspecified => "OPERATION_UNSPECIFIED",
+                Operation::Equal => "EQUAL",
+                Operation::LessThan => "LESS_THAN",
+                Operation::LessThanOrEqual => "LESS_THAN_OR_EQUAL",
+                Operation::GreaterThan => "GREATER_THAN",
+                Operation::GreaterThanOrEqual => "GREATER_THAN_OR_EQUAL",
+            }
+        }
     }
 }
 /// To express that the result needs to be between two numbers (inclusive).
@@ -296,17 +329,17 @@ pub struct MetricHeader {
 ///
 /// ```none
 /// "dimensions": [
-///   {
-///     "name": "eventName"
-///   },
-///   {
-///     "name": "countryId"
-///   }
+///    {
+///      "name": "eventName"
+///    },
+///    {
+///      "name": "countryId"
+///    }
 /// ],
 /// "metrics": [
-///   {
-///     "name": "eventCount"
-///   }
+///    {
+///      "name": "eventCount"
+///    }
 /// ]
 /// ```
 ///
@@ -315,17 +348,17 @@ pub struct MetricHeader {
 ///
 /// ```none
 /// "dimensionValues": [
-///   {
-///     "value": "in_app_purchase"
-///   },
-///   {
-///     "value": "JP"
-///   }
+///    {
+///      "value": "in_app_purchase"
+///    },
+///    {
+///      "value": "JP"
+///    }
 /// ],
 /// "metricValues": [
-///   {
-///     "value": "15"
-///   }
+///    {
+///      "value": "15"
+///    }
 /// ]
 /// ```
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -1264,6 +1297,20 @@ pub enum UserCriteriaScoping {
     /// matches the criteria.
     UserCriteriaAcrossAllSessions = 3,
 }
+impl UserCriteriaScoping {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            UserCriteriaScoping::Unspecified => "USER_CRITERIA_SCOPING_UNSPECIFIED",
+            UserCriteriaScoping::UserCriteriaWithinSameEvent => "USER_CRITERIA_WITHIN_SAME_EVENT",
+            UserCriteriaScoping::UserCriteriaWithinSameSession => "USER_CRITERIA_WITHIN_SAME_SESSION",
+            UserCriteriaScoping::UserCriteriaAcrossAllSessions => "USER_CRITERIA_ACROSS_ALL_SESSIONS",
+        }
+    }
+}
 /// Enumerates options for how long an exclusion will last if a user matches
 /// the `userExclusionCriteria`.
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
@@ -1277,6 +1324,19 @@ pub enum UserExclusionDuration {
     /// Permanently exclude users from the segment if the user ever meets the
     /// `userExclusionCriteria` condition.
     UserExclusionPermanent = 2,
+}
+impl UserExclusionDuration {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            UserExclusionDuration::Unspecified => "USER_EXCLUSION_DURATION_UNSPECIFIED",
+            UserExclusionDuration::UserExclusionTemporary => "USER_EXCLUSION_TEMPORARY",
+            UserExclusionDuration::UserExclusionPermanent => "USER_EXCLUSION_PERMANENT",
+        }
+    }
 }
 /// Scoping specifies which events are considered when evaluating if a
 /// session meets a criteria.
@@ -1292,6 +1352,19 @@ pub enum SessionCriteriaScoping {
     /// the criteria.
     SessionCriteriaWithinSameSession = 2,
 }
+impl SessionCriteriaScoping {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            SessionCriteriaScoping::Unspecified => "SESSION_CRITERIA_SCOPING_UNSPECIFIED",
+            SessionCriteriaScoping::SessionCriteriaWithinSameEvent => "SESSION_CRITERIA_WITHIN_SAME_EVENT",
+            SessionCriteriaScoping::SessionCriteriaWithinSameSession => "SESSION_CRITERIA_WITHIN_SAME_SESSION",
+        }
+    }
+}
 /// Enumerates options for how long an exclusion will last if a session
 /// matches the `sessionExclusionCriteria`.
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
@@ -1306,6 +1379,19 @@ pub enum SessionExclusionDuration {
     /// the `sessionExclusionCriteria` condition.
     SessionExclusionPermanent = 2,
 }
+impl SessionExclusionDuration {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            SessionExclusionDuration::Unspecified => "SESSION_EXCLUSION_DURATION_UNSPECIFIED",
+            SessionExclusionDuration::SessionExclusionTemporary => "SESSION_EXCLUSION_TEMPORARY",
+            SessionExclusionDuration::SessionExclusionPermanent => "SESSION_EXCLUSION_PERMANENT",
+        }
+    }
+}
 /// Scoping specifies which events are considered when evaluating if an event
 /// meets a criteria.
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
@@ -1317,6 +1403,18 @@ pub enum EventCriteriaScoping {
     /// criteria.
     EventCriteriaWithinSameEvent = 1,
 }
+impl EventCriteriaScoping {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            EventCriteriaScoping::Unspecified => "EVENT_CRITERIA_SCOPING_UNSPECIFIED",
+            EventCriteriaScoping::EventCriteriaWithinSameEvent => "EVENT_CRITERIA_WITHIN_SAME_EVENT",
+        }
+    }
+}
 /// Enumerates options for how long an exclusion will last if an event
 /// matches the `eventExclusionCriteria`.
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
@@ -1327,6 +1425,18 @@ pub enum EventExclusionDuration {
     /// Permanently exclude events from the segment if the event ever meets
     /// the `eventExclusionCriteria` condition.
     EventExclusionPermanent = 1,
+}
+impl EventExclusionDuration {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            EventExclusionDuration::Unspecified => "EVENT_EXCLUSION_DURATION_UNSPECIFIED",
+            EventExclusionDuration::EventExclusionPermanent => "EVENT_EXCLUSION_PERMANENT",
+        }
+    }
 }
 /// A metric's value type.
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
@@ -1358,6 +1468,29 @@ pub enum MetricType {
     TypeMeters = 12,
     /// A length in kilometers; a special floating point type.
     TypeKilometers = 13,
+}
+impl MetricType {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            MetricType::Unspecified => "METRIC_TYPE_UNSPECIFIED",
+            MetricType::TypeInteger => "TYPE_INTEGER",
+            MetricType::TypeFloat => "TYPE_FLOAT",
+            MetricType::TypeSeconds => "TYPE_SECONDS",
+            MetricType::TypeMilliseconds => "TYPE_MILLISECONDS",
+            MetricType::TypeMinutes => "TYPE_MINUTES",
+            MetricType::TypeHours => "TYPE_HOURS",
+            MetricType::TypeStandard => "TYPE_STANDARD",
+            MetricType::TypeCurrency => "TYPE_CURRENCY",
+            MetricType::TypeFeet => "TYPE_FEET",
+            MetricType::TypeMiles => "TYPE_MILES",
+            MetricType::TypeMeters => "TYPE_METERS",
+            MetricType::TypeKilometers => "TYPE_KILOMETERS",
+        }
+    }
 }
 /// The request for a funnel report.
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -1449,6 +1582,19 @@ pub mod run_funnel_report_request {
         /// response will contain the date dimension.
         TrendedFunnel = 2,
     }
+    impl FunnelVisualizationType {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                FunnelVisualizationType::Unspecified => "FUNNEL_VISUALIZATION_TYPE_UNSPECIFIED",
+                FunnelVisualizationType::StandardFunnel => "STANDARD_FUNNEL",
+                FunnelVisualizationType::TrendedFunnel => "TRENDED_FUNNEL",
+            }
+        }
+    }
 }
 /// The funnel report response contains two sub reports. The two sub reports are
 /// different combinations of dimensions and metrics.
@@ -1485,6 +1631,7 @@ pub struct RunFunnelReportResponse {
 pub mod alpha_analytics_data_client {
     #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
     use tonic::codegen::*;
+    use tonic::codegen::http::Uri;
     /// Google Analytics reporting data service.
     #[derive(Debug, Clone)]
     pub struct AlphaAnalyticsDataClient<T> {
@@ -1499,6 +1646,10 @@ pub mod alpha_analytics_data_client {
     {
         pub fn new(inner: T) -> Self {
             let inner = tonic::client::Grpc::new(inner);
+            Self { inner }
+        }
+        pub fn with_origin(inner: T, origin: Uri) -> Self {
+            let inner = tonic::client::Grpc::with_origin(inner, origin);
             Self { inner }
         }
         pub fn with_interceptor<F>(
@@ -1520,19 +1671,19 @@ pub mod alpha_analytics_data_client {
         {
             AlphaAnalyticsDataClient::new(InterceptedService::new(inner, interceptor))
         }
-        /// Compress requests with `gzip`.
+        /// Compress requests with the given encoding.
         ///
         /// This requires the server to support it otherwise it might respond with an
         /// error.
         #[must_use]
-        pub fn send_gzip(mut self) -> Self {
-            self.inner = self.inner.send_gzip();
+        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.send_compressed(encoding);
             self
         }
-        /// Enable decompressing responses with `gzip`.
+        /// Enable decompressing responses.
         #[must_use]
-        pub fn accept_gzip(mut self) -> Self {
-            self.inner = self.inner.accept_gzip();
+        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.accept_compressed(encoding);
             self
         }
         /// Returns a customized funnel report of your Google Analytics event data. The

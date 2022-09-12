@@ -1,3 +1,100 @@
+/// The request message for querying Drive activity.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct QueryDriveActivityRequest {
+    /// Details on how to consolidate related actions that make up the activity. If
+    /// not set, then related actions are not consolidated.
+    #[prost(message, optional, tag="5")]
+    pub consolidation_strategy: ::core::option::Option<ConsolidationStrategy>,
+    /// The miminum number of activities desired in the response; the server will
+    /// attempt to return at least this quanitity. The server may also return fewer
+    /// activities if it has a partial response ready before the request times out.
+    /// If not set, a default value is used.
+    #[prost(int32, tag="6")]
+    pub page_size: i32,
+    /// The token identifying which page of results to return. Set this to the
+    /// next_page_token value returned from a previous query to obtain the
+    /// following page of results. If not set, the first page of results will be
+    /// returned.
+    #[prost(string, tag="7")]
+    pub page_token: ::prost::alloc::string::String,
+    /// The filtering for items returned from this query request. The format of the
+    /// filter string is a sequence of expressions, joined by an optional "AND",
+    /// where each expression is of the form "field operator value".
+    ///
+    /// Supported fields:
+    ///
+    ///    - `time`: Uses numerical operators on date values either in
+    ///      terms of milliseconds since Jan 1, 1970 or in RFC 3339 format.
+    ///      Examples:
+    ///        - `time > 1452409200000 AND time <= 1492812924310`
+    ///        - `time >= "2016-01-10T01:02:03-05:00"`
+    ///
+    ///    - `detail.action_detail_case`: Uses the "has" operator (:) and
+    ///      either a singular value or a list of allowed action types enclosed in
+    ///      parentheses.
+    ///      Examples:
+    ///        - `detail.action_detail_case: RENAME`
+    ///        - `detail.action_detail_case:(CREATE EDIT)`
+    ///        - `-detail.action_detail_case:MOVE`
+    #[prost(string, tag="8")]
+    pub filter: ::prost::alloc::string::String,
+    /// The primary criteria in the query. The default is
+    /// ancestor_name = `items/root` if no key is specified.
+    #[prost(oneof="query_drive_activity_request::Key", tags="1, 2")]
+    pub key: ::core::option::Option<query_drive_activity_request::Key>,
+}
+/// Nested message and enum types in `QueryDriveActivityRequest`.
+pub mod query_drive_activity_request {
+    /// The primary criteria in the query. The default is
+    /// ancestor_name = `items/root` if no key is specified.
+    #[derive(Clone, PartialEq, ::prost::Oneof)]
+    pub enum Key {
+        /// Return activities for this Drive item. The format is
+        /// `items/ITEM_ID`.
+        #[prost(string, tag="1")]
+        ItemName(::prost::alloc::string::String),
+        /// Return activities for this Drive folder and all children and descendants.
+        /// The format is `items/ITEM_ID`.
+        #[prost(string, tag="2")]
+        AncestorName(::prost::alloc::string::String),
+    }
+}
+/// How the individual activities are consolidated. A set of activities may be
+/// consolidated into one combined activity if they are related in some way, such
+/// as one actor performing the same action on multiple targets, or multiple
+/// actors performing the same action on a single target. The strategy defines
+/// the rules for which activities are related.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ConsolidationStrategy {
+    /// How the individual activities are consolidated.
+    #[prost(oneof="consolidation_strategy::Strategy", tags="1, 2")]
+    pub strategy: ::core::option::Option<consolidation_strategy::Strategy>,
+}
+/// Nested message and enum types in `ConsolidationStrategy`.
+pub mod consolidation_strategy {
+    /// A strategy which does no consolidation of individual activities.
+    #[derive(Clone, PartialEq, ::prost::Message)]
+    pub struct NoConsolidation {
+    }
+    /// A strategy which consolidates activities using the grouping rules from the
+    /// legacy V1 Activity API. Similar actions occurring within a window of time
+    /// can be grouped across multiple targets (such as moving a set of files at
+    /// once) or multiple actors (such as several users editing the same item).
+    /// Grouping rules for this strategy are specific to each type of action.
+    #[derive(Clone, PartialEq, ::prost::Message)]
+    pub struct Legacy {
+    }
+    /// How the individual activities are consolidated.
+    #[derive(Clone, PartialEq, ::prost::Oneof)]
+    pub enum Strategy {
+        /// The individual activities are not consolidated.
+        #[prost(message, tag="1")]
+        None(NoConsolidation),
+        /// The individual activities are consolidated using the legacy strategy.
+        #[prost(message, tag="2")]
+        Legacy(Legacy),
+    }
+}
 /// Information about time ranges.
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct TimeRange {
@@ -133,6 +230,19 @@ pub mod system_event {
         /// The event is due to the system automatically purging trash.
         TrashAutoPurge = 2,
     }
+    impl Type {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                Type::Unspecified => "TYPE_UNSPECIFIED",
+                Type::UserDeletion => "USER_DELETION",
+                Type::TrashAutoPurge => "TRASH_AUTO_PURGE",
+            }
+        }
+    }
 }
 /// Empty message representing an administrator.
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -267,6 +377,20 @@ pub mod drive_item {
             /// This item is deprecated; please see `DriveFolder.Type` instead.
             StandardFolder = 3,
         }
+        impl Type {
+            /// String value of the enum field names used in the ProtoBuf definition.
+            ///
+            /// The values are not transformed in any way and thus are considered stable
+            /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+            pub fn as_str_name(&self) -> &'static str {
+                match self {
+                    Type::Unspecified => "TYPE_UNSPECIFIED",
+                    Type::MyDriveRoot => "MY_DRIVE_ROOT",
+                    Type::TeamDriveRoot => "TEAM_DRIVE_ROOT",
+                    Type::StandardFolder => "STANDARD_FOLDER",
+                }
+            }
+        }
     }
     /// A Drive item which is a file.
     #[derive(Clone, PartialEq, ::prost::Message)]
@@ -293,6 +417,20 @@ pub mod drive_item {
             SharedDriveRoot = 2,
             /// The folder is a standard, non-root, folder.
             StandardFolder = 3,
+        }
+        impl Type {
+            /// String value of the enum field names used in the ProtoBuf definition.
+            ///
+            /// The values are not transformed in any way and thus are considered stable
+            /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+            pub fn as_str_name(&self) -> &'static str {
+                match self {
+                    Type::Unspecified => "TYPE_UNSPECIFIED",
+                    Type::MyDriveRoot => "MY_DRIVE_ROOT",
+                    Type::SharedDriveRoot => "SHARED_DRIVE_ROOT",
+                    Type::StandardFolder => "STANDARD_FOLDER",
+                }
+            }
         }
     }
     /// If present, this describes the type of the Drive item.
@@ -418,103 +556,6 @@ pub struct DriveReference {
     /// The title of the shared drive.
     #[prost(string, tag="2")]
     pub title: ::prost::alloc::string::String,
-}
-/// The request message for querying Drive activity.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct QueryDriveActivityRequest {
-    /// Details on how to consolidate related actions that make up the activity. If
-    /// not set, then related actions are not consolidated.
-    #[prost(message, optional, tag="5")]
-    pub consolidation_strategy: ::core::option::Option<ConsolidationStrategy>,
-    /// The miminum number of activities desired in the response; the server will
-    /// attempt to return at least this quanitity. The server may also return fewer
-    /// activities if it has a partial response ready before the request times out.
-    /// If not set, a default value is used.
-    #[prost(int32, tag="6")]
-    pub page_size: i32,
-    /// The token identifying which page of results to return. Set this to the
-    /// next_page_token value returned from a previous query to obtain the
-    /// following page of results. If not set, the first page of results will be
-    /// returned.
-    #[prost(string, tag="7")]
-    pub page_token: ::prost::alloc::string::String,
-    /// The filtering for items returned from this query request. The format of the
-    /// filter string is a sequence of expressions, joined by an optional "AND",
-    /// where each expression is of the form "field operator value".
-    ///
-    /// Supported fields:
-    ///
-    ///   - `time`: Uses numerical operators on date values either in
-    ///     terms of milliseconds since Jan 1, 1970 or in RFC 3339 format.
-    ///     Examples:
-    ///       - `time > 1452409200000 AND time <= 1492812924310`
-    ///       - `time >= "2016-01-10T01:02:03-05:00"`
-    ///
-    ///   - `detail.action_detail_case`: Uses the "has" operator (:) and
-    ///     either a singular value or a list of allowed action types enclosed in
-    ///     parentheses.
-    ///     Examples:
-    ///       - `detail.action_detail_case: RENAME`
-    ///       - `detail.action_detail_case:(CREATE EDIT)`
-    ///       - `-detail.action_detail_case:MOVE`
-    #[prost(string, tag="8")]
-    pub filter: ::prost::alloc::string::String,
-    /// The primary criteria in the query. The default is
-    /// ancestor_name = `items/root` if no key is specified.
-    #[prost(oneof="query_drive_activity_request::Key", tags="1, 2")]
-    pub key: ::core::option::Option<query_drive_activity_request::Key>,
-}
-/// Nested message and enum types in `QueryDriveActivityRequest`.
-pub mod query_drive_activity_request {
-    /// The primary criteria in the query. The default is
-    /// ancestor_name = `items/root` if no key is specified.
-    #[derive(Clone, PartialEq, ::prost::Oneof)]
-    pub enum Key {
-        /// Return activities for this Drive item. The format is
-        /// `items/ITEM_ID`.
-        #[prost(string, tag="1")]
-        ItemName(::prost::alloc::string::String),
-        /// Return activities for this Drive folder and all children and descendants.
-        /// The format is `items/ITEM_ID`.
-        #[prost(string, tag="2")]
-        AncestorName(::prost::alloc::string::String),
-    }
-}
-/// How the individual activities are consolidated. A set of activities may be
-/// consolidated into one combined activity if they are related in some way, such
-/// as one actor performing the same action on multiple targets, or multiple
-/// actors performing the same action on a single target. The strategy defines
-/// the rules for which activities are related.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ConsolidationStrategy {
-    /// How the individual activities are consolidated.
-    #[prost(oneof="consolidation_strategy::Strategy", tags="1, 2")]
-    pub strategy: ::core::option::Option<consolidation_strategy::Strategy>,
-}
-/// Nested message and enum types in `ConsolidationStrategy`.
-pub mod consolidation_strategy {
-    /// A strategy which does no consolidation of individual activities.
-    #[derive(Clone, PartialEq, ::prost::Message)]
-    pub struct NoConsolidation {
-    }
-    /// A strategy which consolidates activities using the grouping rules from the
-    /// legacy V1 Activity API. Similar actions occurring within a window of time
-    /// can be grouped across multiple targets (such as moving a set of files at
-    /// once) or multiple actors (such as several users editing the same item).
-    /// Grouping rules for this strategy are specific to each type of action.
-    #[derive(Clone, PartialEq, ::prost::Message)]
-    pub struct Legacy {
-    }
-    /// How the individual activities are consolidated.
-    #[derive(Clone, PartialEq, ::prost::Oneof)]
-    pub enum Strategy {
-        /// The individual activities are not consolidated.
-        #[prost(message, tag="1")]
-        None(NoConsolidation),
-        /// The individual activities are consolidated using the legacy strategy.
-        #[prost(message, tag="2")]
-        Legacy(Legacy),
-    }
 }
 /// Information about the action.
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -679,6 +720,19 @@ pub mod delete {
         /// An object was deleted permanently.
         PermanentDelete = 2,
     }
+    impl Type {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                Type::Unspecified => "TYPE_UNSPECIFIED",
+                Type::Trash => "TRASH",
+                Type::PermanentDelete => "PERMANENT_DELETE",
+            }
+        }
+    }
 }
 /// A deleted object was restored.
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -697,6 +751,18 @@ pub mod restore {
         Unspecified = 0,
         /// An object was restored from the trash.
         Untrash = 1,
+    }
+    impl Type {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                Type::Unspecified => "TYPE_UNSPECIFIED",
+                Type::Untrash => "UNTRASH",
+            }
+        }
     }
 }
 /// A change of the permission setting on an item.
@@ -759,6 +825,24 @@ pub mod permission {
         /// information.
         PublishedViewer = 7,
     }
+    impl Role {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                Role::Unspecified => "ROLE_UNSPECIFIED",
+                Role::Owner => "OWNER",
+                Role::Organizer => "ORGANIZER",
+                Role::FileOrganizer => "FILE_ORGANIZER",
+                Role::Editor => "EDITOR",
+                Role::Commenter => "COMMENTER",
+                Role::Viewer => "VIEWER",
+                Role::PublishedViewer => "PUBLISHED_VIEWER",
+            }
+        }
+    }
     /// The entity granted the role.
     #[derive(Clone, PartialEq, ::prost::Oneof)]
     pub enum Scope {
@@ -816,6 +900,23 @@ pub mod comment {
             /// A posted comment was reopened.
             Reopened = 6,
         }
+        impl Subtype {
+            /// String value of the enum field names used in the ProtoBuf definition.
+            ///
+            /// The values are not transformed in any way and thus are considered stable
+            /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+            pub fn as_str_name(&self) -> &'static str {
+                match self {
+                    Subtype::Unspecified => "SUBTYPE_UNSPECIFIED",
+                    Subtype::Added => "ADDED",
+                    Subtype::Deleted => "DELETED",
+                    Subtype::ReplyAdded => "REPLY_ADDED",
+                    Subtype::ReplyDeleted => "REPLY_DELETED",
+                    Subtype::Resolved => "RESOLVED",
+                    Subtype::Reopened => "REOPENED",
+                }
+            }
+        }
     }
     /// A comment with an assignment.
     #[derive(Clone, PartialEq, ::prost::Message)]
@@ -850,6 +951,24 @@ pub mod comment {
             /// An assignment was reassigned.
             Reassigned = 7,
         }
+        impl Subtype {
+            /// String value of the enum field names used in the ProtoBuf definition.
+            ///
+            /// The values are not transformed in any way and thus are considered stable
+            /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+            pub fn as_str_name(&self) -> &'static str {
+                match self {
+                    Subtype::Unspecified => "SUBTYPE_UNSPECIFIED",
+                    Subtype::Added => "ADDED",
+                    Subtype::Deleted => "DELETED",
+                    Subtype::ReplyAdded => "REPLY_ADDED",
+                    Subtype::ReplyDeleted => "REPLY_DELETED",
+                    Subtype::Resolved => "RESOLVED",
+                    Subtype::Reopened => "REOPENED",
+                    Subtype::Reassigned => "REASSIGNED",
+                }
+            }
+        }
     }
     /// A suggestion.
     #[derive(Clone, PartialEq, ::prost::Message)]
@@ -882,6 +1001,25 @@ pub mod comment {
             AcceptDeleted = 9,
             /// A rejected suggestion was deleted.
             RejectDeleted = 10,
+        }
+        impl Subtype {
+            /// String value of the enum field names used in the ProtoBuf definition.
+            ///
+            /// The values are not transformed in any way and thus are considered stable
+            /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+            pub fn as_str_name(&self) -> &'static str {
+                match self {
+                    Subtype::Unspecified => "SUBTYPE_UNSPECIFIED",
+                    Subtype::Added => "ADDED",
+                    Subtype::Deleted => "DELETED",
+                    Subtype::ReplyAdded => "REPLY_ADDED",
+                    Subtype::ReplyDeleted => "REPLY_DELETED",
+                    Subtype::Accepted => "ACCEPTED",
+                    Subtype::Rejected => "REJECTED",
+                    Subtype::AcceptDeleted => "ACCEPT_DELETED",
+                    Subtype::RejectDeleted => "REJECT_DELETED",
+                }
+            }
         }
     }
     /// The type of changed comment.
@@ -918,6 +1056,19 @@ pub mod data_leak_prevention_change {
         /// Document is no longer flagged as containing sensitive content.
         Cleared = 2,
     }
+    impl Type {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                Type::Unspecified => "TYPE_UNSPECIFIED",
+                Type::Flagged => "FLAGGED",
+                Type::Cleared => "CLEARED",
+            }
+        }
+    }
 }
 /// Activity in applications other than Drive.
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -938,6 +1089,19 @@ pub mod application_reference {
         Link = 1,
         /// Comments were made regarding a Drive item.
         Discuss = 2,
+    }
+    impl Type {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                Type::UnspecifiedReferenceType => "UNSPECIFIED_REFERENCE_TYPE",
+                Type::Link => "LINK",
+                Type::Discuss => "DISCUSS",
+            }
+        }
     }
 }
 /// Information about settings changes.
@@ -978,6 +1142,21 @@ pub mod settings_change {
             /// When restricted, this prevents use of Drive File Stream.
             DriveFileStream = 4,
         }
+        impl Feature {
+            /// String value of the enum field names used in the ProtoBuf definition.
+            ///
+            /// The values are not transformed in any way and thus are considered stable
+            /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+            pub fn as_str_name(&self) -> &'static str {
+                match self {
+                    Feature::Unspecified => "FEATURE_UNSPECIFIED",
+                    Feature::SharingOutsideDomain => "SHARING_OUTSIDE_DOMAIN",
+                    Feature::DirectSharing => "DIRECT_SHARING",
+                    Feature::ItemDuplication => "ITEM_DUPLICATION",
+                    Feature::DriveFileStream => "DRIVE_FILE_STREAM",
+                }
+            }
+        }
         /// The restriction applicable to a feature.
         #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
         #[repr(i32)]
@@ -988,6 +1167,19 @@ pub mod settings_change {
             Unrestricted = 1,
             /// The use of this feature is fully restricted.
             FullyRestricted = 2,
+        }
+        impl Restriction {
+            /// String value of the enum field names used in the ProtoBuf definition.
+            ///
+            /// The values are not transformed in any way and thus are considered stable
+            /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+            pub fn as_str_name(&self) -> &'static str {
+                match self {
+                    Restriction::Unspecified => "RESTRICTION_UNSPECIFIED",
+                    Restriction::Unrestricted => "UNRESTRICTED",
+                    Restriction::FullyRestricted => "FULLY_RESTRICTED",
+                }
+            }
         }
     }
 }
@@ -1047,6 +1239,7 @@ pub mod drive_activity {
 pub mod drive_activity_service_client {
     #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
     use tonic::codegen::*;
+    use tonic::codegen::http::Uri;
     /// Service for querying activity on Drive items. Activity is user
     /// or system action on Drive items that happened in the past. A Drive item can
     /// be a file or folder, or a Team Drive.
@@ -1063,6 +1256,10 @@ pub mod drive_activity_service_client {
     {
         pub fn new(inner: T) -> Self {
             let inner = tonic::client::Grpc::new(inner);
+            Self { inner }
+        }
+        pub fn with_origin(inner: T, origin: Uri) -> Self {
+            let inner = tonic::client::Grpc::with_origin(inner, origin);
             Self { inner }
         }
         pub fn with_interceptor<F>(
@@ -1084,19 +1281,19 @@ pub mod drive_activity_service_client {
         {
             DriveActivityServiceClient::new(InterceptedService::new(inner, interceptor))
         }
-        /// Compress requests with `gzip`.
+        /// Compress requests with the given encoding.
         ///
         /// This requires the server to support it otherwise it might respond with an
         /// error.
         #[must_use]
-        pub fn send_gzip(mut self) -> Self {
-            self.inner = self.inner.send_gzip();
+        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.send_compressed(encoding);
             self
         }
-        /// Enable decompressing responses with `gzip`.
+        /// Enable decompressing responses.
         #[must_use]
-        pub fn accept_gzip(mut self) -> Self {
-            self.inner = self.inner.accept_gzip();
+        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.accept_compressed(encoding);
             self
         }
         /// Query past activity in Google Drive.

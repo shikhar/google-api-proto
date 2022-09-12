@@ -74,6 +74,18 @@ pub mod client_connector_service {
                 /// TCP protocol.
                 Tcp = 1,
             }
+            impl TransportProtocol {
+                /// String value of the enum field names used in the ProtoBuf definition.
+                ///
+                /// The values are not transformed in any way and thus are considered stable
+                /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+                pub fn as_str_name(&self) -> &'static str {
+                    match self {
+                        TransportProtocol::Unspecified => "TRANSPORT_PROTOCOL_UNSPECIFIED",
+                        TransportProtocol::Tcp => "TCP",
+                    }
+                }
+            }
         }
         #[derive(Clone, PartialEq, ::prost::Oneof)]
         pub enum IngressConfig {
@@ -125,6 +137,23 @@ pub mod client_connector_service {
         /// state.
         Error = 6,
     }
+    impl State {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                State::Unspecified => "STATE_UNSPECIFIED",
+                State::Creating => "CREATING",
+                State::Updating => "UPDATING",
+                State::Deleting => "DELETING",
+                State::Running => "RUNNING",
+                State::Down => "DOWN",
+                State::Error => "ERROR",
+            }
+        }
+    }
 }
 /// Message for requesting list of ClientConnectorServices.
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -173,9 +202,9 @@ pub struct CreateClientConnectorServiceRequest {
     #[prost(string, tag="1")]
     pub parent: ::prost::alloc::string::String,
     /// Optional. User-settable client connector service resource ID.
-    ///  * Must start with a letter.
-    ///  * Must contain between 4-63 characters from `/\[a-z][0-9\]-/`.
-    ///  * Must end with a number or a letter.
+    ///   * Must start with a letter.
+    ///   * Must contain between 4-63 characters from `/\[a-z][0-9\]-/`.
+    ///   * Must end with a number or a letter.
     ///
     /// A random system generated name will be assigned
     /// if not specified by the user.
@@ -301,6 +330,7 @@ pub struct ClientConnectorServiceOperationMetadata {
 pub mod client_connector_services_service_client {
     #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
     use tonic::codegen::*;
+    use tonic::codegen::http::Uri;
     /// ## API Overview
     ///
     /// The `beyondcorp.googleapis.com` service implements the Google Cloud
@@ -327,6 +357,10 @@ pub mod client_connector_services_service_client {
             let inner = tonic::client::Grpc::new(inner);
             Self { inner }
         }
+        pub fn with_origin(inner: T, origin: Uri) -> Self {
+            let inner = tonic::client::Grpc::with_origin(inner, origin);
+            Self { inner }
+        }
         pub fn with_interceptor<F>(
             inner: T,
             interceptor: F,
@@ -348,19 +382,19 @@ pub mod client_connector_services_service_client {
                 InterceptedService::new(inner, interceptor),
             )
         }
-        /// Compress requests with `gzip`.
+        /// Compress requests with the given encoding.
         ///
         /// This requires the server to support it otherwise it might respond with an
         /// error.
         #[must_use]
-        pub fn send_gzip(mut self) -> Self {
-            self.inner = self.inner.send_gzip();
+        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.send_compressed(encoding);
             self
         }
-        /// Enable decompressing responses with `gzip`.
+        /// Enable decompressing responses.
         #[must_use]
-        pub fn accept_gzip(mut self) -> Self {
-            self.inner = self.inner.accept_gzip();
+        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.accept_compressed(encoding);
             self
         }
         /// Lists ClientConnectorServices in a given project and location.

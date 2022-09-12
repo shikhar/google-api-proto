@@ -1,3 +1,344 @@
+/// An Instance resource is the computing unit that App Engine uses to
+/// automatically scale an application.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct Instance {
+    /// Output only. Full path to the Instance resource in the API.
+    /// Example: `apps/myapp/services/default/versions/v1/instances/instance-1`.
+    #[prost(string, tag="1")]
+    pub name: ::prost::alloc::string::String,
+    /// Output only. Relative name of the instance within the version.
+    /// Example: `instance-1`.
+    #[prost(string, tag="2")]
+    pub id: ::prost::alloc::string::String,
+    /// Output only. App Engine release this instance is running on.
+    #[prost(string, tag="3")]
+    pub app_engine_release: ::prost::alloc::string::String,
+    /// Output only. Availability of the instance.
+    #[prost(enumeration="instance::Availability", tag="4")]
+    pub availability: i32,
+    /// Output only. Name of the virtual machine where this instance lives. Only applicable
+    /// for instances in App Engine flexible environment.
+    #[prost(string, tag="5")]
+    pub vm_name: ::prost::alloc::string::String,
+    /// Output only. Zone where the virtual machine is located. Only applicable for instances
+    /// in App Engine flexible environment.
+    #[prost(string, tag="6")]
+    pub vm_zone_name: ::prost::alloc::string::String,
+    /// Output only. Virtual machine ID of this instance. Only applicable for instances in
+    /// App Engine flexible environment.
+    #[prost(string, tag="7")]
+    pub vm_id: ::prost::alloc::string::String,
+    /// Output only. Time that this instance was started.
+    ///
+    /// @OutputOnly
+    #[prost(message, optional, tag="8")]
+    pub start_time: ::core::option::Option<::prost_types::Timestamp>,
+    /// Output only. Number of requests since this instance was started.
+    #[prost(int32, tag="9")]
+    pub requests: i32,
+    /// Output only. Number of errors since this instance was started.
+    #[prost(int32, tag="10")]
+    pub errors: i32,
+    /// Output only. Average queries per second (QPS) over the last minute.
+    #[prost(float, tag="11")]
+    pub qps: f32,
+    /// Output only. Average latency (ms) over the last minute.
+    #[prost(int32, tag="12")]
+    pub average_latency: i32,
+    /// Output only. Total memory in use (bytes).
+    #[prost(int64, tag="13")]
+    pub memory_usage: i64,
+    /// Output only. Status of the virtual machine where this instance lives. Only applicable
+    /// for instances in App Engine flexible environment.
+    #[prost(string, tag="14")]
+    pub vm_status: ::prost::alloc::string::String,
+    /// Output only. Whether this instance is in debug mode. Only applicable for instances in
+    /// App Engine flexible environment.
+    #[prost(bool, tag="15")]
+    pub vm_debug_enabled: bool,
+    /// Output only. The IP address of this instance. Only applicable for instances in App
+    /// Engine flexible environment.
+    #[prost(string, tag="16")]
+    pub vm_ip: ::prost::alloc::string::String,
+    /// Output only. The liveness health check of this instance. Only applicable for instances
+    /// in App Engine flexible environment.
+    #[prost(enumeration="instance::liveness::LivenessState", tag="17")]
+    pub vm_liveness: i32,
+}
+/// Nested message and enum types in `Instance`.
+pub mod instance {
+    /// Wrapper for LivenessState enum.
+    #[derive(Clone, PartialEq, ::prost::Message)]
+    pub struct Liveness {
+    }
+    /// Nested message and enum types in `Liveness`.
+    pub mod liveness {
+        /// Liveness health check status for Flex instances.
+        #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+        #[repr(i32)]
+        pub enum LivenessState {
+            /// There is no liveness health check for the instance. Only applicable for
+            /// instances in App Engine standard environment.
+            Unspecified = 0,
+            /// The health checking system is aware of the instance but its health is
+            /// not known at the moment.
+            Unknown = 1,
+            /// The instance is reachable i.e. a connection to the application health
+            /// checking endpoint can be established, and conforms to the requirements
+            /// defined by the health check.
+            Healthy = 2,
+            /// The instance is reachable, but does not conform to the requirements
+            /// defined by the health check.
+            Unhealthy = 3,
+            /// The instance is being drained. The existing connections to the instance
+            /// have time to complete, but the new ones are being refused.
+            Draining = 4,
+            /// The instance is unreachable i.e. a connection to the application health
+            /// checking endpoint cannot be established, or the server does not respond
+            /// within the specified timeout.
+            Timeout = 5,
+        }
+        impl LivenessState {
+            /// String value of the enum field names used in the ProtoBuf definition.
+            ///
+            /// The values are not transformed in any way and thus are considered stable
+            /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+            pub fn as_str_name(&self) -> &'static str {
+                match self {
+                    LivenessState::Unspecified => "LIVENESS_STATE_UNSPECIFIED",
+                    LivenessState::Unknown => "UNKNOWN",
+                    LivenessState::Healthy => "HEALTHY",
+                    LivenessState::Unhealthy => "UNHEALTHY",
+                    LivenessState::Draining => "DRAINING",
+                    LivenessState::Timeout => "TIMEOUT",
+                }
+            }
+        }
+    }
+    /// Availability of the instance.
+    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+    #[repr(i32)]
+    pub enum Availability {
+        Unspecified = 0,
+        Resident = 1,
+        Dynamic = 2,
+    }
+    impl Availability {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                Availability::Unspecified => "UNSPECIFIED",
+                Availability::Resident => "RESIDENT",
+                Availability::Dynamic => "DYNAMIC",
+            }
+        }
+    }
+}
+/// An Application resource contains the top-level configuration of an App
+/// Engine application.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct Application {
+    /// Full path to the Application resource in the API.
+    /// Example: `apps/myapp`.
+    ///
+    /// @OutputOnly
+    #[prost(string, tag="1")]
+    pub name: ::prost::alloc::string::String,
+    /// Identifier of the Application resource. This identifier is equivalent
+    /// to the project ID of the Google Cloud Platform project where you want to
+    /// deploy your application.
+    /// Example: `myapp`.
+    #[prost(string, tag="2")]
+    pub id: ::prost::alloc::string::String,
+    /// HTTP path dispatch rules for requests to the application that do not
+    /// explicitly target a service or version. Rules are order-dependent.
+    /// Up to 20 dispatch rules can be supported.
+    #[prost(message, repeated, tag="3")]
+    pub dispatch_rules: ::prost::alloc::vec::Vec<UrlDispatchRule>,
+    /// Google Apps authentication domain that controls which users can access
+    /// this application.
+    ///
+    /// Defaults to open access for any Google Account.
+    #[prost(string, tag="6")]
+    pub auth_domain: ::prost::alloc::string::String,
+    /// Location from which this application runs. Application instances
+    /// run out of the data centers in the specified location, which is also where
+    /// all of the application's end user content is stored.
+    ///
+    /// Defaults to `us-central`.
+    ///
+    /// View the list of
+    /// [supported locations](<https://cloud.google.com/appengine/docs/locations>).
+    #[prost(string, tag="7")]
+    pub location_id: ::prost::alloc::string::String,
+    /// Google Cloud Storage bucket that can be used for storing files
+    /// associated with this application. This bucket is associated with the
+    /// application and can be used by the gcloud deployment commands.
+    ///
+    /// @OutputOnly
+    #[prost(string, tag="8")]
+    pub code_bucket: ::prost::alloc::string::String,
+    /// Cookie expiration policy for this application.
+    #[prost(message, optional, tag="9")]
+    pub default_cookie_expiration: ::core::option::Option<::prost_types::Duration>,
+    /// Serving status of this application.
+    #[prost(enumeration="application::ServingStatus", tag="10")]
+    pub serving_status: i32,
+    /// Hostname used to reach this application, as resolved by App Engine.
+    ///
+    /// @OutputOnly
+    #[prost(string, tag="11")]
+    pub default_hostname: ::prost::alloc::string::String,
+    /// Google Cloud Storage bucket that can be used by this application to store
+    /// content.
+    ///
+    /// @OutputOnly
+    #[prost(string, tag="12")]
+    pub default_bucket: ::prost::alloc::string::String,
+    /// The service account associated with the application.
+    /// This is the app-level default identity. If no identity provided during
+    /// create version, Admin API will fallback to this one.
+    #[prost(string, tag="13")]
+    pub service_account: ::prost::alloc::string::String,
+    #[prost(message, optional, tag="14")]
+    pub iap: ::core::option::Option<application::IdentityAwareProxy>,
+    /// The Google Container Registry domain used for storing managed build docker
+    /// images for this application.
+    #[prost(string, tag="16")]
+    pub gcr_domain: ::prost::alloc::string::String,
+    /// The type of the Cloud Firestore or Cloud Datastore database associated with
+    /// this application.
+    #[prost(enumeration="application::DatabaseType", tag="17")]
+    pub database_type: i32,
+    /// The feature specific settings to be used in the application.
+    #[prost(message, optional, tag="18")]
+    pub feature_settings: ::core::option::Option<application::FeatureSettings>,
+}
+/// Nested message and enum types in `Application`.
+pub mod application {
+    /// Identity-Aware Proxy
+    #[derive(Clone, PartialEq, ::prost::Message)]
+    pub struct IdentityAwareProxy {
+        /// Whether the serving infrastructure will authenticate and
+        /// authorize all incoming requests.
+        ///
+        /// If true, the `oauth2_client_id` and `oauth2_client_secret`
+        /// fields must be non-empty.
+        #[prost(bool, tag="1")]
+        pub enabled: bool,
+        /// OAuth2 client ID to use for the authentication flow.
+        #[prost(string, tag="2")]
+        pub oauth2_client_id: ::prost::alloc::string::String,
+        /// OAuth2 client secret to use for the authentication flow.
+        ///
+        /// For security reasons, this value cannot be retrieved via the API.
+        /// Instead, the SHA-256 hash of the value is returned in the
+        /// `oauth2_client_secret_sha256` field.
+        ///
+        /// @InputOnly
+        #[prost(string, tag="3")]
+        pub oauth2_client_secret: ::prost::alloc::string::String,
+        /// Hex-encoded SHA-256 hash of the client secret.
+        ///
+        /// @OutputOnly
+        #[prost(string, tag="4")]
+        pub oauth2_client_secret_sha256: ::prost::alloc::string::String,
+    }
+    /// The feature specific settings to be used in the application. These define
+    /// behaviors that are user configurable.
+    #[derive(Clone, PartialEq, ::prost::Message)]
+    pub struct FeatureSettings {
+        /// Boolean value indicating if split health checks should be used instead
+        /// of the legacy health checks. At an app.yaml level, this means defaulting
+        /// to 'readiness_check' and 'liveness_check' values instead of
+        /// 'health_check' ones. Once the legacy 'health_check' behavior is
+        /// deprecated, and this value is always true, this setting can
+        /// be removed.
+        #[prost(bool, tag="1")]
+        pub split_health_checks: bool,
+        /// If true, use [Container-Optimized OS](<https://cloud.google.com/container-optimized-os/>)
+        /// base image for VMs, rather than a base Debian image.
+        #[prost(bool, tag="2")]
+        pub use_container_optimized_os: bool,
+    }
+    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+    #[repr(i32)]
+    pub enum ServingStatus {
+        /// Serving status is unspecified.
+        Unspecified = 0,
+        /// Application is serving.
+        Serving = 1,
+        /// Application has been disabled by the user.
+        UserDisabled = 2,
+        /// Application has been disabled by the system.
+        SystemDisabled = 3,
+    }
+    impl ServingStatus {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                ServingStatus::Unspecified => "UNSPECIFIED",
+                ServingStatus::Serving => "SERVING",
+                ServingStatus::UserDisabled => "USER_DISABLED",
+                ServingStatus::SystemDisabled => "SYSTEM_DISABLED",
+            }
+        }
+    }
+    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+    #[repr(i32)]
+    pub enum DatabaseType {
+        /// Database type is unspecified.
+        Unspecified = 0,
+        /// Cloud Datastore
+        CloudDatastore = 1,
+        /// Cloud Firestore Native
+        CloudFirestore = 2,
+        /// Cloud Firestore in Datastore Mode
+        CloudDatastoreCompatibility = 3,
+    }
+    impl DatabaseType {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                DatabaseType::Unspecified => "DATABASE_TYPE_UNSPECIFIED",
+                DatabaseType::CloudDatastore => "CLOUD_DATASTORE",
+                DatabaseType::CloudFirestore => "CLOUD_FIRESTORE",
+                DatabaseType::CloudDatastoreCompatibility => "CLOUD_DATASTORE_COMPATIBILITY",
+            }
+        }
+    }
+}
+/// Rules to match an HTTP request and dispatch that request to a service.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct UrlDispatchRule {
+    /// Domain name to match against. The wildcard "`*`" is supported if
+    /// specified before a period: "`*.`".
+    ///
+    /// Defaults to matching all domains: "`*`".
+    #[prost(string, tag="1")]
+    pub domain: ::prost::alloc::string::String,
+    /// Pathname within the host. Must start with a "`/`". A
+    /// single "`*`" can be included at the end of the path.
+    ///
+    /// The sum of the lengths of the domain and path may not
+    /// exceed 100 characters.
+    #[prost(string, tag="2")]
+    pub path: ::prost::alloc::string::String,
+    /// Resource ID of a service in this application that should
+    /// serve the matched request. The service must already
+    /// exist. Example: `default`.
+    #[prost(string, tag="3")]
+    pub service: ::prost::alloc::string::String,
+}
 /// An SSL certificate that a user has been authorized to administer. A user
 /// is authorized to administer any certificate that applies to one of their
 /// authorized domains.
@@ -141,6 +482,363 @@ pub enum ManagementStatus {
     /// may still be serving.
     FailedRetryingCaaChecking = 8,
 }
+impl ManagementStatus {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            ManagementStatus::Unspecified => "MANAGEMENT_STATUS_UNSPECIFIED",
+            ManagementStatus::Ok => "OK",
+            ManagementStatus::Pending => "PENDING",
+            ManagementStatus::FailedRetryingNotVisible => "FAILED_RETRYING_NOT_VISIBLE",
+            ManagementStatus::FailedPermanent => "FAILED_PERMANENT",
+            ManagementStatus::FailedRetryingCaaForbidden => "FAILED_RETRYING_CAA_FORBIDDEN",
+            ManagementStatus::FailedRetryingCaaChecking => "FAILED_RETRYING_CAA_CHECKING",
+        }
+    }
+}
+/// A domain that a user has been authorized to administer. To authorize use
+/// of a domain, verify ownership via
+/// [Webmaster Central](<https://www.google.com/webmasters/verification/home>).
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct AuthorizedDomain {
+    /// Full path to the `AuthorizedDomain` resource in the API. Example:
+    /// `apps/myapp/authorizedDomains/example.com`.
+    ///
+    /// @OutputOnly
+    #[prost(string, tag="1")]
+    pub name: ::prost::alloc::string::String,
+    /// Fully qualified domain name of the domain authorized for use. Example:
+    /// `example.com`.
+    #[prost(string, tag="2")]
+    pub id: ::prost::alloc::string::String,
+}
+/// A domain serving an App Engine application.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct DomainMapping {
+    /// Full path to the `DomainMapping` resource in the API. Example:
+    /// `apps/myapp/domainMapping/example.com`.
+    ///
+    /// @OutputOnly
+    #[prost(string, tag="1")]
+    pub name: ::prost::alloc::string::String,
+    /// Relative name of the domain serving the application. Example:
+    /// `example.com`.
+    #[prost(string, tag="2")]
+    pub id: ::prost::alloc::string::String,
+    /// SSL configuration for this domain. If unconfigured, this domain will not
+    /// serve with SSL.
+    #[prost(message, optional, tag="3")]
+    pub ssl_settings: ::core::option::Option<SslSettings>,
+    /// The resource records required to configure this domain mapping. These
+    /// records must be added to the domain's DNS configuration in order to
+    /// serve the application via this domain mapping.
+    ///
+    /// @OutputOnly
+    #[prost(message, repeated, tag="4")]
+    pub resource_records: ::prost::alloc::vec::Vec<ResourceRecord>,
+}
+/// SSL configuration for a `DomainMapping` resource.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct SslSettings {
+    /// ID of the `AuthorizedCertificate` resource configuring SSL for the
+    /// application. Clearing this field will remove SSL support.
+    ///
+    /// By default, a managed certificate is automatically created for every
+    /// domain mapping. To omit SSL support or to configure SSL manually, specify
+    /// `SslManagementType.MANUAL` on a `CREATE` or `UPDATE` request. You must
+    /// be authorized to administer the `AuthorizedCertificate` resource to
+    /// manually map it to a `DomainMapping` resource.
+    /// Example: `12345`.
+    #[prost(string, tag="1")]
+    pub certificate_id: ::prost::alloc::string::String,
+    /// SSL management type for this domain. If `AUTOMATIC`, a managed certificate
+    /// is automatically provisioned. If `MANUAL`, `certificate_id` must be
+    /// manually specified in order to configure SSL for this domain.
+    #[prost(enumeration="ssl_settings::SslManagementType", tag="3")]
+    pub ssl_management_type: i32,
+    /// ID of the managed `AuthorizedCertificate` resource currently being
+    /// provisioned, if applicable. Until the new managed certificate has been
+    /// successfully provisioned, the previous SSL state will be preserved. Once
+    /// the provisioning process completes, the `certificate_id` field will reflect
+    /// the new managed certificate and this field will be left empty. To remove
+    /// SSL support while there is still a pending managed certificate, clear the
+    /// `certificate_id` field with an `UpdateDomainMappingRequest`.
+    ///
+    /// @OutputOnly
+    #[prost(string, tag="4")]
+    pub pending_managed_certificate_id: ::prost::alloc::string::String,
+}
+/// Nested message and enum types in `SslSettings`.
+pub mod ssl_settings {
+    /// The SSL management type for this domain.
+    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+    #[repr(i32)]
+    pub enum SslManagementType {
+        /// Defaults to `AUTOMATIC`.
+        Unspecified = 0,
+        /// SSL support for this domain is configured automatically. The mapped SSL
+        /// certificate will be automatically renewed.
+        Automatic = 1,
+        /// SSL support for this domain is configured manually by the user. Either
+        /// the domain has no SSL support or a user-obtained SSL certificate has been
+        /// explictly mapped to this domain.
+        Manual = 2,
+    }
+    impl SslManagementType {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                SslManagementType::Unspecified => "SSL_MANAGEMENT_TYPE_UNSPECIFIED",
+                SslManagementType::Automatic => "AUTOMATIC",
+                SslManagementType::Manual => "MANUAL",
+            }
+        }
+    }
+}
+/// A DNS resource record.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ResourceRecord {
+    /// Relative name of the object affected by this record. Only applicable for
+    /// `CNAME` records. Example: 'www'.
+    #[prost(string, tag="1")]
+    pub name: ::prost::alloc::string::String,
+    /// Data for this record. Values vary by record type, as defined in RFC 1035
+    /// (section 5) and RFC 1034 (section 3.6.1).
+    #[prost(string, tag="2")]
+    pub rrdata: ::prost::alloc::string::String,
+    /// Resource record type. Example: `AAAA`.
+    #[prost(enumeration="resource_record::RecordType", tag="3")]
+    pub r#type: i32,
+}
+/// Nested message and enum types in `ResourceRecord`.
+pub mod resource_record {
+    /// A resource record type.
+    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+    #[repr(i32)]
+    pub enum RecordType {
+        /// An unknown resource record.
+        Unspecified = 0,
+        /// An A resource record. Data is an IPv4 address.
+        A = 1,
+        /// An AAAA resource record. Data is an IPv6 address.
+        Aaaa = 2,
+        /// A CNAME resource record. Data is a domain name to be aliased.
+        Cname = 3,
+    }
+    impl RecordType {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                RecordType::Unspecified => "RECORD_TYPE_UNSPECIFIED",
+                RecordType::A => "A",
+                RecordType::Aaaa => "AAAA",
+                RecordType::Cname => "CNAME",
+            }
+        }
+    }
+}
+/// A single firewall rule that is evaluated against incoming traffic
+/// and provides an action to take on matched requests.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct FirewallRule {
+    /// A positive integer between [1, Int32.MaxValue-1] that defines the order of
+    /// rule evaluation. Rules with the lowest priority are evaluated first.
+    ///
+    /// A default rule at priority Int32.MaxValue matches all IPv4 and IPv6 traffic
+    /// when no previous rule matches. Only the action of this rule can be modified
+    /// by the user.
+    #[prost(int32, tag="1")]
+    pub priority: i32,
+    /// The action to take on matched requests.
+    #[prost(enumeration="firewall_rule::Action", tag="2")]
+    pub action: i32,
+    /// IP address or range, defined using CIDR notation, of requests that this
+    /// rule applies to. You can use the wildcard character "*" to match all IPs
+    /// equivalent to "0/0" and "::/0" together.
+    /// Examples: `192.168.1.1` or `192.168.0.0/16` or `2001:db8::/32`
+    ///            or `2001:0db8:0000:0042:0000:8a2e:0370:7334`.
+    ///
+    ///
+    /// <p>Truncation will be silently performed on addresses which are not
+    /// properly truncated. For example, `1.2.3.4/24` is accepted as the same
+    /// address as `1.2.3.0/24`. Similarly, for IPv6, `2001:db8::1/32` is accepted
+    /// as the same address as `2001:db8::/32`.
+    #[prost(string, tag="3")]
+    pub source_range: ::prost::alloc::string::String,
+    /// An optional string description of this rule.
+    /// This field has a maximum length of 100 characters.
+    #[prost(string, tag="4")]
+    pub description: ::prost::alloc::string::String,
+}
+/// Nested message and enum types in `FirewallRule`.
+pub mod firewall_rule {
+    /// Available actions to take on matching requests.
+    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+    #[repr(i32)]
+    pub enum Action {
+        UnspecifiedAction = 0,
+        /// Matching requests are allowed.
+        Allow = 1,
+        /// Matching requests are denied.
+        Deny = 2,
+    }
+    impl Action {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                Action::UnspecifiedAction => "UNSPECIFIED_ACTION",
+                Action::Allow => "ALLOW",
+                Action::Deny => "DENY",
+            }
+        }
+    }
+}
+/// A NetworkSettings resource is a container for ingress settings for a version
+/// or service.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct NetworkSettings {
+    /// The ingress settings for version or service.
+    #[prost(enumeration="network_settings::IngressTrafficAllowed", tag="1")]
+    pub ingress_traffic_allowed: i32,
+}
+/// Nested message and enum types in `NetworkSettings`.
+pub mod network_settings {
+    /// If unspecified, INGRESS_TRAFFIC_ALLOWED_ALL will be used.
+    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+    #[repr(i32)]
+    pub enum IngressTrafficAllowed {
+        /// Unspecified
+        Unspecified = 0,
+        /// Allow HTTP traffic from public and private sources.
+        All = 1,
+        /// Allow HTTP traffic from only private VPC sources.
+        InternalOnly = 2,
+        /// Allow HTTP traffic from private VPC sources and through load balancers.
+        InternalAndLb = 3,
+    }
+    impl IngressTrafficAllowed {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                IngressTrafficAllowed::Unspecified => "INGRESS_TRAFFIC_ALLOWED_UNSPECIFIED",
+                IngressTrafficAllowed::All => "INGRESS_TRAFFIC_ALLOWED_ALL",
+                IngressTrafficAllowed::InternalOnly => "INGRESS_TRAFFIC_ALLOWED_INTERNAL_ONLY",
+                IngressTrafficAllowed::InternalAndLb => "INGRESS_TRAFFIC_ALLOWED_INTERNAL_AND_LB",
+            }
+        }
+    }
+}
+/// A Service resource is a logical component of an application that can share
+/// state and communicate in a secure fashion with other services.
+/// For example, an application that handles customer requests might
+/// include separate services to handle tasks such as backend data
+/// analysis or API requests from mobile devices. Each service has a
+/// collection of versions that define a specific set of code used to
+/// implement the functionality of that service.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct Service {
+    /// Full path to the Service resource in the API.
+    /// Example: `apps/myapp/services/default`.
+    ///
+    /// @OutputOnly
+    #[prost(string, tag="1")]
+    pub name: ::prost::alloc::string::String,
+    /// Relative name of the service within the application.
+    /// Example: `default`.
+    ///
+    /// @OutputOnly
+    #[prost(string, tag="2")]
+    pub id: ::prost::alloc::string::String,
+    /// Mapping that defines fractional HTTP traffic diversion to
+    /// different versions within the service.
+    #[prost(message, optional, tag="3")]
+    pub split: ::core::option::Option<TrafficSplit>,
+    /// A set of labels to apply to this service. Labels are key/value pairs that
+    /// describe the service and all resources that belong to it (e.g.,
+    /// versions). The labels can be used to search and group resources, and are
+    /// propagated to the usage and billing reports, enabling fine-grain analysis
+    /// of costs. An example of using labels is to tag resources belonging to
+    /// different environments (e.g., "env=prod", "env=qa").
+    ///
+    /// <p>Label keys and values can be no longer than 63 characters and can only
+    /// contain lowercase letters, numeric characters, underscores, dashes, and
+    /// international characters. Label keys must start with a lowercase letter
+    /// or an international character. Each service can have at most 32 labels.
+    #[prost(btree_map="string, string", tag="4")]
+    pub labels: ::prost::alloc::collections::BTreeMap<::prost::alloc::string::String, ::prost::alloc::string::String>,
+    /// Ingress settings for this service. Will apply to all versions.
+    #[prost(message, optional, tag="6")]
+    pub network_settings: ::core::option::Option<NetworkSettings>,
+}
+/// Traffic routing configuration for versions within a single service. Traffic
+/// splits define how traffic directed to the service is assigned to versions.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct TrafficSplit {
+    /// Mechanism used to determine which version a request is sent to.
+    /// The traffic selection algorithm will
+    /// be stable for either type until allocations are changed.
+    #[prost(enumeration="traffic_split::ShardBy", tag="1")]
+    pub shard_by: i32,
+    /// Mapping from version IDs within the service to fractional
+    /// (0.000, 1] allocations of traffic for that version. Each version can
+    /// be specified only once, but some versions in the service may not
+    /// have any traffic allocation. Services that have traffic allocated
+    /// cannot be deleted until either the service is deleted or
+    /// their traffic allocation is removed. Allocations must sum to 1.
+    /// Up to two decimal place precision is supported for IP-based splits and
+    /// up to three decimal places is supported for cookie-based splits.
+    #[prost(btree_map="string, double", tag="2")]
+    pub allocations: ::prost::alloc::collections::BTreeMap<::prost::alloc::string::String, f64>,
+}
+/// Nested message and enum types in `TrafficSplit`.
+pub mod traffic_split {
+    /// Available sharding mechanisms.
+    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+    #[repr(i32)]
+    pub enum ShardBy {
+        /// Diversion method unspecified.
+        Unspecified = 0,
+        /// Diversion based on a specially named cookie, "GOOGAPPUID." The cookie
+        /// must be set by the application itself or no diversion will occur.
+        Cookie = 1,
+        /// Diversion based on applying the modulus operation to a fingerprint
+        /// of the IP address.
+        Ip = 2,
+        /// Diversion based on weighted random assignment. An incoming request is
+        /// randomly routed to a version in the traffic split, with probability
+        /// proportional to the version's traffic share.
+        Random = 3,
+    }
+    impl ShardBy {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                ShardBy::Unspecified => "UNSPECIFIED",
+                ShardBy::Cookie => "COOKIE",
+                ShardBy::Ip => "IP",
+                ShardBy::Random => "RANDOM",
+            }
+        }
+    }
+}
 /// [Google Cloud Endpoints](<https://cloud.google.com/appengine/docs/python/endpoints/>)
 /// configuration for API handlers.
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -192,6 +890,20 @@ pub mod error_handler {
         /// Deadline reached before the application responds.
         Timeout = 3,
     }
+    impl ErrorCode {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                ErrorCode::Unspecified => "ERROR_CODE_UNSPECIFIED",
+                ErrorCode::OverQuota => "ERROR_CODE_OVER_QUOTA",
+                ErrorCode::DosApiDenial => "ERROR_CODE_DOS_API_DENIAL",
+                ErrorCode::Timeout => "ERROR_CODE_TIMEOUT",
+            }
+        }
+    }
 }
 /// URL pattern and description of how the URL should be handled. App Engine can
 /// handle URLs by executing application code or by serving static files
@@ -239,6 +951,21 @@ pub mod url_map {
         RedirectHttpResponseCode303 = 3,
         /// `307 Temporary Redirect` code.
         RedirectHttpResponseCode307 = 4,
+    }
+    impl RedirectHttpResponseCode {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                RedirectHttpResponseCode::Unspecified => "REDIRECT_HTTP_RESPONSE_CODE_UNSPECIFIED",
+                RedirectHttpResponseCode::RedirectHttpResponseCode301 => "REDIRECT_HTTP_RESPONSE_CODE_301",
+                RedirectHttpResponseCode::RedirectHttpResponseCode302 => "REDIRECT_HTTP_RESPONSE_CODE_302",
+                RedirectHttpResponseCode::RedirectHttpResponseCode303 => "REDIRECT_HTTP_RESPONSE_CODE_303",
+                RedirectHttpResponseCode::RedirectHttpResponseCode307 => "REDIRECT_HTTP_RESPONSE_CODE_307",
+            }
+        }
     }
     /// Type of handler for this URL pattern.
     #[derive(Clone, PartialEq, ::prost::Oneof)]
@@ -424,6 +1151,19 @@ pub enum AuthFailAction {
     /// message.
     Unauthorized = 2,
 }
+impl AuthFailAction {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            AuthFailAction::Unspecified => "AUTH_FAIL_ACTION_UNSPECIFIED",
+            AuthFailAction::Redirect => "AUTH_FAIL_ACTION_REDIRECT",
+            AuthFailAction::Unauthorized => "AUTH_FAIL_ACTION_UNAUTHORIZED",
+        }
+    }
+}
 /// Methods to restrict access to a URL based on login status.
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
 #[repr(i32)]
@@ -442,6 +1182,20 @@ pub enum LoginRequirement {
     /// auth_fail_action is taken.
     LoginRequired = 3,
 }
+impl LoginRequirement {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            LoginRequirement::LoginUnspecified => "LOGIN_UNSPECIFIED",
+            LoginRequirement::LoginOptional => "LOGIN_OPTIONAL",
+            LoginRequirement::LoginAdmin => "LOGIN_ADMIN",
+            LoginRequirement::LoginRequired => "LOGIN_REQUIRED",
+        }
+    }
+}
 /// Methods to enforce security (HTTPS) on a URL.
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
 #[repr(i32)]
@@ -459,6 +1213,20 @@ pub enum SecurityLevel {
     /// automatically redirected to the HTTPS URL with the same path. Query
     /// parameters are reserved for the redirect.
     SecureAlways = 3,
+}
+impl SecurityLevel {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            SecurityLevel::SecureUnspecified => "SECURE_UNSPECIFIED",
+            SecurityLevel::SecureNever => "SECURE_NEVER",
+            SecurityLevel::SecureOptional => "SECURE_OPTIONAL",
+            SecurityLevel::SecureAlways => "SECURE_ALWAYS",
+        }
+    }
 }
 /// Code and application artifacts used to deploy a version to App Engine.
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -817,6 +1585,19 @@ pub mod endpoints_api_service {
         /// Endpoints service configuration ID will be updated with each rollout.
         Managed = 2,
     }
+    impl RolloutStrategy {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                RolloutStrategy::UnspecifiedRolloutStrategy => "UNSPECIFIED_ROLLOUT_STRATEGY",
+                RolloutStrategy::Fixed => "FIXED",
+                RolloutStrategy::Managed => "MANAGED",
+            }
+        }
+    }
 }
 /// Automatic scaling is based on request rate, response latencies, and other
 /// application metrics.
@@ -1080,6 +1861,19 @@ pub mod vpc_access_connector {
         /// Use the VPC Access Connector for private IP space from RFC1918.
         PrivateIpRanges = 2,
     }
+    impl EgressSetting {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                EgressSetting::Unspecified => "EGRESS_SETTING_UNSPECIFIED",
+                EgressSetting::AllTraffic => "ALL_TRAFFIC",
+                EgressSetting::PrivateIpRanges => "PRIVATE_IP_RANGES",
+            }
+        }
+    }
 }
 /// The entrypoint for the application.
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -1122,6 +1916,25 @@ pub enum InboundServiceType {
     /// Enables warmup requests.
     InboundServiceWarmup = 9,
 }
+impl InboundServiceType {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            InboundServiceType::InboundServiceUnspecified => "INBOUND_SERVICE_UNSPECIFIED",
+            InboundServiceType::InboundServiceMail => "INBOUND_SERVICE_MAIL",
+            InboundServiceType::InboundServiceMailBounce => "INBOUND_SERVICE_MAIL_BOUNCE",
+            InboundServiceType::InboundServiceXmppError => "INBOUND_SERVICE_XMPP_ERROR",
+            InboundServiceType::InboundServiceXmppMessage => "INBOUND_SERVICE_XMPP_MESSAGE",
+            InboundServiceType::InboundServiceXmppSubscribe => "INBOUND_SERVICE_XMPP_SUBSCRIBE",
+            InboundServiceType::InboundServiceXmppPresence => "INBOUND_SERVICE_XMPP_PRESENCE",
+            InboundServiceType::InboundServiceChannelPresence => "INBOUND_SERVICE_CHANNEL_PRESENCE",
+            InboundServiceType::InboundServiceWarmup => "INBOUND_SERVICE_WARMUP",
+        }
+    }
+}
 /// Run states of a version.
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
 #[repr(i32)]
@@ -1136,560 +1949,17 @@ pub enum ServingStatus {
     /// to `SERVING`.
     Stopped = 2,
 }
-/// An Application resource contains the top-level configuration of an App
-/// Engine application.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct Application {
-    /// Full path to the Application resource in the API.
-    /// Example: `apps/myapp`.
+impl ServingStatus {
+    /// String value of the enum field names used in the ProtoBuf definition.
     ///
-    /// @OutputOnly
-    #[prost(string, tag="1")]
-    pub name: ::prost::alloc::string::String,
-    /// Identifier of the Application resource. This identifier is equivalent
-    /// to the project ID of the Google Cloud Platform project where you want to
-    /// deploy your application.
-    /// Example: `myapp`.
-    #[prost(string, tag="2")]
-    pub id: ::prost::alloc::string::String,
-    /// HTTP path dispatch rules for requests to the application that do not
-    /// explicitly target a service or version. Rules are order-dependent.
-    /// Up to 20 dispatch rules can be supported.
-    #[prost(message, repeated, tag="3")]
-    pub dispatch_rules: ::prost::alloc::vec::Vec<UrlDispatchRule>,
-    /// Google Apps authentication domain that controls which users can access
-    /// this application.
-    ///
-    /// Defaults to open access for any Google Account.
-    #[prost(string, tag="6")]
-    pub auth_domain: ::prost::alloc::string::String,
-    /// Location from which this application runs. Application instances
-    /// run out of the data centers in the specified location, which is also where
-    /// all of the application's end user content is stored.
-    ///
-    /// Defaults to `us-central`.
-    ///
-    /// View the list of
-    /// [supported locations](<https://cloud.google.com/appengine/docs/locations>).
-    #[prost(string, tag="7")]
-    pub location_id: ::prost::alloc::string::String,
-    /// Google Cloud Storage bucket that can be used for storing files
-    /// associated with this application. This bucket is associated with the
-    /// application and can be used by the gcloud deployment commands.
-    ///
-    /// @OutputOnly
-    #[prost(string, tag="8")]
-    pub code_bucket: ::prost::alloc::string::String,
-    /// Cookie expiration policy for this application.
-    #[prost(message, optional, tag="9")]
-    pub default_cookie_expiration: ::core::option::Option<::prost_types::Duration>,
-    /// Serving status of this application.
-    #[prost(enumeration="application::ServingStatus", tag="10")]
-    pub serving_status: i32,
-    /// Hostname used to reach this application, as resolved by App Engine.
-    ///
-    /// @OutputOnly
-    #[prost(string, tag="11")]
-    pub default_hostname: ::prost::alloc::string::String,
-    /// Google Cloud Storage bucket that can be used by this application to store
-    /// content.
-    ///
-    /// @OutputOnly
-    #[prost(string, tag="12")]
-    pub default_bucket: ::prost::alloc::string::String,
-    /// The service account associated with the application.
-    /// This is the app-level default identity. If no identity provided during
-    /// create version, Admin API will fallback to this one.
-    #[prost(string, tag="13")]
-    pub service_account: ::prost::alloc::string::String,
-    #[prost(message, optional, tag="14")]
-    pub iap: ::core::option::Option<application::IdentityAwareProxy>,
-    /// The Google Container Registry domain used for storing managed build docker
-    /// images for this application.
-    #[prost(string, tag="16")]
-    pub gcr_domain: ::prost::alloc::string::String,
-    /// The type of the Cloud Firestore or Cloud Datastore database associated with
-    /// this application.
-    #[prost(enumeration="application::DatabaseType", tag="17")]
-    pub database_type: i32,
-    /// The feature specific settings to be used in the application.
-    #[prost(message, optional, tag="18")]
-    pub feature_settings: ::core::option::Option<application::FeatureSettings>,
-}
-/// Nested message and enum types in `Application`.
-pub mod application {
-    /// Identity-Aware Proxy
-    #[derive(Clone, PartialEq, ::prost::Message)]
-    pub struct IdentityAwareProxy {
-        /// Whether the serving infrastructure will authenticate and
-        /// authorize all incoming requests.
-        ///
-        /// If true, the `oauth2_client_id` and `oauth2_client_secret`
-        /// fields must be non-empty.
-        #[prost(bool, tag="1")]
-        pub enabled: bool,
-        /// OAuth2 client ID to use for the authentication flow.
-        #[prost(string, tag="2")]
-        pub oauth2_client_id: ::prost::alloc::string::String,
-        /// OAuth2 client secret to use for the authentication flow.
-        ///
-        /// For security reasons, this value cannot be retrieved via the API.
-        /// Instead, the SHA-256 hash of the value is returned in the
-        /// `oauth2_client_secret_sha256` field.
-        ///
-        /// @InputOnly
-        #[prost(string, tag="3")]
-        pub oauth2_client_secret: ::prost::alloc::string::String,
-        /// Hex-encoded SHA-256 hash of the client secret.
-        ///
-        /// @OutputOnly
-        #[prost(string, tag="4")]
-        pub oauth2_client_secret_sha256: ::prost::alloc::string::String,
-    }
-    /// The feature specific settings to be used in the application. These define
-    /// behaviors that are user configurable.
-    #[derive(Clone, PartialEq, ::prost::Message)]
-    pub struct FeatureSettings {
-        /// Boolean value indicating if split health checks should be used instead
-        /// of the legacy health checks. At an app.yaml level, this means defaulting
-        /// to 'readiness_check' and 'liveness_check' values instead of
-        /// 'health_check' ones. Once the legacy 'health_check' behavior is
-        /// deprecated, and this value is always true, this setting can
-        /// be removed.
-        #[prost(bool, tag="1")]
-        pub split_health_checks: bool,
-        /// If true, use [Container-Optimized OS](<https://cloud.google.com/container-optimized-os/>)
-        /// base image for VMs, rather than a base Debian image.
-        #[prost(bool, tag="2")]
-        pub use_container_optimized_os: bool,
-    }
-    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
-    #[repr(i32)]
-    pub enum ServingStatus {
-        /// Serving status is unspecified.
-        Unspecified = 0,
-        /// Application is serving.
-        Serving = 1,
-        /// Application has been disabled by the user.
-        UserDisabled = 2,
-        /// Application has been disabled by the system.
-        SystemDisabled = 3,
-    }
-    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
-    #[repr(i32)]
-    pub enum DatabaseType {
-        /// Database type is unspecified.
-        Unspecified = 0,
-        /// Cloud Datastore
-        CloudDatastore = 1,
-        /// Cloud Firestore Native
-        CloudFirestore = 2,
-        /// Cloud Firestore in Datastore Mode
-        CloudDatastoreCompatibility = 3,
-    }
-}
-/// Rules to match an HTTP request and dispatch that request to a service.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct UrlDispatchRule {
-    /// Domain name to match against. The wildcard "`*`" is supported if
-    /// specified before a period: "`*.`".
-    ///
-    /// Defaults to matching all domains: "`*`".
-    #[prost(string, tag="1")]
-    pub domain: ::prost::alloc::string::String,
-    /// Pathname within the host. Must start with a "`/`". A
-    /// single "`*`" can be included at the end of the path.
-    ///
-    /// The sum of the lengths of the domain and path may not
-    /// exceed 100 characters.
-    #[prost(string, tag="2")]
-    pub path: ::prost::alloc::string::String,
-    /// Resource ID of a service in this application that should
-    /// serve the matched request. The service must already
-    /// exist. Example: `default`.
-    #[prost(string, tag="3")]
-    pub service: ::prost::alloc::string::String,
-}
-/// A domain that a user has been authorized to administer. To authorize use
-/// of a domain, verify ownership via
-/// [Webmaster Central](<https://www.google.com/webmasters/verification/home>).
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct AuthorizedDomain {
-    /// Full path to the `AuthorizedDomain` resource in the API. Example:
-    /// `apps/myapp/authorizedDomains/example.com`.
-    ///
-    /// @OutputOnly
-    #[prost(string, tag="1")]
-    pub name: ::prost::alloc::string::String,
-    /// Fully qualified domain name of the domain authorized for use. Example:
-    /// `example.com`.
-    #[prost(string, tag="2")]
-    pub id: ::prost::alloc::string::String,
-}
-/// A domain serving an App Engine application.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct DomainMapping {
-    /// Full path to the `DomainMapping` resource in the API. Example:
-    /// `apps/myapp/domainMapping/example.com`.
-    ///
-    /// @OutputOnly
-    #[prost(string, tag="1")]
-    pub name: ::prost::alloc::string::String,
-    /// Relative name of the domain serving the application. Example:
-    /// `example.com`.
-    #[prost(string, tag="2")]
-    pub id: ::prost::alloc::string::String,
-    /// SSL configuration for this domain. If unconfigured, this domain will not
-    /// serve with SSL.
-    #[prost(message, optional, tag="3")]
-    pub ssl_settings: ::core::option::Option<SslSettings>,
-    /// The resource records required to configure this domain mapping. These
-    /// records must be added to the domain's DNS configuration in order to
-    /// serve the application via this domain mapping.
-    ///
-    /// @OutputOnly
-    #[prost(message, repeated, tag="4")]
-    pub resource_records: ::prost::alloc::vec::Vec<ResourceRecord>,
-}
-/// SSL configuration for a `DomainMapping` resource.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct SslSettings {
-    /// ID of the `AuthorizedCertificate` resource configuring SSL for the
-    /// application. Clearing this field will remove SSL support.
-    ///
-    /// By default, a managed certificate is automatically created for every
-    /// domain mapping. To omit SSL support or to configure SSL manually, specify
-    /// `SslManagementType.MANUAL` on a `CREATE` or `UPDATE` request. You must
-    /// be authorized to administer the `AuthorizedCertificate` resource to
-    /// manually map it to a `DomainMapping` resource.
-    /// Example: `12345`.
-    #[prost(string, tag="1")]
-    pub certificate_id: ::prost::alloc::string::String,
-    /// SSL management type for this domain. If `AUTOMATIC`, a managed certificate
-    /// is automatically provisioned. If `MANUAL`, `certificate_id` must be
-    /// manually specified in order to configure SSL for this domain.
-    #[prost(enumeration="ssl_settings::SslManagementType", tag="3")]
-    pub ssl_management_type: i32,
-    /// ID of the managed `AuthorizedCertificate` resource currently being
-    /// provisioned, if applicable. Until the new managed certificate has been
-    /// successfully provisioned, the previous SSL state will be preserved. Once
-    /// the provisioning process completes, the `certificate_id` field will reflect
-    /// the new managed certificate and this field will be left empty. To remove
-    /// SSL support while there is still a pending managed certificate, clear the
-    /// `certificate_id` field with an `UpdateDomainMappingRequest`.
-    ///
-    /// @OutputOnly
-    #[prost(string, tag="4")]
-    pub pending_managed_certificate_id: ::prost::alloc::string::String,
-}
-/// Nested message and enum types in `SslSettings`.
-pub mod ssl_settings {
-    /// The SSL management type for this domain.
-    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
-    #[repr(i32)]
-    pub enum SslManagementType {
-        /// Defaults to `AUTOMATIC`.
-        Unspecified = 0,
-        /// SSL support for this domain is configured automatically. The mapped SSL
-        /// certificate will be automatically renewed.
-        Automatic = 1,
-        /// SSL support for this domain is configured manually by the user. Either
-        /// the domain has no SSL support or a user-obtained SSL certificate has been
-        /// explictly mapped to this domain.
-        Manual = 2,
-    }
-}
-/// A DNS resource record.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ResourceRecord {
-    /// Relative name of the object affected by this record. Only applicable for
-    /// `CNAME` records. Example: 'www'.
-    #[prost(string, tag="1")]
-    pub name: ::prost::alloc::string::String,
-    /// Data for this record. Values vary by record type, as defined in RFC 1035
-    /// (section 5) and RFC 1034 (section 3.6.1).
-    #[prost(string, tag="2")]
-    pub rrdata: ::prost::alloc::string::String,
-    /// Resource record type. Example: `AAAA`.
-    #[prost(enumeration="resource_record::RecordType", tag="3")]
-    pub r#type: i32,
-}
-/// Nested message and enum types in `ResourceRecord`.
-pub mod resource_record {
-    /// A resource record type.
-    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
-    #[repr(i32)]
-    pub enum RecordType {
-        /// An unknown resource record.
-        Unspecified = 0,
-        /// An A resource record. Data is an IPv4 address.
-        A = 1,
-        /// An AAAA resource record. Data is an IPv6 address.
-        Aaaa = 2,
-        /// A CNAME resource record. Data is a domain name to be aliased.
-        Cname = 3,
-    }
-}
-/// A single firewall rule that is evaluated against incoming traffic
-/// and provides an action to take on matched requests.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct FirewallRule {
-    /// A positive integer between [1, Int32.MaxValue-1] that defines the order of
-    /// rule evaluation. Rules with the lowest priority are evaluated first.
-    ///
-    /// A default rule at priority Int32.MaxValue matches all IPv4 and IPv6 traffic
-    /// when no previous rule matches. Only the action of this rule can be modified
-    /// by the user.
-    #[prost(int32, tag="1")]
-    pub priority: i32,
-    /// The action to take on matched requests.
-    #[prost(enumeration="firewall_rule::Action", tag="2")]
-    pub action: i32,
-    /// IP address or range, defined using CIDR notation, of requests that this
-    /// rule applies to. You can use the wildcard character "*" to match all IPs
-    /// equivalent to "0/0" and "::/0" together.
-    /// Examples: `192.168.1.1` or `192.168.0.0/16` or `2001:db8::/32`
-    ///           or `2001:0db8:0000:0042:0000:8a2e:0370:7334`.
-    ///
-    ///
-    /// <p>Truncation will be silently performed on addresses which are not
-    /// properly truncated. For example, `1.2.3.4/24` is accepted as the same
-    /// address as `1.2.3.0/24`. Similarly, for IPv6, `2001:db8::1/32` is accepted
-    /// as the same address as `2001:db8::/32`.
-    #[prost(string, tag="3")]
-    pub source_range: ::prost::alloc::string::String,
-    /// An optional string description of this rule.
-    /// This field has a maximum length of 100 characters.
-    #[prost(string, tag="4")]
-    pub description: ::prost::alloc::string::String,
-}
-/// Nested message and enum types in `FirewallRule`.
-pub mod firewall_rule {
-    /// Available actions to take on matching requests.
-    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
-    #[repr(i32)]
-    pub enum Action {
-        UnspecifiedAction = 0,
-        /// Matching requests are allowed.
-        Allow = 1,
-        /// Matching requests are denied.
-        Deny = 2,
-    }
-}
-/// An Instance resource is the computing unit that App Engine uses to
-/// automatically scale an application.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct Instance {
-    /// Output only. Full path to the Instance resource in the API.
-    /// Example: `apps/myapp/services/default/versions/v1/instances/instance-1`.
-    #[prost(string, tag="1")]
-    pub name: ::prost::alloc::string::String,
-    /// Output only. Relative name of the instance within the version.
-    /// Example: `instance-1`.
-    #[prost(string, tag="2")]
-    pub id: ::prost::alloc::string::String,
-    /// Output only. App Engine release this instance is running on.
-    #[prost(string, tag="3")]
-    pub app_engine_release: ::prost::alloc::string::String,
-    /// Output only. Availability of the instance.
-    #[prost(enumeration="instance::Availability", tag="4")]
-    pub availability: i32,
-    /// Output only. Name of the virtual machine where this instance lives. Only applicable
-    /// for instances in App Engine flexible environment.
-    #[prost(string, tag="5")]
-    pub vm_name: ::prost::alloc::string::String,
-    /// Output only. Zone where the virtual machine is located. Only applicable for instances
-    /// in App Engine flexible environment.
-    #[prost(string, tag="6")]
-    pub vm_zone_name: ::prost::alloc::string::String,
-    /// Output only. Virtual machine ID of this instance. Only applicable for instances in
-    /// App Engine flexible environment.
-    #[prost(string, tag="7")]
-    pub vm_id: ::prost::alloc::string::String,
-    /// Output only. Time that this instance was started.
-    ///
-    /// @OutputOnly
-    #[prost(message, optional, tag="8")]
-    pub start_time: ::core::option::Option<::prost_types::Timestamp>,
-    /// Output only. Number of requests since this instance was started.
-    #[prost(int32, tag="9")]
-    pub requests: i32,
-    /// Output only. Number of errors since this instance was started.
-    #[prost(int32, tag="10")]
-    pub errors: i32,
-    /// Output only. Average queries per second (QPS) over the last minute.
-    #[prost(float, tag="11")]
-    pub qps: f32,
-    /// Output only. Average latency (ms) over the last minute.
-    #[prost(int32, tag="12")]
-    pub average_latency: i32,
-    /// Output only. Total memory in use (bytes).
-    #[prost(int64, tag="13")]
-    pub memory_usage: i64,
-    /// Output only. Status of the virtual machine where this instance lives. Only applicable
-    /// for instances in App Engine flexible environment.
-    #[prost(string, tag="14")]
-    pub vm_status: ::prost::alloc::string::String,
-    /// Output only. Whether this instance is in debug mode. Only applicable for instances in
-    /// App Engine flexible environment.
-    #[prost(bool, tag="15")]
-    pub vm_debug_enabled: bool,
-    /// Output only. The IP address of this instance. Only applicable for instances in App
-    /// Engine flexible environment.
-    #[prost(string, tag="16")]
-    pub vm_ip: ::prost::alloc::string::String,
-    /// Output only. The liveness health check of this instance. Only applicable for instances
-    /// in App Engine flexible environment.
-    #[prost(enumeration="instance::liveness::LivenessState", tag="17")]
-    pub vm_liveness: i32,
-}
-/// Nested message and enum types in `Instance`.
-pub mod instance {
-    /// Wrapper for LivenessState enum.
-    #[derive(Clone, PartialEq, ::prost::Message)]
-    pub struct Liveness {
-    }
-    /// Nested message and enum types in `Liveness`.
-    pub mod liveness {
-        /// Liveness health check status for Flex instances.
-        #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
-        #[repr(i32)]
-        pub enum LivenessState {
-            /// There is no liveness health check for the instance. Only applicable for
-            /// instances in App Engine standard environment.
-            Unspecified = 0,
-            /// The health checking system is aware of the instance but its health is
-            /// not known at the moment.
-            Unknown = 1,
-            /// The instance is reachable i.e. a connection to the application health
-            /// checking endpoint can be established, and conforms to the requirements
-            /// defined by the health check.
-            Healthy = 2,
-            /// The instance is reachable, but does not conform to the requirements
-            /// defined by the health check.
-            Unhealthy = 3,
-            /// The instance is being drained. The existing connections to the instance
-            /// have time to complete, but the new ones are being refused.
-            Draining = 4,
-            /// The instance is unreachable i.e. a connection to the application health
-            /// checking endpoint cannot be established, or the server does not respond
-            /// within the specified timeout.
-            Timeout = 5,
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            ServingStatus::Unspecified => "SERVING_STATUS_UNSPECIFIED",
+            ServingStatus::Serving => "SERVING",
+            ServingStatus::Stopped => "STOPPED",
         }
-    }
-    /// Availability of the instance.
-    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
-    #[repr(i32)]
-    pub enum Availability {
-        Unspecified = 0,
-        Resident = 1,
-        Dynamic = 2,
-    }
-}
-/// A NetworkSettings resource is a container for ingress settings for a version
-/// or service.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct NetworkSettings {
-    /// The ingress settings for version or service.
-    #[prost(enumeration="network_settings::IngressTrafficAllowed", tag="1")]
-    pub ingress_traffic_allowed: i32,
-}
-/// Nested message and enum types in `NetworkSettings`.
-pub mod network_settings {
-    /// If unspecified, INGRESS_TRAFFIC_ALLOWED_ALL will be used.
-    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
-    #[repr(i32)]
-    pub enum IngressTrafficAllowed {
-        /// Unspecified
-        Unspecified = 0,
-        /// Allow HTTP traffic from public and private sources.
-        All = 1,
-        /// Allow HTTP traffic from only private VPC sources.
-        InternalOnly = 2,
-        /// Allow HTTP traffic from private VPC sources and through load balancers.
-        InternalAndLb = 3,
-    }
-}
-/// A Service resource is a logical component of an application that can share
-/// state and communicate in a secure fashion with other services.
-/// For example, an application that handles customer requests might
-/// include separate services to handle tasks such as backend data
-/// analysis or API requests from mobile devices. Each service has a
-/// collection of versions that define a specific set of code used to
-/// implement the functionality of that service.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct Service {
-    /// Full path to the Service resource in the API.
-    /// Example: `apps/myapp/services/default`.
-    ///
-    /// @OutputOnly
-    #[prost(string, tag="1")]
-    pub name: ::prost::alloc::string::String,
-    /// Relative name of the service within the application.
-    /// Example: `default`.
-    ///
-    /// @OutputOnly
-    #[prost(string, tag="2")]
-    pub id: ::prost::alloc::string::String,
-    /// Mapping that defines fractional HTTP traffic diversion to
-    /// different versions within the service.
-    #[prost(message, optional, tag="3")]
-    pub split: ::core::option::Option<TrafficSplit>,
-    /// A set of labels to apply to this service. Labels are key/value pairs that
-    /// describe the service and all resources that belong to it (e.g.,
-    /// versions). The labels can be used to search and group resources, and are
-    /// propagated to the usage and billing reports, enabling fine-grain analysis
-    /// of costs. An example of using labels is to tag resources belonging to
-    /// different environments (e.g., "env=prod", "env=qa").
-    ///
-    /// <p>Label keys and values can be no longer than 63 characters and can only
-    /// contain lowercase letters, numeric characters, underscores, dashes, and
-    /// international characters. Label keys must start with a lowercase letter
-    /// or an international character. Each service can have at most 32 labels.
-    #[prost(btree_map="string, string", tag="4")]
-    pub labels: ::prost::alloc::collections::BTreeMap<::prost::alloc::string::String, ::prost::alloc::string::String>,
-    /// Ingress settings for this service. Will apply to all versions.
-    #[prost(message, optional, tag="6")]
-    pub network_settings: ::core::option::Option<NetworkSettings>,
-}
-/// Traffic routing configuration for versions within a single service. Traffic
-/// splits define how traffic directed to the service is assigned to versions.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct TrafficSplit {
-    /// Mechanism used to determine which version a request is sent to.
-    /// The traffic selection algorithm will
-    /// be stable for either type until allocations are changed.
-    #[prost(enumeration="traffic_split::ShardBy", tag="1")]
-    pub shard_by: i32,
-    /// Mapping from version IDs within the service to fractional
-    /// (0.000, 1] allocations of traffic for that version. Each version can
-    /// be specified only once, but some versions in the service may not
-    /// have any traffic allocation. Services that have traffic allocated
-    /// cannot be deleted until either the service is deleted or
-    /// their traffic allocation is removed. Allocations must sum to 1.
-    /// Up to two decimal place precision is supported for IP-based splits and
-    /// up to three decimal places is supported for cookie-based splits.
-    #[prost(btree_map="string, double", tag="2")]
-    pub allocations: ::prost::alloc::collections::BTreeMap<::prost::alloc::string::String, f64>,
-}
-/// Nested message and enum types in `TrafficSplit`.
-pub mod traffic_split {
-    /// Available sharding mechanisms.
-    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
-    #[repr(i32)]
-    pub enum ShardBy {
-        /// Diversion method unspecified.
-        Unspecified = 0,
-        /// Diversion based on a specially named cookie, "GOOGAPPUID." The cookie
-        /// must be set by the application itself or no diversion will occur.
-        Cookie = 1,
-        /// Diversion based on applying the modulus operation to a fingerprint
-        /// of the IP address.
-        Ip = 2,
-        /// Diversion based on weighted random assignment. An incoming request is
-        /// randomly routed to a version in the traffic split, with probability
-        /// proportional to the version's traffic share.
-        Random = 3,
     }
 }
 /// Request message for `Applications.GetApplication`.
@@ -2192,6 +2462,18 @@ pub enum VersionView {
     /// is not returned in `Get` or `List` by default.
     Full = 1,
 }
+impl VersionView {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            VersionView::Basic => "BASIC",
+            VersionView::Full => "FULL",
+        }
+    }
+}
 /// Fields that should be returned when an AuthorizedCertificate resource is
 /// retrieved.
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
@@ -2203,6 +2485,18 @@ pub enum AuthorizedCertificateView {
     /// The information from `BASIC_CERTIFICATE`, plus detailed information on the
     /// domain mappings that have this certificate mapped.
     FullCertificate = 1,
+}
+impl AuthorizedCertificateView {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            AuthorizedCertificateView::BasicCertificate => "BASIC_CERTIFICATE",
+            AuthorizedCertificateView::FullCertificate => "FULL_CERTIFICATE",
+        }
+    }
 }
 /// Override strategy for mutating an existing mapping.
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
@@ -2220,10 +2514,24 @@ pub enum DomainOverrideStrategy {
     /// longer serve from that domain.
     Override = 2,
 }
+impl DomainOverrideStrategy {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            DomainOverrideStrategy::UnspecifiedDomainOverrideStrategy => "UNSPECIFIED_DOMAIN_OVERRIDE_STRATEGY",
+            DomainOverrideStrategy::Strict => "STRICT",
+            DomainOverrideStrategy::Override => "OVERRIDE",
+        }
+    }
+}
 /// Generated client implementations.
 pub mod applications_client {
     #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
     use tonic::codegen::*;
+    use tonic::codegen::http::Uri;
     /// Manages App Engine applications.
     #[derive(Debug, Clone)]
     pub struct ApplicationsClient<T> {
@@ -2238,6 +2546,10 @@ pub mod applications_client {
     {
         pub fn new(inner: T) -> Self {
             let inner = tonic::client::Grpc::new(inner);
+            Self { inner }
+        }
+        pub fn with_origin(inner: T, origin: Uri) -> Self {
+            let inner = tonic::client::Grpc::with_origin(inner, origin);
             Self { inner }
         }
         pub fn with_interceptor<F>(
@@ -2259,19 +2571,19 @@ pub mod applications_client {
         {
             ApplicationsClient::new(InterceptedService::new(inner, interceptor))
         }
-        /// Compress requests with `gzip`.
+        /// Compress requests with the given encoding.
         ///
         /// This requires the server to support it otherwise it might respond with an
         /// error.
         #[must_use]
-        pub fn send_gzip(mut self) -> Self {
-            self.inner = self.inner.send_gzip();
+        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.send_compressed(encoding);
             self
         }
-        /// Enable decompressing responses with `gzip`.
+        /// Enable decompressing responses.
         #[must_use]
-        pub fn accept_gzip(mut self) -> Self {
-            self.inner = self.inner.accept_gzip();
+        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.accept_compressed(encoding);
             self
         }
         /// Gets information about an application.
@@ -2389,6 +2701,7 @@ pub mod applications_client {
 pub mod services_client {
     #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
     use tonic::codegen::*;
+    use tonic::codegen::http::Uri;
     /// Manages services of an application.
     #[derive(Debug, Clone)]
     pub struct ServicesClient<T> {
@@ -2403,6 +2716,10 @@ pub mod services_client {
     {
         pub fn new(inner: T) -> Self {
             let inner = tonic::client::Grpc::new(inner);
+            Self { inner }
+        }
+        pub fn with_origin(inner: T, origin: Uri) -> Self {
+            let inner = tonic::client::Grpc::with_origin(inner, origin);
             Self { inner }
         }
         pub fn with_interceptor<F>(
@@ -2424,19 +2741,19 @@ pub mod services_client {
         {
             ServicesClient::new(InterceptedService::new(inner, interceptor))
         }
-        /// Compress requests with `gzip`.
+        /// Compress requests with the given encoding.
         ///
         /// This requires the server to support it otherwise it might respond with an
         /// error.
         #[must_use]
-        pub fn send_gzip(mut self) -> Self {
-            self.inner = self.inner.send_gzip();
+        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.send_compressed(encoding);
             self
         }
-        /// Enable decompressing responses with `gzip`.
+        /// Enable decompressing responses.
         #[must_use]
-        pub fn accept_gzip(mut self) -> Self {
-            self.inner = self.inner.accept_gzip();
+        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.accept_compressed(encoding);
             self
         }
         /// Lists all the services in the application.
@@ -2531,6 +2848,7 @@ pub mod services_client {
 pub mod versions_client {
     #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
     use tonic::codegen::*;
+    use tonic::codegen::http::Uri;
     /// Manages versions of a service.
     #[derive(Debug, Clone)]
     pub struct VersionsClient<T> {
@@ -2545,6 +2863,10 @@ pub mod versions_client {
     {
         pub fn new(inner: T) -> Self {
             let inner = tonic::client::Grpc::new(inner);
+            Self { inner }
+        }
+        pub fn with_origin(inner: T, origin: Uri) -> Self {
+            let inner = tonic::client::Grpc::with_origin(inner, origin);
             Self { inner }
         }
         pub fn with_interceptor<F>(
@@ -2566,19 +2888,19 @@ pub mod versions_client {
         {
             VersionsClient::new(InterceptedService::new(inner, interceptor))
         }
-        /// Compress requests with `gzip`.
+        /// Compress requests with the given encoding.
         ///
         /// This requires the server to support it otherwise it might respond with an
         /// error.
         #[must_use]
-        pub fn send_gzip(mut self) -> Self {
-            self.inner = self.inner.send_gzip();
+        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.send_compressed(encoding);
             self
         }
-        /// Enable decompressing responses with `gzip`.
+        /// Enable decompressing responses.
         #[must_use]
-        pub fn accept_gzip(mut self) -> Self {
-            self.inner = self.inner.accept_gzip();
+        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.accept_compressed(encoding);
             self
         }
         /// Lists the versions of a service.
@@ -2733,6 +3055,7 @@ pub mod versions_client {
 pub mod instances_client {
     #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
     use tonic::codegen::*;
+    use tonic::codegen::http::Uri;
     /// Manages instances of a version.
     #[derive(Debug, Clone)]
     pub struct InstancesClient<T> {
@@ -2747,6 +3070,10 @@ pub mod instances_client {
     {
         pub fn new(inner: T) -> Self {
             let inner = tonic::client::Grpc::new(inner);
+            Self { inner }
+        }
+        pub fn with_origin(inner: T, origin: Uri) -> Self {
+            let inner = tonic::client::Grpc::with_origin(inner, origin);
             Self { inner }
         }
         pub fn with_interceptor<F>(
@@ -2768,19 +3095,19 @@ pub mod instances_client {
         {
             InstancesClient::new(InterceptedService::new(inner, interceptor))
         }
-        /// Compress requests with `gzip`.
+        /// Compress requests with the given encoding.
         ///
         /// This requires the server to support it otherwise it might respond with an
         /// error.
         #[must_use]
-        pub fn send_gzip(mut self) -> Self {
-            self.inner = self.inner.send_gzip();
+        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.send_compressed(encoding);
             self
         }
-        /// Enable decompressing responses with `gzip`.
+        /// Enable decompressing responses.
         #[must_use]
-        pub fn accept_gzip(mut self) -> Self {
-            self.inner = self.inner.accept_gzip();
+        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.accept_compressed(encoding);
             self
         }
         /// Lists the instances of a version.
@@ -2896,6 +3223,7 @@ pub mod instances_client {
 pub mod firewall_client {
     #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
     use tonic::codegen::*;
+    use tonic::codegen::http::Uri;
     /// Firewall resources are used to define a collection of access control rules
     /// for an Application. Each rule is defined with a position which specifies
     /// the rule's order in the sequence of rules, an IP range to be matched against
@@ -2921,6 +3249,10 @@ pub mod firewall_client {
             let inner = tonic::client::Grpc::new(inner);
             Self { inner }
         }
+        pub fn with_origin(inner: T, origin: Uri) -> Self {
+            let inner = tonic::client::Grpc::with_origin(inner, origin);
+            Self { inner }
+        }
         pub fn with_interceptor<F>(
             inner: T,
             interceptor: F,
@@ -2940,19 +3272,19 @@ pub mod firewall_client {
         {
             FirewallClient::new(InterceptedService::new(inner, interceptor))
         }
-        /// Compress requests with `gzip`.
+        /// Compress requests with the given encoding.
         ///
         /// This requires the server to support it otherwise it might respond with an
         /// error.
         #[must_use]
-        pub fn send_gzip(mut self) -> Self {
-            self.inner = self.inner.send_gzip();
+        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.send_compressed(encoding);
             self
         }
-        /// Enable decompressing responses with `gzip`.
+        /// Enable decompressing responses.
         #[must_use]
-        pub fn accept_gzip(mut self) -> Self {
-            self.inner = self.inner.accept_gzip();
+        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.accept_compressed(encoding);
             self
         }
         /// Lists the firewall rules of an application.
@@ -3088,6 +3420,7 @@ pub mod firewall_client {
 pub mod authorized_domains_client {
     #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
     use tonic::codegen::*;
+    use tonic::codegen::http::Uri;
     /// Manages domains a user is authorized to administer. To authorize use of a
     /// domain, verify ownership via
     /// [Webmaster Central](https://www.google.com/webmasters/verification/home).
@@ -3104,6 +3437,10 @@ pub mod authorized_domains_client {
     {
         pub fn new(inner: T) -> Self {
             let inner = tonic::client::Grpc::new(inner);
+            Self { inner }
+        }
+        pub fn with_origin(inner: T, origin: Uri) -> Self {
+            let inner = tonic::client::Grpc::with_origin(inner, origin);
             Self { inner }
         }
         pub fn with_interceptor<F>(
@@ -3125,19 +3462,19 @@ pub mod authorized_domains_client {
         {
             AuthorizedDomainsClient::new(InterceptedService::new(inner, interceptor))
         }
-        /// Compress requests with `gzip`.
+        /// Compress requests with the given encoding.
         ///
         /// This requires the server to support it otherwise it might respond with an
         /// error.
         #[must_use]
-        pub fn send_gzip(mut self) -> Self {
-            self.inner = self.inner.send_gzip();
+        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.send_compressed(encoding);
             self
         }
-        /// Enable decompressing responses with `gzip`.
+        /// Enable decompressing responses.
         #[must_use]
-        pub fn accept_gzip(mut self) -> Self {
-            self.inner = self.inner.accept_gzip();
+        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.accept_compressed(encoding);
             self
         }
         /// Lists all domains the user is authorized to administer.
@@ -3169,6 +3506,7 @@ pub mod authorized_domains_client {
 pub mod authorized_certificates_client {
     #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
     use tonic::codegen::*;
+    use tonic::codegen::http::Uri;
     /// Manages SSL certificates a user is authorized to administer. A user can
     /// administer any SSL certificates applicable to their authorized domains.
     #[derive(Debug, Clone)]
@@ -3184,6 +3522,10 @@ pub mod authorized_certificates_client {
     {
         pub fn new(inner: T) -> Self {
             let inner = tonic::client::Grpc::new(inner);
+            Self { inner }
+        }
+        pub fn with_origin(inner: T, origin: Uri) -> Self {
+            let inner = tonic::client::Grpc::with_origin(inner, origin);
             Self { inner }
         }
         pub fn with_interceptor<F>(
@@ -3207,19 +3549,19 @@ pub mod authorized_certificates_client {
                 InterceptedService::new(inner, interceptor),
             )
         }
-        /// Compress requests with `gzip`.
+        /// Compress requests with the given encoding.
         ///
         /// This requires the server to support it otherwise it might respond with an
         /// error.
         #[must_use]
-        pub fn send_gzip(mut self) -> Self {
-            self.inner = self.inner.send_gzip();
+        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.send_compressed(encoding);
             self
         }
-        /// Enable decompressing responses with `gzip`.
+        /// Enable decompressing responses.
         #[must_use]
-        pub fn accept_gzip(mut self) -> Self {
-            self.inner = self.inner.accept_gzip();
+        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.accept_compressed(encoding);
             self
         }
         /// Lists all SSL certificates the user is authorized to administer.
@@ -3335,6 +3677,7 @@ pub mod authorized_certificates_client {
 pub mod domain_mappings_client {
     #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
     use tonic::codegen::*;
+    use tonic::codegen::http::Uri;
     /// Manages domains serving an application.
     #[derive(Debug, Clone)]
     pub struct DomainMappingsClient<T> {
@@ -3349,6 +3692,10 @@ pub mod domain_mappings_client {
     {
         pub fn new(inner: T) -> Self {
             let inner = tonic::client::Grpc::new(inner);
+            Self { inner }
+        }
+        pub fn with_origin(inner: T, origin: Uri) -> Self {
+            let inner = tonic::client::Grpc::with_origin(inner, origin);
             Self { inner }
         }
         pub fn with_interceptor<F>(
@@ -3370,19 +3717,19 @@ pub mod domain_mappings_client {
         {
             DomainMappingsClient::new(InterceptedService::new(inner, interceptor))
         }
-        /// Compress requests with `gzip`.
+        /// Compress requests with the given encoding.
         ///
         /// This requires the server to support it otherwise it might respond with an
         /// error.
         #[must_use]
-        pub fn send_gzip(mut self) -> Self {
-            self.inner = self.inner.send_gzip();
+        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.send_compressed(encoding);
             self
         }
-        /// Enable decompressing responses with `gzip`.
+        /// Enable decompressing responses.
         #[must_use]
-        pub fn accept_gzip(mut self) -> Self {
-            self.inner = self.inner.accept_gzip();
+        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.accept_compressed(encoding);
             self
         }
         /// Lists the domain mappings on an application.
@@ -3503,23 +3850,45 @@ pub mod domain_mappings_client {
         }
     }
 }
-/// Metadata for the given \[google.cloud.location.Location][google.cloud.location.Location\].
+/// App Engine admin service audit log.
 #[derive(Clone, PartialEq, ::prost::Message)]
-pub struct LocationMetadata {
-    /// App Engine standard environment is available in the given location.
-    ///
-    /// @OutputOnly
-    #[prost(bool, tag="2")]
-    pub standard_environment_available: bool,
-    /// App Engine flexible environment is available in the given location.
-    ///
-    /// @OutputOnly
-    #[prost(bool, tag="4")]
-    pub flexible_environment_available: bool,
-    /// Output only. [Search API](<https://cloud.google.com/appengine/docs/standard/python/search>)
-    /// is available in the given location.
-    #[prost(bool, tag="6")]
-    pub search_api_available: bool,
+pub struct AuditData {
+    /// Detailed information about methods that require it. Does not include
+    /// simple Get, List or Delete methods because all significant information
+    /// (resource name, number of returned elements for List operations) is already
+    /// included in parent audit log message.
+    #[prost(oneof="audit_data::Method", tags="1, 2")]
+    pub method: ::core::option::Option<audit_data::Method>,
+}
+/// Nested message and enum types in `AuditData`.
+pub mod audit_data {
+    /// Detailed information about methods that require it. Does not include
+    /// simple Get, List or Delete methods because all significant information
+    /// (resource name, number of returned elements for List operations) is already
+    /// included in parent audit log message.
+    #[derive(Clone, PartialEq, ::prost::Oneof)]
+    pub enum Method {
+        /// Detailed information about UpdateService call.
+        #[prost(message, tag="1")]
+        UpdateService(super::UpdateServiceMethod),
+        /// Detailed information about CreateVersion call.
+        #[prost(message, tag="2")]
+        CreateVersion(super::CreateVersionMethod),
+    }
+}
+/// Detailed information about UpdateService call.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct UpdateServiceMethod {
+    /// Update service request.
+    #[prost(message, optional, tag="1")]
+    pub request: ::core::option::Option<UpdateServiceRequest>,
+}
+/// Detailed information about CreateVersion call.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct CreateVersionMethod {
+    /// Create version request.
+    #[prost(message, optional, tag="1")]
+    pub request: ::core::option::Option<CreateVersionRequest>,
 }
 /// Metadata for the given \[google.longrunning.Operation][google.longrunning.Operation\].
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -3583,43 +3952,21 @@ pub struct CreateVersionMetadataV1 {
     #[prost(string, tag="1")]
     pub cloud_build_id: ::prost::alloc::string::String,
 }
-/// App Engine admin service audit log.
+/// Metadata for the given \[google.cloud.location.Location][google.cloud.location.Location\].
 #[derive(Clone, PartialEq, ::prost::Message)]
-pub struct AuditData {
-    /// Detailed information about methods that require it. Does not include
-    /// simple Get, List or Delete methods because all significant information
-    /// (resource name, number of returned elements for List operations) is already
-    /// included in parent audit log message.
-    #[prost(oneof="audit_data::Method", tags="1, 2")]
-    pub method: ::core::option::Option<audit_data::Method>,
-}
-/// Nested message and enum types in `AuditData`.
-pub mod audit_data {
-    /// Detailed information about methods that require it. Does not include
-    /// simple Get, List or Delete methods because all significant information
-    /// (resource name, number of returned elements for List operations) is already
-    /// included in parent audit log message.
-    #[derive(Clone, PartialEq, ::prost::Oneof)]
-    pub enum Method {
-        /// Detailed information about UpdateService call.
-        #[prost(message, tag="1")]
-        UpdateService(super::UpdateServiceMethod),
-        /// Detailed information about CreateVersion call.
-        #[prost(message, tag="2")]
-        CreateVersion(super::CreateVersionMethod),
-    }
-}
-/// Detailed information about UpdateService call.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct UpdateServiceMethod {
-    /// Update service request.
-    #[prost(message, optional, tag="1")]
-    pub request: ::core::option::Option<UpdateServiceRequest>,
-}
-/// Detailed information about CreateVersion call.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct CreateVersionMethod {
-    /// Create version request.
-    #[prost(message, optional, tag="1")]
-    pub request: ::core::option::Option<CreateVersionRequest>,
+pub struct LocationMetadata {
+    /// App Engine standard environment is available in the given location.
+    ///
+    /// @OutputOnly
+    #[prost(bool, tag="2")]
+    pub standard_environment_available: bool,
+    /// App Engine flexible environment is available in the given location.
+    ///
+    /// @OutputOnly
+    #[prost(bool, tag="4")]
+    pub flexible_environment_available: bool,
+    /// Output only. [Search API](<https://cloud.google.com/appengine/docs/standard/python/search>)
+    /// is available in the given location.
+    #[prost(bool, tag="6")]
+    pub search_api_available: bool,
 }

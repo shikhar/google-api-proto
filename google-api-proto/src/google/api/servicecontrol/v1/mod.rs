@@ -22,7 +22,7 @@ pub struct Distribution {
     #[prost(double, tag="4")]
     pub maximum: f64,
     /// The sum of squared deviations from the mean:
-    ///   Sum\[i=1..count\]((x_i - mean)^2)
+    ///    Sum\[i=1..count\]((x_i - mean)^2)
     /// where each x_i is a sample values. If `count` is zero then this field
     /// must be zero, otherwise validation of the request fails.
     #[prost(double, tag="5")]
@@ -56,9 +56,9 @@ pub struct Distribution {
     /// buckets because they have finite lower and upper bounds. As described
     /// below, there are three ways to define the finite buckets.
     ///
-    ///   (1) Buckets with constant width.
-    ///   (2) Buckets with exponentially growing widths.
-    ///   (3) Buckets with arbitrary user-provided widths.
+    ///    (1) Buckets with constant width.
+    ///    (2) Buckets with exponentially growing widths.
+    ///    (3) Buckets with arbitrary user-provided widths.
     ///
     /// In all cases, the buckets cover the entire real number line (-inf,
     /// +inf). Bucket upper bounds are exclusive and lower bounds are
@@ -80,13 +80,13 @@ pub mod distribution {
         #[prost(int32, tag="1")]
         pub num_finite_buckets: i32,
         /// The i'th linear bucket covers the interval
-        ///   [offset + (i-1) * width, offset + i * width)
+        ///    [offset + (i-1) * width, offset + i * width)
         /// where i ranges from 1 to num_finite_buckets, inclusive.
         /// Must be strictly positive.
         #[prost(double, tag="2")]
         pub width: f64,
         /// The i'th linear bucket covers the interval
-        ///   [offset + (i-1) * width, offset + i * width)
+        ///    [offset + (i-1) * width, offset + i * width)
         /// where i ranges from 1 to num_finite_buckets, inclusive.
         #[prost(double, tag="3")]
         pub offset: f64,
@@ -100,13 +100,13 @@ pub mod distribution {
         #[prost(int32, tag="1")]
         pub num_finite_buckets: i32,
         /// The i'th exponential bucket covers the interval
-        ///   [scale * growth_factor^(i-1), scale * growth_factor^i)
+        ///    [scale * growth_factor^(i-1), scale * growth_factor^i)
         /// where i ranges from 1 to num_finite_buckets inclusive.
         /// Must be larger than 1.0.
         #[prost(double, tag="2")]
         pub growth_factor: f64,
         /// The i'th exponential bucket covers the interval
-        ///   [scale * growth_factor^(i-1), scale * growth_factor^i)
+        ///    [scale * growth_factor^(i-1), scale * growth_factor^i)
         /// where i ranges from 1 to num_finite_buckets inclusive.
         /// Must be > 0.
         #[prost(double, tag="3")]
@@ -120,16 +120,16 @@ pub mod distribution {
         /// of fenceposting. See comments on `bucket_options` for details.
         ///
         /// The i'th finite bucket covers the interval
-        ///   \[bound[i-1\], bound\[i\])
+        ///    \[bound[i-1\], bound\[i\])
         /// where i ranges from 1 to bound_size() - 1. Note that there are no
         /// finite buckets at all if 'bound' only contains a single element; in
         /// that special case the single bound defines the boundary between the
         /// underflow and overflow buckets.
         ///
         /// bucket number                   lower bound    upper bound
-        ///  i == 0 (underflow)              -inf           bound\[i\]
-        ///  0 < i < bound_size()            bound\[i-1\]     bound\[i\]
-        ///  i == bound_size() (overflow)    bound\[i-1\]     +inf
+        ///   i == 0 (underflow)              -inf           bound\[i\]
+        ///   0 < i < bound_size()            bound\[i-1\]     bound\[i\]
+        ///   i == bound_size() (overflow)    bound\[i-1\]     +inf
         #[prost(double, repeated, tag="1")]
         pub bounds: ::prost::alloc::vec::Vec<f64>,
     }
@@ -146,9 +146,9 @@ pub mod distribution {
     /// buckets because they have finite lower and upper bounds. As described
     /// below, there are three ways to define the finite buckets.
     ///
-    ///   (1) Buckets with constant width.
-    ///   (2) Buckets with exponentially growing widths.
-    ///   (3) Buckets with arbitrary user-provided widths.
+    ///    (1) Buckets with constant width.
+    ///    (2) Buckets with exponentially growing widths.
+    ///    (3) Buckets with arbitrary user-provided widths.
     ///
     /// In all cases, the buckets cover the entire real number line (-inf,
     /// +inf). Bucket upper bounds are exclusive and lower bounds are
@@ -274,15 +274,15 @@ pub struct QuotaOperation {
     ///
     ///
     /// Example of an RPC method name:
-    ///     google.example.library.v1.LibraryService.CreateShelf
+    ///      google.example.library.v1.LibraryService.CreateShelf
     #[prost(string, tag="2")]
     pub method_name: ::prost::alloc::string::String,
     /// Identity of the consumer for whom this quota operation is being performed.
     ///
     /// This can be in one of the following formats:
-    ///   project:<project_id>,
-    ///   project_number:<project_number>,
-    ///   api_key:<api_key>.
+    ///    project:<project_id>,
+    ///    project_number:<project_number>,
+    ///    api_key:<api_key>.
     #[prost(string, tag="3")]
     pub consumer_id: ::prost::alloc::string::String,
     /// Labels describing the operation.
@@ -347,6 +347,22 @@ pub mod quota_operation {
         /// Not supported for Rate Quota.
         AdjustOnly = 5,
     }
+    impl QuotaMode {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                QuotaMode::Unspecified => "UNSPECIFIED",
+                QuotaMode::Normal => "NORMAL",
+                QuotaMode::BestEffort => "BEST_EFFORT",
+                QuotaMode::CheckOnly => "CHECK_ONLY",
+                QuotaMode::QueryOnly => "QUERY_ONLY",
+                QuotaMode::AdjustOnly => "ADJUST_ONLY",
+            }
+        }
+    }
 }
 /// Response message for the AllocateQuota method.
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -363,11 +379,11 @@ pub struct AllocateQuotaResponse {
     ///
     /// 1. Per quota group or per quota metric incremental usage will be specified
     /// using the following delta metric :
-    ///   "serviceruntime.googleapis.com/api/consumer/quota_used_count"
+    ///    "serviceruntime.googleapis.com/api/consumer/quota_used_count"
     ///
     /// 2. The quota limit reached condition will be specified using the following
     /// boolean metric :
-    ///   "serviceruntime.googleapis.com/quota/exceeded"
+    ///    "serviceruntime.googleapis.com/quota/exceeded"
     #[prost(message, repeated, tag="3")]
     pub quota_metrics: ::prost::alloc::vec::Vec<MetricValueSet>,
     /// ID of the actual config used to process the request.
@@ -418,11 +434,28 @@ pub mod quota_error {
         /// Specified API Key has expired.
         ApiKeyExpired = 112,
     }
+    impl Code {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                Code::Unspecified => "UNSPECIFIED",
+                Code::ResourceExhausted => "RESOURCE_EXHAUSTED",
+                Code::BillingNotActive => "BILLING_NOT_ACTIVE",
+                Code::ProjectDeleted => "PROJECT_DELETED",
+                Code::ApiKeyInvalid => "API_KEY_INVALID",
+                Code::ApiKeyExpired => "API_KEY_EXPIRED",
+            }
+        }
+    }
 }
 /// Generated client implementations.
 pub mod quota_controller_client {
     #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
     use tonic::codegen::*;
+    use tonic::codegen::http::Uri;
     /// [Google Quota Control API](/service-control/overview)
     ///
     /// Allows clients to allocate and release quota against a [managed
@@ -440,6 +473,10 @@ pub mod quota_controller_client {
     {
         pub fn new(inner: T) -> Self {
             let inner = tonic::client::Grpc::new(inner);
+            Self { inner }
+        }
+        pub fn with_origin(inner: T, origin: Uri) -> Self {
+            let inner = tonic::client::Grpc::with_origin(inner, origin);
             Self { inner }
         }
         pub fn with_interceptor<F>(
@@ -461,19 +498,19 @@ pub mod quota_controller_client {
         {
             QuotaControllerClient::new(InterceptedService::new(inner, interceptor))
         }
-        /// Compress requests with `gzip`.
+        /// Compress requests with the given encoding.
         ///
         /// This requires the server to support it otherwise it might respond with an
         /// error.
         #[must_use]
-        pub fn send_gzip(mut self) -> Self {
-            self.inner = self.inner.send_gzip();
+        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.send_compressed(encoding);
             self
         }
-        /// Enable decompressing responses with `gzip`.
+        /// Enable decompressing responses.
         #[must_use]
-        pub fn accept_gzip(mut self) -> Self {
-            self.inner = self.inner.accept_gzip();
+        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.accept_compressed(encoding);
             self
         }
         /// Attempts to allocate quota for the specified consumer. It should be called
@@ -505,6 +542,118 @@ pub mod quota_controller_client {
                 "/google.api.servicecontrol.v1.QuotaController/AllocateQuota",
             );
             self.inner.unary(request.into_request(), path, codec).await
+        }
+    }
+}
+/// Defines the errors to be returned in
+/// \[google.api.servicecontrol.v1.CheckResponse.check_errors][google.api.servicecontrol.v1.CheckResponse.check_errors\].
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct CheckError {
+    /// The error code.
+    #[prost(enumeration="check_error::Code", tag="1")]
+    pub code: i32,
+    /// Subject to whom this error applies. See the specific code enum for more
+    /// details on this field. For example:
+    ///
+    /// - "project:<project-id or project-number>"
+    /// - "folder:<folder-id>"
+    /// - "organization:<organization-id>"
+    #[prost(string, tag="4")]
+    pub subject: ::prost::alloc::string::String,
+    /// Free-form text providing details on the error cause of the error.
+    #[prost(string, tag="2")]
+    pub detail: ::prost::alloc::string::String,
+    /// Contains public information about the check error. If available,
+    /// `status.code` will be non zero and client can propagate it out as public
+    /// error.
+    #[prost(message, optional, tag="3")]
+    pub status: ::core::option::Option<super::super::super::rpc::Status>,
+}
+/// Nested message and enum types in `CheckError`.
+pub mod check_error {
+    /// Error codes for Check responses.
+    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+    #[repr(i32)]
+    pub enum Code {
+        /// This is never used in `CheckResponse`.
+        ErrorCodeUnspecified = 0,
+        /// The consumer's project id, network container, or resource container was
+        /// not found. Same as \[google.rpc.Code.NOT_FOUND][google.rpc.Code.NOT_FOUND\].
+        NotFound = 5,
+        /// The consumer doesn't have access to the specified resource.
+        /// Same as \[google.rpc.Code.PERMISSION_DENIED][google.rpc.Code.PERMISSION_DENIED\].
+        PermissionDenied = 7,
+        /// Quota check failed. Same as \[google.rpc.Code.RESOURCE_EXHAUSTED][google.rpc.Code.RESOURCE_EXHAUSTED\].
+        ResourceExhausted = 8,
+        /// The consumer hasn't activated the service.
+        ServiceNotActivated = 104,
+        /// The consumer cannot access the service because billing is disabled.
+        BillingDisabled = 107,
+        /// The consumer's project has been marked as deleted (soft deletion).
+        ProjectDeleted = 108,
+        /// The consumer's project number or id does not represent a valid project.
+        ProjectInvalid = 114,
+        /// The input consumer info does not represent a valid consumer folder or
+        /// organization.
+        ConsumerInvalid = 125,
+        /// The IP address of the consumer is invalid for the specific consumer
+        /// project.
+        IpAddressBlocked = 109,
+        /// The referer address of the consumer request is invalid for the specific
+        /// consumer project.
+        RefererBlocked = 110,
+        /// The client application of the consumer request is invalid for the
+        /// specific consumer project.
+        ClientAppBlocked = 111,
+        /// The API targeted by this request is invalid for the specified consumer
+        /// project.
+        ApiTargetBlocked = 122,
+        /// The consumer's API key is invalid.
+        ApiKeyInvalid = 105,
+        /// The consumer's API Key has expired.
+        ApiKeyExpired = 112,
+        /// The consumer's API Key was not found in config record.
+        ApiKeyNotFound = 113,
+        /// The credential in the request can not be verified.
+        InvalidCredential = 123,
+        /// The backend server for looking up project id/number is unavailable.
+        NamespaceLookupUnavailable = 300,
+        /// The backend server for checking service status is unavailable.
+        ServiceStatusUnavailable = 301,
+        /// The backend server for checking billing status is unavailable.
+        BillingStatusUnavailable = 302,
+        /// Cloud Resource Manager backend server is unavailable.
+        CloudResourceManagerBackendUnavailable = 305,
+    }
+    impl Code {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                Code::ErrorCodeUnspecified => "ERROR_CODE_UNSPECIFIED",
+                Code::NotFound => "NOT_FOUND",
+                Code::PermissionDenied => "PERMISSION_DENIED",
+                Code::ResourceExhausted => "RESOURCE_EXHAUSTED",
+                Code::ServiceNotActivated => "SERVICE_NOT_ACTIVATED",
+                Code::BillingDisabled => "BILLING_DISABLED",
+                Code::ProjectDeleted => "PROJECT_DELETED",
+                Code::ProjectInvalid => "PROJECT_INVALID",
+                Code::ConsumerInvalid => "CONSUMER_INVALID",
+                Code::IpAddressBlocked => "IP_ADDRESS_BLOCKED",
+                Code::RefererBlocked => "REFERER_BLOCKED",
+                Code::ClientAppBlocked => "CLIENT_APP_BLOCKED",
+                Code::ApiTargetBlocked => "API_TARGET_BLOCKED",
+                Code::ApiKeyInvalid => "API_KEY_INVALID",
+                Code::ApiKeyExpired => "API_KEY_EXPIRED",
+                Code::ApiKeyNotFound => "API_KEY_NOT_FOUND",
+                Code::InvalidCredential => "INVALID_CREDENTIAL",
+                Code::NamespaceLookupUnavailable => "NAMESPACE_LOOKUP_UNAVAILABLE",
+                Code::ServiceStatusUnavailable => "SERVICE_STATUS_UNAVAILABLE",
+                Code::BillingStatusUnavailable => "BILLING_STATUS_UNAVAILABLE",
+                Code::CloudResourceManagerBackendUnavailable => "CLOUD_RESOURCE_MANAGER_BACKEND_UNAVAILABLE",
+            }
         }
     }
 }
@@ -703,12 +852,12 @@ pub struct Operation {
     /// not related to a specific consumer.
     ///
     /// - This can be in one of the following formats:
-    ///     - project:PROJECT_ID,
-    ///     - project`_`number:PROJECT_NUMBER,
-    ///     - projects/PROJECT_ID or PROJECT_NUMBER,
-    ///     - folders/FOLDER_NUMBER,
-    ///     - organizations/ORGANIZATION_NUMBER,
-    ///     - api`_`key:API_KEY.
+    ///      - project:PROJECT_ID,
+    ///      - project`_`number:PROJECT_NUMBER,
+    ///      - projects/PROJECT_ID or PROJECT_NUMBER,
+    ///      - folders/FOLDER_NUMBER,
+    ///      - organizations/ORGANIZATION_NUMBER,
+    ///      - api`_`key:API_KEY.
     #[prost(string, tag="3")]
     pub consumer_id: ::prost::alloc::string::String,
     /// Required. Start time of the operation.
@@ -724,19 +873,19 @@ pub struct Operation {
     /// Labels describing the operation. Only the following labels are allowed:
     ///
     /// - Labels describing monitored resources as defined in
-    ///   the service configuration.
+    ///    the service configuration.
     /// - Default labels of metric values. When specified, labels defined in the
-    ///   metric value override these default.
+    ///    metric value override these default.
     /// - The following labels defined by Google Cloud Platform:
-    ///     - `cloud.googleapis.com/location` describing the location where the
-    ///        operation happened,
-    ///     - `servicecontrol.googleapis.com/user_agent` describing the user agent
-    ///        of the API request,
-    ///     - `servicecontrol.googleapis.com/service_agent` describing the service
-    ///        used to handle the API request (e.g. ESP),
-    ///     - `servicecontrol.googleapis.com/platform` describing the platform
-    ///        where the API is served, such as App Engine, Compute Engine, or
-    ///        Kubernetes Engine.
+    ///      - `cloud.googleapis.com/location` describing the location where the
+    ///         operation happened,
+    ///      - `servicecontrol.googleapis.com/user_agent` describing the user agent
+    ///         of the API request,
+    ///      - `servicecontrol.googleapis.com/service_agent` describing the service
+    ///         used to handle the API request (e.g. ESP),
+    ///      - `servicecontrol.googleapis.com/platform` describing the platform
+    ///         where the API is served, such as App Engine, Compute Engine, or
+    ///         Kubernetes Engine.
     #[prost(btree_map="string, string", tag="6")]
     pub labels: ::prost::alloc::collections::BTreeMap<::prost::alloc::string::String, ::prost::alloc::string::String>,
     /// Represents information about this operation. Each MetricValueSet
@@ -775,86 +924,17 @@ pub mod operation {
         /// only applies to the client libraries.
         High = 1,
     }
-}
-/// Defines the errors to be returned in
-/// \[google.api.servicecontrol.v1.CheckResponse.check_errors][google.api.servicecontrol.v1.CheckResponse.check_errors\].
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct CheckError {
-    /// The error code.
-    #[prost(enumeration="check_error::Code", tag="1")]
-    pub code: i32,
-    /// Subject to whom this error applies. See the specific code enum for more
-    /// details on this field. For example:
-    ///
-    /// - "project:<project-id or project-number>"
-    /// - "folder:<folder-id>"
-    /// - "organization:<organization-id>"
-    #[prost(string, tag="4")]
-    pub subject: ::prost::alloc::string::String,
-    /// Free-form text providing details on the error cause of the error.
-    #[prost(string, tag="2")]
-    pub detail: ::prost::alloc::string::String,
-    /// Contains public information about the check error. If available,
-    /// `status.code` will be non zero and client can propagate it out as public
-    /// error.
-    #[prost(message, optional, tag="3")]
-    pub status: ::core::option::Option<super::super::super::rpc::Status>,
-}
-/// Nested message and enum types in `CheckError`.
-pub mod check_error {
-    /// Error codes for Check responses.
-    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
-    #[repr(i32)]
-    pub enum Code {
-        /// This is never used in `CheckResponse`.
-        ErrorCodeUnspecified = 0,
-        /// The consumer's project id, network container, or resource container was
-        /// not found. Same as \[google.rpc.Code.NOT_FOUND][google.rpc.Code.NOT_FOUND\].
-        NotFound = 5,
-        /// The consumer doesn't have access to the specified resource.
-        /// Same as \[google.rpc.Code.PERMISSION_DENIED][google.rpc.Code.PERMISSION_DENIED\].
-        PermissionDenied = 7,
-        /// Quota check failed. Same as \[google.rpc.Code.RESOURCE_EXHAUSTED][google.rpc.Code.RESOURCE_EXHAUSTED\].
-        ResourceExhausted = 8,
-        /// The consumer hasn't activated the service.
-        ServiceNotActivated = 104,
-        /// The consumer cannot access the service because billing is disabled.
-        BillingDisabled = 107,
-        /// The consumer's project has been marked as deleted (soft deletion).
-        ProjectDeleted = 108,
-        /// The consumer's project number or id does not represent a valid project.
-        ProjectInvalid = 114,
-        /// The input consumer info does not represent a valid consumer folder or
-        /// organization.
-        ConsumerInvalid = 125,
-        /// The IP address of the consumer is invalid for the specific consumer
-        /// project.
-        IpAddressBlocked = 109,
-        /// The referer address of the consumer request is invalid for the specific
-        /// consumer project.
-        RefererBlocked = 110,
-        /// The client application of the consumer request is invalid for the
-        /// specific consumer project.
-        ClientAppBlocked = 111,
-        /// The API targeted by this request is invalid for the specified consumer
-        /// project.
-        ApiTargetBlocked = 122,
-        /// The consumer's API key is invalid.
-        ApiKeyInvalid = 105,
-        /// The consumer's API Key has expired.
-        ApiKeyExpired = 112,
-        /// The consumer's API Key was not found in config record.
-        ApiKeyNotFound = 113,
-        /// The credential in the request can not be verified.
-        InvalidCredential = 123,
-        /// The backend server for looking up project id/number is unavailable.
-        NamespaceLookupUnavailable = 300,
-        /// The backend server for checking service status is unavailable.
-        ServiceStatusUnavailable = 301,
-        /// The backend server for checking billing status is unavailable.
-        BillingStatusUnavailable = 302,
-        /// Cloud Resource Manager backend server is unavailable.
-        CloudResourceManagerBackendUnavailable = 305,
+    impl Importance {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                Importance::Low => "LOW",
+                Importance::High => "HIGH",
+            }
+        }
     }
 }
 /// Request message for the Check method.
@@ -958,6 +1038,21 @@ pub mod check_response {
             /// functionalities at a finer level of granularity than the PROJECT.
             ServiceSpecific = 4,
         }
+        impl ConsumerType {
+            /// String value of the enum field names used in the ProtoBuf definition.
+            ///
+            /// The values are not transformed in any way and thus are considered stable
+            /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+            pub fn as_str_name(&self) -> &'static str {
+                match self {
+                    ConsumerType::Unspecified => "CONSUMER_TYPE_UNSPECIFIED",
+                    ConsumerType::Project => "PROJECT",
+                    ConsumerType::Folder => "FOLDER",
+                    ConsumerType::Organization => "ORGANIZATION",
+                    ConsumerType::ServiceSpecific => "SERVICE_SPECIFIC",
+                }
+            }
+        }
     }
 }
 /// Request message for the Report method.
@@ -999,16 +1094,16 @@ pub struct ReportResponse {
     /// processing. There are three possible combinations of the RPC status:
     ///
     /// 1. The combination of a successful RPC status and an empty `report_errors`
-    ///    list indicates a complete success where all `Operations` in the
-    ///    request are processed successfully.
+    ///     list indicates a complete success where all `Operations` in the
+    ///     request are processed successfully.
     /// 2. The combination of a successful RPC status and a non-empty
-    ///    `report_errors` list indicates a partial success where some
-    ///    `Operations` in the request succeeded. Each
-    ///    `Operation` that failed processing has a corresponding item
-    ///    in this list.
+    ///     `report_errors` list indicates a partial success where some
+    ///     `Operations` in the request succeeded. Each
+    ///     `Operation` that failed processing has a corresponding item
+    ///     in this list.
     /// 3. A failed RPC status indicates a general non-deterministic failure.
-    ///    When this happens, it's impossible to know which of the
-    ///    'Operations' in the request succeeded or failed.
+    ///     When this happens, it's impossible to know which of the
+    ///     'Operations' in the request succeeded or failed.
     #[prost(message, repeated, tag="1")]
     pub report_errors: ::prost::alloc::vec::Vec<report_response::ReportError>,
     /// The actual config id used to process the request.
@@ -1039,6 +1134,7 @@ pub mod report_response {
 pub mod service_controller_client {
     #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
     use tonic::codegen::*;
+    use tonic::codegen::http::Uri;
     /// [Google Service Control API](/service-control/overview)
     ///
     /// Lets clients check and report operations against a [managed
@@ -1056,6 +1152,10 @@ pub mod service_controller_client {
     {
         pub fn new(inner: T) -> Self {
             let inner = tonic::client::Grpc::new(inner);
+            Self { inner }
+        }
+        pub fn with_origin(inner: T, origin: Uri) -> Self {
+            let inner = tonic::client::Grpc::with_origin(inner, origin);
             Self { inner }
         }
         pub fn with_interceptor<F>(
@@ -1077,19 +1177,19 @@ pub mod service_controller_client {
         {
             ServiceControllerClient::new(InterceptedService::new(inner, interceptor))
         }
-        /// Compress requests with `gzip`.
+        /// Compress requests with the given encoding.
         ///
         /// This requires the server to support it otherwise it might respond with an
         /// error.
         #[must_use]
-        pub fn send_gzip(mut self) -> Self {
-            self.inner = self.inner.send_gzip();
+        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.send_compressed(encoding);
             self
         }
-        /// Enable decompressing responses with `gzip`.
+        /// Enable decompressing responses.
         #[must_use]
-        pub fn accept_gzip(mut self) -> Self {
-            self.inner = self.inner.accept_gzip();
+        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.accept_compressed(encoding);
             self
         }
         /// Checks whether an operation on a service should be allowed to proceed

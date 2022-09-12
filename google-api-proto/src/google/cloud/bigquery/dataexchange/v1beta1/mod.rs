@@ -184,6 +184,18 @@ pub mod listing {
         /// can subscribe to this listing.
         Active = 1,
     }
+    impl State {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                State::Unspecified => "STATE_UNSPECIFIED",
+                State::Active => "ACTIVE",
+            }
+        }
+    }
     /// Listing categories.
     #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
     #[repr(i32)]
@@ -208,6 +220,36 @@ pub mod listing {
         ScienceAndResearch = 17,
         TransportationAndLogistics = 18,
         TravelAndTourism = 19,
+    }
+    impl Category {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                Category::Unspecified => "CATEGORY_UNSPECIFIED",
+                Category::Others => "CATEGORY_OTHERS",
+                Category::AdvertisingAndMarketing => "CATEGORY_ADVERTISING_AND_MARKETING",
+                Category::Commerce => "CATEGORY_COMMERCE",
+                Category::ClimateAndEnvironment => "CATEGORY_CLIMATE_AND_ENVIRONMENT",
+                Category::Demographics => "CATEGORY_DEMOGRAPHICS",
+                Category::Economics => "CATEGORY_ECONOMICS",
+                Category::Education => "CATEGORY_EDUCATION",
+                Category::Energy => "CATEGORY_ENERGY",
+                Category::Financial => "CATEGORY_FINANCIAL",
+                Category::Gaming => "CATEGORY_GAMING",
+                Category::Geospatial => "CATEGORY_GEOSPATIAL",
+                Category::HealthcareAndLifeScience => "CATEGORY_HEALTHCARE_AND_LIFE_SCIENCE",
+                Category::Media => "CATEGORY_MEDIA",
+                Category::PublicSector => "CATEGORY_PUBLIC_SECTOR",
+                Category::Retail => "CATEGORY_RETAIL",
+                Category::Sports => "CATEGORY_SPORTS",
+                Category::ScienceAndResearch => "CATEGORY_SCIENCE_AND_RESEARCH",
+                Category::TransportationAndLogistics => "CATEGORY_TRANSPORTATION_AND_LOGISTICS",
+                Category::TravelAndTourism => "CATEGORY_TRAVEL_AND_TOURISM",
+            }
+        }
     }
     /// Listing source.
     #[derive(Clone, PartialEq, ::prost::Oneof)]
@@ -418,6 +460,7 @@ pub struct SubscribeListingResponse {
 pub mod analytics_hub_service_client {
     #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
     use tonic::codegen::*;
+    use tonic::codegen::http::Uri;
     /// The `AnalyticsHubService` API facilitates data sharing within and across
     /// organizations. It allows data providers to publish listings that reference
     /// shared datasets. With Analytics Hub, users can discover and search for
@@ -439,6 +482,10 @@ pub mod analytics_hub_service_client {
             let inner = tonic::client::Grpc::new(inner);
             Self { inner }
         }
+        pub fn with_origin(inner: T, origin: Uri) -> Self {
+            let inner = tonic::client::Grpc::with_origin(inner, origin);
+            Self { inner }
+        }
         pub fn with_interceptor<F>(
             inner: T,
             interceptor: F,
@@ -458,19 +505,19 @@ pub mod analytics_hub_service_client {
         {
             AnalyticsHubServiceClient::new(InterceptedService::new(inner, interceptor))
         }
-        /// Compress requests with `gzip`.
+        /// Compress requests with the given encoding.
         ///
         /// This requires the server to support it otherwise it might respond with an
         /// error.
         #[must_use]
-        pub fn send_gzip(mut self) -> Self {
-            self.inner = self.inner.send_gzip();
+        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.send_compressed(encoding);
             self
         }
-        /// Enable decompressing responses with `gzip`.
+        /// Enable decompressing responses.
         #[must_use]
-        pub fn accept_gzip(mut self) -> Self {
-            self.inner = self.inner.accept_gzip();
+        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.accept_compressed(encoding);
             self
         }
         /// Lists all data exchanges in a given project and location.

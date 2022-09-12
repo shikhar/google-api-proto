@@ -36,6 +36,22 @@ pub enum FileFormat {
     /// KMZ file.
     Kmz = 5,
 }
+impl FileFormat {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            FileFormat::Unspecified => "FILE_FORMAT_UNSPECIFIED",
+            FileFormat::Geojson => "FILE_FORMAT_GEOJSON",
+            FileFormat::Kml => "FILE_FORMAT_KML",
+            FileFormat::Csv => "FILE_FORMAT_CSV",
+            FileFormat::Proto => "FILE_FORMAT_PROTO",
+            FileFormat::Kmz => "FILE_FORMAT_KMZ",
+        }
+    }
+}
 /// A representation of a maps platform dataset.
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct Dataset {
@@ -103,6 +119,20 @@ pub enum Usage {
     /// This dataset will be used for assisted driving in routing.
     AssistedDriving = 3,
 }
+impl Usage {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            Usage::Unspecified => "USAGE_UNSPECIFIED",
+            Usage::DataDrivenStyling => "USAGE_DATA_DRIVEN_STYLING",
+            Usage::AreaAffordances => "USAGE_AREA_AFFORDANCES",
+            Usage::AssistedDriving => "USAGE_ASSISTED_DRIVING",
+        }
+    }
+}
 /// State specifies the status of the import of the latest dataset version.
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
 #[repr(i32)]
@@ -115,6 +145,20 @@ pub enum State {
     ImportSucceeded = 2,
     /// The dataset version failed to get imported.
     ImportFailed = 3,
+}
+impl State {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            State::Unspecified => "STATE_UNSPECIFIED",
+            State::Importing => "STATE_IMPORTING",
+            State::ImportSucceeded => "STATE_IMPORT_SUCCEEDED",
+            State::ImportFailed => "STATE_IMPORT_FAILED",
+        }
+    }
 }
 /// Request to create a maps dataset.
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -237,6 +281,7 @@ pub struct DeleteDatasetVersionRequest {
 pub mod maps_platform_datasets_v1_alpha_client {
     #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
     use tonic::codegen::*;
+    use tonic::codegen::http::Uri;
     /// Service definition for the Maps Platform Datasets API.
     #[derive(Debug, Clone)]
     pub struct MapsPlatformDatasetsV1AlphaClient<T> {
@@ -251,6 +296,10 @@ pub mod maps_platform_datasets_v1_alpha_client {
     {
         pub fn new(inner: T) -> Self {
             let inner = tonic::client::Grpc::new(inner);
+            Self { inner }
+        }
+        pub fn with_origin(inner: T, origin: Uri) -> Self {
+            let inner = tonic::client::Grpc::with_origin(inner, origin);
             Self { inner }
         }
         pub fn with_interceptor<F>(
@@ -274,19 +323,19 @@ pub mod maps_platform_datasets_v1_alpha_client {
                 InterceptedService::new(inner, interceptor),
             )
         }
-        /// Compress requests with `gzip`.
+        /// Compress requests with the given encoding.
         ///
         /// This requires the server to support it otherwise it might respond with an
         /// error.
         #[must_use]
-        pub fn send_gzip(mut self) -> Self {
-            self.inner = self.inner.send_gzip();
+        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.send_compressed(encoding);
             self
         }
-        /// Enable decompressing responses with `gzip`.
+        /// Enable decompressing responses.
         #[must_use]
-        pub fn accept_gzip(mut self) -> Self {
-            self.inner = self.inner.accept_gzip();
+        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.accept_compressed(encoding);
             self
         }
         /// Create a new dataset for the specified project.

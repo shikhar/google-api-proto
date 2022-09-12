@@ -26,7 +26,7 @@ pub struct Setting {
     ///
     /// 1. the local setting value on the given resource: \[Setting.local_value][google.cloud.resourcesettings.v1.Setting.local_value\]
     /// 2. if one of the given resource's ancestors have a local setting value,
-    ///    the local value at the nearest such ancestor
+    ///     the local value at the nearest such ancestor
     /// 3. the setting's default value: \[SettingMetadata.default_value][google.cloud.resourcesettings.v1.SettingMetadata.default_value\]
     /// 4. an empty value (defined as a `Value` with all fields unset)
     ///
@@ -80,6 +80,21 @@ pub mod setting_metadata {
         StringSet = 3,
         /// A Enum setting
         EnumValue = 4,
+    }
+    impl DataType {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                DataType::Unspecified => "DATA_TYPE_UNSPECIFIED",
+                DataType::Boolean => "BOOLEAN",
+                DataType::String => "STRING",
+                DataType::StringSet => "STRING_SET",
+                DataType::EnumValue => "ENUM_VALUE",
+            }
+        }
     }
 }
 /// The data in a setting value.
@@ -191,10 +206,25 @@ pub enum SettingView {
     /// Include \[Setting.local_value][google.cloud.resourcesettings.v1.Setting.local_value\], but nothing else.
     LocalValue = 3,
 }
+impl SettingView {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            SettingView::Unspecified => "SETTING_VIEW_UNSPECIFIED",
+            SettingView::Basic => "SETTING_VIEW_BASIC",
+            SettingView::EffectiveValue => "SETTING_VIEW_EFFECTIVE_VALUE",
+            SettingView::LocalValue => "SETTING_VIEW_LOCAL_VALUE",
+        }
+    }
+}
 /// Generated client implementations.
 pub mod resource_settings_service_client {
     #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
     use tonic::codegen::*;
+    use tonic::codegen::http::Uri;
     /// An interface to interact with resource settings and setting values throughout
     /// the resource hierarchy.
     ///
@@ -222,6 +252,10 @@ pub mod resource_settings_service_client {
             let inner = tonic::client::Grpc::new(inner);
             Self { inner }
         }
+        pub fn with_origin(inner: T, origin: Uri) -> Self {
+            let inner = tonic::client::Grpc::with_origin(inner, origin);
+            Self { inner }
+        }
         pub fn with_interceptor<F>(
             inner: T,
             interceptor: F,
@@ -243,19 +277,19 @@ pub mod resource_settings_service_client {
                 InterceptedService::new(inner, interceptor),
             )
         }
-        /// Compress requests with `gzip`.
+        /// Compress requests with the given encoding.
         ///
         /// This requires the server to support it otherwise it might respond with an
         /// error.
         #[must_use]
-        pub fn send_gzip(mut self) -> Self {
-            self.inner = self.inner.send_gzip();
+        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.send_compressed(encoding);
             self
         }
-        /// Enable decompressing responses with `gzip`.
+        /// Enable decompressing responses.
         #[must_use]
-        pub fn accept_gzip(mut self) -> Self {
-            self.inner = self.inner.accept_gzip();
+        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.accept_compressed(encoding);
             self
         }
         /// Lists all the settings that are available on the Cloud resource `parent`.

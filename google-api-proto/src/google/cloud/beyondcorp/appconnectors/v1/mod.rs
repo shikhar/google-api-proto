@@ -55,13 +55,13 @@ pub struct ImageConfig {
 /// ResourceInfo represents the information/status of an app connector resource.
 /// Such as:
 /// - remote_agent
-///   - container
-///     - runtime
-///     - appgateway
-///       - appconnector
-///         - appconnection
-///           - tunnel
-///       - logagent
+///    - container
+///      - runtime
+///      - appgateway
+///        - appconnector
+///          - appconnection
+///            - tunnel
+///        - logagent
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ResourceInfo {
     /// Required. Unique Id for the resource.
@@ -96,6 +96,21 @@ pub enum HealthStatus {
     Unresponsive = 3,
     /// Some sub-resources are UNHEALTHY.
     Degraded = 4,
+}
+impl HealthStatus {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            HealthStatus::Unspecified => "HEALTH_STATUS_UNSPECIFIED",
+            HealthStatus::Healthy => "HEALTHY",
+            HealthStatus::Unhealthy => "UNHEALTHY",
+            HealthStatus::Unresponsive => "UNRESPONSIVE",
+            HealthStatus::Degraded => "DEGRADED",
+        }
+    }
 }
 /// Request message for BeyondCorp.ListAppConnectors.
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -157,9 +172,9 @@ pub struct CreateAppConnectorRequest {
     pub parent: ::prost::alloc::string::String,
     /// Optional. User-settable AppConnector resource ID.
     ///
-    ///  * Must start with a letter.
-    ///  * Must contain between 4-63 characters from `/\[a-z][0-9\]-/`.
-    ///  * Must end with a number or a letter.
+    ///   * Must start with a letter.
+    ///   * Must contain between 4-63 characters from `/\[a-z][0-9\]-/`.
+    ///   * Must end with a number or a letter.
     #[prost(string, tag="2")]
     pub app_connector_id: ::prost::alloc::string::String,
     /// Required. A BeyondCorp AppConnector resource.
@@ -356,6 +371,22 @@ pub mod app_connector {
         /// This happens when CCFE sends ProjectState = OFF.
         Down = 5,
     }
+    impl State {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                State::Unspecified => "STATE_UNSPECIFIED",
+                State::Creating => "CREATING",
+                State::Created => "CREATED",
+                State::Updating => "UPDATING",
+                State::Deleting => "DELETING",
+                State::Down => "DOWN",
+            }
+        }
+    }
 }
 /// Represents the metadata of the long-running operation.
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -390,6 +421,7 @@ pub struct AppConnectorOperationMetadata {
 pub mod app_connectors_service_client {
     #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
     use tonic::codegen::*;
+    use tonic::codegen::http::Uri;
     /// ## API Overview
     ///
     /// The `beyondcorp.googleapis.com` service implements the Google Cloud
@@ -419,6 +451,10 @@ pub mod app_connectors_service_client {
             let inner = tonic::client::Grpc::new(inner);
             Self { inner }
         }
+        pub fn with_origin(inner: T, origin: Uri) -> Self {
+            let inner = tonic::client::Grpc::with_origin(inner, origin);
+            Self { inner }
+        }
         pub fn with_interceptor<F>(
             inner: T,
             interceptor: F,
@@ -438,19 +474,19 @@ pub mod app_connectors_service_client {
         {
             AppConnectorsServiceClient::new(InterceptedService::new(inner, interceptor))
         }
-        /// Compress requests with `gzip`.
+        /// Compress requests with the given encoding.
         ///
         /// This requires the server to support it otherwise it might respond with an
         /// error.
         #[must_use]
-        pub fn send_gzip(mut self) -> Self {
-            self.inner = self.inner.send_gzip();
+        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.send_compressed(encoding);
             self
         }
-        /// Enable decompressing responses with `gzip`.
+        /// Enable decompressing responses.
         #[must_use]
-        pub fn accept_gzip(mut self) -> Self {
-            self.inner = self.inner.accept_gzip();
+        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.accept_compressed(encoding);
             self
         }
         /// Lists AppConnectors in a given project and location.

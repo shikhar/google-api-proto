@@ -89,6 +89,21 @@ pub mod capacity_commitment {
         /// renewal_plan.
         Annual = 4,
     }
+    impl CommitmentPlan {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                CommitmentPlan::Unspecified => "COMMITMENT_PLAN_UNSPECIFIED",
+                CommitmentPlan::Flex => "FLEX",
+                CommitmentPlan::Trial => "TRIAL",
+                CommitmentPlan::Monthly => "MONTHLY",
+                CommitmentPlan::Annual => "ANNUAL",
+            }
+        }
+    }
     /// Capacity commitment can either become ACTIVE right away or transition
     /// from PENDING to ACTIVE or FAILED.
     #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
@@ -104,6 +119,20 @@ pub mod capacity_commitment {
         Active = 2,
         /// Capacity commitment is failed to be activated by the backend.
         Failed = 3,
+    }
+    impl State {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                State::Unspecified => "STATE_UNSPECIFIED",
+                State::Pending => "PENDING",
+                State::Active => "ACTIVE",
+                State::Failed => "FAILED",
+            }
+        }
     }
 }
 /// The request for
@@ -127,7 +156,7 @@ pub struct CreateReservationRequest {
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ListReservationsRequest {
     /// Required. The parent resource name containing project and location, e.g.:
-    ///   `projects/myproject/locations/US`
+    ///    `projects/myproject/locations/US`
     #[prost(string, tag="1")]
     pub parent: ::prost::alloc::string::String,
     /// The maximum number of items to return.
@@ -161,7 +190,7 @@ pub struct ListReservationsResponse {
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct GetReservationRequest {
     /// Required. Resource name of the reservation to retrieve. E.g.,
-    ///    `projects/myproject/locations/US/reservations/team1-prod`
+    ///     `projects/myproject/locations/US/reservations/team1-prod`
     #[prost(string, tag="1")]
     pub name: ::prost::alloc::string::String,
 }
@@ -170,7 +199,7 @@ pub struct GetReservationRequest {
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct DeleteReservationRequest {
     /// Required. Resource name of the reservation to retrieve. E.g.,
-    ///    `projects/myproject/locations/US/reservations/team1-prod`
+    ///     `projects/myproject/locations/US/reservations/team1-prod`
     #[prost(string, tag="1")]
     pub name: ::prost::alloc::string::String,
 }
@@ -190,7 +219,7 @@ pub struct UpdateReservationRequest {
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct CreateCapacityCommitmentRequest {
     /// Required. Resource name of the parent reservation. E.g.,
-    ///    `projects/myproject/locations/US`
+    ///     `projects/myproject/locations/US`
     #[prost(string, tag="1")]
     pub parent: ::prost::alloc::string::String,
     /// Content of the capacity commitment to create.
@@ -206,7 +235,7 @@ pub struct CreateCapacityCommitmentRequest {
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ListCapacityCommitmentsRequest {
     /// Required. Resource name of the parent reservation. E.g.,
-    ///    `projects/myproject/locations/US`
+    ///     `projects/myproject/locations/US`
     #[prost(string, tag="1")]
     pub parent: ::prost::alloc::string::String,
     /// The maximum number of items to return.
@@ -233,7 +262,7 @@ pub struct ListCapacityCommitmentsResponse {
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct GetCapacityCommitmentRequest {
     /// Required. Resource name of the capacity commitment to retrieve. E.g.,
-    ///    `projects/myproject/locations/US/capacityCommitments/123`
+    ///     `projects/myproject/locations/US/capacityCommitments/123`
     #[prost(string, tag="1")]
     pub name: ::prost::alloc::string::String,
 }
@@ -242,7 +271,7 @@ pub struct GetCapacityCommitmentRequest {
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct DeleteCapacityCommitmentRequest {
     /// Required. Resource name of the capacity commitment to delete. E.g.,
-    ///    `projects/myproject/locations/US/capacityCommitments/123`
+    ///     `projects/myproject/locations/US/capacityCommitments/123`
     #[prost(string, tag="1")]
     pub name: ::prost::alloc::string::String,
 }
@@ -262,7 +291,7 @@ pub struct UpdateCapacityCommitmentRequest {
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct SplitCapacityCommitmentRequest {
     /// Required. The resource name e.g.,:
-    ///  `projects/myproject/locations/US/capacityCommitments/123`
+    ///   `projects/myproject/locations/US/capacityCommitments/123`
     #[prost(string, tag="1")]
     pub name: ::prost::alloc::string::String,
     /// Number of slots in the capacity commitment after the split.
@@ -285,7 +314,7 @@ pub struct SplitCapacityCommitmentResponse {
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct MergeCapacityCommitmentsRequest {
     /// Parent resource that identifies admin project and location e.g.,
-    ///  `projects/myproject/locations/us`
+    ///   `projects/myproject/locations/us`
     #[prost(string, tag="1")]
     pub parent: ::prost::alloc::string::String,
     /// Ids of capacity commitments to merge.
@@ -327,6 +356,19 @@ pub mod assignment {
         /// Query jobs from the project will use the reservation.
         Query = 2,
     }
+    impl JobType {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                JobType::Unspecified => "JOB_TYPE_UNSPECIFIED",
+                JobType::Pipeline => "PIPELINE",
+                JobType::Query => "QUERY",
+            }
+        }
+    }
     /// Assignment will remain in PENDING state if no active capacity commitment is
     /// present. It will become ACTIVE when some capacity commitment becomes
     /// active.
@@ -340,6 +382,19 @@ pub mod assignment {
         Pending = 1,
         /// Assignment is ready.
         Active = 2,
+    }
+    impl State {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                State::Unspecified => "STATE_UNSPECIFIED",
+                State::Pending => "PENDING",
+                State::Active => "ACTIVE",
+            }
+        }
     }
 }
 /// The request for
@@ -395,7 +450,7 @@ pub struct ListAssignmentsResponse {
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct DeleteAssignmentRequest {
     /// Required. Name of the resource, e.g.
-    ///   `projects/myproject/locations/US/reservations/team1-prod/assignments/123`
+    ///    `projects/myproject/locations/US/reservations/team1-prod/assignments/123`
     #[prost(string, tag="1")]
     pub name: ::prost::alloc::string::String,
 }
@@ -407,7 +462,7 @@ pub struct DeleteAssignmentRequest {
 pub struct SearchAssignmentsRequest {
     /// Required. The resource name of the admin project(containing project and
     /// location), e.g.:
-    ///   `projects/myproject/locations/US`.
+    ///    `projects/myproject/locations/US`.
     #[prost(string, tag="1")]
     pub parent: ::prost::alloc::string::String,
     /// Please specify resource name as assignee in the query.
@@ -455,7 +510,7 @@ pub struct MoveAssignmentRequest {
     #[prost(string, tag="1")]
     pub name: ::prost::alloc::string::String,
     /// The new reservation ID, e.g.:
-    ///   `projects/myotherproject/locations/US/reservations/team2-prod`
+    ///    `projects/myotherproject/locations/US/reservations/team2-prod`
     #[prost(string, tag="3")]
     pub destination_id: ::prost::alloc::string::String,
 }
@@ -496,6 +551,7 @@ pub struct UpdateBiReservationRequest {
 pub mod reservation_service_client {
     #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
     use tonic::codegen::*;
+    use tonic::codegen::http::Uri;
     /// Deprecated: Please use the v1 api instead.
     /// This API allows users to manage their flat-rate BigQuery reservations.
     ///
@@ -527,6 +583,10 @@ pub mod reservation_service_client {
             let inner = tonic::client::Grpc::new(inner);
             Self { inner }
         }
+        pub fn with_origin(inner: T, origin: Uri) -> Self {
+            let inner = tonic::client::Grpc::with_origin(inner, origin);
+            Self { inner }
+        }
         pub fn with_interceptor<F>(
             inner: T,
             interceptor: F,
@@ -546,19 +606,19 @@ pub mod reservation_service_client {
         {
             ReservationServiceClient::new(InterceptedService::new(inner, interceptor))
         }
-        /// Compress requests with `gzip`.
+        /// Compress requests with the given encoding.
         ///
         /// This requires the server to support it otherwise it might respond with an
         /// error.
         #[must_use]
-        pub fn send_gzip(mut self) -> Self {
-            self.inner = self.inner.send_gzip();
+        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.send_compressed(encoding);
             self
         }
-        /// Enable decompressing responses with `gzip`.
+        /// Enable decompressing responses.
         #[must_use]
-        pub fn accept_gzip(mut self) -> Self {
-            self.inner = self.inner.accept_gzip();
+        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.accept_compressed(encoding);
             self
         }
         /// Creates a new reservation resource.

@@ -1,48 +1,10 @@
-/// Table display options that can be reused.
+/// A widget that groups the other widgets. All widgets that are within
+/// the area spanned by the grouping widget are considered member widgets.
 #[derive(Clone, PartialEq, ::prost::Message)]
-pub struct TableDisplayOptions {
-    /// Optional. Columns to display in the table. Leave empty to display all available
-    /// columns. Note: This field is for future features and is not currently used.
-    #[prost(string, repeated, tag="1")]
-    pub shown_columns: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
-}
-/// A widget that displays a stream of log.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct LogsPanel {
-    /// A filter that chooses which log entries to return.  See [Advanced Logs
-    /// Queries](<https://cloud.google.com/logging/docs/view/advanced-queries>).
-    /// Only log entries that match the filter are returned.  An empty filter
-    /// matches all log entries.
-    #[prost(string, tag="1")]
-    pub filter: ::prost::alloc::string::String,
-    /// The names of logging resources to collect logs for. Currently only projects
-    /// are supported. If empty, the widget will default to the host project.
-    #[prost(string, repeated, tag="2")]
-    pub resource_names: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
-}
-/// A widget that displays textual content.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct Text {
-    /// The text content to be displayed.
-    #[prost(string, tag="1")]
-    pub content: ::prost::alloc::string::String,
-    /// How the text content is formatted.
-    #[prost(enumeration="text::Format", tag="2")]
-    pub format: i32,
-}
-/// Nested message and enum types in `Text`.
-pub mod text {
-    /// The format type of the text content.
-    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
-    #[repr(i32)]
-    pub enum Format {
-        /// Format is unspecified. Defaults to MARKDOWN.
-        Unspecified = 0,
-        /// The text contains Markdown formatting.
-        Markdown = 1,
-        /// The text contains no special formatting.
-        Raw = 2,
-    }
+pub struct CollapsibleGroup {
+    /// The collapsed state of the widget on first page load.
+    #[prost(bool, tag="1")]
+    pub collapsed: bool,
 }
 /// Describes how to combine multiple time series to provide a different view of
 /// the data.  Aggregation of time series is done in two steps. First, each time
@@ -281,6 +243,35 @@ pub mod aggregation {
         /// `GAUGE` metric with `value_type` `DOUBLE`.
         AlignPercentChange = 23,
     }
+    impl Aligner {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                Aligner::AlignNone => "ALIGN_NONE",
+                Aligner::AlignDelta => "ALIGN_DELTA",
+                Aligner::AlignRate => "ALIGN_RATE",
+                Aligner::AlignInterpolate => "ALIGN_INTERPOLATE",
+                Aligner::AlignNextOlder => "ALIGN_NEXT_OLDER",
+                Aligner::AlignMin => "ALIGN_MIN",
+                Aligner::AlignMax => "ALIGN_MAX",
+                Aligner::AlignMean => "ALIGN_MEAN",
+                Aligner::AlignCount => "ALIGN_COUNT",
+                Aligner::AlignSum => "ALIGN_SUM",
+                Aligner::AlignStddev => "ALIGN_STDDEV",
+                Aligner::AlignCountTrue => "ALIGN_COUNT_TRUE",
+                Aligner::AlignCountFalse => "ALIGN_COUNT_FALSE",
+                Aligner::AlignFractionTrue => "ALIGN_FRACTION_TRUE",
+                Aligner::AlignPercentile99 => "ALIGN_PERCENTILE_99",
+                Aligner::AlignPercentile95 => "ALIGN_PERCENTILE_95",
+                Aligner::AlignPercentile50 => "ALIGN_PERCENTILE_50",
+                Aligner::AlignPercentile05 => "ALIGN_PERCENTILE_05",
+                Aligner::AlignPercentChange => "ALIGN_PERCENT_CHANGE",
+            }
+        }
+    }
     /// A Reducer operation describes how to aggregate data points from multiple
     /// time series into a single time series, where the value of each data point
     /// in the resulting series is a function of all the already aligned values in
@@ -364,6 +355,30 @@ pub mod aggregation {
         /// of the output is `DOUBLE`.
         ReducePercentile05 = 12,
     }
+    impl Reducer {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                Reducer::ReduceNone => "REDUCE_NONE",
+                Reducer::ReduceMean => "REDUCE_MEAN",
+                Reducer::ReduceMin => "REDUCE_MIN",
+                Reducer::ReduceMax => "REDUCE_MAX",
+                Reducer::ReduceSum => "REDUCE_SUM",
+                Reducer::ReduceStddev => "REDUCE_STDDEV",
+                Reducer::ReduceCount => "REDUCE_COUNT",
+                Reducer::ReduceCountTrue => "REDUCE_COUNT_TRUE",
+                Reducer::ReduceCountFalse => "REDUCE_COUNT_FALSE",
+                Reducer::ReduceFractionTrue => "REDUCE_FRACTION_TRUE",
+                Reducer::ReducePercentile99 => "REDUCE_PERCENTILE_99",
+                Reducer::ReducePercentile95 => "REDUCE_PERCENTILE_95",
+                Reducer::ReducePercentile50 => "REDUCE_PERCENTILE_50",
+                Reducer::ReducePercentile05 => "REDUCE_PERCENTILE_05",
+            }
+        }
+    }
 }
 /// Describes a ranking-based time series filter. Each input time series is
 /// ranked with an aligner. The filter will allow up to `num_time_series` time
@@ -406,6 +421,22 @@ pub mod pick_time_series_filter {
         /// Select the most recent value.
         Latest = 5,
     }
+    impl Method {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                Method::Unspecified => "METHOD_UNSPECIFIED",
+                Method::Mean => "METHOD_MEAN",
+                Method::Max => "METHOD_MAX",
+                Method::Min => "METHOD_MIN",
+                Method::Sum => "METHOD_SUM",
+                Method::Latest => "METHOD_LATEST",
+            }
+        }
+    }
     /// Describes the ranking directions.
     #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
     #[repr(i32)]
@@ -417,6 +448,19 @@ pub mod pick_time_series_filter {
         Top = 1,
         /// Pass the lowest `num_time_series` ranking inputs.
         Bottom = 2,
+    }
+    impl Direction {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                Direction::Unspecified => "DIRECTION_UNSPECIFIED",
+                Direction::Top => "TOP",
+                Direction::Bottom => "BOTTOM",
+            }
+        }
     }
 }
 /// A filter that ranks streams based on their statistical relation to other
@@ -445,6 +489,18 @@ pub mod statistical_time_series_filter {
         Unspecified = 0,
         /// Compute the outlier score of each stream.
         ClusterOutlier = 1,
+    }
+    impl Method {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                Method::Unspecified => "METHOD_UNSPECIFIED",
+                Method::ClusterOutlier => "METHOD_CLUSTER_OUTLIER",
+            }
+        }
     }
 }
 /// TimeSeriesQuery collects the set of supported methods for querying time
@@ -600,6 +656,19 @@ pub mod threshold {
         /// Crossing the threshold is "emergency" behavior.
         Red = 6,
     }
+    impl Color {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                Color::Unspecified => "COLOR_UNSPECIFIED",
+                Color::Yellow => "YELLOW",
+                Color::Red => "RED",
+            }
+        }
+    }
     /// Whether the threshold is considered crossed by an actual value above or
     /// below its threshold value.
     #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
@@ -614,6 +683,19 @@ pub mod threshold {
         /// the threshold value.
         Below = 2,
     }
+    impl Direction {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                Direction::Unspecified => "DIRECTION_UNSPECIFIED",
+                Direction::Above => "ABOVE",
+                Direction::Below => "BELOW",
+            }
+        }
+    }
     /// An axis identifier.
     #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
     #[repr(i32)]
@@ -624,6 +706,19 @@ pub mod threshold {
         Y1 = 1,
         /// The y2_axis (the left axis of chart).
         Y2 = 2,
+    }
+    impl TargetAxis {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                TargetAxis::Unspecified => "TARGET_AXIS_UNSPECIFIED",
+                TargetAxis::Y1 => "Y1",
+                TargetAxis::Y2 => "Y2",
+            }
+        }
     }
 }
 /// Defines the possible types of spark chart supported by the `Scorecard`.
@@ -636,6 +731,216 @@ pub enum SparkChartType {
     SparkLine = 1,
     /// The sparkbar will be rendered as a small bar chart.
     SparkBar = 2,
+}
+impl SparkChartType {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            SparkChartType::Unspecified => "SPARK_CHART_TYPE_UNSPECIFIED",
+            SparkChartType::SparkLine => "SPARK_LINE",
+            SparkChartType::SparkBar => "SPARK_BAR",
+        }
+    }
+}
+/// A widget showing the latest value of a metric, and how this value relates to
+/// one or more thresholds.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct Scorecard {
+    /// Required. Fields for querying time series data from the
+    /// Stackdriver metrics API.
+    #[prost(message, optional, tag="1")]
+    pub time_series_query: ::core::option::Option<TimeSeriesQuery>,
+    /// The thresholds used to determine the state of the scorecard given the
+    /// time series' current value. For an actual value x, the scorecard is in a
+    /// danger state if x is less than or equal to a danger threshold that triggers
+    /// below, or greater than or equal to a danger threshold that triggers above.
+    /// Similarly, if x is above/below a warning threshold that triggers
+    /// above/below, then the scorecard is in a warning state - unless x also puts
+    /// it in a danger state. (Danger trumps warning.)
+    ///
+    /// As an example, consider a scorecard with the following four thresholds:
+    /// {
+    ///    value: 90,
+    ///    category: 'DANGER',
+    ///    trigger: 'ABOVE',
+    /// },
+    /// {
+    ///    value: 70,
+    ///    category: 'WARNING',
+    ///    trigger: 'ABOVE',
+    /// },
+    /// {
+    ///    value: 10,
+    ///    category: 'DANGER',
+    ///    trigger: 'BELOW',
+    /// },
+    /// {
+    ///    value: 20,
+    ///    category: 'WARNING',
+    ///    trigger: 'BELOW',
+    /// }
+    ///
+    /// Then: values less than or equal to 10 would put the scorecard in a DANGER
+    /// state, values greater than 10 but less than or equal to 20 a WARNING state,
+    /// values strictly between 20 and 70 an OK state, values greater than or equal
+    /// to 70 but less than 90 a WARNING state, and values greater than or equal to
+    /// 90 a DANGER state.
+    #[prost(message, repeated, tag="6")]
+    pub thresholds: ::prost::alloc::vec::Vec<Threshold>,
+    /// Defines the optional additional chart shown on the scorecard. If
+    /// neither is included - then a default scorecard is shown.
+    #[prost(oneof="scorecard::DataView", tags="4, 5")]
+    pub data_view: ::core::option::Option<scorecard::DataView>,
+}
+/// Nested message and enum types in `Scorecard`.
+pub mod scorecard {
+    /// A gauge chart shows where the current value sits within a pre-defined
+    /// range. The upper and lower bounds should define the possible range of
+    /// values for the scorecard's query (inclusive).
+    #[derive(Clone, PartialEq, ::prost::Message)]
+    pub struct GaugeView {
+        /// The lower bound for this gauge chart. The value of the chart should
+        /// always be greater than or equal to this.
+        #[prost(double, tag="1")]
+        pub lower_bound: f64,
+        /// The upper bound for this gauge chart. The value of the chart should
+        /// always be less than or equal to this.
+        #[prost(double, tag="2")]
+        pub upper_bound: f64,
+    }
+    /// A sparkChart is a small chart suitable for inclusion in a table-cell or
+    /// inline in text. This message contains the configuration for a sparkChart
+    /// to show up on a Scorecard, showing recent trends of the scorecard's
+    /// timeseries.
+    #[derive(Clone, PartialEq, ::prost::Message)]
+    pub struct SparkChartView {
+        /// Required. The type of sparkchart to show in this chartView.
+        #[prost(enumeration="super::SparkChartType", tag="1")]
+        pub spark_chart_type: i32,
+        /// The lower bound on data point frequency in the chart implemented by
+        /// specifying the minimum alignment period to use in a time series query.
+        /// For example, if the data is published once every 10 minutes it would not
+        /// make sense to fetch and align data at one minute intervals. This field is
+        /// optional and exists only as a hint.
+        #[prost(message, optional, tag="2")]
+        pub min_alignment_period: ::core::option::Option<::prost_types::Duration>,
+    }
+    /// Defines the optional additional chart shown on the scorecard. If
+    /// neither is included - then a default scorecard is shown.
+    #[derive(Clone, PartialEq, ::prost::Oneof)]
+    pub enum DataView {
+        /// Will cause the scorecard to show a gauge chart.
+        #[prost(message, tag="4")]
+        GaugeView(GaugeView),
+        /// Will cause the scorecard to show a spark chart.
+        #[prost(message, tag="5")]
+        SparkChartView(SparkChartView),
+    }
+}
+/// A chart that displays alert policy data.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct AlertChart {
+    /// Required. The resource name of the alert policy. The format is:
+    ///
+    ///      projects/\[PROJECT_ID_OR_NUMBER]/alertPolicies/[ALERT_POLICY_ID\]
+    #[prost(string, tag="1")]
+    pub name: ::prost::alloc::string::String,
+}
+/// A widget that displays a stream of log.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct LogsPanel {
+    /// A filter that chooses which log entries to return.  See [Advanced Logs
+    /// Queries](<https://cloud.google.com/logging/docs/view/advanced-queries>).
+    /// Only log entries that match the filter are returned.  An empty filter
+    /// matches all log entries.
+    #[prost(string, tag="1")]
+    pub filter: ::prost::alloc::string::String,
+    /// The names of logging resources to collect logs for. Currently only projects
+    /// are supported. If empty, the widget will default to the host project.
+    #[prost(string, repeated, tag="2")]
+    pub resource_names: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
+}
+/// Table display options that can be reused.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct TableDisplayOptions {
+    /// Optional. Columns to display in the table. Leave empty to display all available
+    /// columns. Note: This field is for future features and is not currently used.
+    #[prost(string, repeated, tag="1")]
+    pub shown_columns: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
+}
+/// A table that displays time series data.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct TimeSeriesTable {
+    /// Required. The data displayed in this table.
+    #[prost(message, repeated, tag="1")]
+    pub data_sets: ::prost::alloc::vec::Vec<time_series_table::TableDataSet>,
+}
+/// Nested message and enum types in `TimeSeriesTable`.
+pub mod time_series_table {
+    /// Groups a time series query definition with table options.
+    #[derive(Clone, PartialEq, ::prost::Message)]
+    pub struct TableDataSet {
+        /// Required. Fields for querying time series data from the
+        /// Stackdriver metrics API.
+        #[prost(message, optional, tag="1")]
+        pub time_series_query: ::core::option::Option<super::TimeSeriesQuery>,
+        /// Optional. A template string for naming `TimeSeries` in the resulting data set.
+        /// This should be a string with interpolations of the form `${label_name}`,
+        /// which will resolve to the label's value i.e.
+        /// "${resource.labels.project_id}."
+        #[prost(string, tag="2")]
+        pub table_template: ::prost::alloc::string::String,
+        /// Optional. The lower bound on data point frequency for this data set, implemented by
+        /// specifying the minimum alignment period to use in a time series query
+        /// For example, if the data is published once every 10 minutes, the
+        /// `min_alignment_period` should be at least 10 minutes. It would not
+        /// make sense to fetch and align data at one minute intervals.
+        #[prost(message, optional, tag="3")]
+        pub min_alignment_period: ::core::option::Option<::prost_types::Duration>,
+        /// Optional. Table display options for configuring how the table is rendered.
+        #[prost(message, optional, tag="4")]
+        pub table_display_options: ::core::option::Option<super::TableDisplayOptions>,
+    }
+}
+/// A widget that displays textual content.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct Text {
+    /// The text content to be displayed.
+    #[prost(string, tag="1")]
+    pub content: ::prost::alloc::string::String,
+    /// How the text content is formatted.
+    #[prost(enumeration="text::Format", tag="2")]
+    pub format: i32,
+}
+/// Nested message and enum types in `Text`.
+pub mod text {
+    /// The format type of the text content.
+    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+    #[repr(i32)]
+    pub enum Format {
+        /// Format is unspecified. Defaults to MARKDOWN.
+        Unspecified = 0,
+        /// The text contains Markdown formatting.
+        Markdown = 1,
+        /// The text contains no special formatting.
+        Raw = 2,
+    }
+    impl Format {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                Format::Unspecified => "FORMAT_UNSPECIFIED",
+                Format::Markdown => "MARKDOWN",
+                Format::Raw => "RAW",
+            }
+        }
+    }
 }
 /// A chart that displays data on a 2D (X and Y axes) plane.
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -720,6 +1025,21 @@ pub mod xy_chart {
             /// Stackdriver Monitoring application.
             Heatmap = 4,
         }
+        impl PlotType {
+            /// String value of the enum field names used in the ProtoBuf definition.
+            ///
+            /// The values are not transformed in any way and thus are considered stable
+            /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+            pub fn as_str_name(&self) -> &'static str {
+                match self {
+                    PlotType::Unspecified => "PLOT_TYPE_UNSPECIFIED",
+                    PlotType::Line => "LINE",
+                    PlotType::StackedArea => "STACKED_AREA",
+                    PlotType::StackedBar => "STACKED_BAR",
+                    PlotType::Heatmap => "HEATMAP",
+                }
+            }
+        }
         /// An axis identifier.
         #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
         #[repr(i32)]
@@ -730,6 +1050,19 @@ pub mod xy_chart {
             Y1 = 1,
             /// The y2_axis (the left axis of chart).
             Y2 = 2,
+        }
+        impl TargetAxis {
+            /// String value of the enum field names used in the ProtoBuf definition.
+            ///
+            /// The values are not transformed in any way and thus are considered stable
+            /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+            pub fn as_str_name(&self) -> &'static str {
+                match self {
+                    TargetAxis::Unspecified => "TARGET_AXIS_UNSPECIFIED",
+                    TargetAxis::Y1 => "Y1",
+                    TargetAxis::Y2 => "Y2",
+                }
+            }
         }
     }
     /// A chart axis.
@@ -754,6 +1087,19 @@ pub mod xy_chart {
             Linear = 1,
             /// Logarithmic scale (base 10).
             Log10 = 2,
+        }
+        impl Scale {
+            /// String value of the enum field names used in the ProtoBuf definition.
+            ///
+            /// The values are not transformed in any way and thus are considered stable
+            /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+            pub fn as_str_name(&self) -> &'static str {
+                match self {
+                    Scale::Unspecified => "SCALE_UNSPECIFIED",
+                    Scale::Linear => "LINEAR",
+                    Scale::Log10 => "LOG10",
+                }
+            }
         }
     }
 }
@@ -782,196 +1128,19 @@ pub mod chart_options {
         /// and more.
         Stats = 3,
     }
-}
-/// A filter to reduce the amount of data charted in relevant widgets.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct DashboardFilter {
-    /// Required. The key for the label
-    #[prost(string, tag="1")]
-    pub label_key: ::prost::alloc::string::String,
-    /// The placeholder text that can be referenced in a filter string or MQL
-    /// query. If omitted, the dashboard filter will be applied to all relevant
-    /// widgets in the dashboard.
-    #[prost(string, tag="3")]
-    pub template_variable: ::prost::alloc::string::String,
-    /// The specified filter type
-    #[prost(enumeration="dashboard_filter::FilterType", tag="5")]
-    pub filter_type: i32,
-    /// The default value used in the filter comparison
-    #[prost(oneof="dashboard_filter::DefaultValue", tags="4")]
-    pub default_value: ::core::option::Option<dashboard_filter::DefaultValue>,
-}
-/// Nested message and enum types in `DashboardFilter`.
-pub mod dashboard_filter {
-    /// The type for the dashboard filter
-    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
-    #[repr(i32)]
-    pub enum FilterType {
-        /// Filter type is unspecified. This is not valid in a well-formed request.
-        Unspecified = 0,
-        /// Filter on a resource label value
-        ResourceLabel = 1,
-        /// Filter on a metrics label value
-        MetricLabel = 2,
-        /// Filter on a user metadata label value
-        UserMetadataLabel = 3,
-        /// Filter on a system metadata label value
-        SystemMetadataLabel = 4,
-        /// Filter on a group id
-        Group = 5,
-    }
-    /// The default value used in the filter comparison
-    #[derive(Clone, PartialEq, ::prost::Oneof)]
-    pub enum DefaultValue {
-        /// A variable-length string value.
-        #[prost(string, tag="4")]
-        StringValue(::prost::alloc::string::String),
-    }
-}
-/// A chart that displays alert policy data.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct AlertChart {
-    /// Required. The resource name of the alert policy. The format is:
-    ///
-    ///     projects/\[PROJECT_ID_OR_NUMBER]/alertPolicies/[ALERT_POLICY_ID\]
-    #[prost(string, tag="1")]
-    pub name: ::prost::alloc::string::String,
-}
-/// A widget that groups the other widgets. All widgets that are within
-/// the area spanned by the grouping widget are considered member widgets.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct CollapsibleGroup {
-    /// The collapsed state of the widget on first page load.
-    #[prost(bool, tag="1")]
-    pub collapsed: bool,
-}
-/// A widget showing the latest value of a metric, and how this value relates to
-/// one or more thresholds.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct Scorecard {
-    /// Required. Fields for querying time series data from the
-    /// Stackdriver metrics API.
-    #[prost(message, optional, tag="1")]
-    pub time_series_query: ::core::option::Option<TimeSeriesQuery>,
-    /// The thresholds used to determine the state of the scorecard given the
-    /// time series' current value. For an actual value x, the scorecard is in a
-    /// danger state if x is less than or equal to a danger threshold that triggers
-    /// below, or greater than or equal to a danger threshold that triggers above.
-    /// Similarly, if x is above/below a warning threshold that triggers
-    /// above/below, then the scorecard is in a warning state - unless x also puts
-    /// it in a danger state. (Danger trumps warning.)
-    ///
-    /// As an example, consider a scorecard with the following four thresholds:
-    /// {
-    ///   value: 90,
-    ///   category: 'DANGER',
-    ///   trigger: 'ABOVE',
-    /// },
-    /// {
-    ///   value: 70,
-    ///   category: 'WARNING',
-    ///   trigger: 'ABOVE',
-    /// },
-    /// {
-    ///   value: 10,
-    ///   category: 'DANGER',
-    ///   trigger: 'BELOW',
-    /// },
-    /// {
-    ///   value: 20,
-    ///   category: 'WARNING',
-    ///   trigger: 'BELOW',
-    /// }
-    ///
-    /// Then: values less than or equal to 10 would put the scorecard in a DANGER
-    /// state, values greater than 10 but less than or equal to 20 a WARNING state,
-    /// values strictly between 20 and 70 an OK state, values greater than or equal
-    /// to 70 but less than 90 a WARNING state, and values greater than or equal to
-    /// 90 a DANGER state.
-    #[prost(message, repeated, tag="6")]
-    pub thresholds: ::prost::alloc::vec::Vec<Threshold>,
-    /// Defines the optional additional chart shown on the scorecard. If
-    /// neither is included - then a default scorecard is shown.
-    #[prost(oneof="scorecard::DataView", tags="4, 5")]
-    pub data_view: ::core::option::Option<scorecard::DataView>,
-}
-/// Nested message and enum types in `Scorecard`.
-pub mod scorecard {
-    /// A gauge chart shows where the current value sits within a pre-defined
-    /// range. The upper and lower bounds should define the possible range of
-    /// values for the scorecard's query (inclusive).
-    #[derive(Clone, PartialEq, ::prost::Message)]
-    pub struct GaugeView {
-        /// The lower bound for this gauge chart. The value of the chart should
-        /// always be greater than or equal to this.
-        #[prost(double, tag="1")]
-        pub lower_bound: f64,
-        /// The upper bound for this gauge chart. The value of the chart should
-        /// always be less than or equal to this.
-        #[prost(double, tag="2")]
-        pub upper_bound: f64,
-    }
-    /// A sparkChart is a small chart suitable for inclusion in a table-cell or
-    /// inline in text. This message contains the configuration for a sparkChart
-    /// to show up on a Scorecard, showing recent trends of the scorecard's
-    /// timeseries.
-    #[derive(Clone, PartialEq, ::prost::Message)]
-    pub struct SparkChartView {
-        /// Required. The type of sparkchart to show in this chartView.
-        #[prost(enumeration="super::SparkChartType", tag="1")]
-        pub spark_chart_type: i32,
-        /// The lower bound on data point frequency in the chart implemented by
-        /// specifying the minimum alignment period to use in a time series query.
-        /// For example, if the data is published once every 10 minutes it would not
-        /// make sense to fetch and align data at one minute intervals. This field is
-        /// optional and exists only as a hint.
-        #[prost(message, optional, tag="2")]
-        pub min_alignment_period: ::core::option::Option<::prost_types::Duration>,
-    }
-    /// Defines the optional additional chart shown on the scorecard. If
-    /// neither is included - then a default scorecard is shown.
-    #[derive(Clone, PartialEq, ::prost::Oneof)]
-    pub enum DataView {
-        /// Will cause the scorecard to show a gauge chart.
-        #[prost(message, tag="4")]
-        GaugeView(GaugeView),
-        /// Will cause the scorecard to show a spark chart.
-        #[prost(message, tag="5")]
-        SparkChartView(SparkChartView),
-    }
-}
-/// A table that displays time series data.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct TimeSeriesTable {
-    /// Required. The data displayed in this table.
-    #[prost(message, repeated, tag="1")]
-    pub data_sets: ::prost::alloc::vec::Vec<time_series_table::TableDataSet>,
-}
-/// Nested message and enum types in `TimeSeriesTable`.
-pub mod time_series_table {
-    /// Groups a time series query definition with table options.
-    #[derive(Clone, PartialEq, ::prost::Message)]
-    pub struct TableDataSet {
-        /// Required. Fields for querying time series data from the
-        /// Stackdriver metrics API.
-        #[prost(message, optional, tag="1")]
-        pub time_series_query: ::core::option::Option<super::TimeSeriesQuery>,
-        /// Optional. A template string for naming `TimeSeries` in the resulting data set.
-        /// This should be a string with interpolations of the form `${label_name}`,
-        /// which will resolve to the label's value i.e.
-        /// "${resource.labels.project_id}."
-        #[prost(string, tag="2")]
-        pub table_template: ::prost::alloc::string::String,
-        /// Optional. The lower bound on data point frequency for this data set, implemented by
-        /// specifying the minimum alignment period to use in a time series query
-        /// For example, if the data is published once every 10 minutes, the
-        /// `min_alignment_period` should be at least 10 minutes. It would not
-        /// make sense to fetch and align data at one minute intervals.
-        #[prost(message, optional, tag="3")]
-        pub min_alignment_period: ::core::option::Option<::prost_types::Duration>,
-        /// Optional. Table display options for configuring how the table is rendered.
-        #[prost(message, optional, tag="4")]
-        pub table_display_options: ::core::option::Option<super::TableDisplayOptions>,
+    impl Mode {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                Mode::Unspecified => "MODE_UNSPECIFIED",
+                Mode::Color => "COLOR",
+                Mode::XRay => "X_RAY",
+                Mode::Stats => "STATS",
+            }
+        }
     }
 }
 /// Widget contains a single dashboard component and configuration of how to
@@ -1118,6 +1287,67 @@ pub mod column_layout {
         pub widgets: ::prost::alloc::vec::Vec<super::Widget>,
     }
 }
+/// A filter to reduce the amount of data charted in relevant widgets.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct DashboardFilter {
+    /// Required. The key for the label
+    #[prost(string, tag="1")]
+    pub label_key: ::prost::alloc::string::String,
+    /// The placeholder text that can be referenced in a filter string or MQL
+    /// query. If omitted, the dashboard filter will be applied to all relevant
+    /// widgets in the dashboard.
+    #[prost(string, tag="3")]
+    pub template_variable: ::prost::alloc::string::String,
+    /// The specified filter type
+    #[prost(enumeration="dashboard_filter::FilterType", tag="5")]
+    pub filter_type: i32,
+    /// The default value used in the filter comparison
+    #[prost(oneof="dashboard_filter::DefaultValue", tags="4")]
+    pub default_value: ::core::option::Option<dashboard_filter::DefaultValue>,
+}
+/// Nested message and enum types in `DashboardFilter`.
+pub mod dashboard_filter {
+    /// The type for the dashboard filter
+    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+    #[repr(i32)]
+    pub enum FilterType {
+        /// Filter type is unspecified. This is not valid in a well-formed request.
+        Unspecified = 0,
+        /// Filter on a resource label value
+        ResourceLabel = 1,
+        /// Filter on a metrics label value
+        MetricLabel = 2,
+        /// Filter on a user metadata label value
+        UserMetadataLabel = 3,
+        /// Filter on a system metadata label value
+        SystemMetadataLabel = 4,
+        /// Filter on a group id
+        Group = 5,
+    }
+    impl FilterType {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                FilterType::Unspecified => "FILTER_TYPE_UNSPECIFIED",
+                FilterType::ResourceLabel => "RESOURCE_LABEL",
+                FilterType::MetricLabel => "METRIC_LABEL",
+                FilterType::UserMetadataLabel => "USER_METADATA_LABEL",
+                FilterType::SystemMetadataLabel => "SYSTEM_METADATA_LABEL",
+                FilterType::Group => "GROUP",
+            }
+        }
+    }
+    /// The default value used in the filter comparison
+    #[derive(Clone, PartialEq, ::prost::Oneof)]
+    pub enum DefaultValue {
+        /// A variable-length string value.
+        #[prost(string, tag="4")]
+        StringValue(::prost::alloc::string::String),
+    }
+}
 /// A Google Stackdriver dashboard. Dashboards define the content and layout
 /// of pages in the Stackdriver web application.
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -1175,7 +1405,7 @@ pub mod dashboard {
 pub struct CreateDashboardRequest {
     /// Required. The project on which to execute the request. The format is:
     ///
-    ///     projects/\[PROJECT_ID_OR_NUMBER\]
+    ///      projects/\[PROJECT_ID_OR_NUMBER\]
     ///
     /// The `\[PROJECT_ID_OR_NUMBER\]` must match the dashboard resource name.
     #[prost(string, tag="1")]
@@ -1193,7 +1423,7 @@ pub struct CreateDashboardRequest {
 pub struct ListDashboardsRequest {
     /// Required. The scope of the dashboards to list. The format is:
     ///
-    ///     projects/\[PROJECT_ID_OR_NUMBER\]
+    ///      projects/\[PROJECT_ID_OR_NUMBER\]
     #[prost(string, tag="1")]
     pub parent: ::prost::alloc::string::String,
     /// A positive number that is the maximum number of results to return.
@@ -1223,9 +1453,9 @@ pub struct ListDashboardsResponse {
 pub struct GetDashboardRequest {
     /// Required. The resource name of the Dashboard. The format is one of:
     ///
-    ///  -  `dashboards/\[DASHBOARD_ID\]` (for system dashboards)
-    ///  -  `projects/\[PROJECT_ID_OR_NUMBER]/dashboards/[DASHBOARD_ID\]`
-    ///       (for custom dashboards).
+    ///   -  `dashboards/\[DASHBOARD_ID\]` (for system dashboards)
+    ///   -  `projects/\[PROJECT_ID_OR_NUMBER]/dashboards/[DASHBOARD_ID\]`
+    ///        (for custom dashboards).
     #[prost(string, tag="1")]
     pub name: ::prost::alloc::string::String,
 }
@@ -1234,7 +1464,7 @@ pub struct GetDashboardRequest {
 pub struct DeleteDashboardRequest {
     /// Required. The resource name of the Dashboard. The format is:
     ///
-    ///     projects/\[PROJECT_ID_OR_NUMBER]/dashboards/[DASHBOARD_ID\]
+    ///      projects/\[PROJECT_ID_OR_NUMBER]/dashboards/[DASHBOARD_ID\]
     #[prost(string, tag="1")]
     pub name: ::prost::alloc::string::String,
 }
@@ -1253,6 +1483,7 @@ pub struct UpdateDashboardRequest {
 pub mod dashboards_service_client {
     #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
     use tonic::codegen::*;
+    use tonic::codegen::http::Uri;
     /// Manages Stackdriver dashboards. A dashboard is an arrangement of data display
     /// widgets in a specific layout.
     #[derive(Debug, Clone)]
@@ -1268,6 +1499,10 @@ pub mod dashboards_service_client {
     {
         pub fn new(inner: T) -> Self {
             let inner = tonic::client::Grpc::new(inner);
+            Self { inner }
+        }
+        pub fn with_origin(inner: T, origin: Uri) -> Self {
+            let inner = tonic::client::Grpc::with_origin(inner, origin);
             Self { inner }
         }
         pub fn with_interceptor<F>(
@@ -1289,19 +1524,19 @@ pub mod dashboards_service_client {
         {
             DashboardsServiceClient::new(InterceptedService::new(inner, interceptor))
         }
-        /// Compress requests with `gzip`.
+        /// Compress requests with the given encoding.
         ///
         /// This requires the server to support it otherwise it might respond with an
         /// error.
         #[must_use]
-        pub fn send_gzip(mut self) -> Self {
-            self.inner = self.inner.send_gzip();
+        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.send_compressed(encoding);
             self
         }
-        /// Enable decompressing responses with `gzip`.
+        /// Enable decompressing responses.
         #[must_use]
-        pub fn accept_gzip(mut self) -> Self {
-            self.inner = self.inner.accept_gzip();
+        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.accept_compressed(encoding);
             self
         }
         /// Creates a new custom dashboard. For examples on how you can use this API to create dashboards, see [Managing dashboards by API](https://cloud.google.com/monitoring/dashboards/api-dashboard).

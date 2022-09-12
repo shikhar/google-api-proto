@@ -1,3 +1,109 @@
+/// A RequestHeader contains fields common to all Fleet Engine RPC requests.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct RequestHeader {
+    /// The BCP-47 language code, such as en-US or sr-Latn. For more information,
+    /// see <http://www.unicode.org/reports/tr35/#Unicode_locale_identifier.> If none
+    /// is specified, the response may be in any language, with a preference for
+    /// English if such a name exists. Field value example: `en-US`.
+    #[prost(string, tag="1")]
+    pub language_code: ::prost::alloc::string::String,
+    /// Required. CLDR region code of the region where the request originates.
+    /// Field value example: `US`.
+    #[prost(string, tag="2")]
+    pub region_code: ::prost::alloc::string::String,
+    /// Version of the calling SDK, if applicable.
+    /// The version format is "major.minor.patch", example: `1.1.2`.
+    #[prost(string, tag="3")]
+    pub sdk_version: ::prost::alloc::string::String,
+    /// Version of the operating system on which the calling SDK is running.
+    /// Field value examples: `4.4.1`, `12.1`.
+    #[prost(string, tag="4")]
+    pub os_version: ::prost::alloc::string::String,
+    /// Model of the device on which the calling SDK is running.
+    /// Field value examples: `iPhone12,1`, `SM-G920F`.
+    #[prost(string, tag="5")]
+    pub device_model: ::prost::alloc::string::String,
+    /// The type of SDK sending the request.
+    #[prost(enumeration="request_header::SdkType", tag="6")]
+    pub sdk_type: i32,
+    /// Version of the MapSDK which the calling SDK depends on, if applicable.
+    /// The version format is "major.minor.patch", example: `5.2.1`.
+    #[prost(string, tag="7")]
+    pub maps_sdk_version: ::prost::alloc::string::String,
+    /// Version of the NavSDK which the calling SDK depends on, if applicable.
+    /// The version format is "major.minor.patch", example: `2.1.0`.
+    #[prost(string, tag="8")]
+    pub nav_sdk_version: ::prost::alloc::string::String,
+    /// Platform of the calling SDK.
+    #[prost(enumeration="request_header::Platform", tag="9")]
+    pub platform: i32,
+    /// Manufacturer of the Android device from the calling SDK, only applicable
+    /// for the Android SDKs.
+    /// Field value example: `Samsung`.
+    #[prost(string, tag="10")]
+    pub manufacturer: ::prost::alloc::string::String,
+    /// Android API level of the calling SDK, only applicable for the Android SDKs.
+    /// Field value example: `23`.
+    #[prost(int32, tag="11")]
+    pub android_api_level: i32,
+}
+/// Nested message and enum types in `RequestHeader`.
+pub mod request_header {
+    /// Possible types of SDK.
+    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+    #[repr(i32)]
+    pub enum SdkType {
+        /// The default value. This value is used if the `sdk_type` is omitted.
+        Unspecified = 0,
+        /// The calling SDK is Consumer.
+        Consumer = 1,
+        /// The calling SDK is Driver.
+        Driver = 2,
+        /// The calling SDK is JavaScript.
+        Javascript = 3,
+    }
+    impl SdkType {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                SdkType::Unspecified => "SDK_TYPE_UNSPECIFIED",
+                SdkType::Consumer => "CONSUMER",
+                SdkType::Driver => "DRIVER",
+                SdkType::Javascript => "JAVASCRIPT",
+            }
+        }
+    }
+    /// The platform of the calling SDK.
+    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+    #[repr(i32)]
+    pub enum Platform {
+        /// The default value. This value is used if the platform is omitted.
+        Unspecified = 0,
+        /// The request is coming from Android.
+        Android = 1,
+        /// The request is coming from iOS.
+        Ios = 2,
+        /// The request is coming from the web.
+        Web = 3,
+    }
+    impl Platform {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                Platform::Unspecified => "PLATFORM_UNSPECIFIED",
+                Platform::Android => "ANDROID",
+                Platform::Ios => "IOS",
+                Platform::Web => "WEB",
+            }
+        }
+    }
+}
 /// Traffic density indicator on a contiguous segment of a path. Given a path
 /// with points P_0, P_1, ... , P_N (zero-based index), the SpeedReadingInterval
 /// defines an interval and describes its traffic using the following categories.
@@ -29,6 +135,20 @@ pub mod speed_reading_interval {
         Slow = 2,
         /// Traffic jam detected.
         TrafficJam = 3,
+    }
+    impl Speed {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                Speed::Unspecified => "SPEED_UNSPECIFIED",
+                Speed::Normal => "NORMAL",
+                Speed::Slow => "SLOW",
+                Speed::TrafficJam => "TRAFFIC_JAM",
+            }
+        }
     }
 }
 /// Traffic density along a Vehicle's path.
@@ -256,6 +376,19 @@ pub enum TripType {
     /// The trip is exclusive to a vehicle.
     Exclusive = 2,
 }
+impl TripType {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            TripType::UnknownTripType => "UNKNOWN_TRIP_TYPE",
+            TripType::Shared => "SHARED",
+            TripType::Exclusive => "EXCLUSIVE",
+        }
+    }
+}
 /// The type of waypoint.
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
 #[repr(i32)]
@@ -269,6 +402,20 @@ pub enum WaypointType {
     /// Waypoints for intermediate destinations in a multi-destination trip.
     IntermediateDestinationWaypointType = 3,
 }
+impl WaypointType {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            WaypointType::UnknownWaypointType => "UNKNOWN_WAYPOINT_TYPE",
+            WaypointType::PickupWaypointType => "PICKUP_WAYPOINT_TYPE",
+            WaypointType::DropOffWaypointType => "DROP_OFF_WAYPOINT_TYPE",
+            WaypointType::IntermediateDestinationWaypointType => "INTERMEDIATE_DESTINATION_WAYPOINT_TYPE",
+        }
+    }
+}
 /// The type of polyline format.
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
 #[repr(i32)]
@@ -280,6 +427,19 @@ pub enum PolylineFormatType {
     /// A polyline encoded with a polyline compression algorithm. Decoding is not
     /// yet supported.
     EncodedPolylineType = 2,
+}
+impl PolylineFormatType {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            PolylineFormatType::UnknownFormatType => "UNKNOWN_FORMAT_TYPE",
+            PolylineFormatType::LatLngListType => "LAT_LNG_LIST_TYPE",
+            PolylineFormatType::EncodedPolylineType => "ENCODED_POLYLINE_TYPE",
+        }
+    }
 }
 /// The vehicle's navigation status.
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
@@ -296,6 +456,21 @@ pub enum NavigationStatus {
     OffRoute = 3,
     /// The vehicle is within approximately 50m of the destination.
     ArrivedAtDestination = 4,
+}
+impl NavigationStatus {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            NavigationStatus::UnknownNavigationStatus => "UNKNOWN_NAVIGATION_STATUS",
+            NavigationStatus::NoGuidance => "NO_GUIDANCE",
+            NavigationStatus::EnrouteToDestination => "ENROUTE_TO_DESTINATION",
+            NavigationStatus::OffRoute => "OFF_ROUTE",
+            NavigationStatus::ArrivedAtDestination => "ARRIVED_AT_DESTINATION",
+        }
+    }
 }
 /// The sensor or methodology used to determine the location.
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
@@ -314,388 +489,20 @@ pub enum LocationSensor {
     /// The fused location provider in Google Play services.
     FusedLocationProvider = 100,
 }
-/// Vehicle metadata.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct Vehicle {
-    /// Output only. The unique name for this vehicle.
-    /// The format is `providers/{provider}/vehicles/{vehicle}`.
-    #[prost(string, tag="1")]
-    pub name: ::prost::alloc::string::String,
-    /// The vehicle state.
-    #[prost(enumeration="VehicleState", tag="2")]
-    pub vehicle_state: i32,
-    /// Trip types supported by this vehicle.
-    #[prost(enumeration="TripType", repeated, tag="3")]
-    pub supported_trip_types: ::prost::alloc::vec::Vec<i32>,
-    /// Output only. List of `trip_id`'s for trips currently assigned to this vehicle.
-    #[prost(string, repeated, tag="4")]
-    pub current_trips: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
-    /// Last reported location of the vehicle.
-    #[prost(message, optional, tag="5")]
-    pub last_location: ::core::option::Option<VehicleLocation>,
-    /// The total numbers of riders this vehicle can carry.  The driver is not
-    /// considered in this value. This value must be greater than or equal to one.
-    #[prost(int32, tag="6")]
-    pub maximum_capacity: i32,
-    /// List of vehicle attributes. A vehicle can have at most 50
-    /// attributes, and each attribute must have a unique key.
-    #[prost(message, repeated, tag="8")]
-    pub attributes: ::prost::alloc::vec::Vec<VehicleAttribute>,
-    /// The type of this vehicle.  Can be used to filter vehicles in
-    /// `SearchVehicles` results.  Also influences ETA and route calculations.
-    #[prost(message, optional, tag="9")]
-    pub vehicle_type: ::core::option::Option<vehicle::VehicleType>,
-    /// License plate information for the vehicle.
-    #[prost(message, optional, tag="10")]
-    pub license_plate: ::core::option::Option<LicensePlate>,
-    /// Deprecated: Use `Vehicle.waypoints` instead.
-    #[deprecated]
-    #[prost(message, repeated, tag="12")]
-    pub route: ::prost::alloc::vec::Vec<TerminalLocation>,
-    /// The polyline specifying the route the driver app intends to take to
-    /// the next waypoint. This list is also returned in
-    /// `Trip.current_route_segment` for all active trips assigned to the vehicle.
+impl LocationSensor {
+    /// String value of the enum field names used in the ProtoBuf definition.
     ///
-    /// Note: This field is intended only for use by the Driver SDK. Decoding is
-    /// not yet supported.
-    #[prost(string, tag="20")]
-    pub current_route_segment: ::prost::alloc::string::String,
-    /// Input only. Fleet Engine uses this information to improve Journey Sharing.
-    #[prost(message, optional, tag="28")]
-    pub current_route_segment_traffic: ::core::option::Option<TrafficPolylineData>,
-    /// Output only. Time when `current_route_segment` was set. It can be stored by the client
-    /// and passed in future `GetVehicle` requests to prevent returning routes that
-    /// haven't changed.
-    #[prost(message, optional, tag="15")]
-    pub current_route_segment_version: ::core::option::Option<::prost_types::Timestamp>,
-    /// The waypoint where `current_route_segment` ends. This can be supplied by
-    /// drivers on `UpdateVehicle` calls either as a full trip waypoint, a waypoint
-    /// `LatLng`, or as the last `LatLng` of the `current_route_segment`. Fleet
-    /// Engine will then do its best to interpolate to an actual waypoint if it is
-    /// not fully specified. This field is ignored in `UpdateVehicle` calls unless
-    /// `current_route_segment` is also specified.
-    #[prost(message, optional, tag="24")]
-    pub current_route_segment_end_point: ::core::option::Option<TripWaypoint>,
-    /// The remaining driving distance for the `current_route_segment`.
-    /// This value is also returned in `Trip.remaining_distance_meters` for all
-    /// active trips assigned to the vehicle. The value is unspecified if the
-    /// `current_route_segment` field is empty.
-    #[prost(message, optional, tag="18")]
-    pub remaining_distance_meters: ::core::option::Option<i32>,
-    /// The ETA to the first entry in the `waypoints` field.  The value is
-    /// unspecified if the `waypoints` field is empty or the
-    /// `Vehicle.current_route_segment` field is empty.
-    ///
-    /// When updating a vehicle, `remaining_time_seconds` takes precedence over
-    /// `eta_to_first_waypoint` in the same request.
-    #[prost(message, optional, tag="19")]
-    pub eta_to_first_waypoint: ::core::option::Option<::prost_types::Timestamp>,
-    /// Input only. The remaining driving time for the `current_route_segment`. The value is
-    /// unspecified if the `waypoints` field is empty or the
-    /// `Vehicle.current_route_segment` field is empty. This value should match
-    /// `eta_to_first_waypoint` - `current_time` if all parties are using the same
-    /// clock.
-    ///
-    /// When updating a vehicle, `remaining_time_seconds` takes precedence over
-    /// `eta_to_first_waypoint` in the same request.
-    #[prost(message, optional, tag="25")]
-    pub remaining_time_seconds: ::core::option::Option<i32>,
-    /// The remaining waypoints assigned to this Vehicle.
-    #[prost(message, repeated, tag="22")]
-    pub waypoints: ::prost::alloc::vec::Vec<TripWaypoint>,
-    /// Output only. Last time the `waypoints` field was updated. Clients should cache this
-    /// value and pass it in `GetVehicleRequest` to ensure the `waypoints` field is
-    /// only returned if it is updated.
-    #[prost(message, optional, tag="16")]
-    pub waypoints_version: ::core::option::Option<::prost_types::Timestamp>,
-    /// Indicates if the driver accepts back-to-back trips. If `true`,
-    /// `SearchVehicles` may include the vehicle even if it is currently assigned
-    /// to a trip. The default value is `false`.
-    #[prost(bool, tag="23")]
-    pub back_to_back_enabled: bool,
-    /// The vehicle's navigation status.
-    #[prost(enumeration="NavigationStatus", tag="26")]
-    pub navigation_status: i32,
-    /// Input only. Information about settings in the mobile device being used by the driver.
-    #[prost(message, optional, tag="27")]
-    pub device_settings: ::core::option::Option<DeviceSettings>,
-}
-/// Nested message and enum types in `Vehicle`.
-pub mod vehicle {
-    /// The type of vehicle.
-    #[derive(Clone, PartialEq, ::prost::Message)]
-    pub struct VehicleType {
-        /// Vehicle type category
-        #[prost(enumeration="vehicle_type::Category", tag="1")]
-        pub category: i32,
-    }
-    /// Nested message and enum types in `VehicleType`.
-    pub mod vehicle_type {
-        /// Vehicle type categories
-        #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
-        #[repr(i32)]
-        pub enum Category {
-            /// Default, used for unspecified or unrecognized vehicle categories.
-            Unknown = 0,
-            /// An automobile.
-            Auto = 1,
-            /// Any vehicle that acts as a taxi (typically licensed or regulated).
-            Taxi = 2,
-            /// Generally, a vehicle with a large storage capacity.
-            Truck = 3,
-            /// A motorcycle, moped, or other two-wheeled vehicle
-            TwoWheeler = 4,
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            LocationSensor::UnknownSensor => "UNKNOWN_SENSOR",
+            LocationSensor::Gps => "GPS",
+            LocationSensor::Network => "NETWORK",
+            LocationSensor::Passive => "PASSIVE",
+            LocationSensor::RoadSnappedLocationProvider => "ROAD_SNAPPED_LOCATION_PROVIDER",
+            LocationSensor::FusedLocationProvider => "FUSED_LOCATION_PROVIDER",
         }
-    }
-}
-/// Information about the device's battery.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct BatteryInfo {
-    /// Status of the battery, whether full or charging etc.
-    #[prost(enumeration="BatteryStatus", tag="1")]
-    pub battery_status: i32,
-    /// Status of battery power source.
-    #[prost(enumeration="PowerSource", tag="2")]
-    pub power_source: i32,
-    /// Current battery percentage \[0-100\].
-    #[prost(float, tag="3")]
-    pub battery_percentage: f32,
-}
-/// Information about various settings on the mobile device.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct DeviceSettings {
-    /// How location features are set to behave on the device when battery saver is
-    /// on.
-    #[prost(enumeration="LocationPowerSaveMode", tag="1")]
-    pub location_power_save_mode: i32,
-    /// Whether the device is currently in power save mode.
-    #[prost(bool, tag="2")]
-    pub is_power_save_mode: bool,
-    /// Whether the device is in an interactive state.
-    #[prost(bool, tag="3")]
-    pub is_interactive: bool,
-    /// Information about the battery state.
-    #[prost(message, optional, tag="4")]
-    pub battery_info: ::core::option::Option<BatteryInfo>,
-}
-/// The license plate information of the Vehicle.  To avoid storing
-/// personally-identifiable information, only the minimum information
-/// about the license plate is stored as part of the entity.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct LicensePlate {
-    /// Required. CLDR Country/Region Code.  For example, `US` for United States,
-    /// or `IN` for India.
-    #[prost(string, tag="1")]
-    pub country_code: ::prost::alloc::string::String,
-    /// The last digit of the license plate or "-1" to denote no numeric value
-    /// is present in the license plate.
-    ///
-    /// * "ABC 1234" -> "4"
-    /// * "AB 123 CD" -> "3"
-    /// * "ABCDEF" -> "-1"
-    #[prost(string, tag="2")]
-    pub last_character: ::prost::alloc::string::String,
-}
-/// Describes how clients should color one portion of the polyline along the
-/// route.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct VisualTrafficReportPolylineRendering {
-    /// Optional. Road stretches that should be rendered along the polyline. Stretches
-    /// <ul>
-    /// <li>are
-    /// guaranteed to not overlap, and</li>
-    /// <li>do not necessarily
-    /// span the full route.</li>
-    /// </ul>
-    ///
-    /// <p>In the absence of a road stretch to style, the client should apply the
-    /// default for the route.
-    #[prost(message, repeated, tag="1")]
-    pub road_stretch: ::prost::alloc::vec::Vec<visual_traffic_report_polyline_rendering::RoadStretch>,
-}
-/// Nested message and enum types in `VisualTrafficReportPolylineRendering`.
-pub mod visual_traffic_report_polyline_rendering {
-    /// One road stretch that should be rendered.
-    #[derive(Clone, PartialEq, ::prost::Message)]
-    pub struct RoadStretch {
-        /// Required. The style to apply.
-        #[prost(enumeration="road_stretch::Style", tag="1")]
-        pub style: i32,
-        /// Required. The style should be applied between `[offset_meters, offset_meters +
-        /// length_meters)`.
-        #[prost(int32, tag="2")]
-        pub offset_meters: i32,
-        /// Required. The length of the path where to apply the style.
-        #[prost(int32, tag="3")]
-        pub length_meters: i32,
-    }
-    /// Nested message and enum types in `RoadStretch`.
-    pub mod road_stretch {
-        /// The traffic style, indicating traffic speed.
-        #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
-        #[repr(i32)]
-        pub enum Style {
-            /// No style selected.
-            Unspecified = 0,
-            /// Traffic is slowing down.
-            SlowerTraffic = 1,
-            /// There is a traffic jam.
-            TrafficJam = 2,
-        }
-    }
-}
-/// Traffic conditions along the expected vehicle route.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct TrafficPolylineData {
-    /// A polyline rendering of how fast traffic is for all regions along
-    /// one stretch of a customer ride.
-    #[prost(message, optional, tag="1")]
-    pub traffic_rendering: ::core::option::Option<VisualTrafficReportPolylineRendering>,
-}
-/// The state of a `Vehicle`.
-#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
-#[repr(i32)]
-pub enum VehicleState {
-    /// Default, used for unspecified or unrecognized vehicle states.
-    UnknownVehicleState = 0,
-    /// The vehicle is not accepting new trips. Note: the vehicle may continue to
-    /// operate in this state while completing a trip assigned to it.
-    Offline = 1,
-    /// The vehicle is accepting new trips.
-    Online = 2,
-}
-/// How location features are configured to behave on the mobile device when the
-/// devices "battery saver" feature is on.
-/// (<https://developer.android.com/reference/android/os/PowerManager#getLocationPowerSaveMode(>))
-#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
-#[repr(i32)]
-pub enum LocationPowerSaveMode {
-    /// Undefined LocationPowerSaveMode
-    UnknownLocationPowerSaveMode = 0,
-    /// Either the location providers shouldn't be affected by battery saver, or
-    /// battery saver is off.
-    LocationModeNoChange = 1,
-    /// The GPS based location provider should be disabled when battery saver is on
-    /// and the device is non-interactive.
-    LocationModeGpsDisabledWhenScreenOff = 2,
-    /// All location providers should be disabled when battery saver is on and the
-    /// device is non-interactive.
-    LocationModeAllDisabledWhenScreenOff = 3,
-    /// All the location providers will be kept available, but location fixes
-    /// should only be provided to foreground apps.
-    LocationModeForegroundOnly = 4,
-    /// Location will not be turned off, but LocationManager will throttle all
-    /// requests to providers when the device is non-interactive.
-    LocationModeThrottleRequestsWhenScreenOff = 5,
-}
-/// Status of the battery, whether full or charging etc.
-#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
-#[repr(i32)]
-pub enum BatteryStatus {
-    /// Battery status unknown.
-    UnknownBatteryStatus = 0,
-    /// Battery is being charged.
-    Charging = 1,
-    /// Battery is discharging.
-    Discharging = 2,
-    /// Battery is full.
-    Full = 3,
-    /// Battery is not charging.
-    NotCharging = 4,
-    /// Battery is low on power.
-    PowerLow = 5,
-}
-/// Type of the charger being used to charge the battery.
-#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
-#[repr(i32)]
-pub enum PowerSource {
-    /// Power source unknown.
-    UnknownPowerSource = 0,
-    /// Power source is an AC charger.
-    Ac = 1,
-    /// Power source is a USB port.
-    Usb = 2,
-    /// Power source is wireless.
-    Wireless = 3,
-    /// Battery is unplugged.
-    Unplugged = 4,
-}
-/// A RequestHeader contains fields common to all Fleet Engine RPC requests.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct RequestHeader {
-    /// The BCP-47 language code, such as en-US or sr-Latn. For more information,
-    /// see <http://www.unicode.org/reports/tr35/#Unicode_locale_identifier.> If none
-    /// is specified, the response may be in any language, with a preference for
-    /// English if such a name exists. Field value example: `en-US`.
-    #[prost(string, tag="1")]
-    pub language_code: ::prost::alloc::string::String,
-    /// Required. CLDR region code of the region where the request originates.
-    /// Field value example: `US`.
-    #[prost(string, tag="2")]
-    pub region_code: ::prost::alloc::string::String,
-    /// Version of the calling SDK, if applicable.
-    /// The version format is "major.minor.patch", example: `1.1.2`.
-    #[prost(string, tag="3")]
-    pub sdk_version: ::prost::alloc::string::String,
-    /// Version of the operating system on which the calling SDK is running.
-    /// Field value examples: `4.4.1`, `12.1`.
-    #[prost(string, tag="4")]
-    pub os_version: ::prost::alloc::string::String,
-    /// Model of the device on which the calling SDK is running.
-    /// Field value examples: `iPhone12,1`, `SM-G920F`.
-    #[prost(string, tag="5")]
-    pub device_model: ::prost::alloc::string::String,
-    /// The type of SDK sending the request.
-    #[prost(enumeration="request_header::SdkType", tag="6")]
-    pub sdk_type: i32,
-    /// Version of the MapSDK which the calling SDK depends on, if applicable.
-    /// The version format is "major.minor.patch", example: `5.2.1`.
-    #[prost(string, tag="7")]
-    pub maps_sdk_version: ::prost::alloc::string::String,
-    /// Version of the NavSDK which the calling SDK depends on, if applicable.
-    /// The version format is "major.minor.patch", example: `2.1.0`.
-    #[prost(string, tag="8")]
-    pub nav_sdk_version: ::prost::alloc::string::String,
-    /// Platform of the calling SDK.
-    #[prost(enumeration="request_header::Platform", tag="9")]
-    pub platform: i32,
-    /// Manufacturer of the Android device from the calling SDK, only applicable
-    /// for the Android SDKs.
-    /// Field value example: `Samsung`.
-    #[prost(string, tag="10")]
-    pub manufacturer: ::prost::alloc::string::String,
-    /// Android API level of the calling SDK, only applicable for the Android SDKs.
-    /// Field value example: `23`.
-    #[prost(int32, tag="11")]
-    pub android_api_level: i32,
-}
-/// Nested message and enum types in `RequestHeader`.
-pub mod request_header {
-    /// Possible types of SDK.
-    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
-    #[repr(i32)]
-    pub enum SdkType {
-        /// The default value. This value is used if the `sdk_type` is omitted.
-        Unspecified = 0,
-        /// The calling SDK is Consumer.
-        Consumer = 1,
-        /// The calling SDK is Driver.
-        Driver = 2,
-        /// The calling SDK is JavaScript.
-        Javascript = 3,
-    }
-    /// The platform of the calling SDK.
-    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
-    #[repr(i32)]
-    pub enum Platform {
-        /// The default value. This value is used if the platform is omitted.
-        Unspecified = 0,
-        /// The request is coming from Android.
-        Android = 1,
-        /// The request is coming from iOS.
-        Ios = 2,
-        /// The request is coming from the web.
-        Web = 3,
     }
 }
 /// Trip metadata.
@@ -903,6 +710,25 @@ pub enum TripStatus {
     /// rideshare provider.
     Canceled = 6,
 }
+impl TripStatus {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            TripStatus::UnknownTripStatus => "UNKNOWN_TRIP_STATUS",
+            TripStatus::New => "NEW",
+            TripStatus::EnrouteToPickup => "ENROUTE_TO_PICKUP",
+            TripStatus::ArrivedAtPickup => "ARRIVED_AT_PICKUP",
+            TripStatus::ArrivedAtIntermediateDestination => "ARRIVED_AT_INTERMEDIATE_DESTINATION",
+            TripStatus::EnrouteToIntermediateDestination => "ENROUTE_TO_INTERMEDIATE_DESTINATION",
+            TripStatus::EnrouteToDropoff => "ENROUTE_TO_DROPOFF",
+            TripStatus::Complete => "COMPLETE",
+            TripStatus::Canceled => "CANCELED",
+        }
+    }
+}
 /// A set of values that indicate upon which platform the request was issued.
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
 #[repr(i32)]
@@ -920,6 +746,22 @@ pub enum BillingPlatformIdentifier {
     /// Other platforms that are not listed in this enumeration.
     Others = 5,
 }
+impl BillingPlatformIdentifier {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            BillingPlatformIdentifier::Unspecified => "BILLING_PLATFORM_IDENTIFIER_UNSPECIFIED",
+            BillingPlatformIdentifier::Server => "SERVER",
+            BillingPlatformIdentifier::Web => "WEB",
+            BillingPlatformIdentifier::Android => "ANDROID",
+            BillingPlatformIdentifier::Ios => "IOS",
+            BillingPlatformIdentifier::Others => "OTHERS",
+        }
+    }
+}
 /// Selector for different sets of Trip fields in a `GetTrip` response.  See
 /// \[AIP-157\](<https://google.aip.dev/157>) for context. Additional views are
 /// likely to be added.
@@ -936,6 +778,413 @@ pub enum TripView {
     /// Trip fields are populated for the Journey Sharing use case. This view is
     /// intended for server-to-server communications.
     JourneySharingV1s = 2,
+}
+impl TripView {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            TripView::Unspecified => "TRIP_VIEW_UNSPECIFIED",
+            TripView::Sdk => "SDK",
+            TripView::JourneySharingV1s => "JOURNEY_SHARING_V1S",
+        }
+    }
+}
+/// Vehicle metadata.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct Vehicle {
+    /// Output only. The unique name for this vehicle.
+    /// The format is `providers/{provider}/vehicles/{vehicle}`.
+    #[prost(string, tag="1")]
+    pub name: ::prost::alloc::string::String,
+    /// The vehicle state.
+    #[prost(enumeration="VehicleState", tag="2")]
+    pub vehicle_state: i32,
+    /// Trip types supported by this vehicle.
+    #[prost(enumeration="TripType", repeated, tag="3")]
+    pub supported_trip_types: ::prost::alloc::vec::Vec<i32>,
+    /// Output only. List of `trip_id`'s for trips currently assigned to this vehicle.
+    #[prost(string, repeated, tag="4")]
+    pub current_trips: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
+    /// Last reported location of the vehicle.
+    #[prost(message, optional, tag="5")]
+    pub last_location: ::core::option::Option<VehicleLocation>,
+    /// The total numbers of riders this vehicle can carry.  The driver is not
+    /// considered in this value. This value must be greater than or equal to one.
+    #[prost(int32, tag="6")]
+    pub maximum_capacity: i32,
+    /// List of vehicle attributes. A vehicle can have at most 50
+    /// attributes, and each attribute must have a unique key.
+    #[prost(message, repeated, tag="8")]
+    pub attributes: ::prost::alloc::vec::Vec<VehicleAttribute>,
+    /// The type of this vehicle.  Can be used to filter vehicles in
+    /// `SearchVehicles` results.  Also influences ETA and route calculations.
+    #[prost(message, optional, tag="9")]
+    pub vehicle_type: ::core::option::Option<vehicle::VehicleType>,
+    /// License plate information for the vehicle.
+    #[prost(message, optional, tag="10")]
+    pub license_plate: ::core::option::Option<LicensePlate>,
+    /// Deprecated: Use `Vehicle.waypoints` instead.
+    #[deprecated]
+    #[prost(message, repeated, tag="12")]
+    pub route: ::prost::alloc::vec::Vec<TerminalLocation>,
+    /// The polyline specifying the route the driver app intends to take to
+    /// the next waypoint. This list is also returned in
+    /// `Trip.current_route_segment` for all active trips assigned to the vehicle.
+    ///
+    /// Note: This field is intended only for use by the Driver SDK. Decoding is
+    /// not yet supported.
+    #[prost(string, tag="20")]
+    pub current_route_segment: ::prost::alloc::string::String,
+    /// Input only. Fleet Engine uses this information to improve Journey Sharing.
+    #[prost(message, optional, tag="28")]
+    pub current_route_segment_traffic: ::core::option::Option<TrafficPolylineData>,
+    /// Output only. Time when `current_route_segment` was set. It can be stored by the client
+    /// and passed in future `GetVehicle` requests to prevent returning routes that
+    /// haven't changed.
+    #[prost(message, optional, tag="15")]
+    pub current_route_segment_version: ::core::option::Option<::prost_types::Timestamp>,
+    /// The waypoint where `current_route_segment` ends. This can be supplied by
+    /// drivers on `UpdateVehicle` calls either as a full trip waypoint, a waypoint
+    /// `LatLng`, or as the last `LatLng` of the `current_route_segment`. Fleet
+    /// Engine will then do its best to interpolate to an actual waypoint if it is
+    /// not fully specified. This field is ignored in `UpdateVehicle` calls unless
+    /// `current_route_segment` is also specified.
+    #[prost(message, optional, tag="24")]
+    pub current_route_segment_end_point: ::core::option::Option<TripWaypoint>,
+    /// The remaining driving distance for the `current_route_segment`.
+    /// This value is also returned in `Trip.remaining_distance_meters` for all
+    /// active trips assigned to the vehicle. The value is unspecified if the
+    /// `current_route_segment` field is empty.
+    #[prost(message, optional, tag="18")]
+    pub remaining_distance_meters: ::core::option::Option<i32>,
+    /// The ETA to the first entry in the `waypoints` field.  The value is
+    /// unspecified if the `waypoints` field is empty or the
+    /// `Vehicle.current_route_segment` field is empty.
+    ///
+    /// When updating a vehicle, `remaining_time_seconds` takes precedence over
+    /// `eta_to_first_waypoint` in the same request.
+    #[prost(message, optional, tag="19")]
+    pub eta_to_first_waypoint: ::core::option::Option<::prost_types::Timestamp>,
+    /// Input only. The remaining driving time for the `current_route_segment`. The value is
+    /// unspecified if the `waypoints` field is empty or the
+    /// `Vehicle.current_route_segment` field is empty. This value should match
+    /// `eta_to_first_waypoint` - `current_time` if all parties are using the same
+    /// clock.
+    ///
+    /// When updating a vehicle, `remaining_time_seconds` takes precedence over
+    /// `eta_to_first_waypoint` in the same request.
+    #[prost(message, optional, tag="25")]
+    pub remaining_time_seconds: ::core::option::Option<i32>,
+    /// The remaining waypoints assigned to this Vehicle.
+    #[prost(message, repeated, tag="22")]
+    pub waypoints: ::prost::alloc::vec::Vec<TripWaypoint>,
+    /// Output only. Last time the `waypoints` field was updated. Clients should cache this
+    /// value and pass it in `GetVehicleRequest` to ensure the `waypoints` field is
+    /// only returned if it is updated.
+    #[prost(message, optional, tag="16")]
+    pub waypoints_version: ::core::option::Option<::prost_types::Timestamp>,
+    /// Indicates if the driver accepts back-to-back trips. If `true`,
+    /// `SearchVehicles` may include the vehicle even if it is currently assigned
+    /// to a trip. The default value is `false`.
+    #[prost(bool, tag="23")]
+    pub back_to_back_enabled: bool,
+    /// The vehicle's navigation status.
+    #[prost(enumeration="NavigationStatus", tag="26")]
+    pub navigation_status: i32,
+    /// Input only. Information about settings in the mobile device being used by the driver.
+    #[prost(message, optional, tag="27")]
+    pub device_settings: ::core::option::Option<DeviceSettings>,
+}
+/// Nested message and enum types in `Vehicle`.
+pub mod vehicle {
+    /// The type of vehicle.
+    #[derive(Clone, PartialEq, ::prost::Message)]
+    pub struct VehicleType {
+        /// Vehicle type category
+        #[prost(enumeration="vehicle_type::Category", tag="1")]
+        pub category: i32,
+    }
+    /// Nested message and enum types in `VehicleType`.
+    pub mod vehicle_type {
+        /// Vehicle type categories
+        #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+        #[repr(i32)]
+        pub enum Category {
+            /// Default, used for unspecified or unrecognized vehicle categories.
+            Unknown = 0,
+            /// An automobile.
+            Auto = 1,
+            /// Any vehicle that acts as a taxi (typically licensed or regulated).
+            Taxi = 2,
+            /// Generally, a vehicle with a large storage capacity.
+            Truck = 3,
+            /// A motorcycle, moped, or other two-wheeled vehicle
+            TwoWheeler = 4,
+        }
+        impl Category {
+            /// String value of the enum field names used in the ProtoBuf definition.
+            ///
+            /// The values are not transformed in any way and thus are considered stable
+            /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+            pub fn as_str_name(&self) -> &'static str {
+                match self {
+                    Category::Unknown => "UNKNOWN",
+                    Category::Auto => "AUTO",
+                    Category::Taxi => "TAXI",
+                    Category::Truck => "TRUCK",
+                    Category::TwoWheeler => "TWO_WHEELER",
+                }
+            }
+        }
+    }
+}
+/// Information about the device's battery.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct BatteryInfo {
+    /// Status of the battery, whether full or charging etc.
+    #[prost(enumeration="BatteryStatus", tag="1")]
+    pub battery_status: i32,
+    /// Status of battery power source.
+    #[prost(enumeration="PowerSource", tag="2")]
+    pub power_source: i32,
+    /// Current battery percentage \[0-100\].
+    #[prost(float, tag="3")]
+    pub battery_percentage: f32,
+}
+/// Information about various settings on the mobile device.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct DeviceSettings {
+    /// How location features are set to behave on the device when battery saver is
+    /// on.
+    #[prost(enumeration="LocationPowerSaveMode", tag="1")]
+    pub location_power_save_mode: i32,
+    /// Whether the device is currently in power save mode.
+    #[prost(bool, tag="2")]
+    pub is_power_save_mode: bool,
+    /// Whether the device is in an interactive state.
+    #[prost(bool, tag="3")]
+    pub is_interactive: bool,
+    /// Information about the battery state.
+    #[prost(message, optional, tag="4")]
+    pub battery_info: ::core::option::Option<BatteryInfo>,
+}
+/// The license plate information of the Vehicle.  To avoid storing
+/// personally-identifiable information, only the minimum information
+/// about the license plate is stored as part of the entity.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct LicensePlate {
+    /// Required. CLDR Country/Region Code.  For example, `US` for United States,
+    /// or `IN` for India.
+    #[prost(string, tag="1")]
+    pub country_code: ::prost::alloc::string::String,
+    /// The last digit of the license plate or "-1" to denote no numeric value
+    /// is present in the license plate.
+    ///
+    /// * "ABC 1234" -> "4"
+    /// * "AB 123 CD" -> "3"
+    /// * "ABCDEF" -> "-1"
+    #[prost(string, tag="2")]
+    pub last_character: ::prost::alloc::string::String,
+}
+/// Describes how clients should color one portion of the polyline along the
+/// route.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct VisualTrafficReportPolylineRendering {
+    /// Optional. Road stretches that should be rendered along the polyline. Stretches
+    /// <ul>
+    /// <li>are
+    /// guaranteed to not overlap, and</li>
+    /// <li>do not necessarily
+    /// span the full route.</li>
+    /// </ul>
+    ///
+    /// <p>In the absence of a road stretch to style, the client should apply the
+    /// default for the route.
+    #[prost(message, repeated, tag="1")]
+    pub road_stretch: ::prost::alloc::vec::Vec<visual_traffic_report_polyline_rendering::RoadStretch>,
+}
+/// Nested message and enum types in `VisualTrafficReportPolylineRendering`.
+pub mod visual_traffic_report_polyline_rendering {
+    /// One road stretch that should be rendered.
+    #[derive(Clone, PartialEq, ::prost::Message)]
+    pub struct RoadStretch {
+        /// Required. The style to apply.
+        #[prost(enumeration="road_stretch::Style", tag="1")]
+        pub style: i32,
+        /// Required. The style should be applied between `[offset_meters, offset_meters +
+        /// length_meters)`.
+        #[prost(int32, tag="2")]
+        pub offset_meters: i32,
+        /// Required. The length of the path where to apply the style.
+        #[prost(int32, tag="3")]
+        pub length_meters: i32,
+    }
+    /// Nested message and enum types in `RoadStretch`.
+    pub mod road_stretch {
+        /// The traffic style, indicating traffic speed.
+        #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+        #[repr(i32)]
+        pub enum Style {
+            /// No style selected.
+            Unspecified = 0,
+            /// Traffic is slowing down.
+            SlowerTraffic = 1,
+            /// There is a traffic jam.
+            TrafficJam = 2,
+        }
+        impl Style {
+            /// String value of the enum field names used in the ProtoBuf definition.
+            ///
+            /// The values are not transformed in any way and thus are considered stable
+            /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+            pub fn as_str_name(&self) -> &'static str {
+                match self {
+                    Style::Unspecified => "STYLE_UNSPECIFIED",
+                    Style::SlowerTraffic => "SLOWER_TRAFFIC",
+                    Style::TrafficJam => "TRAFFIC_JAM",
+                }
+            }
+        }
+    }
+}
+/// Traffic conditions along the expected vehicle route.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct TrafficPolylineData {
+    /// A polyline rendering of how fast traffic is for all regions along
+    /// one stretch of a customer ride.
+    #[prost(message, optional, tag="1")]
+    pub traffic_rendering: ::core::option::Option<VisualTrafficReportPolylineRendering>,
+}
+/// The state of a `Vehicle`.
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+#[repr(i32)]
+pub enum VehicleState {
+    /// Default, used for unspecified or unrecognized vehicle states.
+    UnknownVehicleState = 0,
+    /// The vehicle is not accepting new trips. Note: the vehicle may continue to
+    /// operate in this state while completing a trip assigned to it.
+    Offline = 1,
+    /// The vehicle is accepting new trips.
+    Online = 2,
+}
+impl VehicleState {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            VehicleState::UnknownVehicleState => "UNKNOWN_VEHICLE_STATE",
+            VehicleState::Offline => "OFFLINE",
+            VehicleState::Online => "ONLINE",
+        }
+    }
+}
+/// How location features are configured to behave on the mobile device when the
+/// devices "battery saver" feature is on.
+/// (<https://developer.android.com/reference/android/os/PowerManager#getLocationPowerSaveMode(>))
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+#[repr(i32)]
+pub enum LocationPowerSaveMode {
+    /// Undefined LocationPowerSaveMode
+    UnknownLocationPowerSaveMode = 0,
+    /// Either the location providers shouldn't be affected by battery saver, or
+    /// battery saver is off.
+    LocationModeNoChange = 1,
+    /// The GPS based location provider should be disabled when battery saver is on
+    /// and the device is non-interactive.
+    LocationModeGpsDisabledWhenScreenOff = 2,
+    /// All location providers should be disabled when battery saver is on and the
+    /// device is non-interactive.
+    LocationModeAllDisabledWhenScreenOff = 3,
+    /// All the location providers will be kept available, but location fixes
+    /// should only be provided to foreground apps.
+    LocationModeForegroundOnly = 4,
+    /// Location will not be turned off, but LocationManager will throttle all
+    /// requests to providers when the device is non-interactive.
+    LocationModeThrottleRequestsWhenScreenOff = 5,
+}
+impl LocationPowerSaveMode {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            LocationPowerSaveMode::UnknownLocationPowerSaveMode => "UNKNOWN_LOCATION_POWER_SAVE_MODE",
+            LocationPowerSaveMode::LocationModeNoChange => "LOCATION_MODE_NO_CHANGE",
+            LocationPowerSaveMode::LocationModeGpsDisabledWhenScreenOff => "LOCATION_MODE_GPS_DISABLED_WHEN_SCREEN_OFF",
+            LocationPowerSaveMode::LocationModeAllDisabledWhenScreenOff => "LOCATION_MODE_ALL_DISABLED_WHEN_SCREEN_OFF",
+            LocationPowerSaveMode::LocationModeForegroundOnly => "LOCATION_MODE_FOREGROUND_ONLY",
+            LocationPowerSaveMode::LocationModeThrottleRequestsWhenScreenOff => "LOCATION_MODE_THROTTLE_REQUESTS_WHEN_SCREEN_OFF",
+        }
+    }
+}
+/// Status of the battery, whether full or charging etc.
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+#[repr(i32)]
+pub enum BatteryStatus {
+    /// Battery status unknown.
+    UnknownBatteryStatus = 0,
+    /// Battery is being charged.
+    Charging = 1,
+    /// Battery is discharging.
+    Discharging = 2,
+    /// Battery is full.
+    Full = 3,
+    /// Battery is not charging.
+    NotCharging = 4,
+    /// Battery is low on power.
+    PowerLow = 5,
+}
+impl BatteryStatus {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            BatteryStatus::UnknownBatteryStatus => "UNKNOWN_BATTERY_STATUS",
+            BatteryStatus::Charging => "BATTERY_STATUS_CHARGING",
+            BatteryStatus::Discharging => "BATTERY_STATUS_DISCHARGING",
+            BatteryStatus::Full => "BATTERY_STATUS_FULL",
+            BatteryStatus::NotCharging => "BATTERY_STATUS_NOT_CHARGING",
+            BatteryStatus::PowerLow => "BATTERY_STATUS_POWER_LOW",
+        }
+    }
+}
+/// Type of the charger being used to charge the battery.
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+#[repr(i32)]
+pub enum PowerSource {
+    /// Power source unknown.
+    UnknownPowerSource = 0,
+    /// Power source is an AC charger.
+    Ac = 1,
+    /// Power source is a USB port.
+    Usb = 2,
+    /// Power source is wireless.
+    Wireless = 3,
+    /// Battery is unplugged.
+    Unplugged = 4,
+}
+impl PowerSource {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            PowerSource::UnknownPowerSource => "UNKNOWN_POWER_SOURCE",
+            PowerSource::Ac => "POWER_SOURCE_AC",
+            PowerSource::Usb => "POWER_SOURCE_USB",
+            PowerSource::Wireless => "POWER_SOURCE_WIRELESS",
+            PowerSource::Unplugged => "POWER_SOURCE_UNPLUGGED",
+        }
+    }
 }
 /// CreateTrip request message.
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -1085,6 +1334,18 @@ pub mod report_billable_trip_request {
         /// The solution is an on-demand ridesharing and deliveries trip.
         OnDemandRidesharingAndDeliveries = 1,
     }
+    impl SolutionType {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                SolutionType::Unspecified => "SOLUTION_TYPE_UNSPECIFIED",
+                SolutionType::OnDemandRidesharingAndDeliveries => "ON_DEMAND_RIDESHARING_AND_DELIVERIES",
+            }
+        }
+    }
 }
 /// UpdateTrip request message.
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -1200,6 +1461,7 @@ pub struct SearchTripsResponse {
 pub mod trip_service_client {
     #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
     use tonic::codegen::*;
+    use tonic::codegen::http::Uri;
     /// Trip management service.
     #[derive(Debug, Clone)]
     pub struct TripServiceClient<T> {
@@ -1214,6 +1476,10 @@ pub mod trip_service_client {
     {
         pub fn new(inner: T) -> Self {
             let inner = tonic::client::Grpc::new(inner);
+            Self { inner }
+        }
+        pub fn with_origin(inner: T, origin: Uri) -> Self {
+            let inner = tonic::client::Grpc::with_origin(inner, origin);
             Self { inner }
         }
         pub fn with_interceptor<F>(
@@ -1235,19 +1501,19 @@ pub mod trip_service_client {
         {
             TripServiceClient::new(InterceptedService::new(inner, interceptor))
         }
-        /// Compress requests with `gzip`.
+        /// Compress requests with the given encoding.
         ///
         /// This requires the server to support it otherwise it might respond with an
         /// error.
         #[must_use]
-        pub fn send_gzip(mut self) -> Self {
-            self.inner = self.inner.send_gzip();
+        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.send_compressed(encoding);
             self
         }
-        /// Enable decompressing responses with `gzip`.
+        /// Enable decompressing responses.
         #[must_use]
-        pub fn accept_gzip(mut self) -> Self {
-            self.inner = self.inner.accept_gzip();
+        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.accept_compressed(encoding);
             self
         }
         /// Creates a trip in the Fleet Engine and returns the new trip.
@@ -1666,6 +1932,22 @@ pub mod search_vehicles_request {
         /// Ascending order by the configured match cost.
         Cost = 5,
     }
+    impl VehicleMatchOrder {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                VehicleMatchOrder::UnknownVehicleMatchOrder => "UNKNOWN_VEHICLE_MATCH_ORDER",
+                VehicleMatchOrder::PickupPointEta => "PICKUP_POINT_ETA",
+                VehicleMatchOrder::PickupPointDistance => "PICKUP_POINT_DISTANCE",
+                VehicleMatchOrder::DropoffPointEta => "DROPOFF_POINT_ETA",
+                VehicleMatchOrder::PickupPointStraightDistance => "PICKUP_POINT_STRAIGHT_DISTANCE",
+                VehicleMatchOrder::Cost => "COST",
+            }
+        }
+    }
     /// Specifies the types of restrictions on a vehicle's current trips.
     #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
     #[repr(i32)]
@@ -1681,6 +1963,19 @@ pub mod search_vehicles_request {
         /// in the search results.
         /// A validation exception is thrown if `include_back_to_back` is true.
         Any = 2,
+    }
+    impl CurrentTripsPresent {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                CurrentTripsPresent::Unspecified => "CURRENT_TRIPS_PRESENT_UNSPECIFIED",
+                CurrentTripsPresent::None => "NONE",
+                CurrentTripsPresent::Any => "ANY",
+            }
+        }
     }
 }
 /// `SearchVehicles` response message.
@@ -1911,6 +2206,21 @@ pub mod vehicle_match {
         /// account.
         CarpoolBackToBack = 4,
     }
+    impl VehicleMatchType {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                VehicleMatchType::Unknown => "UNKNOWN",
+                VehicleMatchType::Exclusive => "EXCLUSIVE",
+                VehicleMatchType::BackToBack => "BACK_TO_BACK",
+                VehicleMatchType::Carpool => "CARPOOL",
+                VehicleMatchType::CarpoolBackToBack => "CARPOOL_BACK_TO_BACK",
+            }
+        }
+    }
 }
 /// A list-of-lists datatype for vehicle attributes.
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -1923,6 +2233,7 @@ pub struct VehicleAttributeList {
 pub mod vehicle_service_client {
     #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
     use tonic::codegen::*;
+    use tonic::codegen::http::Uri;
     /// Vehicle management service.
     #[derive(Debug, Clone)]
     pub struct VehicleServiceClient<T> {
@@ -1937,6 +2248,10 @@ pub mod vehicle_service_client {
     {
         pub fn new(inner: T) -> Self {
             let inner = tonic::client::Grpc::new(inner);
+            Self { inner }
+        }
+        pub fn with_origin(inner: T, origin: Uri) -> Self {
+            let inner = tonic::client::Grpc::with_origin(inner, origin);
             Self { inner }
         }
         pub fn with_interceptor<F>(
@@ -1958,19 +2273,19 @@ pub mod vehicle_service_client {
         {
             VehicleServiceClient::new(InterceptedService::new(inner, interceptor))
         }
-        /// Compress requests with `gzip`.
+        /// Compress requests with the given encoding.
         ///
         /// This requires the server to support it otherwise it might respond with an
         /// error.
         #[must_use]
-        pub fn send_gzip(mut self) -> Self {
-            self.inner = self.inner.send_gzip();
+        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.send_compressed(encoding);
             self
         }
-        /// Enable decompressing responses with `gzip`.
+        /// Enable decompressing responses.
         #[must_use]
-        pub fn accept_gzip(mut self) -> Self {
-            self.inner = self.inner.accept_gzip();
+        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.accept_compressed(encoding);
             self
         }
         /// Instantiates a new vehicle associated with an on-demand rideshare or

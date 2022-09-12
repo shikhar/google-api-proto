@@ -97,6 +97,21 @@ pub enum JsonValidationOption {
     /// Perform both PRE_EXECUTION and POST_EXECUTION validations.
     PrePostExecution = 4,
 }
+impl JsonValidationOption {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            JsonValidationOption::Unspecified => "JSON_VALIDATION_OPTION_UNSPECIFIED",
+            JsonValidationOption::Skip => "SKIP",
+            JsonValidationOption::PreExecution => "PRE_EXECUTION",
+            JsonValidationOption::PostExecution => "POST_EXECUTION",
+            JsonValidationOption::PrePostExecution => "PRE_POST_EXECUTION",
+        }
+    }
+}
 /// The task configuration details. This is not the implementation of Task.
 /// There might be multiple TaskConfigs for the same Task.
 /// (-- Next available id: 12 --)
@@ -161,6 +176,19 @@ pub mod task_config {
         /// Execute the first task that satisfies the associated condition.
         RunFirstMatch = 2,
     }
+    impl NextTasksExecutionPolicy {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                NextTasksExecutionPolicy::Unspecified => "NEXT_TASKS_EXECUTION_POLICY_UNSPECIFIED",
+                NextTasksExecutionPolicy::RunAllMatch => "RUN_ALL_MATCH",
+                NextTasksExecutionPolicy::RunFirstMatch => "RUN_FIRST_MATCH",
+            }
+        }
+    }
     /// Various policies to trigger the execution of this task.
     #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
     #[repr(i32)]
@@ -179,6 +207,20 @@ pub mod task_config {
         /// Wait until all of its previous tasks finished execution, then verify
         /// the all edge conditions are met and execute if possible.
         WhenAllTasksAndConditionsSucceed = 3,
+    }
+    impl TaskExecutionStrategy {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                TaskExecutionStrategy::Unspecified => "TASK_EXECUTION_STRATEGY_UNSPECIFIED",
+                TaskExecutionStrategy::WhenAllSucceed => "WHEN_ALL_SUCCEED",
+                TaskExecutionStrategy::WhenAnySucceed => "WHEN_ANY_SUCCEED",
+                TaskExecutionStrategy::WhenAllTasksAndConditionsSucceed => "WHEN_ALL_TASKS_AND_CONDITIONS_SUCCEED",
+            }
+        }
     }
 }
 /// Policy that dictates the behavior for the task after it completes
@@ -204,6 +246,19 @@ pub mod success_policy {
         /// SuspensionTask; event execution will continue once the user calls
         /// ResolveSuspensions with the event_execution_info_id and the task number.
         Suspended = 2,
+    }
+    impl FinalState {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                FinalState::Unspecified => "FINAL_STATE_UNSPECIFIED",
+                FinalState::Succeeded => "SUCCEEDED",
+                FinalState::Suspended => "SUSPENDED",
+            }
+        }
     }
 }
 /// Policy that defines the task retry logic and failure type. If no
@@ -272,6 +327,24 @@ pub mod failure_policy {
         /// must be specified.
         RestartIntegrationWithBackoff = 7,
     }
+    impl RetryStrategy {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                RetryStrategy::Unspecified => "RETRY_STRATEGY_UNSPECIFIED",
+                RetryStrategy::Ignore => "IGNORE",
+                RetryStrategy::None => "NONE",
+                RetryStrategy::Fatal => "FATAL",
+                RetryStrategy::FixedInterval => "FIXED_INTERVAL",
+                RetryStrategy::LinearBackoff => "LINEAR_BACKOFF",
+                RetryStrategy::ExponentialBackoff => "EXPONENTIAL_BACKOFF",
+                RetryStrategy::RestartIntegrationWithBackoff => "RESTART_INTEGRATION_WITH_BACKOFF",
+            }
+        }
+    }
 }
 /// The task that is next in line to be executed, if the
 /// condition specified evaluated to true.
@@ -302,6 +375,20 @@ pub enum Product {
     Apigee = 2,
     /// Security Command Center.
     Security = 3,
+}
+impl Product {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            Product::Unspecified => "PRODUCT_UNSPECIFIED",
+            Product::Ip => "IP",
+            Product::Apigee => "APIGEE",
+            Product::Security => "SECURITY",
+        }
+    }
 }
 /// Log entry to log execution info for the monitored resource
 /// `integrations.googleapis.com/IntegrationVersion`.
@@ -366,6 +453,19 @@ pub mod execution_info {
         /// Async post with schedule time.
         Schedule = 2,
     }
+    impl PostMethod {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                PostMethod::Unspecified => "POST_METHOD_UNSPECIFIED",
+                PostMethod::Post => "POST",
+                PostMethod::Schedule => "SCHEDULE",
+            }
+        }
+    }
 }
 /// Contains the details of the execution info of this event: this includes
 /// the tasks execution details plus the event execution statistics.
@@ -415,6 +515,24 @@ pub mod event_execution_details {
         RetryOnHold = 6,
         /// Event execution suspended and waiting for manual intervention.
         Suspended = 7,
+    }
+    impl EventExecutionState {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                EventExecutionState::Unspecified => "EVENT_EXECUTION_STATE_UNSPECIFIED",
+                EventExecutionState::OnHold => "ON_HOLD",
+                EventExecutionState::InProcess => "IN_PROCESS",
+                EventExecutionState::Succeeded => "SUCCEEDED",
+                EventExecutionState::Failed => "FAILED",
+                EventExecutionState::Cancelled => "CANCELLED",
+                EventExecutionState::RetryOnHold => "RETRY_ON_HOLD",
+                EventExecutionState::Suspended => "SUSPENDED",
+            }
+        }
     }
 }
 /// Contains the snapshot of the event execution for a given checkpoint.
@@ -516,6 +634,29 @@ pub mod task_execution_details {
         /// Task is a SuspensionTask which has executed once, creating a pending
         /// suspension.
         Suspended = 12,
+    }
+    impl TaskExecutionState {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                TaskExecutionState::Unspecified => "TASK_EXECUTION_STATE_UNSPECIFIED",
+                TaskExecutionState::PendingExecution => "PENDING_EXECUTION",
+                TaskExecutionState::InProcess => "IN_PROCESS",
+                TaskExecutionState::Succeed => "SUCCEED",
+                TaskExecutionState::Failed => "FAILED",
+                TaskExecutionState::Fatal => "FATAL",
+                TaskExecutionState::RetryOnHold => "RETRY_ON_HOLD",
+                TaskExecutionState::Skipped => "SKIPPED",
+                TaskExecutionState::Cancelled => "CANCELLED",
+                TaskExecutionState::PendingRollback => "PENDING_ROLLBACK",
+                TaskExecutionState::RollbackInProcess => "ROLLBACK_IN_PROCESS",
+                TaskExecutionState::Rolledback => "ROLLEDBACK",
+                TaskExecutionState::Suspended => "SUSPENDED",
+            }
+        }
     }
 }
 /// Status for the execution attempt.

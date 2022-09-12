@@ -180,6 +180,21 @@ pub enum LineItemChangeType {
     /// The change is to revert a cancellation.
     RevertCancellation = 4,
 }
+impl LineItemChangeType {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            LineItemChangeType::Unspecified => "LINE_ITEM_CHANGE_TYPE_UNSPECIFIED",
+            LineItemChangeType::Create => "LINE_ITEM_CHANGE_TYPE_CREATE",
+            LineItemChangeType::Update => "LINE_ITEM_CHANGE_TYPE_UPDATE",
+            LineItemChangeType::Cancel => "LINE_ITEM_CHANGE_TYPE_CANCEL",
+            LineItemChangeType::RevertCancellation => "LINE_ITEM_CHANGE_TYPE_REVERT_CANCELLATION",
+        }
+    }
+}
 /// State of a change.
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
 #[repr(i32)]
@@ -205,6 +220,23 @@ pub enum LineItemChangeState {
     /// change can't be overwritten or cancelled when it's in this state.
     Activating = 6,
 }
+impl LineItemChangeState {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            LineItemChangeState::Unspecified => "LINE_ITEM_CHANGE_STATE_UNSPECIFIED",
+            LineItemChangeState::PendingApproval => "LINE_ITEM_CHANGE_STATE_PENDING_APPROVAL",
+            LineItemChangeState::Approved => "LINE_ITEM_CHANGE_STATE_APPROVED",
+            LineItemChangeState::Completed => "LINE_ITEM_CHANGE_STATE_COMPLETED",
+            LineItemChangeState::Rejected => "LINE_ITEM_CHANGE_STATE_REJECTED",
+            LineItemChangeState::Abandoned => "LINE_ITEM_CHANGE_STATE_ABANDONED",
+            LineItemChangeState::Activating => "LINE_ITEM_CHANGE_STATE_ACTIVATING",
+        }
+    }
+}
 /// Predefined types for line item change state reason.
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
 #[repr(i32)]
@@ -218,6 +250,20 @@ pub enum LineItemChangeStateReasonType {
     UserCancelled = 2,
     /// Change is in current state due to system-initiated cancellation.
     SystemCancelled = 3,
+}
+impl LineItemChangeStateReasonType {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            LineItemChangeStateReasonType::Unspecified => "LINE_ITEM_CHANGE_STATE_REASON_TYPE_UNSPECIFIED",
+            LineItemChangeStateReasonType::Expired => "LINE_ITEM_CHANGE_STATE_REASON_TYPE_EXPIRED",
+            LineItemChangeStateReasonType::UserCancelled => "LINE_ITEM_CHANGE_STATE_REASON_TYPE_USER_CANCELLED",
+            LineItemChangeStateReasonType::SystemCancelled => "LINE_ITEM_CHANGE_STATE_REASON_TYPE_SYSTEM_CANCELLED",
+        }
+    }
 }
 /// Request message for \[ConsumerProcurementService.PlaceOrder][google.cloud.commerce.consumer.procurement.v1alpha1.ConsumerProcurementService.PlaceOrder\].
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -301,6 +347,7 @@ pub struct ListOrdersResponse {
 pub mod consumer_procurement_service_client {
     #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
     use tonic::codegen::*;
+    use tonic::codegen::http::Uri;
     /// ConsumerProcurementService allows customers to make purchases of products
     /// served by the Cloud Commerce platform.
     ///
@@ -325,6 +372,10 @@ pub mod consumer_procurement_service_client {
             let inner = tonic::client::Grpc::new(inner);
             Self { inner }
         }
+        pub fn with_origin(inner: T, origin: Uri) -> Self {
+            let inner = tonic::client::Grpc::with_origin(inner, origin);
+            Self { inner }
+        }
         pub fn with_interceptor<F>(
             inner: T,
             interceptor: F,
@@ -346,19 +397,19 @@ pub mod consumer_procurement_service_client {
                 InterceptedService::new(inner, interceptor),
             )
         }
-        /// Compress requests with `gzip`.
+        /// Compress requests with the given encoding.
         ///
         /// This requires the server to support it otherwise it might respond with an
         /// error.
         #[must_use]
-        pub fn send_gzip(mut self) -> Self {
-            self.inner = self.inner.send_gzip();
+        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.send_compressed(encoding);
             self
         }
-        /// Enable decompressing responses with `gzip`.
+        /// Enable decompressing responses.
         #[must_use]
-        pub fn accept_gzip(mut self) -> Self {
-            self.inner = self.inner.accept_gzip();
+        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.accept_compressed(encoding);
             self
         }
         /// Creates a new [Order][google.cloud.commerce.consumer.procurement.v1alpha1.Order].

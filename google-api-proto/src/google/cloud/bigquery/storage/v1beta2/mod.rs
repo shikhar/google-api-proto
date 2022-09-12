@@ -1,3 +1,89 @@
+/// ProtoSchema describes the schema of the serialized protocol buffer data rows.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ProtoSchema {
+    /// Descriptor for input message. The descriptor has to be self contained,
+    /// including all the nested types, excepted for proto buffer well known types
+    /// (<https://developers.google.com/protocol-buffers/docs/reference/google.protobuf>).
+    #[prost(message, optional, tag="1")]
+    pub proto_descriptor: ::core::option::Option<::prost_types::DescriptorProto>,
+}
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ProtoRows {
+    /// A sequence of rows serialized as a Protocol Buffer.
+    ///
+    /// See <https://developers.google.com/protocol-buffers/docs/overview> for more
+    /// information on deserializing this field.
+    #[prost(bytes="bytes", repeated, tag="1")]
+    pub serialized_rows: ::prost::alloc::vec::Vec<::prost::bytes::Bytes>,
+}
+/// Arrow schema as specified in
+/// <https://arrow.apache.org/docs/python/api/datatypes.html>
+/// and serialized to bytes using IPC:
+/// <https://arrow.apache.org/docs/format/Columnar.html#serialization-and-interprocess-communication-ipc>
+///
+/// See code samples on how this message can be deserialized.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ArrowSchema {
+    /// IPC serialized Arrow schema.
+    #[prost(bytes="bytes", tag="1")]
+    pub serialized_schema: ::prost::bytes::Bytes,
+}
+/// Arrow RecordBatch.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ArrowRecordBatch {
+    /// IPC-serialized Arrow RecordBatch.
+    #[prost(bytes="bytes", tag="1")]
+    pub serialized_record_batch: ::prost::bytes::Bytes,
+}
+/// Contains options specific to Arrow Serialization.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ArrowSerializationOptions {
+    /// The Arrow IPC format to use.
+    #[prost(enumeration="arrow_serialization_options::Format", tag="1")]
+    pub format: i32,
+}
+/// Nested message and enum types in `ArrowSerializationOptions`.
+pub mod arrow_serialization_options {
+    /// The IPC format to use when serializing Arrow streams.
+    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+    #[repr(i32)]
+    pub enum Format {
+        /// If unspecied the IPC format as of 0.15 release will be used.
+        Unspecified = 0,
+        /// Use the legacy IPC message format as of Apache Arrow Release 0.14.
+        Arrow014 = 1,
+        /// Use the message format as of Apache Arrow Release 0.15.
+        Arrow015 = 2,
+    }
+    impl Format {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                Format::Unspecified => "FORMAT_UNSPECIFIED",
+                Format::Arrow014 => "ARROW_0_14",
+                Format::Arrow015 => "ARROW_0_15",
+            }
+        }
+    }
+}
+/// Avro schema.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct AvroSchema {
+    /// Json serialized schema, as described at
+    /// <https://avro.apache.org/docs/1.8.1/spec.html.>
+    #[prost(string, tag="1")]
+    pub schema: ::prost::alloc::string::String,
+}
+/// Avro rows.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct AvroRows {
+    /// Binary serialized rows in a block.
+    #[prost(bytes="bytes", tag="1")]
+    pub serialized_binary_rows: ::prost::bytes::Bytes,
+}
 /// Schema of a table
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct TableSchema {
@@ -64,6 +150,32 @@ pub mod table_field_schema {
         /// JSON, String
         Json = 15,
     }
+    impl Type {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                Type::Unspecified => "TYPE_UNSPECIFIED",
+                Type::String => "STRING",
+                Type::Int64 => "INT64",
+                Type::Double => "DOUBLE",
+                Type::Struct => "STRUCT",
+                Type::Bytes => "BYTES",
+                Type::Bool => "BOOL",
+                Type::Timestamp => "TIMESTAMP",
+                Type::Date => "DATE",
+                Type::Time => "TIME",
+                Type::Datetime => "DATETIME",
+                Type::Geography => "GEOGRAPHY",
+                Type::Numeric => "NUMERIC",
+                Type::Bignumeric => "BIGNUMERIC",
+                Type::Interval => "INTERVAL",
+                Type::Json => "JSON",
+            }
+        }
+    }
     #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
     #[repr(i32)]
     pub enum Mode {
@@ -73,79 +185,20 @@ pub mod table_field_schema {
         Required = 2,
         Repeated = 3,
     }
-}
-/// Arrow schema as specified in
-/// <https://arrow.apache.org/docs/python/api/datatypes.html>
-/// and serialized to bytes using IPC:
-/// <https://arrow.apache.org/docs/format/Columnar.html#serialization-and-interprocess-communication-ipc>
-///
-/// See code samples on how this message can be deserialized.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ArrowSchema {
-    /// IPC serialized Arrow schema.
-    #[prost(bytes="bytes", tag="1")]
-    pub serialized_schema: ::prost::bytes::Bytes,
-}
-/// Arrow RecordBatch.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ArrowRecordBatch {
-    /// IPC-serialized Arrow RecordBatch.
-    #[prost(bytes="bytes", tag="1")]
-    pub serialized_record_batch: ::prost::bytes::Bytes,
-}
-/// Contains options specific to Arrow Serialization.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ArrowSerializationOptions {
-    /// The Arrow IPC format to use.
-    #[prost(enumeration="arrow_serialization_options::Format", tag="1")]
-    pub format: i32,
-}
-/// Nested message and enum types in `ArrowSerializationOptions`.
-pub mod arrow_serialization_options {
-    /// The IPC format to use when serializing Arrow streams.
-    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
-    #[repr(i32)]
-    pub enum Format {
-        /// If unspecied the IPC format as of 0.15 release will be used.
-        Unspecified = 0,
-        /// Use the legacy IPC message format as of Apache Arrow Release 0.14.
-        Arrow014 = 1,
-        /// Use the message format as of Apache Arrow Release 0.15.
-        Arrow015 = 2,
+    impl Mode {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                Mode::Unspecified => "MODE_UNSPECIFIED",
+                Mode::Nullable => "NULLABLE",
+                Mode::Required => "REQUIRED",
+                Mode::Repeated => "REPEATED",
+            }
+        }
     }
-}
-/// Avro schema.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct AvroSchema {
-    /// Json serialized schema, as described at
-    /// <https://avro.apache.org/docs/1.8.1/spec.html.>
-    #[prost(string, tag="1")]
-    pub schema: ::prost::alloc::string::String,
-}
-/// Avro rows.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct AvroRows {
-    /// Binary serialized rows in a block.
-    #[prost(bytes="bytes", tag="1")]
-    pub serialized_binary_rows: ::prost::bytes::Bytes,
-}
-/// ProtoSchema describes the schema of the serialized protocol buffer data rows.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ProtoSchema {
-    /// Descriptor for input message. The descriptor has to be self contained,
-    /// including all the nested types, excepted for proto buffer well known types
-    /// (<https://developers.google.com/protocol-buffers/docs/reference/google.protobuf>).
-    #[prost(message, optional, tag="1")]
-    pub proto_descriptor: ::core::option::Option<::prost_types::DescriptorProto>,
-}
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ProtoRows {
-    /// A sequence of rows serialized as a Protocol Buffer.
-    ///
-    /// See <https://developers.google.com/protocol-buffers/docs/overview> for more
-    /// information on deserializing this field.
-    #[prost(bytes="bytes", repeated, tag="1")]
-    pub serialized_rows: ::prost::alloc::vec::Vec<::prost::bytes::Bytes>,
 }
 /// Information about the ReadSession.
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -208,10 +261,10 @@ pub mod read_session {
         /// Aggregates are not supported.
         ///
         /// Examples: "int_field > 5"
-        ///           "date_field = CAST('2014-9-27' as DATE)"
-        ///           "nullable_field is not NULL"
-        ///           "st_equals(geo_field, st_geofromtext("POINT(2, 2)"))"
-        ///           "numeric_field BETWEEN 1.0 AND 5.0"
+        ///            "date_field = CAST('2014-9-27' as DATE)"
+        ///            "nullable_field is not NULL"
+        ///            "st_equals(geo_field, st_geofromtext("POINT(2, 2)"))"
+        ///            "numeric_field BETWEEN 1.0 AND 5.0"
         ///
         /// Restricted to a maximum length for 1 MB.
         #[prost(string, tag="2")]
@@ -286,6 +339,20 @@ pub mod write_stream {
         /// Data is only visible up to the offset to which it was flushed.
         Buffered = 3,
     }
+    impl Type {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                Type::Unspecified => "TYPE_UNSPECIFIED",
+                Type::Committed => "COMMITTED",
+                Type::Pending => "PENDING",
+                Type::Buffered => "BUFFERED",
+            }
+        }
+    }
 }
 /// Data format for input or output data.
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
@@ -298,6 +365,19 @@ pub enum DataFormat {
     /// Arrow is a standard open source column-based message format.
     /// See <https://arrow.apache.org/> for more details.
     Arrow = 2,
+}
+impl DataFormat {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            DataFormat::Unspecified => "DATA_FORMAT_UNSPECIFIED",
+            DataFormat::Avro => "AVRO",
+            DataFormat::Arrow => "ARROW",
+        }
+    }
 }
 /// Request message for `CreateReadSession`.
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -670,11 +750,29 @@ pub mod storage_error {
         /// Stream is finalized.
         StreamFinalized = 6,
     }
+    impl StorageErrorCode {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                StorageErrorCode::Unspecified => "STORAGE_ERROR_CODE_UNSPECIFIED",
+                StorageErrorCode::TableNotFound => "TABLE_NOT_FOUND",
+                StorageErrorCode::StreamAlreadyCommitted => "STREAM_ALREADY_COMMITTED",
+                StorageErrorCode::StreamNotFound => "STREAM_NOT_FOUND",
+                StorageErrorCode::InvalidStreamType => "INVALID_STREAM_TYPE",
+                StorageErrorCode::InvalidStreamState => "INVALID_STREAM_STATE",
+                StorageErrorCode::StreamFinalized => "STREAM_FINALIZED",
+            }
+        }
+    }
 }
 /// Generated client implementations.
 pub mod big_query_read_client {
     #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
     use tonic::codegen::*;
+    use tonic::codegen::http::Uri;
     /// BigQuery Read API.
     ///
     /// The Read API can be used to read data from BigQuery.
@@ -696,6 +794,10 @@ pub mod big_query_read_client {
             let inner = tonic::client::Grpc::new(inner);
             Self { inner }
         }
+        pub fn with_origin(inner: T, origin: Uri) -> Self {
+            let inner = tonic::client::Grpc::with_origin(inner, origin);
+            Self { inner }
+        }
         pub fn with_interceptor<F>(
             inner: T,
             interceptor: F,
@@ -715,19 +817,19 @@ pub mod big_query_read_client {
         {
             BigQueryReadClient::new(InterceptedService::new(inner, interceptor))
         }
-        /// Compress requests with `gzip`.
+        /// Compress requests with the given encoding.
         ///
         /// This requires the server to support it otherwise it might respond with an
         /// error.
         #[must_use]
-        pub fn send_gzip(mut self) -> Self {
-            self.inner = self.inner.send_gzip();
+        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.send_compressed(encoding);
             self
         }
-        /// Enable decompressing responses with `gzip`.
+        /// Enable decompressing responses.
         #[must_use]
-        pub fn accept_gzip(mut self) -> Self {
-            self.inner = self.inner.accept_gzip();
+        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.accept_compressed(encoding);
             self
         }
         /// Creates a new read session. A read session divides the contents of a
@@ -834,6 +936,7 @@ pub mod big_query_read_client {
 pub mod big_query_write_client {
     #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
     use tonic::codegen::*;
+    use tonic::codegen::http::Uri;
     /// BigQuery Write API.
     ///
     /// The Write API can be used to write data to BigQuery.
@@ -850,6 +953,10 @@ pub mod big_query_write_client {
     {
         pub fn new(inner: T) -> Self {
             let inner = tonic::client::Grpc::new(inner);
+            Self { inner }
+        }
+        pub fn with_origin(inner: T, origin: Uri) -> Self {
+            let inner = tonic::client::Grpc::with_origin(inner, origin);
             Self { inner }
         }
         pub fn with_interceptor<F>(
@@ -871,19 +978,19 @@ pub mod big_query_write_client {
         {
             BigQueryWriteClient::new(InterceptedService::new(inner, interceptor))
         }
-        /// Compress requests with `gzip`.
+        /// Compress requests with the given encoding.
         ///
         /// This requires the server to support it otherwise it might respond with an
         /// error.
         #[must_use]
-        pub fn send_gzip(mut self) -> Self {
-            self.inner = self.inner.send_gzip();
+        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.send_compressed(encoding);
             self
         }
-        /// Enable decompressing responses with `gzip`.
+        /// Enable decompressing responses.
         #[must_use]
-        pub fn accept_gzip(mut self) -> Self {
-            self.inner = self.inner.accept_gzip();
+        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.accept_compressed(encoding);
             self
         }
         /// Creates a write stream to the given table.

@@ -9,16 +9,16 @@ pub struct AuditLog {
     /// For API calls, this should be the name of the API method.
     /// For example,
     ///
-    ///     "google.cloud.bigquery.v2.TableService.InsertTable"
-    ///     "google.logging.v2.ConfigServiceV2.CreateSink"
+    ///      "google.cloud.bigquery.v2.TableService.InsertTable"
+    ///      "google.logging.v2.ConfigServiceV2.CreateSink"
     #[prost(string, tag="8")]
     pub method_name: ::prost::alloc::string::String,
     /// The resource or collection that is the target of the operation.
     /// The name is a scheme-less URI, not including the API service name.
     /// For example:
     ///
-    ///     "projects/PROJECT_ID/zones/us-central1-a/instances"
-    ///     "projects/PROJECT_ID/datasets/DATASET_ID"
+    ///      "projects/PROJECT_ID/zones/us-central1-a/instances"
+    ///      "projects/PROJECT_ID/datasets/DATASET_ID"
     #[prost(string, tag="11")]
     pub resource_name: ::prost::alloc::string::String,
     /// The resource location information.
@@ -124,9 +124,9 @@ pub struct AuthorizationInfo {
     /// The resource being accessed, as a REST-style or cloud resource string.
     /// For example:
     ///
-    ///     bigquery.googleapis.com/projects/PROJECTID/datasets/DATASETID
+    ///      bigquery.googleapis.com/projects/PROJECTID/datasets/DATASETID
     /// or
-    ///     projects/PROJECTID/datasets/DATASETID
+    ///      projects/PROJECTID/datasets/DATASETID
     #[prost(string, tag="1")]
     pub resource: ::prost::alloc::string::String,
     /// The required IAM permission.
@@ -164,12 +164,12 @@ pub struct RequestMetadata {
     /// For example:
     ///
     /// +   `google-api-python-client/1.4.0`:
-    ///     The request was made by the Google API client for Python.
+    ///      The request was made by the Google API client for Python.
     /// +   `Cloud SDK Command Line Tool apitools-client/1.0 gcloud/0.9.62`:
-    ///     The request was made by the Google Cloud SDK CLI (gcloud).
+    ///      The request was made by the Google Cloud SDK CLI (gcloud).
     /// +   `AppEngine-Google; (+<http://code.google.com/appengine;> appid:
     /// s~my-project`:
-    ///     The request was made from the `my-project` App Engine app.
+    ///      The request was made from the `my-project` App Engine app.
     #[prost(string, tag="2")]
     pub caller_supplied_user_agent: ::prost::alloc::string::String,
     /// The network of the caller.
@@ -178,7 +178,7 @@ pub struct RequestMetadata {
     /// See <https://cloud.google.com/compute/docs/vpc/> for more information.
     /// This is a scheme-less URI full resource name. For example:
     ///
-    ///     "//compute.googleapis.com/projects/PROJECT_ID/global/networks/NETWORK_ID"
+    ///      "//compute.googleapis.com/projects/PROJECT_ID/global/networks/NETWORK_ID"
     #[prost(string, tag="3")]
     pub caller_network: ::prost::alloc::string::String,
     /// Request attributes used in IAM condition evaluation. This field contains
@@ -207,9 +207,9 @@ pub struct ResourceLocation {
     /// the 'current_locations' field and not the 'original_locations' field.
     /// For example:
     ///
-    ///     "europe-west1-a"
-    ///     "us-east1"
-    ///     "nam3"
+    ///      "europe-west1-a"
+    ///      "us-east1"
+    ///      "nam3"
     #[prost(string, repeated, tag="1")]
     pub current_locations: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
     /// The locations of a resource prior to the execution of the operation.
@@ -217,9 +217,9 @@ pub struct ResourceLocation {
     /// 'original_locations' as well as the 'current_locations' fields.
     /// For example:
     ///
-    ///     "europe-west1-a"
-    ///     "us-east1"
-    ///     "nam3"
+    ///      "europe-west1-a"
+    ///      "us-east1"
+    ///      "nam3"
     #[prost(string, repeated, tag="2")]
     pub original_locations: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
 }
@@ -303,6 +303,19 @@ pub mod big_query_audit_metadata {
             /// Job was inserted using the jobs.query RPC.
             QueryRequest = 2,
         }
+        impl Reason {
+            /// String value of the enum field names used in the ProtoBuf definition.
+            ///
+            /// The values are not transformed in any way and thus are considered stable
+            /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+            pub fn as_str_name(&self) -> &'static str {
+                match self {
+                    Reason::Unspecified => "REASON_UNSPECIFIED",
+                    Reason::JobInsertRequest => "JOB_INSERT_REQUEST",
+                    Reason::QueryRequest => "QUERY_REQUEST",
+                }
+            }
+        }
     }
     /// Job state change event.
     #[derive(Clone, PartialEq, ::prost::Message)]
@@ -346,6 +359,19 @@ pub mod big_query_audit_metadata {
             /// Dataset was created using a query job, e.g., CREATE SCHEMA statement.
             Query = 2,
         }
+        impl Reason {
+            /// String value of the enum field names used in the ProtoBuf definition.
+            ///
+            /// The values are not transformed in any way and thus are considered stable
+            /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+            pub fn as_str_name(&self) -> &'static str {
+                match self {
+                    Reason::Unspecified => "REASON_UNSPECIFIED",
+                    Reason::Create => "CREATE",
+                    Reason::Query => "QUERY",
+                }
+            }
+        }
     }
     /// Dataset change event.
     #[derive(Clone, PartialEq, ::prost::Message)]
@@ -378,6 +404,20 @@ pub mod big_query_audit_metadata {
             /// Dataset was changed using a query job, e.g., ALTER SCHEMA statement.
             Query = 3,
         }
+        impl Reason {
+            /// String value of the enum field names used in the ProtoBuf definition.
+            ///
+            /// The values are not transformed in any way and thus are considered stable
+            /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+            pub fn as_str_name(&self) -> &'static str {
+                match self {
+                    Reason::Unspecified => "REASON_UNSPECIFIED",
+                    Reason::Update => "UPDATE",
+                    Reason::SetIamPolicy => "SET_IAM_POLICY",
+                    Reason::Query => "QUERY",
+                }
+            }
+        }
     }
     /// Dataset deletion event.
     #[derive(Clone, PartialEq, ::prost::Message)]
@@ -404,6 +444,19 @@ pub mod big_query_audit_metadata {
             Delete = 1,
             /// Dataset was deleted using a query job, e.g., DROP SCHEMA statement.
             Query = 2,
+        }
+        impl Reason {
+            /// String value of the enum field names used in the ProtoBuf definition.
+            ///
+            /// The values are not transformed in any way and thus are considered stable
+            /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+            pub fn as_str_name(&self) -> &'static str {
+                match self {
+                    Reason::Unspecified => "REASON_UNSPECIFIED",
+                    Reason::Delete => "DELETE",
+                    Reason::Query => "QUERY",
+                }
+            }
         }
     }
     /// Table creation event.
@@ -438,6 +491,20 @@ pub mod big_query_audit_metadata {
             /// Table was created using the tables.create API.
             TableInsertRequest = 3,
         }
+        impl Reason {
+            /// String value of the enum field names used in the ProtoBuf definition.
+            ///
+            /// The values are not transformed in any way and thus are considered stable
+            /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+            pub fn as_str_name(&self) -> &'static str {
+                match self {
+                    Reason::Unspecified => "REASON_UNSPECIFIED",
+                    Reason::Job => "JOB",
+                    Reason::Query => "QUERY",
+                    Reason::TableInsertRequest => "TABLE_INSERT_REQUEST",
+                }
+            }
+        }
     }
     /// Model creation event.
     #[derive(Clone, PartialEq, ::prost::Message)]
@@ -464,6 +531,18 @@ pub mod big_query_audit_metadata {
             Unspecified = 0,
             /// Model was created using a DDL query.
             Query = 2,
+        }
+        impl Reason {
+            /// String value of the enum field names used in the ProtoBuf definition.
+            ///
+            /// The values are not transformed in any way and thus are considered stable
+            /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+            pub fn as_str_name(&self) -> &'static str {
+                match self {
+                    Reason::Unspecified => "REASON_UNSPECIFIED",
+                    Reason::Query => "QUERY",
+                }
+            }
         }
     }
     /// Routine creation event.
@@ -493,6 +572,19 @@ pub mod big_query_audit_metadata {
             Query = 1,
             /// Routine was created using the routines.create API.
             RoutineInsertRequest = 2,
+        }
+        impl Reason {
+            /// String value of the enum field names used in the ProtoBuf definition.
+            ///
+            /// The values are not transformed in any way and thus are considered stable
+            /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+            pub fn as_str_name(&self) -> &'static str {
+                match self {
+                    Reason::Unspecified => "REASON_UNSPECIFIED",
+                    Reason::Query => "QUERY",
+                    Reason::RoutineInsertRequest => "ROUTINE_INSERT_REQUEST",
+                }
+            }
         }
     }
     /// Table data read event.
@@ -553,6 +645,23 @@ pub mod big_query_audit_metadata {
             /// Table data was accessed during a materialized view refresh.
             MaterializedViewRefresh = 6,
         }
+        impl Reason {
+            /// String value of the enum field names used in the ProtoBuf definition.
+            ///
+            /// The values are not transformed in any way and thus are considered stable
+            /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+            pub fn as_str_name(&self) -> &'static str {
+                match self {
+                    Reason::Unspecified => "REASON_UNSPECIFIED",
+                    Reason::Job => "JOB",
+                    Reason::TabledataListRequest => "TABLEDATA_LIST_REQUEST",
+                    Reason::GetQueryResultsRequest => "GET_QUERY_RESULTS_REQUEST",
+                    Reason::QueryRequest => "QUERY_REQUEST",
+                    Reason::CreateReadSession => "CREATE_READ_SESSION",
+                    Reason::MaterializedViewRefresh => "MATERIALIZED_VIEW_REFRESH",
+                }
+            }
+        }
     }
     /// Table metadata change event.
     #[derive(Clone, PartialEq, ::prost::Message)]
@@ -588,6 +697,20 @@ pub mod big_query_audit_metadata {
             /// Table metadata was updated using a DML or DDL query.
             Query = 3,
         }
+        impl Reason {
+            /// String value of the enum field names used in the ProtoBuf definition.
+            ///
+            /// The values are not transformed in any way and thus are considered stable
+            /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+            pub fn as_str_name(&self) -> &'static str {
+                match self {
+                    Reason::Unspecified => "REASON_UNSPECIFIED",
+                    Reason::TableUpdateRequest => "TABLE_UPDATE_REQUEST",
+                    Reason::Job => "JOB",
+                    Reason::Query => "QUERY",
+                }
+            }
+        }
     }
     /// Model metadata change event.
     #[derive(Clone, PartialEq, ::prost::Message)]
@@ -618,6 +741,19 @@ pub mod big_query_audit_metadata {
             /// Model metadata was updated using a DDL query.
             Query = 2,
         }
+        impl Reason {
+            /// String value of the enum field names used in the ProtoBuf definition.
+            ///
+            /// The values are not transformed in any way and thus are considered stable
+            /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+            pub fn as_str_name(&self) -> &'static str {
+                match self {
+                    Reason::Unspecified => "REASON_UNSPECIFIED",
+                    Reason::ModelPatchRequest => "MODEL_PATCH_REQUEST",
+                    Reason::Query => "QUERY",
+                }
+            }
+        }
     }
     /// Routine change event.
     #[derive(Clone, PartialEq, ::prost::Message)]
@@ -646,6 +782,19 @@ pub mod big_query_audit_metadata {
             Query = 1,
             /// Routine was updated using the routines.update or routines.patch API.
             RoutineUpdateRequest = 2,
+        }
+        impl Reason {
+            /// String value of the enum field names used in the ProtoBuf definition.
+            ///
+            /// The values are not transformed in any way and thus are considered stable
+            /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+            pub fn as_str_name(&self) -> &'static str {
+                match self {
+                    Reason::Unspecified => "REASON_UNSPECIFIED",
+                    Reason::Query => "QUERY",
+                    Reason::RoutineUpdateRequest => "ROUTINE_UPDATE_REQUEST",
+                }
+            }
         }
     }
     /// Table data change event.
@@ -692,6 +841,21 @@ pub mod big_query_audit_metadata {
             /// Table data was added using the Write API.
             WriteApi = 4,
         }
+        impl Reason {
+            /// String value of the enum field names used in the ProtoBuf definition.
+            ///
+            /// The values are not transformed in any way and thus are considered stable
+            /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+            pub fn as_str_name(&self) -> &'static str {
+                match self {
+                    Reason::Unspecified => "REASON_UNSPECIFIED",
+                    Reason::Job => "JOB",
+                    Reason::Query => "QUERY",
+                    Reason::MaterializedViewRefresh => "MATERIALIZED_VIEW_REFRESH",
+                    Reason::WriteApi => "WRITE_API",
+                }
+            }
+        }
     }
     /// Model data change event.
     #[derive(Clone, PartialEq, ::prost::Message)]
@@ -716,6 +880,18 @@ pub mod big_query_audit_metadata {
             /// Model data was changed using a DDL query.
             Query = 1,
         }
+        impl Reason {
+            /// String value of the enum field names used in the ProtoBuf definition.
+            ///
+            /// The values are not transformed in any way and thus are considered stable
+            /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+            pub fn as_str_name(&self) -> &'static str {
+                match self {
+                    Reason::Unspecified => "REASON_UNSPECIFIED",
+                    Reason::Query => "QUERY",
+                }
+            }
+        }
     }
     /// Model data read event.
     #[derive(Clone, PartialEq, ::prost::Message)]
@@ -739,6 +915,18 @@ pub mod big_query_audit_metadata {
             Unspecified = 0,
             /// Model was used as a source model during a BigQuery job.
             Job = 1,
+        }
+        impl Reason {
+            /// String value of the enum field names used in the ProtoBuf definition.
+            ///
+            /// The values are not transformed in any way and thus are considered stable
+            /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+            pub fn as_str_name(&self) -> &'static str {
+                match self {
+                    Reason::Unspecified => "REASON_UNSPECIFIED",
+                    Reason::Job => "JOB",
+                }
+            }
         }
     }
     /// BigQuery dataset.
@@ -796,6 +984,20 @@ pub mod big_query_audit_metadata {
             /// Table deleted using a DDL query.
             Query = 4,
         }
+        impl Reason {
+            /// String value of the enum field names used in the ProtoBuf definition.
+            ///
+            /// The values are not transformed in any way and thus are considered stable
+            /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+            pub fn as_str_name(&self) -> &'static str {
+                match self {
+                    Reason::Unspecified => "REASON_UNSPECIFIED",
+                    Reason::TableDeleteRequest => "TABLE_DELETE_REQUEST",
+                    Reason::Expired => "EXPIRED",
+                    Reason::Query => "QUERY",
+                }
+            }
+        }
     }
     /// Model deletion event.
     #[derive(Clone, PartialEq, ::prost::Message)]
@@ -824,6 +1026,20 @@ pub mod big_query_audit_metadata {
             Expired = 2,
             /// Model was deleted using DDL query.
             Query = 3,
+        }
+        impl Reason {
+            /// String value of the enum field names used in the ProtoBuf definition.
+            ///
+            /// The values are not transformed in any way and thus are considered stable
+            /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+            pub fn as_str_name(&self) -> &'static str {
+                match self {
+                    Reason::Unspecified => "REASON_UNSPECIFIED",
+                    Reason::ModelDeleteRequest => "MODEL_DELETE_REQUEST",
+                    Reason::Expired => "EXPIRED",
+                    Reason::Query => "QUERY",
+                }
+            }
         }
     }
     /// Trained BigQuery ML model.
@@ -878,6 +1094,19 @@ pub mod big_query_audit_metadata {
             Query = 1,
             /// Routine was deleted using the API.
             RoutineDeleteRequest = 2,
+        }
+        impl Reason {
+            /// String value of the enum field names used in the ProtoBuf definition.
+            ///
+            /// The values are not transformed in any way and thus are considered stable
+            /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+            pub fn as_str_name(&self) -> &'static str {
+                match self {
+                    Reason::Unspecified => "REASON_UNSPECIFIED",
+                    Reason::Query => "QUERY",
+                    Reason::RoutineDeleteRequest => "ROUTINE_DELETE_REQUEST",
+                }
+            }
         }
     }
     /// BigQuery job.
@@ -962,6 +1191,19 @@ pub mod big_query_audit_metadata {
                 QueryInteractive = 1,
                 /// Batch query.
                 QueryBatch = 2,
+            }
+            impl Priority {
+                /// String value of the enum field names used in the ProtoBuf definition.
+                ///
+                /// The values are not transformed in any way and thus are considered stable
+                /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+                pub fn as_str_name(&self) -> &'static str {
+                    match self {
+                        Priority::Unspecified => "PRIORITY_UNSPECIFIED",
+                        Priority::QueryInteractive => "QUERY_INTERACTIVE",
+                        Priority::QueryBatch => "QUERY_BATCH",
+                    }
+                }
             }
         }
         /// Load job configuration.
@@ -1064,6 +1306,21 @@ pub mod big_query_audit_metadata {
             Export = 3,
             /// Import (load) job.
             Import = 4,
+        }
+        impl Type {
+            /// String value of the enum field names used in the ProtoBuf definition.
+            ///
+            /// The values are not transformed in any way and thus are considered stable
+            /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+            pub fn as_str_name(&self) -> &'static str {
+                match self {
+                    Type::Unspecified => "TYPE_UNSPECIFIED",
+                    Type::Query => "QUERY",
+                    Type::Copy => "COPY",
+                    Type::Export => "EXPORT",
+                    Type::Import => "IMPORT",
+                }
+            }
         }
         /// Job configuration information.
         #[derive(Clone, PartialEq, ::prost::Oneof)]
@@ -1311,6 +1568,20 @@ pub mod big_query_audit_metadata {
         /// This job will append to the table.
         WriteAppend = 3,
     }
+    impl WriteDisposition {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                WriteDisposition::Unspecified => "WRITE_DISPOSITION_UNSPECIFIED",
+                WriteDisposition::WriteEmpty => "WRITE_EMPTY",
+                WriteDisposition::WriteTruncate => "WRITE_TRUNCATE",
+                WriteDisposition::WriteAppend => "WRITE_APPEND",
+            }
+        }
+    }
     /// Table copy job operation type.
     #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
     #[repr(i32)]
@@ -1326,6 +1597,20 @@ pub mod big_query_audit_metadata {
         /// the destination table type is TABLE.
         Restore = 3,
     }
+    impl OperationType {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                OperationType::Unspecified => "OPERATION_TYPE_UNSPECIFIED",
+                OperationType::Copy => "COPY",
+                OperationType::Snapshot => "SNAPSHOT",
+                OperationType::Restore => "RESTORE",
+            }
+        }
+    }
     /// Describes whether a job should create a destination table if it doesn't
     /// exist.
     #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
@@ -1337,6 +1622,19 @@ pub mod big_query_audit_metadata {
         CreateNever = 1,
         /// This job should create a table if it doesn't already exist.
         CreateIfNeeded = 2,
+    }
+    impl CreateDisposition {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                CreateDisposition::Unspecified => "CREATE_DISPOSITION_UNSPECIFIED",
+                CreateDisposition::CreateNever => "CREATE_NEVER",
+                CreateDisposition::CreateIfNeeded => "CREATE_IF_NEEDED",
+            }
+        }
     }
     /// State of a job.
     #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
@@ -1350,6 +1648,20 @@ pub mod big_query_audit_metadata {
         Running = 2,
         /// Job is done.
         Done = 3,
+    }
+    impl JobState {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                JobState::Unspecified => "JOB_STATE_UNSPECIFIED",
+                JobState::Pending => "PENDING",
+                JobState::Running => "RUNNING",
+                JobState::Done => "DONE",
+            }
+        }
     }
     /// Type of the statement (e.g. SELECT, INSERT, CREATE_TABLE, CREATE_MODEL..)
     #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
@@ -1419,6 +1731,48 @@ pub mod big_query_audit_metadata {
         ExportData = 28,
         /// CALL &lt;stored procedure&gt;
         Call = 29,
+    }
+    impl QueryStatementType {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                QueryStatementType::Unspecified => "QUERY_STATEMENT_TYPE_UNSPECIFIED",
+                QueryStatementType::Select => "SELECT",
+                QueryStatementType::Assert => "ASSERT",
+                QueryStatementType::Insert => "INSERT",
+                QueryStatementType::Update => "UPDATE",
+                QueryStatementType::Delete => "DELETE",
+                QueryStatementType::Merge => "MERGE",
+                QueryStatementType::CreateTable => "CREATE_TABLE",
+                QueryStatementType::CreateTableAsSelect => "CREATE_TABLE_AS_SELECT",
+                QueryStatementType::CreateView => "CREATE_VIEW",
+                QueryStatementType::CreateModel => "CREATE_MODEL",
+                QueryStatementType::CreateMaterializedView => "CREATE_MATERIALIZED_VIEW",
+                QueryStatementType::CreateFunction => "CREATE_FUNCTION",
+                QueryStatementType::CreateProcedure => "CREATE_PROCEDURE",
+                QueryStatementType::CreateSchema => "CREATE_SCHEMA",
+                QueryStatementType::DropTable => "DROP_TABLE",
+                QueryStatementType::DropExternalTable => "DROP_EXTERNAL_TABLE",
+                QueryStatementType::DropView => "DROP_VIEW",
+                QueryStatementType::DropModel => "DROP_MODEL",
+                QueryStatementType::DropMaterializedView => "DROP_MATERIALIZED_VIEW",
+                QueryStatementType::DropFunction => "DROP_FUNCTION",
+                QueryStatementType::DropProcedure => "DROP_PROCEDURE",
+                QueryStatementType::DropSchema => "DROP_SCHEMA",
+                QueryStatementType::AlterTable => "ALTER_TABLE",
+                QueryStatementType::AlterView => "ALTER_VIEW",
+                QueryStatementType::AlterMaterializedView => "ALTER_MATERIALIZED_VIEW",
+                QueryStatementType::AlterSchema => "ALTER_SCHEMA",
+                QueryStatementType::Script => "SCRIPT",
+                QueryStatementType::TruncateTable => "TRUNCATE_TABLE",
+                QueryStatementType::CreateExternalTable => "CREATE_EXTERNAL_TABLE",
+                QueryStatementType::ExportData => "EXPORT_DATA",
+                QueryStatementType::Call => "CALL",
+            }
+        }
     }
     /// BigQuery event information.
     #[derive(Clone, PartialEq, ::prost::Oneof)]

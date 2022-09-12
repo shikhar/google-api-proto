@@ -44,6 +44,24 @@ pub mod common_metadata {
         /// google.longrunning.Operations.CancelOperation.
         Cancelled = 7,
     }
+    impl State {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                State::Unspecified => "STATE_UNSPECIFIED",
+                State::Initializing => "INITIALIZING",
+                State::Processing => "PROCESSING",
+                State::Cancelling => "CANCELLING",
+                State::Finalizing => "FINALIZING",
+                State::Successful => "SUCCESSFUL",
+                State::Failed => "FAILED",
+                State::Cancelled => "CANCELLED",
+            }
+        }
+    }
 }
 /// Measures the progress of a particular metric.
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -185,19 +203,19 @@ pub struct ImportEntitiesMetadata {
 /// Example usage:
 ///
 /// Entire project:
-///   kinds=[], namespace_ids=[]
+///    kinds=[], namespace_ids=[]
 ///
 /// Kinds Foo and Bar in all namespaces:
-///   kinds=['Foo', 'Bar'], namespace_ids=[]
+///    kinds=['Foo', 'Bar'], namespace_ids=[]
 ///
 /// Kinds Foo and Bar only in the default namespace:
-///   kinds=['Foo', 'Bar'], namespace_ids=\[''\]
+///    kinds=['Foo', 'Bar'], namespace_ids=\[''\]
 ///
 /// Kinds Foo and Bar in both the default and Baz namespaces:
-///   kinds=['Foo', 'Bar'], namespace_ids=['', 'Baz']
+///    kinds=['Foo', 'Bar'], namespace_ids=['', 'Baz']
 ///
 /// The entire Baz namespace:
-///   kinds=[], namespace_ids=\['Baz'\]
+///    kinds=[], namespace_ids=\['Baz'\]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct EntityFilter {
     /// If empty, then this represents all kinds.
@@ -224,10 +242,24 @@ pub enum OperationType {
     /// ImportEntities.
     ImportEntities = 2,
 }
+impl OperationType {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            OperationType::Unspecified => "OPERATION_TYPE_UNSPECIFIED",
+            OperationType::ExportEntities => "EXPORT_ENTITIES",
+            OperationType::ImportEntities => "IMPORT_ENTITIES",
+        }
+    }
+}
 /// Generated client implementations.
 pub mod datastore_admin_client {
     #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
     use tonic::codegen::*;
+    use tonic::codegen::http::Uri;
     /// Google Cloud Datastore Admin API
     ///
     /// The Datastore Admin API provides several admin services for Cloud Datastore.
@@ -294,6 +326,10 @@ pub mod datastore_admin_client {
             let inner = tonic::client::Grpc::new(inner);
             Self { inner }
         }
+        pub fn with_origin(inner: T, origin: Uri) -> Self {
+            let inner = tonic::client::Grpc::with_origin(inner, origin);
+            Self { inner }
+        }
         pub fn with_interceptor<F>(
             inner: T,
             interceptor: F,
@@ -313,19 +349,19 @@ pub mod datastore_admin_client {
         {
             DatastoreAdminClient::new(InterceptedService::new(inner, interceptor))
         }
-        /// Compress requests with `gzip`.
+        /// Compress requests with the given encoding.
         ///
         /// This requires the server to support it otherwise it might respond with an
         /// error.
         #[must_use]
-        pub fn send_gzip(mut self) -> Self {
-            self.inner = self.inner.send_gzip();
+        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.send_compressed(encoding);
             self
         }
-        /// Enable decompressing responses with `gzip`.
+        /// Enable decompressing responses.
         #[must_use]
-        pub fn accept_gzip(mut self) -> Self {
-            self.inner = self.inner.accept_gzip();
+        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.accept_compressed(encoding);
             self
         }
         /// Exports a copy of all or a subset of entities from Google Cloud Datastore

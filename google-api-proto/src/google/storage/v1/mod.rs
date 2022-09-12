@@ -223,6 +223,19 @@ pub mod bucket {
             /// being granted to public members 'allUsers' or 'allAuthenticatedUsers'.
             Inherited = 2,
         }
+        impl PublicAccessPrevention {
+            /// String value of the enum field names used in the ProtoBuf definition.
+            ///
+            /// The values are not transformed in any way and thus are considered stable
+            /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+            pub fn as_str_name(&self) -> &'static str {
+                match self {
+                    PublicAccessPrevention::Unspecified => "PUBLIC_ACCESS_PREVENTION_UNSPECIFIED",
+                    PublicAccessPrevention::Enforced => "ENFORCED",
+                    PublicAccessPrevention::Inherited => "INHERITED",
+                }
+            }
+        }
     }
     /// Lifecycle properties of a bucket.
     /// For more information, see <https://cloud.google.com/storage/docs/lifecycle.>
@@ -562,6 +575,19 @@ pub mod common_enums {
         /// Include all properties.
         Full = 2,
     }
+    impl Projection {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                Projection::Unspecified => "PROJECTION_UNSPECIFIED",
+                Projection::NoAcl => "NO_ACL",
+                Projection::Full => "FULL",
+            }
+        }
+    }
     /// Predefined or "canned" aliases for sets of specific bucket ACL entries.
     #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
     #[repr(i32)]
@@ -581,6 +607,22 @@ pub mod common_enums {
         /// Project team owners get `OWNER` access, and
         /// `allUsers` get `WRITER` access.
         BucketAclPublicReadWrite = 5,
+    }
+    impl PredefinedBucketAcl {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                PredefinedBucketAcl::Unspecified => "PREDEFINED_BUCKET_ACL_UNSPECIFIED",
+                PredefinedBucketAcl::BucketAclAuthenticatedRead => "BUCKET_ACL_AUTHENTICATED_READ",
+                PredefinedBucketAcl::BucketAclPrivate => "BUCKET_ACL_PRIVATE",
+                PredefinedBucketAcl::BucketAclProjectPrivate => "BUCKET_ACL_PROJECT_PRIVATE",
+                PredefinedBucketAcl::BucketAclPublicRead => "BUCKET_ACL_PUBLIC_READ",
+                PredefinedBucketAcl::BucketAclPublicReadWrite => "BUCKET_ACL_PUBLIC_READ_WRITE",
+            }
+        }
     }
     /// Predefined or "canned" aliases for sets of specific object ACL entries.
     #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
@@ -605,6 +647,23 @@ pub mod common_enums {
         /// Object owner gets `OWNER` access, and `allUsers`
         /// get `READER` access.
         ObjectAclPublicRead = 6,
+    }
+    impl PredefinedObjectAcl {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                PredefinedObjectAcl::Unspecified => "PREDEFINED_OBJECT_ACL_UNSPECIFIED",
+                PredefinedObjectAcl::ObjectAclAuthenticatedRead => "OBJECT_ACL_AUTHENTICATED_READ",
+                PredefinedObjectAcl::ObjectAclBucketOwnerFullControl => "OBJECT_ACL_BUCKET_OWNER_FULL_CONTROL",
+                PredefinedObjectAcl::ObjectAclBucketOwnerRead => "OBJECT_ACL_BUCKET_OWNER_READ",
+                PredefinedObjectAcl::ObjectAclPrivate => "OBJECT_ACL_PRIVATE",
+                PredefinedObjectAcl::ObjectAclProjectPrivate => "OBJECT_ACL_PROJECT_PRIVATE",
+                PredefinedObjectAcl::ObjectAclPublicRead => "OBJECT_ACL_PUBLIC_READ",
+            }
+        }
     }
 }
 /// Specifies a requested range of bytes to download.
@@ -2051,16 +2110,16 @@ pub mod insert_object_request {
         ChecksummedData(super::ChecksummedData),
         /// A reference to an existing object. This can be used to support
         /// several use cases:
-        ///   - Writing a sequence of data buffers supports the basic use case of
-        ///     uploading a complete object, chunk by chunk.
-        ///   - Writing a sequence of references to existing objects allows an
-        ///     object to be composed from a collection of objects, which can be
-        ///     used to support parallel object writes.
-        ///   - Writing a single reference with a given offset and size can be used
-        ///     to create an object from a slice of an existing object.
-        ///   - Writing an object referencing a object slice (created as noted
-        ///     above) followed by a data buffer followed by another object
-        ///     slice can be used to support delta upload functionality.
+        ///    - Writing a sequence of data buffers supports the basic use case of
+        ///      uploading a complete object, chunk by chunk.
+        ///    - Writing a sequence of references to existing objects allows an
+        ///      object to be composed from a collection of objects, which can be
+        ///      used to support parallel object writes.
+        ///    - Writing a single reference with a given offset and size can be used
+        ///      to create an object from a slice of an existing object.
+        ///    - Writing an object referencing a object slice (created as noted
+        ///      above) followed by a data buffer followed by another object
+        ///      slice can be used to support delta upload functionality.
         #[prost(message, tag="5")]
         Reference(super::GetObjectMediaRequest),
     }

@@ -102,7 +102,7 @@ pub struct HttpRequest {
 /// The proto definition of url.
 /// A url represents a URL and the general form represented is:
 ///
-///  `\[scheme://][google.cloud.apigeeconnect.v1.Url.host][path\]`
+///   `\[scheme://][google.cloud.apigeeconnect.v1.Url.host][path\]`
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct Url {
     /// Scheme.
@@ -157,6 +157,18 @@ pub enum Action {
     /// Indicates that agent should open a new stream.
     OpenNewStream = 1,
 }
+impl Action {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            Action::Unspecified => "ACTION_UNSPECIFIED",
+            Action::OpenNewStream => "OPEN_NEW_STREAM",
+        }
+    }
+}
 /// Endpoint indicates where the messages will be delivered.
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
 #[repr(i32)]
@@ -170,6 +182,20 @@ pub enum TetherEndpoint {
     /// Apigee Mint Rating endpoint.
     ApigeeMintRating = 3,
 }
+impl TetherEndpoint {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            TetherEndpoint::Unspecified => "TETHER_ENDPOINT_UNSPECIFIED",
+            TetherEndpoint::ApigeeMart => "APIGEE_MART",
+            TetherEndpoint::ApigeeRuntime => "APIGEE_RUNTIME",
+            TetherEndpoint::ApigeeMintRating => "APIGEE_MINT_RATING",
+        }
+    }
+}
 /// HTTP Scheme.
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
 #[repr(i32)]
@@ -179,10 +205,23 @@ pub enum Scheme {
     /// HTTPS protocol.
     Https = 1,
 }
+impl Scheme {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            Scheme::Unspecified => "SCHEME_UNSPECIFIED",
+            Scheme::Https => "HTTPS",
+        }
+    }
+}
 /// Generated client implementations.
 pub mod tether_client {
     #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
     use tonic::codegen::*;
+    use tonic::codegen::http::Uri;
     /// Tether provides a way for the control plane to send HTTP API requests to
     /// services in data planes that runs in a remote datacenter without
     /// requiring customers to open firewalls on their runtime plane.
@@ -199,6 +238,10 @@ pub mod tether_client {
     {
         pub fn new(inner: T) -> Self {
             let inner = tonic::client::Grpc::new(inner);
+            Self { inner }
+        }
+        pub fn with_origin(inner: T, origin: Uri) -> Self {
+            let inner = tonic::client::Grpc::with_origin(inner, origin);
             Self { inner }
         }
         pub fn with_interceptor<F>(
@@ -220,19 +263,19 @@ pub mod tether_client {
         {
             TetherClient::new(InterceptedService::new(inner, interceptor))
         }
-        /// Compress requests with `gzip`.
+        /// Compress requests with the given encoding.
         ///
         /// This requires the server to support it otherwise it might respond with an
         /// error.
         #[must_use]
-        pub fn send_gzip(mut self) -> Self {
-            self.inner = self.inner.send_gzip();
+        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.send_compressed(encoding);
             self
         }
-        /// Enable decompressing responses with `gzip`.
+        /// Enable decompressing responses.
         #[must_use]
-        pub fn accept_gzip(mut self) -> Self {
-            self.inner = self.inner.accept_gzip();
+        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.accept_compressed(encoding);
             self
         }
         /// Egress streams egress requests and responses. Logically, this is not
@@ -270,7 +313,7 @@ pub mod tether_client {
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ListConnectionsRequest {
     /// Required. Parent name of the form:
-    ///     `projects/{project_number or project_id}/endpoints/{endpoint}`.
+    ///      `projects/{project_number or project_id}/endpoints/{endpoint}`.
     #[prost(string, tag="1")]
     pub parent: ::prost::alloc::string::String,
     /// The maximum number of connections to return. The service may return fewer
@@ -324,6 +367,7 @@ pub struct Cluster {
 pub mod connection_service_client {
     #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
     use tonic::codegen::*;
+    use tonic::codegen::http::Uri;
     /// Service Interface for the Apigee Connect connection management APIs.
     #[derive(Debug, Clone)]
     pub struct ConnectionServiceClient<T> {
@@ -338,6 +382,10 @@ pub mod connection_service_client {
     {
         pub fn new(inner: T) -> Self {
             let inner = tonic::client::Grpc::new(inner);
+            Self { inner }
+        }
+        pub fn with_origin(inner: T, origin: Uri) -> Self {
+            let inner = tonic::client::Grpc::with_origin(inner, origin);
             Self { inner }
         }
         pub fn with_interceptor<F>(
@@ -359,19 +407,19 @@ pub mod connection_service_client {
         {
             ConnectionServiceClient::new(InterceptedService::new(inner, interceptor))
         }
-        /// Compress requests with `gzip`.
+        /// Compress requests with the given encoding.
         ///
         /// This requires the server to support it otherwise it might respond with an
         /// error.
         #[must_use]
-        pub fn send_gzip(mut self) -> Self {
-            self.inner = self.inner.send_gzip();
+        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.send_compressed(encoding);
             self
         }
-        /// Enable decompressing responses with `gzip`.
+        /// Enable decompressing responses.
         #[must_use]
-        pub fn accept_gzip(mut self) -> Self {
-            self.inner = self.inner.accept_gzip();
+        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.accept_compressed(encoding);
             self
         }
         /// Lists connections that are currently active for the given Apigee Connect

@@ -62,6 +62,20 @@ pub mod delivery_request_header {
         /// The calling SDK is JavaScript.
         Javascript = 3,
     }
+    impl SdkType {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                SdkType::Unspecified => "SDK_TYPE_UNSPECIFIED",
+                SdkType::Consumer => "CONSUMER",
+                SdkType::Driver => "DRIVER",
+                SdkType::Javascript => "JAVASCRIPT",
+            }
+        }
+    }
     /// The platform of the calling SDK.
     #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
     #[repr(i32)]
@@ -74,6 +88,20 @@ pub mod delivery_request_header {
         Ios = 2,
         /// The request is coming from the web.
         Web = 3,
+    }
+    impl Platform {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                Platform::Unspecified => "PLATFORM_UNSPECIFIED",
+                Platform::Android => "ANDROID",
+                Platform::Ios => "IOS",
+                Platform::Web => "WEB",
+            }
+        }
     }
 }
 /// Describes a vehicle attribute as a key-value pair. The "key:value" string
@@ -207,6 +235,22 @@ pub enum DeliveryVehicleLocationSensor {
     /// The fused location provider in Google Play services.
     FusedLocationProvider = 100,
 }
+impl DeliveryVehicleLocationSensor {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            DeliveryVehicleLocationSensor::UnknownSensor => "UNKNOWN_SENSOR",
+            DeliveryVehicleLocationSensor::Gps => "GPS",
+            DeliveryVehicleLocationSensor::Network => "NETWORK",
+            DeliveryVehicleLocationSensor::Passive => "PASSIVE",
+            DeliveryVehicleLocationSensor::RoadSnappedLocationProvider => "ROAD_SNAPPED_LOCATION_PROVIDER",
+            DeliveryVehicleLocationSensor::FusedLocationProvider => "FUSED_LOCATION_PROVIDER",
+        }
+    }
+}
 /// The vehicle's navigation status.
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
 #[repr(i32)]
@@ -222,6 +266,21 @@ pub enum DeliveryVehicleNavigationStatus {
     OffRoute = 3,
     /// The vehicle is within approximately 50m of the destination.
     ArrivedAtDestination = 4,
+}
+impl DeliveryVehicleNavigationStatus {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            DeliveryVehicleNavigationStatus::UnknownNavigationStatus => "UNKNOWN_NAVIGATION_STATUS",
+            DeliveryVehicleNavigationStatus::NoGuidance => "NO_GUIDANCE",
+            DeliveryVehicleNavigationStatus::EnrouteToDestination => "ENROUTE_TO_DESTINATION",
+            DeliveryVehicleNavigationStatus::OffRoute => "OFF_ROUTE",
+            DeliveryVehicleNavigationStatus::ArrivedAtDestination => "ARRIVED_AT_DESTINATION",
+        }
+    }
 }
 /// The `DeliveryVehicle` message. A delivery vehicle transports shipments from a
 /// depot to a delivery location, and from a pickup location to the depot. In
@@ -427,6 +486,20 @@ pub mod vehicle_stop {
         /// stop, that all previous stops have been completed.
         Arrived = 3,
     }
+    impl State {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                State::Unspecified => "STATE_UNSPECIFIED",
+                State::New => "NEW",
+                State::Enroute => "ENROUTE",
+                State::Arrived => "ARRIVED",
+            }
+        }
+    }
 }
 /// A Task in the Delivery API represents a single action to track. In general,
 /// there is a distinction between shipment-related Tasks and break Tasks. A
@@ -559,6 +632,21 @@ pub mod task {
         /// is being refueled.
         Unavailable = 4,
     }
+    impl Type {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                Type::Unspecified => "TYPE_UNSPECIFIED",
+                Type::Pickup => "PICKUP",
+                Type::Delivery => "DELIVERY",
+                Type::ScheduledStop => "SCHEDULED_STOP",
+                Type::Unavailable => "UNAVAILABLE",
+            }
+        }
+    }
     /// The state of a Task. This indicates the Tasks's progress.
     #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
     #[repr(i32)]
@@ -570,6 +658,19 @@ pub mod task {
         Open = 1,
         /// When the vehicle passes the vehicle stop for this Task.
         Closed = 2,
+    }
+    impl State {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                State::Unspecified => "STATE_UNSPECIFIED",
+                State::Open => "OPEN",
+                State::Closed => "CLOSED",
+            }
+        }
     }
     /// The outcome of attempting to execute a Task. When `TaskState` is closed,
     /// `TaskOutcome` indicates whether it was completed successfully.
@@ -583,6 +684,19 @@ pub mod task {
         /// Either the Task couldn't be completed, or it was cancelled.
         Failed = 2,
     }
+    impl TaskOutcome {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                TaskOutcome::Unspecified => "TASK_OUTCOME_UNSPECIFIED",
+                TaskOutcome::Succeeded => "SUCCEEDED",
+                TaskOutcome::Failed => "FAILED",
+            }
+        }
+    }
     /// The identity of the source that populated the `task_outcome_location`.
     #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
     #[repr(i32)]
@@ -594,6 +708,19 @@ pub mod task {
         /// The provider didn't specify the `task_outcome_location`, so Fleet Engine
         /// used the last known vehicle location.
         LastVehicleLocation = 3,
+    }
+    impl TaskOutcomeLocationSource {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                TaskOutcomeLocationSource::Unspecified => "TASK_OUTCOME_LOCATION_SOURCE_UNSPECIFIED",
+                TaskOutcomeLocationSource::Provider => "PROVIDER",
+                TaskOutcomeLocationSource::LastVehicleLocation => "LAST_VEHICLE_LOCATION",
+            }
+        }
     }
 }
 /// The `CreateDeliveryVehicle` request message.
@@ -856,11 +983,11 @@ pub struct UpdateTaskRequest {
     /// The following fields are maintained by Fleet Engine. Do not update
     /// them using `Task.update`.
     ///
-    ///   * `last_location`.
-    ///   * `last_location_snappable`.
-    ///   * `name`.
-    ///   * `remaining_vehicle_journey_segments`.
-    ///   * `task_outcome_location_source`.
+    ///    * `last_location`.
+    ///    * `last_location_snappable`.
+    ///    * `name`.
+    ///    * `remaining_vehicle_journey_segments`.
+    ///    * `task_outcome_location_source`.
     ///
     /// Note: You cannot change the value of `task_outcome` once you set it.
     ///
@@ -934,6 +1061,7 @@ pub struct ListTasksResponse {
 pub mod delivery_service_client {
     #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
     use tonic::codegen::*;
+    use tonic::codegen::http::Uri;
     /// The Last Mile Delivery service.
     #[derive(Debug, Clone)]
     pub struct DeliveryServiceClient<T> {
@@ -948,6 +1076,10 @@ pub mod delivery_service_client {
     {
         pub fn new(inner: T) -> Self {
             let inner = tonic::client::Grpc::new(inner);
+            Self { inner }
+        }
+        pub fn with_origin(inner: T, origin: Uri) -> Self {
+            let inner = tonic::client::Grpc::with_origin(inner, origin);
             Self { inner }
         }
         pub fn with_interceptor<F>(
@@ -969,19 +1101,19 @@ pub mod delivery_service_client {
         {
             DeliveryServiceClient::new(InterceptedService::new(inner, interceptor))
         }
-        /// Compress requests with `gzip`.
+        /// Compress requests with the given encoding.
         ///
         /// This requires the server to support it otherwise it might respond with an
         /// error.
         #[must_use]
-        pub fn send_gzip(mut self) -> Self {
-            self.inner = self.inner.send_gzip();
+        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.send_compressed(encoding);
             self
         }
-        /// Enable decompressing responses with `gzip`.
+        /// Enable decompressing responses.
         #[must_use]
-        pub fn accept_gzip(mut self) -> Self {
-            self.inner = self.inner.accept_gzip();
+        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.accept_compressed(encoding);
             self
         }
         /// Creates and returns a new `DeliveryVehicle`.

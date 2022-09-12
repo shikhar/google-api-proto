@@ -8,109 +8,6 @@ pub mod conversation;
     )
 )]
 pub mod interactionmodel;
-/// AccountLinking allows Google to guide the user to sign-in to the App's web
-/// services.
-///
-/// For Google Sign In and OAuth + Google Sign In linking types, Google generates
-/// a client ID identifying your App to Google ("Client ID issued by Google to
-/// your Actions" on Console UI). This field is read-only and can be checked by
-/// navigating to the Console UI's Account Linking page.
-/// See: <https://developers.google.com/assistant/identity/google-sign-in>
-///
-/// Note: For all account linking setting types (except for Google Sign In), you
-/// must provide a username and password for a test account in
-/// Settings.testing_instructions for the review team to review the app (they
-/// will not be visible to users).
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct AccountLinking {
-    /// Required. If `true`, users are allowed to sign up for new accounts via voice.
-    /// If `false`, account creation is only allowed on your website. Select this
-    /// option if you want to display your terms of service or obtain user consents
-    /// during sign-up.
-    /// linking_type cannot be GOOGLE_SIGN_IN when this is `false`.
-    /// linking_type cannot be OAUTH when this is `true`.
-    #[prost(bool, tag="1")]
-    pub enable_account_creation: bool,
-    /// Required. The linking type to use.
-    /// See <https://developers.google.com/assistant/identity> for further details on
-    /// the linking types.
-    #[prost(enumeration="account_linking::LinkingType", tag="2")]
-    pub linking_type: i32,
-    /// Optional. Indicates the type of authentication for OAUTH linking_type.
-    #[prost(enumeration="account_linking::AuthGrantType", tag="3")]
-    pub auth_grant_type: i32,
-    /// Optional. Client ID issued by your App to Google.
-    /// This is the OAuth2 Client ID identifying Google to your service.
-    /// Only set when using OAuth.
-    #[prost(string, tag="4")]
-    pub app_client_id: ::prost::alloc::string::String,
-    /// Optional. Endpoint for your sign-in web page that supports OAuth2 code or
-    /// implicit flows.
-    /// URL must use HTTPS.
-    /// Only set when using OAuth.
-    #[prost(string, tag="5")]
-    pub authorization_url: ::prost::alloc::string::String,
-    /// Optional. OAuth2 endpoint for token exchange.
-    /// URL must use HTTPS.
-    /// This is not set when only using OAuth with IMPLICIT grant as the
-    /// linking type.
-    /// Only set when using OAuth.
-    #[prost(string, tag="6")]
-    pub token_url: ::prost::alloc::string::String,
-    /// Optional. List of permissions the user must consent to in order to use
-    /// your service.
-    /// Only set when using OAuth.
-    /// Make sure to provide a Terms of Service in the directory information in
-    /// LocalizedSettings.terms_of_service_url section if specifying this field.
-    #[prost(string, repeated, tag="7")]
-    pub scopes: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
-    /// Optional. This is the web page on your service which describes the
-    /// permissions the user is granting to Google.
-    /// Only set if using OAuth and Google Sign In.
-    /// Make sure to provide a Terms of Service in the directory information in
-    /// LocalizedSettings.terms_of_service_url section if specifying this field.
-    #[prost(string, tag="8")]
-    pub learn_more_url: ::prost::alloc::string::String,
-    /// Optional. If true, allow Google to transmit client ID and secret via HTTP
-    /// basic auth header. Otherwise, Google uses the client ID and secret inside
-    /// the post body.
-    /// Only set when using OAuth.
-    /// Make sure to provide a Terms of Service in the directory information in
-    /// LocalizedSettings.terms_of_service_url section if specifying this field.
-    #[prost(bool, tag="9")]
-    pub use_basic_auth_header: bool,
-}
-/// Nested message and enum types in `AccountLinking`.
-pub mod account_linking {
-    /// The type of Account Linking to perform.
-    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
-    #[repr(i32)]
-    pub enum LinkingType {
-        /// Unspecified.
-        Unspecified = 0,
-        /// Google Sign In linking type.
-        /// If using this linking type, no OAuth-related fields need to be set below.
-        GoogleSignIn = 1,
-        /// OAuth and Google Sign In linking type.
-        OauthAndGoogleSignIn = 2,
-        /// OAuth linking type.
-        Oauth = 3,
-    }
-    /// The OAuth2 grant type Google uses to guide the user to sign in to your
-    /// App's web service.
-    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
-    #[repr(i32)]
-    pub enum AuthGrantType {
-        /// Unspecified.
-        Unspecified = 0,
-        /// Authorization code grant. Requires you to provide both
-        /// authentication URL and access token URL.
-        AuthCode = 1,
-        /// Implicit code grant. Only requires you to provide authentication
-        /// URL.
-        Implicit = 2,
-    }
-}
 /// Information about the encrypted OAuth client secret used in account linking
 /// flows (for AUTH_CODE grant type).
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -227,6 +124,136 @@ pub struct Manifest {
     #[prost(string, tag="1")]
     pub version: ::prost::alloc::string::String,
 }
+/// AccountLinking allows Google to guide the user to sign-in to the App's web
+/// services.
+///
+/// For Google Sign In and OAuth + Google Sign In linking types, Google generates
+/// a client ID identifying your App to Google ("Client ID issued by Google to
+/// your Actions" on Console UI). This field is read-only and can be checked by
+/// navigating to the Console UI's Account Linking page.
+/// See: <https://developers.google.com/assistant/identity/google-sign-in>
+///
+/// Note: For all account linking setting types (except for Google Sign In), you
+/// must provide a username and password for a test account in
+/// Settings.testing_instructions for the review team to review the app (they
+/// will not be visible to users).
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct AccountLinking {
+    /// Required. If `true`, users are allowed to sign up for new accounts via voice.
+    /// If `false`, account creation is only allowed on your website. Select this
+    /// option if you want to display your terms of service or obtain user consents
+    /// during sign-up.
+    /// linking_type cannot be GOOGLE_SIGN_IN when this is `false`.
+    /// linking_type cannot be OAUTH when this is `true`.
+    #[prost(bool, tag="1")]
+    pub enable_account_creation: bool,
+    /// Required. The linking type to use.
+    /// See <https://developers.google.com/assistant/identity> for further details on
+    /// the linking types.
+    #[prost(enumeration="account_linking::LinkingType", tag="2")]
+    pub linking_type: i32,
+    /// Optional. Indicates the type of authentication for OAUTH linking_type.
+    #[prost(enumeration="account_linking::AuthGrantType", tag="3")]
+    pub auth_grant_type: i32,
+    /// Optional. Client ID issued by your App to Google.
+    /// This is the OAuth2 Client ID identifying Google to your service.
+    /// Only set when using OAuth.
+    #[prost(string, tag="4")]
+    pub app_client_id: ::prost::alloc::string::String,
+    /// Optional. Endpoint for your sign-in web page that supports OAuth2 code or
+    /// implicit flows.
+    /// URL must use HTTPS.
+    /// Only set when using OAuth.
+    #[prost(string, tag="5")]
+    pub authorization_url: ::prost::alloc::string::String,
+    /// Optional. OAuth2 endpoint for token exchange.
+    /// URL must use HTTPS.
+    /// This is not set when only using OAuth with IMPLICIT grant as the
+    /// linking type.
+    /// Only set when using OAuth.
+    #[prost(string, tag="6")]
+    pub token_url: ::prost::alloc::string::String,
+    /// Optional. List of permissions the user must consent to in order to use
+    /// your service.
+    /// Only set when using OAuth.
+    /// Make sure to provide a Terms of Service in the directory information in
+    /// LocalizedSettings.terms_of_service_url section if specifying this field.
+    #[prost(string, repeated, tag="7")]
+    pub scopes: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
+    /// Optional. This is the web page on your service which describes the
+    /// permissions the user is granting to Google.
+    /// Only set if using OAuth and Google Sign In.
+    /// Make sure to provide a Terms of Service in the directory information in
+    /// LocalizedSettings.terms_of_service_url section if specifying this field.
+    #[prost(string, tag="8")]
+    pub learn_more_url: ::prost::alloc::string::String,
+    /// Optional. If true, allow Google to transmit client ID and secret via HTTP
+    /// basic auth header. Otherwise, Google uses the client ID and secret inside
+    /// the post body.
+    /// Only set when using OAuth.
+    /// Make sure to provide a Terms of Service in the directory information in
+    /// LocalizedSettings.terms_of_service_url section if specifying this field.
+    #[prost(bool, tag="9")]
+    pub use_basic_auth_header: bool,
+}
+/// Nested message and enum types in `AccountLinking`.
+pub mod account_linking {
+    /// The type of Account Linking to perform.
+    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+    #[repr(i32)]
+    pub enum LinkingType {
+        /// Unspecified.
+        Unspecified = 0,
+        /// Google Sign In linking type.
+        /// If using this linking type, no OAuth-related fields need to be set below.
+        GoogleSignIn = 1,
+        /// OAuth and Google Sign In linking type.
+        OauthAndGoogleSignIn = 2,
+        /// OAuth linking type.
+        Oauth = 3,
+    }
+    impl LinkingType {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                LinkingType::Unspecified => "LINKING_TYPE_UNSPECIFIED",
+                LinkingType::GoogleSignIn => "GOOGLE_SIGN_IN",
+                LinkingType::OauthAndGoogleSignIn => "OAUTH_AND_GOOGLE_SIGN_IN",
+                LinkingType::Oauth => "OAUTH",
+            }
+        }
+    }
+    /// The OAuth2 grant type Google uses to guide the user to sign in to your
+    /// App's web service.
+    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+    #[repr(i32)]
+    pub enum AuthGrantType {
+        /// Unspecified.
+        Unspecified = 0,
+        /// Authorization code grant. Requires you to provide both
+        /// authentication URL and access token URL.
+        AuthCode = 1,
+        /// Implicit code grant. Only requires you to provide authentication
+        /// URL.
+        Implicit = 2,
+    }
+    impl AuthGrantType {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                AuthGrantType::Unspecified => "AUTH_GRANT_TYPE_UNSPECIFIED",
+                AuthGrantType::AuthCode => "AUTH_CODE",
+                AuthGrantType::Implicit => "IMPLICIT",
+            }
+        }
+    }
+}
 /// Styles applied to cards that are presented to users
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ThemeCustomization {
@@ -289,6 +316,19 @@ pub mod theme_customization {
         Curved = 1,
         /// Rectangular corner for image.
         Angled = 2,
+    }
+    impl ImageCornerStyle {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                ImageCornerStyle::Unspecified => "IMAGE_CORNER_STYLE_UNSPECIFIED",
+                ImageCornerStyle::Curved => "CURVED",
+                ImageCornerStyle::Angled => "ANGLED",
+            }
+        }
     }
 }
 /// Represents settings of an Actions project that are specific to a user locale.
@@ -398,6 +438,24 @@ pub mod capability_requirement {
         InteractiveCanvas = 8,
         /// Surface supports home storage.
         HomeStorage = 9,
+    }
+    impl SurfaceCapability {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                SurfaceCapability::Unspecified => "SURFACE_CAPABILITY_UNSPECIFIED",
+                SurfaceCapability::AudioOutput => "AUDIO_OUTPUT",
+                SurfaceCapability::ScreenOutput => "SCREEN_OUTPUT",
+                SurfaceCapability::MediaResponseAudio => "MEDIA_RESPONSE_AUDIO",
+                SurfaceCapability::WebBrowser => "WEB_BROWSER",
+                SurfaceCapability::AccountLinking => "ACCOUNT_LINKING",
+                SurfaceCapability::InteractiveCanvas => "INTERACTIVE_CANVAS",
+                SurfaceCapability::HomeStorage => "HOME_STORAGE",
+            }
+        }
     }
 }
 /// Represents settings of an Actions project that are not locale specific.
@@ -544,15 +602,46 @@ pub mod settings {
         /// Home Control category.
         HomeControl = 19,
     }
+    impl Category {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                Category::Unspecified => "CATEGORY_UNSPECIFIED",
+                Category::BusinessAndFinance => "BUSINESS_AND_FINANCE",
+                Category::EducationAndReference => "EDUCATION_AND_REFERENCE",
+                Category::FoodAndDrink => "FOOD_AND_DRINK",
+                Category::GamesAndTrivia => "GAMES_AND_TRIVIA",
+                Category::HealthAndFitness => "HEALTH_AND_FITNESS",
+                Category::KidsAndFamily => "KIDS_AND_FAMILY",
+                Category::Lifestyle => "LIFESTYLE",
+                Category::Local => "LOCAL",
+                Category::MoviesAndTv => "MOVIES_AND_TV",
+                Category::MusicAndAudio => "MUSIC_AND_AUDIO",
+                Category::News => "NEWS",
+                Category::NoveltyAndHumor => "NOVELTY_AND_HUMOR",
+                Category::Productivity => "PRODUCTIVITY",
+                Category::Shopping => "SHOPPING",
+                Category::Social => "SOCIAL",
+                Category::Sports => "SPORTS",
+                Category::TravelAndTransportation => "TRAVEL_AND_TRANSPORTATION",
+                Category::Utilities => "UTILITIES",
+                Category::Weather => "WEATHER",
+                Category::HomeControl => "HOME_CONTROL",
+            }
+        }
+    }
 }
 /// Metadata for different types of webhooks. If you're using
 /// `inlineCloudFunction`, your source code must be in a directory with the same
 /// name as the value for the `executeFunction` key.
 /// For example, a value of `my_webhook` for the`executeFunction` key would have
 /// a code structure like this:
-///  - `/webhooks/my_webhook.yaml`
-///  - `/webhooks/my_webhook/index.js`
-///  - `/webhooks/my_webhook/package.json`
+///   - `/webhooks/my_webhook.yaml`
+///   - `/webhooks/my_webhook/index.js`
+///   - `/webhooks/my_webhook/package.json`
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct Webhook {
     /// List of handlers for this webhook.
@@ -714,15 +803,15 @@ pub struct DataFile {
     /// Relative path of the data file from the project root in the SDK file
     /// structure.
     /// Allowed file paths:
-    ///     - Images: `resources/images/{multiple
-    ///     directories}?/{ImageName}.{extension}`
-    ///     - Audio: `resources/audio/{multiple
-    ///     directories}?/{AudioFileName}.{extension}`
-    ///     - Inline Cloud Function Code: `webhooks/{WebhookName}.zip`
+    ///      - Images: `resources/images/{multiple
+    ///      directories}?/{ImageName}.{extension}`
+    ///      - Audio: `resources/audio/{multiple
+    ///      directories}?/{AudioFileName}.{extension}`
+    ///      - Inline Cloud Function Code: `webhooks/{WebhookName}.zip`
     /// Allowed extensions:
-    ///     - Images: `png`, `jpg`, `jpeg`
-    ///     - Audio: `mp3`, `mpeg`
-    ///     - Inline Cloud Functions: `zip`
+    ///      - Images: `png`, `jpg`, `jpeg`
+    ///      - Audio: `mp3`, `mpeg`
+    ///      - Inline Cloud Functions: `zip`
     #[prost(string, tag="1")]
     pub file_path: ::prost::alloc::string::String,
     /// Required. The content type of this asset. Example: `text/html`. The content
@@ -761,6 +850,52 @@ pub mod files {
         /// source code.
         #[prost(message, tag="2")]
         DataFiles(super::DataFiles),
+    }
+}
+/// Definition of release channel resource.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ReleaseChannel {
+    /// The unique name of the release channel in the following format.
+    /// `projects/{project}/releaseChannels/{release_channel}`.
+    #[prost(string, tag="1")]
+    pub name: ::prost::alloc::string::String,
+    /// Version currently deployed to this release channel in the following format:
+    /// `projects/{project}/versions/{version}`.
+    #[prost(string, tag="2")]
+    pub current_version: ::prost::alloc::string::String,
+    /// Version to be deployed to this release channel in the following format:
+    /// `projects/{project}/versions/{version}`.
+    #[prost(string, tag="3")]
+    pub pending_version: ::prost::alloc::string::String,
+}
+/// Wrapper for repeated validation result.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ValidationResults {
+    /// Multiple validation results.
+    #[prost(message, repeated, tag="1")]
+    pub results: ::prost::alloc::vec::Vec<ValidationResult>,
+}
+/// Represents a validation result associated with the app content.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ValidationResult {
+    /// Holds the validation message.
+    #[prost(string, tag="1")]
+    pub validation_message: ::prost::alloc::string::String,
+    /// Context to identify the resource the validation message relates to.
+    #[prost(message, optional, tag="2")]
+    pub validation_context: ::core::option::Option<validation_result::ValidationContext>,
+}
+/// Nested message and enum types in `ValidationResult`.
+pub mod validation_result {
+    /// Context to identify the resource the validation message relates to.
+    #[derive(Clone, PartialEq, ::prost::Message)]
+    pub struct ValidationContext {
+        /// Language code of the lozalized resource.
+        /// Empty if the error is for non-localized resource.
+        /// See the list of supported languages in
+        /// <https://developers.google.com/assistant/console/languages-locales>
+        #[prost(string, tag="1")]
+        pub language_code: ::prost::alloc::string::String,
     }
 }
 /// Definition of version resource.
@@ -822,36 +957,605 @@ pub mod version {
             /// The version has been deleted.
             Deleted = 9,
         }
+        impl State {
+            /// String value of the enum field names used in the ProtoBuf definition.
+            ///
+            /// The values are not transformed in any way and thus are considered stable
+            /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+            pub fn as_str_name(&self) -> &'static str {
+                match self {
+                    State::Unspecified => "STATE_UNSPECIFIED",
+                    State::CreationInProgress => "CREATION_IN_PROGRESS",
+                    State::CreationFailed => "CREATION_FAILED",
+                    State::Created => "CREATED",
+                    State::ReviewInProgress => "REVIEW_IN_PROGRESS",
+                    State::Approved => "APPROVED",
+                    State::ConditionallyApproved => "CONDITIONALLY_APPROVED",
+                    State::Denied => "DENIED",
+                    State::UnderTakedown => "UNDER_TAKEDOWN",
+                    State::Deleted => "DELETED",
+                }
+            }
+        }
     }
 }
-/// Wrapper for repeated validation result.
+/// Streaming RPC request for WriteDraft.
 #[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ValidationResults {
-    /// Multiple validation results.
-    #[prost(message, repeated, tag="1")]
-    pub results: ::prost::alloc::vec::Vec<ValidationResult>,
-}
-/// Represents a validation result associated with the app content.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ValidationResult {
-    /// Holds the validation message.
+pub struct WriteDraftRequest {
+    /// Required. The parent resource name in the format `projects/{project}`. The
+    /// `{project}` is the cloud project ID associated with the project.
     #[prost(string, tag="1")]
-    pub validation_message: ::prost::alloc::string::String,
-    /// Context to identify the resource the validation message relates to.
-    #[prost(message, optional, tag="2")]
-    pub validation_context: ::core::option::Option<validation_result::ValidationContext>,
+    pub parent: ::prost::alloc::string::String,
+    /// Required. List of files sent to the server at a time. This is a list of config files
+    /// or data files.
+    /// 1. The first request must be a ConfigFiles.
+    /// 2. The first request must have a ConfigFile with 'settings'.
+    /// 3. The first request must have a ConfigFile with 'manifest'.
+    /// 4. The webhook ConfigFile corresponding to inline cloud function must be
+    ///     streamed before the DataFile corresponding to its source code.
+    #[prost(message, optional, tag="4")]
+    pub files: ::core::option::Option<Files>,
 }
-/// Nested message and enum types in `ValidationResult`.
-pub mod validation_result {
-    /// Context to identify the resource the validation message relates to.
+/// Definition of draft resource.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct Draft {
+    /// The unique identifier of the draft in the following format.
+    /// `projects/{project}/draft`
+    #[prost(string, tag="1")]
+    pub name: ::prost::alloc::string::String,
+    /// Validation results associated with the project draft content. Note that
+    /// WriteDraft updates the draft despite the warnings as warnings are not draft
+    /// blocking.
+    #[prost(message, optional, tag="2")]
+    pub validation_results: ::core::option::Option<ValidationResults>,
+}
+/// Streaming RPC request for WritePreview.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct WritePreviewRequest {
+    /// Required. The parent resource name in the format `projects/{project}`. The
+    /// `{project}` is the cloud project ID associated with the project.
+    #[prost(string, tag="1")]
+    pub parent: ::prost::alloc::string::String,
+    /// Required. The settings for updating the user's preview.
+    #[prost(message, optional, tag="4")]
+    pub preview_settings: ::core::option::Option<write_preview_request::PreviewSettings>,
+    /// Data source used to created the preview.
+    #[prost(oneof="write_preview_request::Source", tags="5, 6, 7")]
+    pub source: ::core::option::Option<write_preview_request::Source>,
+}
+/// Nested message and enum types in `WritePreviewRequest`.
+pub mod write_preview_request {
+    /// Indicates the preview content will be coming from the Draft.
     #[derive(Clone, PartialEq, ::prost::Message)]
-    pub struct ValidationContext {
-        /// Language code of the lozalized resource.
-        /// Empty if the error is for non-localized resource.
-        /// See the list of supported languages in
-        /// <https://developers.google.com/assistant/console/languages-locales>
+    pub struct ContentFromDraft {
+    }
+    /// Indicates the preview content will be coming from an exiting version.
+    #[derive(Clone, PartialEq, ::prost::Message)]
+    pub struct ContentFromSubmittedVersion {
+        /// Required. Submitted version of the project to be used to create a preview.
+        /// Format: `projects/{project}/versions/{version}`
         #[prost(string, tag="1")]
-        pub language_code: ::prost::alloc::string::String,
+        pub version: ::prost::alloc::string::String,
+    }
+    /// Settings for updating the preview.
+    #[derive(Clone, PartialEq, ::prost::Message)]
+    pub struct PreviewSettings {
+        /// Indicates whether or not to run certain operations, such as transactions,
+        /// in sandbox mode. By default, preview requests run these operations in
+        /// sandbox mode. In other words, the default value for `sandbox` is `true`.
+        #[prost(message, optional, tag="1")]
+        pub sandbox: ::core::option::Option<bool>,
+    }
+    /// Data source used to created the preview.
+    #[derive(Clone, PartialEq, ::prost::Oneof)]
+    pub enum Source {
+        /// List of files sent to the server at a time. This is a list of config
+        /// files or data files.
+        /// 1. The first request must be a ConfigFiles.
+        /// 2. The first request must have a ConfigFile with 'settings'.
+        /// 3. The first request must have a ConfigFile with 'manifest'.
+        /// 4. The webhook ConfigFile corresponding to inline cloud function must be
+        ///     streamed before the DataFile corresponding to its source code.
+        #[prost(message, tag="5")]
+        Files(super::Files),
+        /// Content sourced from the project draft.
+        #[prost(message, tag="6")]
+        Draft(ContentFromDraft),
+        /// Content sourced from the an exiting version.
+        #[prost(message, tag="7")]
+        SubmittedVersion(ContentFromSubmittedVersion),
+    }
+}
+/// Definition of preview resource.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct Preview {
+    /// The unique identifier of the preview.
+    /// Format: `projects/{project}/preview`
+    #[prost(string, tag="1")]
+    pub name: ::prost::alloc::string::String,
+    /// Validation results associated with the user project preview content.
+    #[prost(message, optional, tag="2")]
+    pub validation_results: ::core::option::Option<ValidationResults>,
+    /// The simulator URL to test the user preview.
+    #[prost(string, tag="3")]
+    pub simulator_url: ::prost::alloc::string::String,
+}
+/// Streaming RPC request for CreateVersion.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct CreateVersionRequest {
+    /// Required. The parent resource name in the format `projects/{project}`. The
+    /// `{project}` is the cloud project ID associated with the project.
+    #[prost(string, tag="1")]
+    pub parent: ::prost::alloc::string::String,
+    /// Required. List of files sent to the server at a time. This is a list of config files
+    /// or data files.
+    /// 1. The first request must be a ConfigFiles.
+    /// 2. The first request must have a ConfigFile with 'settings'.
+    /// 3. The first request must have a ConfigFile with 'manifest'.
+    /// 4. The webhook ConfigFile corresponding to inline cloud function must be
+    ///     streamed before the DataFile corresponding to its source code.
+    #[prost(message, optional, tag="5")]
+    pub files: ::core::option::Option<Files>,
+    /// Optional. The release channel to deploy the version, if specified. The supported
+    /// built in release channels are actions.channels.Production,
+    /// actions.channels.ClosedBeta, actions.channels.Alpha.
+    /// .
+    #[prost(string, tag="4")]
+    pub release_channel: ::prost::alloc::string::String,
+}
+/// RPC request for ReadDraft.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ReadDraftRequest {
+    /// Required. The name of the resource in the format `projects/{project}/draft`. The
+    /// `{project}` is the cloud project ID associated with the project.
+    #[prost(string, tag="1")]
+    pub name: ::prost::alloc::string::String,
+    /// Optional. The version of the crypto key used to encrypt the account linking OAuth
+    /// client secret. If not specified, the primary key version is used for
+    /// encryption. Only relevant for projects with account linking with client
+    /// secret.
+    #[prost(string, tag="2")]
+    pub client_secret_encryption_key_version: ::prost::alloc::string::String,
+}
+/// Streaming RPC response for ReadDraft.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ReadDraftResponse {
+    /// List of files sent from the server at a time.
+    #[prost(message, optional, tag="3")]
+    pub files: ::core::option::Option<Files>,
+}
+/// RPC request for ReadVersion.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ReadVersionRequest {
+    /// Required. The name of the version resource in the format
+    /// `projects/{project}/versions/{version}`. `{project}` is the
+    /// cloud project ID associated with the project, `{version}` is the
+    /// identifier of the version being read.
+    #[prost(string, tag="1")]
+    pub name: ::prost::alloc::string::String,
+    /// Optional. The version of the crypto key used to encrypt the account linking OAuth
+    /// client secret. If not specified, the primary key version is used for
+    /// encryption. Only relevant for projects with account linking with client
+    /// secret.
+    #[prost(string, tag="2")]
+    pub client_secret_encryption_key_version: ::prost::alloc::string::String,
+}
+/// Streaming RPC response for ReadVersion.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ReadVersionResponse {
+    /// List of files sent from the server at a time.
+    #[prost(message, optional, tag="1")]
+    pub files: ::core::option::Option<Files>,
+}
+/// RPC request for EncryptSecret.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct EncryptSecretRequest {
+    /// Required. The account linking client secret plaintext.
+    #[prost(string, tag="1")]
+    pub client_secret: ::prost::alloc::string::String,
+}
+/// RPC response for EncryptSecret.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct EncryptSecretResponse {
+    /// Contains the encrypted account linking client secret and the key version
+    /// used to encrypt the secret.
+    #[prost(message, optional, tag="1")]
+    pub account_linking_secret: ::core::option::Option<AccountLinkingSecret>,
+}
+/// RPC request for DecryptSecret.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct DecryptSecretRequest {
+    /// Required. The account linking client secret ciphertext.
+    #[prost(bytes="bytes", tag="1")]
+    pub encrypted_client_secret: ::prost::bytes::Bytes,
+}
+/// RPC response for DecryptSecret.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct DecryptSecretResponse {
+    /// The account linking client secret plaintext.
+    #[prost(string, tag="1")]
+    pub client_secret: ::prost::alloc::string::String,
+}
+/// RPC request for ListSampleProjects.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ListSampleProjectsRequest {
+    /// Optional. The maximum number of sample projects to return. The service may return
+    /// fewer than this value.
+    /// If unspecified, at most 1000 sample projects will be returned. Values above
+    /// 1000 will be coerced to 1000.
+    #[prost(int32, tag="1")]
+    pub page_size: i32,
+    /// Optional. A page token, received from a previous 'ListSampleProjects' call.
+    /// Provide this to retrieve the subsequent page.
+    #[prost(string, tag="2")]
+    pub page_token: ::prost::alloc::string::String,
+}
+/// RPC response for ListSampleProjects.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ListSampleProjectsResponse {
+    /// The list of sample projects supported.
+    #[prost(message, repeated, tag="1")]
+    pub sample_projects: ::prost::alloc::vec::Vec<SampleProject>,
+    /// A token, which can be sent as `page_token` to retrieve the next page.
+    /// If this field is omitted, there are no subsequent pages.
+    #[prost(string, tag="2")]
+    pub next_page_token: ::prost::alloc::string::String,
+}
+/// Definition of sample project resource.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct SampleProject {
+    /// The name of the sample project.
+    /// Format: `sampleProjects/{sample_project}`
+    #[prost(string, tag="1")]
+    pub name: ::prost::alloc::string::String,
+    /// The URL to the zip file where the sample is hosted.
+    #[prost(string, tag="2")]
+    pub hosted_url: ::prost::alloc::string::String,
+    /// The description of the sample project.
+    #[prost(string, tag="3")]
+    pub description: ::prost::alloc::string::String,
+}
+/// RPC request for listing release channels
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ListReleaseChannelsRequest {
+    /// Required. The name of the resource in the format `projects/{project}`. The
+    /// `{project}` is the cloud project ID associated with the project.
+    #[prost(string, tag="1")]
+    pub parent: ::prost::alloc::string::String,
+    /// The maximum number of release channels to return. The service may return
+    /// fewer than this value. If unspecified, at most 50 release channels will be
+    /// returned.
+    #[prost(int32, tag="2")]
+    pub page_size: i32,
+    /// A page token, received from a previous `ListReleaseChannels` call.
+    /// Provide this to retrieve the subsequent page.
+    /// When paginating, all other parameters provided to `ListReleaseChannels`
+    /// must match the call that provided the page token.
+    #[prost(string, tag="3")]
+    pub page_token: ::prost::alloc::string::String,
+}
+/// RPC response for listing release channels
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ListReleaseChannelsResponse {
+    /// List of the release channels for the given project id.
+    #[prost(message, repeated, tag="1")]
+    pub release_channels: ::prost::alloc::vec::Vec<ReleaseChannel>,
+    /// A token, which can be sent as `page_token` to retrieve the next page.
+    /// If this field is omitted, there are no subsequent pages.
+    #[prost(string, tag="2")]
+    pub next_page_token: ::prost::alloc::string::String,
+}
+/// RPC request for listing versions
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ListVersionsRequest {
+    /// Required. The name of the resource in the format `projects/{project}`. The
+    /// `{project}` is the cloud project ID associated with the project.
+    #[prost(string, tag="1")]
+    pub parent: ::prost::alloc::string::String,
+    /// The maximum number of versions to return. The service may return
+    /// fewer than this value. If unspecified, at most 50 versions will be
+    /// returned.
+    #[prost(int32, tag="2")]
+    pub page_size: i32,
+    /// A page token, received from a previous `ListVersions` call.
+    /// Provide this to retrieve the subsequent page.
+    /// When paginating, all other parameters provided to `ListVersions`
+    /// must match the call that provided the page token.
+    #[prost(string, tag="3")]
+    pub page_token: ::prost::alloc::string::String,
+}
+/// RPC response for listing versions
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ListVersionsResponse {
+    /// List of the versions for the given project id.
+    #[prost(message, repeated, tag="1")]
+    pub versions: ::prost::alloc::vec::Vec<Version>,
+    /// A token, which can be sent as `page_token` to retrieve the next page.
+    /// If this field is omitted, there are no subsequent pages.
+    #[prost(string, tag="2")]
+    pub next_page_token: ::prost::alloc::string::String,
+}
+/// Generated client implementations.
+pub mod actions_sdk_client {
+    #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
+    use tonic::codegen::*;
+    use tonic::codegen::http::Uri;
+    /// Actions SDK API which allows developers to build projects using the SDK.
+    #[derive(Debug, Clone)]
+    pub struct ActionsSdkClient<T> {
+        inner: tonic::client::Grpc<T>,
+    }
+    impl<T> ActionsSdkClient<T>
+    where
+        T: tonic::client::GrpcService<tonic::body::BoxBody>,
+        T::Error: Into<StdError>,
+        T::ResponseBody: Body<Data = Bytes> + Send + 'static,
+        <T::ResponseBody as Body>::Error: Into<StdError> + Send,
+    {
+        pub fn new(inner: T) -> Self {
+            let inner = tonic::client::Grpc::new(inner);
+            Self { inner }
+        }
+        pub fn with_origin(inner: T, origin: Uri) -> Self {
+            let inner = tonic::client::Grpc::with_origin(inner, origin);
+            Self { inner }
+        }
+        pub fn with_interceptor<F>(
+            inner: T,
+            interceptor: F,
+        ) -> ActionsSdkClient<InterceptedService<T, F>>
+        where
+            F: tonic::service::Interceptor,
+            T::ResponseBody: Default,
+            T: tonic::codegen::Service<
+                http::Request<tonic::body::BoxBody>,
+                Response = http::Response<
+                    <T as tonic::client::GrpcService<tonic::body::BoxBody>>::ResponseBody,
+                >,
+            >,
+            <T as tonic::codegen::Service<
+                http::Request<tonic::body::BoxBody>,
+            >>::Error: Into<StdError> + Send + Sync,
+        {
+            ActionsSdkClient::new(InterceptedService::new(inner, interceptor))
+        }
+        /// Compress requests with the given encoding.
+        ///
+        /// This requires the server to support it otherwise it might respond with an
+        /// error.
+        #[must_use]
+        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.send_compressed(encoding);
+            self
+        }
+        /// Enable decompressing responses.
+        #[must_use]
+        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.accept_compressed(encoding);
+            self
+        }
+        /// Updates the project draft based on the model.
+        pub async fn write_draft(
+            &mut self,
+            request: impl tonic::IntoStreamingRequest<Message = super::WriteDraftRequest>,
+        ) -> Result<tonic::Response<super::Draft>, tonic::Status> {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/google.actions.sdk.v2.ActionsSdk/WriteDraft",
+            );
+            self.inner
+                .client_streaming(request.into_streaming_request(), path, codec)
+                .await
+        }
+        /// Updates the user's project preview based on the model.
+        pub async fn write_preview(
+            &mut self,
+            request: impl tonic::IntoStreamingRequest<
+                Message = super::WritePreviewRequest,
+            >,
+        ) -> Result<tonic::Response<super::Preview>, tonic::Status> {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/google.actions.sdk.v2.ActionsSdk/WritePreview",
+            );
+            self.inner
+                .client_streaming(request.into_streaming_request(), path, codec)
+                .await
+        }
+        /// Creates a project version based on the model and triggers deployment to the
+        /// specified release channel, if specified.
+        pub async fn create_version(
+            &mut self,
+            request: impl tonic::IntoStreamingRequest<
+                Message = super::CreateVersionRequest,
+            >,
+        ) -> Result<tonic::Response<super::Version>, tonic::Status> {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/google.actions.sdk.v2.ActionsSdk/CreateVersion",
+            );
+            self.inner
+                .client_streaming(request.into_streaming_request(), path, codec)
+                .await
+        }
+        /// Reads the entire content of the project draft.
+        pub async fn read_draft(
+            &mut self,
+            request: impl tonic::IntoRequest<super::ReadDraftRequest>,
+        ) -> Result<
+            tonic::Response<tonic::codec::Streaming<super::ReadDraftResponse>>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/google.actions.sdk.v2.ActionsSdk/ReadDraft",
+            );
+            self.inner.server_streaming(request.into_request(), path, codec).await
+        }
+        /// Reads the entire content of a project version.
+        pub async fn read_version(
+            &mut self,
+            request: impl tonic::IntoRequest<super::ReadVersionRequest>,
+        ) -> Result<
+            tonic::Response<tonic::codec::Streaming<super::ReadVersionResponse>>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/google.actions.sdk.v2.ActionsSdk/ReadVersion",
+            );
+            self.inner.server_streaming(request.into_request(), path, codec).await
+        }
+        /// Encrypts the OAuth client secret used in account linking flows.
+        /// This can be used to encrypt the client secret for the first time (e.g.
+        /// before the first push or after changing the client secret) or to re-encrypt
+        /// a client secret using the latest primary key version (considering key
+        /// rotation).
+        pub async fn encrypt_secret(
+            &mut self,
+            request: impl tonic::IntoRequest<super::EncryptSecretRequest>,
+        ) -> Result<tonic::Response<super::EncryptSecretResponse>, tonic::Status> {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/google.actions.sdk.v2.ActionsSdk/EncryptSecret",
+            );
+            self.inner.unary(request.into_request(), path, codec).await
+        }
+        /// Decrypts the OAuth client secret used in account linking flows.
+        /// This can be used to view the client secret (e.g. after pulling a project).
+        pub async fn decrypt_secret(
+            &mut self,
+            request: impl tonic::IntoRequest<super::DecryptSecretRequest>,
+        ) -> Result<tonic::Response<super::DecryptSecretResponse>, tonic::Status> {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/google.actions.sdk.v2.ActionsSdk/DecryptSecret",
+            );
+            self.inner.unary(request.into_request(), path, codec).await
+        }
+        /// Lists all the sample projects supported by the gactions CLI.
+        pub async fn list_sample_projects(
+            &mut self,
+            request: impl tonic::IntoRequest<super::ListSampleProjectsRequest>,
+        ) -> Result<tonic::Response<super::ListSampleProjectsResponse>, tonic::Status> {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/google.actions.sdk.v2.ActionsSdk/ListSampleProjects",
+            );
+            self.inner.unary(request.into_request(), path, codec).await
+        }
+        /// Lists all release channels and corresponding versions, if any.
+        pub async fn list_release_channels(
+            &mut self,
+            request: impl tonic::IntoRequest<super::ListReleaseChannelsRequest>,
+        ) -> Result<tonic::Response<super::ListReleaseChannelsResponse>, tonic::Status> {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/google.actions.sdk.v2.ActionsSdk/ListReleaseChannels",
+            );
+            self.inner.unary(request.into_request(), path, codec).await
+        }
+        /// Lists all versions and their current states.
+        pub async fn list_versions(
+            &mut self,
+            request: impl tonic::IntoRequest<super::ListVersionsRequest>,
+        ) -> Result<tonic::Response<super::ListVersionsResponse>, tonic::Status> {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/google.actions.sdk.v2.ActionsSdk/ListVersions",
+            );
+            self.inner.unary(request.into_request(), path, codec).await
+        }
     }
 }
 /// Contains information about execution event which happened during processing
@@ -1136,6 +1840,21 @@ pub mod user_input {
         /// The action was triggered by a URL link.
         Url = 4,
     }
+    impl InputType {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                InputType::Unspecified => "INPUT_TYPE_UNSPECIFIED",
+                InputType::Touch => "TOUCH",
+                InputType::Voice => "VOICE",
+                InputType::Keyboard => "KEYBOARD",
+                InputType::Url => "URL",
+            }
+        }
+    }
 }
 /// Properties of device relevant to a conversation round.
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -1177,6 +1896,22 @@ pub mod device_properties {
         SmartDisplay = 4,
         /// KaiOS.
         KaiOs = 5,
+    }
+    impl Surface {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                Surface::Unspecified => "SURFACE_UNSPECIFIED",
+                Surface::Speaker => "SPEAKER",
+                Surface::Phone => "PHONE",
+                Surface::Allo => "ALLO",
+                Surface::SmartDisplay => "SMART_DISPLAY",
+                Surface::KaiOs => "KAI_OS",
+            }
+        }
     }
 }
 /// Container that represents a location.
@@ -1285,6 +2020,7 @@ pub struct SetWebAndAppActivityControlRequest {
 pub mod actions_testing_client {
     #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
     use tonic::codegen::*;
+    use tonic::codegen::http::Uri;
     /// Actions Testing API which allows developers to run automated tests.
     #[derive(Debug, Clone)]
     pub struct ActionsTestingClient<T> {
@@ -1299,6 +2035,10 @@ pub mod actions_testing_client {
     {
         pub fn new(inner: T) -> Self {
             let inner = tonic::client::Grpc::new(inner);
+            Self { inner }
+        }
+        pub fn with_origin(inner: T, origin: Uri) -> Self {
+            let inner = tonic::client::Grpc::with_origin(inner, origin);
             Self { inner }
         }
         pub fn with_interceptor<F>(
@@ -1320,19 +2060,19 @@ pub mod actions_testing_client {
         {
             ActionsTestingClient::new(InterceptedService::new(inner, interceptor))
         }
-        /// Compress requests with `gzip`.
+        /// Compress requests with the given encoding.
         ///
         /// This requires the server to support it otherwise it might respond with an
         /// error.
         #[must_use]
-        pub fn send_gzip(mut self) -> Self {
-            self.inner = self.inner.send_gzip();
+        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.send_compressed(encoding);
             self
         }
-        /// Enable decompressing responses with `gzip`.
+        /// Enable decompressing responses.
         #[must_use]
-        pub fn accept_gzip(mut self) -> Self {
-            self.inner = self.inner.accept_gzip();
+        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.accept_compressed(encoding);
             self
         }
         /// Plays one round of the conversation.
@@ -1402,596 +2142,6 @@ pub mod actions_testing_client {
             let codec = tonic::codec::ProstCodec::default();
             let path = http::uri::PathAndQuery::from_static(
                 "/google.actions.sdk.v2.ActionsTesting/SetWebAndAppActivityControl",
-            );
-            self.inner.unary(request.into_request(), path, codec).await
-        }
-    }
-}
-/// Definition of release channel resource.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ReleaseChannel {
-    /// The unique name of the release channel in the following format.
-    /// `projects/{project}/releaseChannels/{release_channel}`.
-    #[prost(string, tag="1")]
-    pub name: ::prost::alloc::string::String,
-    /// Version currently deployed to this release channel in the following format:
-    /// `projects/{project}/versions/{version}`.
-    #[prost(string, tag="2")]
-    pub current_version: ::prost::alloc::string::String,
-    /// Version to be deployed to this release channel in the following format:
-    /// `projects/{project}/versions/{version}`.
-    #[prost(string, tag="3")]
-    pub pending_version: ::prost::alloc::string::String,
-}
-/// Streaming RPC request for WriteDraft.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct WriteDraftRequest {
-    /// Required. The parent resource name in the format `projects/{project}`. The
-    /// `{project}` is the cloud project ID associated with the project.
-    #[prost(string, tag="1")]
-    pub parent: ::prost::alloc::string::String,
-    /// Required. List of files sent to the server at a time. This is a list of config files
-    /// or data files.
-    /// 1. The first request must be a ConfigFiles.
-    /// 2. The first request must have a ConfigFile with 'settings'.
-    /// 3. The first request must have a ConfigFile with 'manifest'.
-    /// 4. The webhook ConfigFile corresponding to inline cloud function must be
-    ///    streamed before the DataFile corresponding to its source code.
-    #[prost(message, optional, tag="4")]
-    pub files: ::core::option::Option<Files>,
-}
-/// Definition of draft resource.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct Draft {
-    /// The unique identifier of the draft in the following format.
-    /// `projects/{project}/draft`
-    #[prost(string, tag="1")]
-    pub name: ::prost::alloc::string::String,
-    /// Validation results associated with the project draft content. Note that
-    /// WriteDraft updates the draft despite the warnings as warnings are not draft
-    /// blocking.
-    #[prost(message, optional, tag="2")]
-    pub validation_results: ::core::option::Option<ValidationResults>,
-}
-/// Streaming RPC request for WritePreview.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct WritePreviewRequest {
-    /// Required. The parent resource name in the format `projects/{project}`. The
-    /// `{project}` is the cloud project ID associated with the project.
-    #[prost(string, tag="1")]
-    pub parent: ::prost::alloc::string::String,
-    /// Required. The settings for updating the user's preview.
-    #[prost(message, optional, tag="4")]
-    pub preview_settings: ::core::option::Option<write_preview_request::PreviewSettings>,
-    /// Data source used to created the preview.
-    #[prost(oneof="write_preview_request::Source", tags="5, 6, 7")]
-    pub source: ::core::option::Option<write_preview_request::Source>,
-}
-/// Nested message and enum types in `WritePreviewRequest`.
-pub mod write_preview_request {
-    /// Indicates the preview content will be coming from the Draft.
-    #[derive(Clone, PartialEq, ::prost::Message)]
-    pub struct ContentFromDraft {
-    }
-    /// Indicates the preview content will be coming from an exiting version.
-    #[derive(Clone, PartialEq, ::prost::Message)]
-    pub struct ContentFromSubmittedVersion {
-        /// Required. Submitted version of the project to be used to create a preview.
-        /// Format: `projects/{project}/versions/{version}`
-        #[prost(string, tag="1")]
-        pub version: ::prost::alloc::string::String,
-    }
-    /// Settings for updating the preview.
-    #[derive(Clone, PartialEq, ::prost::Message)]
-    pub struct PreviewSettings {
-        /// Indicates whether or not to run certain operations, such as transactions,
-        /// in sandbox mode. By default, preview requests run these operations in
-        /// sandbox mode. In other words, the default value for `sandbox` is `true`.
-        #[prost(message, optional, tag="1")]
-        pub sandbox: ::core::option::Option<bool>,
-    }
-    /// Data source used to created the preview.
-    #[derive(Clone, PartialEq, ::prost::Oneof)]
-    pub enum Source {
-        /// List of files sent to the server at a time. This is a list of config
-        /// files or data files.
-        /// 1. The first request must be a ConfigFiles.
-        /// 2. The first request must have a ConfigFile with 'settings'.
-        /// 3. The first request must have a ConfigFile with 'manifest'.
-        /// 4. The webhook ConfigFile corresponding to inline cloud function must be
-        ///    streamed before the DataFile corresponding to its source code.
-        #[prost(message, tag="5")]
-        Files(super::Files),
-        /// Content sourced from the project draft.
-        #[prost(message, tag="6")]
-        Draft(ContentFromDraft),
-        /// Content sourced from the an exiting version.
-        #[prost(message, tag="7")]
-        SubmittedVersion(ContentFromSubmittedVersion),
-    }
-}
-/// Definition of preview resource.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct Preview {
-    /// The unique identifier of the preview.
-    /// Format: `projects/{project}/preview`
-    #[prost(string, tag="1")]
-    pub name: ::prost::alloc::string::String,
-    /// Validation results associated with the user project preview content.
-    #[prost(message, optional, tag="2")]
-    pub validation_results: ::core::option::Option<ValidationResults>,
-    /// The simulator URL to test the user preview.
-    #[prost(string, tag="3")]
-    pub simulator_url: ::prost::alloc::string::String,
-}
-/// Streaming RPC request for CreateVersion.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct CreateVersionRequest {
-    /// Required. The parent resource name in the format `projects/{project}`. The
-    /// `{project}` is the cloud project ID associated with the project.
-    #[prost(string, tag="1")]
-    pub parent: ::prost::alloc::string::String,
-    /// Required. List of files sent to the server at a time. This is a list of config files
-    /// or data files.
-    /// 1. The first request must be a ConfigFiles.
-    /// 2. The first request must have a ConfigFile with 'settings'.
-    /// 3. The first request must have a ConfigFile with 'manifest'.
-    /// 4. The webhook ConfigFile corresponding to inline cloud function must be
-    ///    streamed before the DataFile corresponding to its source code.
-    #[prost(message, optional, tag="5")]
-    pub files: ::core::option::Option<Files>,
-    /// Optional. The release channel to deploy the version, if specified. The supported
-    /// built in release channels are actions.channels.Production,
-    /// actions.channels.ClosedBeta, actions.channels.Alpha.
-    /// .
-    #[prost(string, tag="4")]
-    pub release_channel: ::prost::alloc::string::String,
-}
-/// RPC request for ReadDraft.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ReadDraftRequest {
-    /// Required. The name of the resource in the format `projects/{project}/draft`. The
-    /// `{project}` is the cloud project ID associated with the project.
-    #[prost(string, tag="1")]
-    pub name: ::prost::alloc::string::String,
-    /// Optional. The version of the crypto key used to encrypt the account linking OAuth
-    /// client secret. If not specified, the primary key version is used for
-    /// encryption. Only relevant for projects with account linking with client
-    /// secret.
-    #[prost(string, tag="2")]
-    pub client_secret_encryption_key_version: ::prost::alloc::string::String,
-}
-/// Streaming RPC response for ReadDraft.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ReadDraftResponse {
-    /// List of files sent from the server at a time.
-    #[prost(message, optional, tag="3")]
-    pub files: ::core::option::Option<Files>,
-}
-/// RPC request for ReadVersion.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ReadVersionRequest {
-    /// Required. The name of the version resource in the format
-    /// `projects/{project}/versions/{version}`. `{project}` is the
-    /// cloud project ID associated with the project, `{version}` is the
-    /// identifier of the version being read.
-    #[prost(string, tag="1")]
-    pub name: ::prost::alloc::string::String,
-    /// Optional. The version of the crypto key used to encrypt the account linking OAuth
-    /// client secret. If not specified, the primary key version is used for
-    /// encryption. Only relevant for projects with account linking with client
-    /// secret.
-    #[prost(string, tag="2")]
-    pub client_secret_encryption_key_version: ::prost::alloc::string::String,
-}
-/// Streaming RPC response for ReadVersion.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ReadVersionResponse {
-    /// List of files sent from the server at a time.
-    #[prost(message, optional, tag="1")]
-    pub files: ::core::option::Option<Files>,
-}
-/// RPC request for EncryptSecret.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct EncryptSecretRequest {
-    /// Required. The account linking client secret plaintext.
-    #[prost(string, tag="1")]
-    pub client_secret: ::prost::alloc::string::String,
-}
-/// RPC response for EncryptSecret.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct EncryptSecretResponse {
-    /// Contains the encrypted account linking client secret and the key version
-    /// used to encrypt the secret.
-    #[prost(message, optional, tag="1")]
-    pub account_linking_secret: ::core::option::Option<AccountLinkingSecret>,
-}
-/// RPC request for DecryptSecret.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct DecryptSecretRequest {
-    /// Required. The account linking client secret ciphertext.
-    #[prost(bytes="bytes", tag="1")]
-    pub encrypted_client_secret: ::prost::bytes::Bytes,
-}
-/// RPC response for DecryptSecret.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct DecryptSecretResponse {
-    /// The account linking client secret plaintext.
-    #[prost(string, tag="1")]
-    pub client_secret: ::prost::alloc::string::String,
-}
-/// RPC request for ListSampleProjects.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ListSampleProjectsRequest {
-    /// Optional. The maximum number of sample projects to return. The service may return
-    /// fewer than this value.
-    /// If unspecified, at most 1000 sample projects will be returned. Values above
-    /// 1000 will be coerced to 1000.
-    #[prost(int32, tag="1")]
-    pub page_size: i32,
-    /// Optional. A page token, received from a previous 'ListSampleProjects' call.
-    /// Provide this to retrieve the subsequent page.
-    #[prost(string, tag="2")]
-    pub page_token: ::prost::alloc::string::String,
-}
-/// RPC response for ListSampleProjects.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ListSampleProjectsResponse {
-    /// The list of sample projects supported.
-    #[prost(message, repeated, tag="1")]
-    pub sample_projects: ::prost::alloc::vec::Vec<SampleProject>,
-    /// A token, which can be sent as `page_token` to retrieve the next page.
-    /// If this field is omitted, there are no subsequent pages.
-    #[prost(string, tag="2")]
-    pub next_page_token: ::prost::alloc::string::String,
-}
-/// Definition of sample project resource.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct SampleProject {
-    /// The name of the sample project.
-    /// Format: `sampleProjects/{sample_project}`
-    #[prost(string, tag="1")]
-    pub name: ::prost::alloc::string::String,
-    /// The URL to the zip file where the sample is hosted.
-    #[prost(string, tag="2")]
-    pub hosted_url: ::prost::alloc::string::String,
-    /// The description of the sample project.
-    #[prost(string, tag="3")]
-    pub description: ::prost::alloc::string::String,
-}
-/// RPC request for listing release channels
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ListReleaseChannelsRequest {
-    /// Required. The name of the resource in the format `projects/{project}`. The
-    /// `{project}` is the cloud project ID associated with the project.
-    #[prost(string, tag="1")]
-    pub parent: ::prost::alloc::string::String,
-    /// The maximum number of release channels to return. The service may return
-    /// fewer than this value. If unspecified, at most 50 release channels will be
-    /// returned.
-    #[prost(int32, tag="2")]
-    pub page_size: i32,
-    /// A page token, received from a previous `ListReleaseChannels` call.
-    /// Provide this to retrieve the subsequent page.
-    /// When paginating, all other parameters provided to `ListReleaseChannels`
-    /// must match the call that provided the page token.
-    #[prost(string, tag="3")]
-    pub page_token: ::prost::alloc::string::String,
-}
-/// RPC response for listing release channels
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ListReleaseChannelsResponse {
-    /// List of the release channels for the given project id.
-    #[prost(message, repeated, tag="1")]
-    pub release_channels: ::prost::alloc::vec::Vec<ReleaseChannel>,
-    /// A token, which can be sent as `page_token` to retrieve the next page.
-    /// If this field is omitted, there are no subsequent pages.
-    #[prost(string, tag="2")]
-    pub next_page_token: ::prost::alloc::string::String,
-}
-/// RPC request for listing versions
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ListVersionsRequest {
-    /// Required. The name of the resource in the format `projects/{project}`. The
-    /// `{project}` is the cloud project ID associated with the project.
-    #[prost(string, tag="1")]
-    pub parent: ::prost::alloc::string::String,
-    /// The maximum number of versions to return. The service may return
-    /// fewer than this value. If unspecified, at most 50 versions will be
-    /// returned.
-    #[prost(int32, tag="2")]
-    pub page_size: i32,
-    /// A page token, received from a previous `ListVersions` call.
-    /// Provide this to retrieve the subsequent page.
-    /// When paginating, all other parameters provided to `ListVersions`
-    /// must match the call that provided the page token.
-    #[prost(string, tag="3")]
-    pub page_token: ::prost::alloc::string::String,
-}
-/// RPC response for listing versions
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ListVersionsResponse {
-    /// List of the versions for the given project id.
-    #[prost(message, repeated, tag="1")]
-    pub versions: ::prost::alloc::vec::Vec<Version>,
-    /// A token, which can be sent as `page_token` to retrieve the next page.
-    /// If this field is omitted, there are no subsequent pages.
-    #[prost(string, tag="2")]
-    pub next_page_token: ::prost::alloc::string::String,
-}
-/// Generated client implementations.
-pub mod actions_sdk_client {
-    #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
-    use tonic::codegen::*;
-    /// Actions SDK API which allows developers to build projects using the SDK.
-    #[derive(Debug, Clone)]
-    pub struct ActionsSdkClient<T> {
-        inner: tonic::client::Grpc<T>,
-    }
-    impl<T> ActionsSdkClient<T>
-    where
-        T: tonic::client::GrpcService<tonic::body::BoxBody>,
-        T::Error: Into<StdError>,
-        T::ResponseBody: Body<Data = Bytes> + Send + 'static,
-        <T::ResponseBody as Body>::Error: Into<StdError> + Send,
-    {
-        pub fn new(inner: T) -> Self {
-            let inner = tonic::client::Grpc::new(inner);
-            Self { inner }
-        }
-        pub fn with_interceptor<F>(
-            inner: T,
-            interceptor: F,
-        ) -> ActionsSdkClient<InterceptedService<T, F>>
-        where
-            F: tonic::service::Interceptor,
-            T::ResponseBody: Default,
-            T: tonic::codegen::Service<
-                http::Request<tonic::body::BoxBody>,
-                Response = http::Response<
-                    <T as tonic::client::GrpcService<tonic::body::BoxBody>>::ResponseBody,
-                >,
-            >,
-            <T as tonic::codegen::Service<
-                http::Request<tonic::body::BoxBody>,
-            >>::Error: Into<StdError> + Send + Sync,
-        {
-            ActionsSdkClient::new(InterceptedService::new(inner, interceptor))
-        }
-        /// Compress requests with `gzip`.
-        ///
-        /// This requires the server to support it otherwise it might respond with an
-        /// error.
-        #[must_use]
-        pub fn send_gzip(mut self) -> Self {
-            self.inner = self.inner.send_gzip();
-            self
-        }
-        /// Enable decompressing responses with `gzip`.
-        #[must_use]
-        pub fn accept_gzip(mut self) -> Self {
-            self.inner = self.inner.accept_gzip();
-            self
-        }
-        /// Updates the project draft based on the model.
-        pub async fn write_draft(
-            &mut self,
-            request: impl tonic::IntoStreamingRequest<Message = super::WriteDraftRequest>,
-        ) -> Result<tonic::Response<super::Draft>, tonic::Status> {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/google.actions.sdk.v2.ActionsSdk/WriteDraft",
-            );
-            self.inner
-                .client_streaming(request.into_streaming_request(), path, codec)
-                .await
-        }
-        /// Updates the user's project preview based on the model.
-        pub async fn write_preview(
-            &mut self,
-            request: impl tonic::IntoStreamingRequest<
-                Message = super::WritePreviewRequest,
-            >,
-        ) -> Result<tonic::Response<super::Preview>, tonic::Status> {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/google.actions.sdk.v2.ActionsSdk/WritePreview",
-            );
-            self.inner
-                .client_streaming(request.into_streaming_request(), path, codec)
-                .await
-        }
-        /// Creates a project version based on the model and triggers deployment to the
-        /// specified release channel, if specified.
-        pub async fn create_version(
-            &mut self,
-            request: impl tonic::IntoStreamingRequest<
-                Message = super::CreateVersionRequest,
-            >,
-        ) -> Result<tonic::Response<super::Version>, tonic::Status> {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/google.actions.sdk.v2.ActionsSdk/CreateVersion",
-            );
-            self.inner
-                .client_streaming(request.into_streaming_request(), path, codec)
-                .await
-        }
-        /// Reads the entire content of the project draft.
-        pub async fn read_draft(
-            &mut self,
-            request: impl tonic::IntoRequest<super::ReadDraftRequest>,
-        ) -> Result<
-            tonic::Response<tonic::codec::Streaming<super::ReadDraftResponse>>,
-            tonic::Status,
-        > {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/google.actions.sdk.v2.ActionsSdk/ReadDraft",
-            );
-            self.inner.server_streaming(request.into_request(), path, codec).await
-        }
-        /// Reads the entire content of a project version.
-        pub async fn read_version(
-            &mut self,
-            request: impl tonic::IntoRequest<super::ReadVersionRequest>,
-        ) -> Result<
-            tonic::Response<tonic::codec::Streaming<super::ReadVersionResponse>>,
-            tonic::Status,
-        > {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/google.actions.sdk.v2.ActionsSdk/ReadVersion",
-            );
-            self.inner.server_streaming(request.into_request(), path, codec).await
-        }
-        /// Encrypts the OAuth client secret used in account linking flows.
-        /// This can be used to encrypt the client secret for the first time (e.g.
-        /// before the first push or after changing the client secret) or to re-encrypt
-        /// a client secret using the latest primary key version (considering key
-        /// rotation).
-        pub async fn encrypt_secret(
-            &mut self,
-            request: impl tonic::IntoRequest<super::EncryptSecretRequest>,
-        ) -> Result<tonic::Response<super::EncryptSecretResponse>, tonic::Status> {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/google.actions.sdk.v2.ActionsSdk/EncryptSecret",
-            );
-            self.inner.unary(request.into_request(), path, codec).await
-        }
-        /// Decrypts the OAuth client secret used in account linking flows.
-        /// This can be used to view the client secret (e.g. after pulling a project).
-        pub async fn decrypt_secret(
-            &mut self,
-            request: impl tonic::IntoRequest<super::DecryptSecretRequest>,
-        ) -> Result<tonic::Response<super::DecryptSecretResponse>, tonic::Status> {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/google.actions.sdk.v2.ActionsSdk/DecryptSecret",
-            );
-            self.inner.unary(request.into_request(), path, codec).await
-        }
-        /// Lists all the sample projects supported by the gactions CLI.
-        pub async fn list_sample_projects(
-            &mut self,
-            request: impl tonic::IntoRequest<super::ListSampleProjectsRequest>,
-        ) -> Result<tonic::Response<super::ListSampleProjectsResponse>, tonic::Status> {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/google.actions.sdk.v2.ActionsSdk/ListSampleProjects",
-            );
-            self.inner.unary(request.into_request(), path, codec).await
-        }
-        /// Lists all release channels and corresponding versions, if any.
-        pub async fn list_release_channels(
-            &mut self,
-            request: impl tonic::IntoRequest<super::ListReleaseChannelsRequest>,
-        ) -> Result<tonic::Response<super::ListReleaseChannelsResponse>, tonic::Status> {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/google.actions.sdk.v2.ActionsSdk/ListReleaseChannels",
-            );
-            self.inner.unary(request.into_request(), path, codec).await
-        }
-        /// Lists all versions and their current states.
-        pub async fn list_versions(
-            &mut self,
-            request: impl tonic::IntoRequest<super::ListVersionsRequest>,
-        ) -> Result<tonic::Response<super::ListVersionsResponse>, tonic::Status> {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/google.actions.sdk.v2.ActionsSdk/ListVersions",
             );
             self.inner.unary(request.into_request(), path, codec).await
         }

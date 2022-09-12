@@ -2,7 +2,7 @@
 pub struct Instance {
     /// Required. Unique name of the resource in this scope including project and
     /// location using the form:
-    ///     `projects/{project_id}/locations/{location_id}/instances/{instance_id}`
+    ///      `projects/{project_id}/locations/{location_id}/instances/{instance_id}`
     ///
     /// Note: Memcached instances are managed and addressed at regional level so
     /// location_id here refers to a GCP region; however, users may choose which
@@ -126,6 +126,21 @@ pub mod instance {
             /// Node is being updated.
             Updating = 4,
         }
+        impl State {
+            /// String value of the enum field names used in the ProtoBuf definition.
+            ///
+            /// The values are not transformed in any way and thus are considered stable
+            /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+            pub fn as_str_name(&self) -> &'static str {
+                match self {
+                    State::Unspecified => "STATE_UNSPECIFIED",
+                    State::Creating => "CREATING",
+                    State::Ready => "READY",
+                    State::Deleting => "DELETING",
+                    State::Updating => "UPDATING",
+                }
+            }
+        }
     }
     #[derive(Clone, PartialEq, ::prost::Message)]
     pub struct InstanceMessage {
@@ -146,6 +161,18 @@ pub mod instance {
             /// Memcached nodes are distributed unevenly.
             ZoneDistributionUnbalanced = 1,
         }
+        impl Code {
+            /// String value of the enum field names used in the ProtoBuf definition.
+            ///
+            /// The values are not transformed in any way and thus are considered stable
+            /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+            pub fn as_str_name(&self) -> &'static str {
+                match self {
+                    Code::Unspecified => "CODE_UNSPECIFIED",
+                    Code::ZoneDistributionUnbalanced => "ZONE_DISTRIBUTION_UNBALANCED",
+                }
+            }
+        }
     }
     /// Different states of a Memcached instance.
     #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
@@ -162,12 +189,27 @@ pub mod instance {
         /// Memcached instance is going through maintenance, e.g. data plane rollout.
         PerformingMaintenance = 5,
     }
+    impl State {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                State::Unspecified => "STATE_UNSPECIFIED",
+                State::Creating => "CREATING",
+                State::Ready => "READY",
+                State::Deleting => "DELETING",
+                State::PerformingMaintenance => "PERFORMING_MAINTENANCE",
+            }
+        }
+    }
 }
 /// Request for \[ListInstances][google.cloud.memcache.v1.CloudMemcache.ListInstances\].
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ListInstancesRequest {
     /// Required. The resource name of the instance location using the form:
-    ///     `projects/{project_id}/locations/{location_id}`
+    ///      `projects/{project_id}/locations/{location_id}`
     /// where `location_id` refers to a GCP region
     #[prost(string, tag="1")]
     pub parent: ::prost::alloc::string::String,
@@ -214,7 +256,7 @@ pub struct ListInstancesResponse {
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct GetInstanceRequest {
     /// Required. Memcached instance resource name in the format:
-    ///     `projects/{project_id}/locations/{location_id}/instances/{instance_id}`
+    ///      `projects/{project_id}/locations/{location_id}/instances/{instance_id}`
     /// where `location_id` refers to a GCP region
     #[prost(string, tag="1")]
     pub name: ::prost::alloc::string::String,
@@ -223,7 +265,7 @@ pub struct GetInstanceRequest {
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct CreateInstanceRequest {
     /// Required. The resource name of the instance location using the form:
-    ///     `projects/{project_id}/locations/{location_id}`
+    ///      `projects/{project_id}/locations/{location_id}`
     /// where `location_id` refers to a GCP region
     #[prost(string, tag="1")]
     pub parent: ::prost::alloc::string::String,
@@ -247,7 +289,7 @@ pub struct CreateInstanceRequest {
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct UpdateInstanceRequest {
     /// Required. Mask of fields to update.
-    ///  *   `displayName`
+    ///   *   `displayName`
     #[prost(message, optional, tag="1")]
     pub update_mask: ::core::option::Option<::prost_types::FieldMask>,
     /// Required. A Memcached Instance.
@@ -259,7 +301,7 @@ pub struct UpdateInstanceRequest {
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct DeleteInstanceRequest {
     /// Required. Memcached instance resource name in the format:
-    ///     `projects/{project_id}/locations/{location_id}/instances/{instance_id}`
+    ///      `projects/{project_id}/locations/{location_id}/instances/{instance_id}`
     /// where `location_id` refers to a GCP region
     #[prost(string, tag="1")]
     pub name: ::prost::alloc::string::String,
@@ -342,10 +384,23 @@ pub enum MemcacheVersion {
     /// Memcached 1.5 version.
     Memcache15 = 1,
 }
+impl MemcacheVersion {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            MemcacheVersion::Unspecified => "MEMCACHE_VERSION_UNSPECIFIED",
+            MemcacheVersion::Memcache15 => "MEMCACHE_1_5",
+        }
+    }
+}
 /// Generated client implementations.
 pub mod cloud_memcache_client {
     #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
     use tonic::codegen::*;
+    use tonic::codegen::http::Uri;
     /// Configures and manages Cloud Memorystore for Memcached instances.
     ///
     ///
@@ -376,6 +431,10 @@ pub mod cloud_memcache_client {
             let inner = tonic::client::Grpc::new(inner);
             Self { inner }
         }
+        pub fn with_origin(inner: T, origin: Uri) -> Self {
+            let inner = tonic::client::Grpc::with_origin(inner, origin);
+            Self { inner }
+        }
         pub fn with_interceptor<F>(
             inner: T,
             interceptor: F,
@@ -395,19 +454,19 @@ pub mod cloud_memcache_client {
         {
             CloudMemcacheClient::new(InterceptedService::new(inner, interceptor))
         }
-        /// Compress requests with `gzip`.
+        /// Compress requests with the given encoding.
         ///
         /// This requires the server to support it otherwise it might respond with an
         /// error.
         #[must_use]
-        pub fn send_gzip(mut self) -> Self {
-            self.inner = self.inner.send_gzip();
+        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.send_compressed(encoding);
             self
         }
-        /// Enable decompressing responses with `gzip`.
+        /// Enable decompressing responses.
         #[must_use]
-        pub fn accept_gzip(mut self) -> Self {
-            self.inner = self.inner.accept_gzip();
+        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.accept_compressed(encoding);
             self
         }
         /// Lists Instances in a given location.

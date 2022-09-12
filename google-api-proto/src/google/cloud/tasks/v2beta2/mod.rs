@@ -90,16 +90,16 @@ pub struct AppEngineHttpTarget {
 /// delivered to can be set at the queue-level or task-level:
 ///
 /// * If set,
-///   \[app_engine_routing_override][google.cloud.tasks.v2beta2.AppEngineHttpTarget.app_engine_routing_override\]
-///   is used for all tasks in the queue, no matter what the setting
-///   is for the
-///   [task-level app_engine_routing]\[google.cloud.tasks.v2beta2.AppEngineHttpRequest.app_engine_routing\].
+///    \[app_engine_routing_override][google.cloud.tasks.v2beta2.AppEngineHttpTarget.app_engine_routing_override\]
+///    is used for all tasks in the queue, no matter what the setting
+///    is for the
+///    [task-level app_engine_routing]\[google.cloud.tasks.v2beta2.AppEngineHttpRequest.app_engine_routing\].
 ///
 ///
 /// The `url` that the task will be sent to is:
 ///
 /// * `url =` \[host][google.cloud.tasks.v2beta2.AppEngineRouting.host\] `+`
-///   \[relative_url][google.cloud.tasks.v2beta2.AppEngineHttpRequest.relative_url\]
+///    \[relative_url][google.cloud.tasks.v2beta2.AppEngineHttpRequest.relative_url\]
 ///
 /// Tasks can be dispatched to secure app handlers, unsecure app handlers, and
 /// URIs restricted with
@@ -160,21 +160,21 @@ pub struct AppEngineHttpRequest {
     /// Cloud Tasks sets some headers to default values:
     ///
     /// * `User-Agent`: By default, this header is
-    ///   `"AppEngine-Google; (+<http://code.google.com/appengine>)"`.
-    ///   This header can be modified, but Cloud Tasks will append
-    ///   `"AppEngine-Google; (+<http://code.google.com/appengine>)"` to the
-    ///   modified `User-Agent`.
+    ///    `"AppEngine-Google; (+<http://code.google.com/appengine>)"`.
+    ///    This header can be modified, but Cloud Tasks will append
+    ///    `"AppEngine-Google; (+<http://code.google.com/appengine>)"` to the
+    ///    modified `User-Agent`.
     ///
     /// If the task has a \[payload][google.cloud.tasks.v2beta2.AppEngineHttpRequest.payload\], Cloud
     /// Tasks sets the following headers:
     ///
     /// * `Content-Type`: By default, the `Content-Type` header is set to
-    ///   `"application/octet-stream"`. The default can be overridden by explicitly
-    ///   setting `Content-Type` to a particular media type when the
-    ///   [task is created]\[google.cloud.tasks.v2beta2.CloudTasks.CreateTask\].
-    ///   For example, `Content-Type` can be set to `"application/json"`.
+    ///    `"application/octet-stream"`. The default can be overridden by explicitly
+    ///    setting `Content-Type` to a particular media type when the
+    ///    [task is created]\[google.cloud.tasks.v2beta2.CloudTasks.CreateTask\].
+    ///    For example, `Content-Type` can be set to `"application/json"`.
     /// * `Content-Length`: This is computed by Cloud Tasks. This value is
-    ///   output only.   It cannot be changed.
+    ///    output only.   It cannot be changed.
     ///
     /// The headers below cannot be set or overridden:
     ///
@@ -280,41 +280,41 @@ pub struct AppEngineRouting {
     ///
     ///
     /// * `host = \[application_domain_name\]`</br>
-    ///   `| \[service\] + '.' + \[application_domain_name\]`</br>
-    ///   `| \[version\] + '.' + \[application_domain_name\]`</br>
-    ///   `| \[version_dot_service\]+ '.' + \[application_domain_name\]`</br>
-    ///   `| \[instance\] + '.' + \[application_domain_name\]`</br>
-    ///   `| \[instance_dot_service\] + '.' + \[application_domain_name\]`</br>
-    ///   `| \[instance_dot_version\] + '.' + \[application_domain_name\]`</br>
-    ///   `| \[instance_dot_version_dot_service\] + '.' + \[application_domain_name\]`
+    ///    `| \[service\] + '.' + \[application_domain_name\]`</br>
+    ///    `| \[version\] + '.' + \[application_domain_name\]`</br>
+    ///    `| \[version_dot_service\]+ '.' + \[application_domain_name\]`</br>
+    ///    `| \[instance\] + '.' + \[application_domain_name\]`</br>
+    ///    `| \[instance_dot_service\] + '.' + \[application_domain_name\]`</br>
+    ///    `| \[instance_dot_version\] + '.' + \[application_domain_name\]`</br>
+    ///    `| \[instance_dot_version_dot_service\] + '.' + \[application_domain_name\]`
     ///
     /// * `application_domain_name` = The domain name of the app, for
-    ///   example <app-id>.appspot.com, which is associated with the
-    ///   queue's project ID. Some tasks which were created using the App Engine
-    ///   SDK use a custom domain name.
+    ///    example <app-id>.appspot.com, which is associated with the
+    ///    queue's project ID. Some tasks which were created using the App Engine
+    ///    SDK use a custom domain name.
     ///
     /// * `service =` \[service][google.cloud.tasks.v2beta2.AppEngineRouting.service\]
     ///
     /// * `version =` \[version][google.cloud.tasks.v2beta2.AppEngineRouting.version\]
     ///
     /// * `version_dot_service =`
-    ///   \[version][google.cloud.tasks.v2beta2.AppEngineRouting.version\] `+ '.' +`
-    ///   \[service][google.cloud.tasks.v2beta2.AppEngineRouting.service\]
+    ///    \[version][google.cloud.tasks.v2beta2.AppEngineRouting.version\] `+ '.' +`
+    ///    \[service][google.cloud.tasks.v2beta2.AppEngineRouting.service\]
     ///
     /// * `instance =` \[instance][google.cloud.tasks.v2beta2.AppEngineRouting.instance\]
     ///
     /// * `instance_dot_service =`
-    ///   \[instance][google.cloud.tasks.v2beta2.AppEngineRouting.instance\] `+ '.' +`
-    ///   \[service][google.cloud.tasks.v2beta2.AppEngineRouting.service\]
+    ///    \[instance][google.cloud.tasks.v2beta2.AppEngineRouting.instance\] `+ '.' +`
+    ///    \[service][google.cloud.tasks.v2beta2.AppEngineRouting.service\]
     ///
     /// * `instance_dot_version =`
-    ///   \[instance][google.cloud.tasks.v2beta2.AppEngineRouting.instance\] `+ '.' +`
-    ///   \[version][google.cloud.tasks.v2beta2.AppEngineRouting.version\]
+    ///    \[instance][google.cloud.tasks.v2beta2.AppEngineRouting.instance\] `+ '.' +`
+    ///    \[version][google.cloud.tasks.v2beta2.AppEngineRouting.version\]
     ///
     /// * `instance_dot_version_dot_service =`
-    ///   \[instance][google.cloud.tasks.v2beta2.AppEngineRouting.instance\] `+ '.' +`
-    ///   \[version][google.cloud.tasks.v2beta2.AppEngineRouting.version\] `+ '.' +`
-    ///   \[service][google.cloud.tasks.v2beta2.AppEngineRouting.service\]
+    ///    \[instance][google.cloud.tasks.v2beta2.AppEngineRouting.instance\] `+ '.' +`
+    ///    \[version][google.cloud.tasks.v2beta2.AppEngineRouting.version\] `+ '.' +`
+    ///    \[service][google.cloud.tasks.v2beta2.AppEngineRouting.service\]
     ///
     /// If \[service][google.cloud.tasks.v2beta2.AppEngineRouting.service\] is empty, then the task will be sent
     /// to the service which is the default service when the task is attempted.
@@ -351,6 +351,22 @@ pub enum HttpMethod {
     /// HTTP DELETE
     Delete = 5,
 }
+impl HttpMethod {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            HttpMethod::Unspecified => "HTTP_METHOD_UNSPECIFIED",
+            HttpMethod::Post => "POST",
+            HttpMethod::Get => "GET",
+            HttpMethod::Head => "HEAD",
+            HttpMethod::Put => "PUT",
+            HttpMethod::Delete => "DELETE",
+        }
+    }
+}
 /// A queue is a container of related tasks. Queues are configured to manage
 /// how those tasks are dispatched. Configurable properties include rate limits,
 /// retry options, target types, and others.
@@ -365,16 +381,16 @@ pub struct Queue {
     /// `projects/PROJECT_ID/locations/LOCATION_ID/queues/QUEUE_ID`
     ///
     /// * `PROJECT_ID` can contain letters (\[A-Za-z\]), numbers (\[0-9\]),
-    ///    hyphens (-), colons (:), or periods (.).
-    ///    For more information, see
-    ///    [Identifying
-    ///    projects](<https://cloud.google.com/resource-manager/docs/creating-managing-projects#identifying_projects>)
+    ///     hyphens (-), colons (:), or periods (.).
+    ///     For more information, see
+    ///     [Identifying
+    ///     projects](<https://cloud.google.com/resource-manager/docs/creating-managing-projects#identifying_projects>)
     /// * `LOCATION_ID` is the canonical ID for the queue's location.
-    ///    The list of available locations can be obtained by calling
-    ///    \[ListLocations][google.cloud.location.Locations.ListLocations\].
-    ///    For more information, see <https://cloud.google.com/about/locations/.>
+    ///     The list of available locations can be obtained by calling
+    ///     \[ListLocations][google.cloud.location.Locations.ListLocations\].
+    ///     For more information, see <https://cloud.google.com/about/locations/.>
     /// * `QUEUE_ID` can contain letters (\[A-Za-z\]), numbers (\[0-9\]), or
-    ///   hyphens (-). The maximum length is 100 characters.
+    ///    hyphens (-). The maximum length is 100 characters.
     #[prost(string, tag="1")]
     pub name: ::prost::alloc::string::String,
     /// Rate limits for task dispatches.
@@ -385,25 +401,25 @@ pub struct Queue {
     /// attempted in different ways:
     ///
     /// * \[rate_limits][google.cloud.tasks.v2beta2.Queue.rate_limits\] controls the total rate of
-    ///   dispatches from a queue (i.e. all traffic dispatched from the
-    ///   queue, regardless of whether the dispatch is from a first
-    ///   attempt or a retry).
+    ///    dispatches from a queue (i.e. all traffic dispatched from the
+    ///    queue, regardless of whether the dispatch is from a first
+    ///    attempt or a retry).
     /// * \[retry_config][google.cloud.tasks.v2beta2.Queue.retry_config\] controls what happens to
-    ///   particular a task after its first attempt fails. That is,
-    ///   \[retry_config][google.cloud.tasks.v2beta2.Queue.retry_config\] controls task retries (the
-    ///   second attempt, third attempt, etc).
+    ///    particular a task after its first attempt fails. That is,
+    ///    \[retry_config][google.cloud.tasks.v2beta2.Queue.retry_config\] controls task retries (the
+    ///    second attempt, third attempt, etc).
     #[prost(message, optional, tag="5")]
     pub rate_limits: ::core::option::Option<RateLimits>,
     /// Settings that determine the retry behavior.
     ///
     /// * For tasks created using Cloud Tasks: the queue-level retry settings
-    ///   apply to all tasks in the queue that were created using Cloud Tasks.
-    ///   Retry settings cannot be set on individual tasks.
+    ///    apply to all tasks in the queue that were created using Cloud Tasks.
+    ///    Retry settings cannot be set on individual tasks.
     /// * For tasks created using the App Engine SDK: the queue-level retry
-    ///   settings apply to all tasks in the queue which do not have retry settings
-    ///   explicitly set on the task and were created by the App Engine SDK. See
-    ///   [App Engine
-    ///   documentation](<https://cloud.google.com/appengine/docs/standard/python/taskqueue/push/retrying-tasks>).
+    ///    settings apply to all tasks in the queue which do not have retry settings
+    ///    explicitly set on the task and were created by the App Engine SDK. See
+    ///    [App Engine
+    ///    documentation](<https://cloud.google.com/appengine/docs/standard/python/taskqueue/push/retrying-tasks>).
     #[prost(message, optional, tag="6")]
     pub retry_config: ::core::option::Option<RetryConfig>,
     /// Output only. The state of the queue.
@@ -510,6 +526,20 @@ pub mod queue {
         /// \[DeleteQueue][google.cloud.tasks.v2beta2.CloudTasks.DeleteQueue\].
         Disabled = 3,
     }
+    impl State {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                State::Unspecified => "STATE_UNSPECIFIED",
+                State::Running => "RUNNING",
+                State::Paused => "PAUSED",
+                State::Disabled => "DISABLED",
+            }
+        }
+    }
     /// Caller-specified and required in \[CreateQueue][google.cloud.tasks.v2beta2.CloudTasks.CreateQueue][\],
     /// after which the queue config type becomes output only, though fields within
     /// the config are mutable.
@@ -546,10 +576,10 @@ pub struct RateLimits {
     /// default.
     ///
     /// * For [App Engine queues]\[google.cloud.tasks.v2beta2.AppEngineHttpTarget\], the maximum allowed value
-    ///   is 500.
+    ///    is 500.
     /// * This field is output only   for [pull queues]\[google.cloud.tasks.v2beta2.PullTarget\]. In addition to the
-    ///   `max_tasks_dispatched_per_second` limit, a maximum of 10 QPS of
-    ///   \[LeaseTasks][google.cloud.tasks.v2beta2.CloudTasks.LeaseTasks\] requests are allowed per pull queue.
+    ///    `max_tasks_dispatched_per_second` limit, a maximum of 10 QPS of
+    ///    \[LeaseTasks][google.cloud.tasks.v2beta2.CloudTasks.LeaseTasks\] requests are allowed per pull queue.
     ///
     ///
     /// This field has the same meaning as
@@ -788,18 +818,18 @@ pub struct Task {
     /// `projects/PROJECT_ID/locations/LOCATION_ID/queues/QUEUE_ID/tasks/TASK_ID`
     ///
     /// * `PROJECT_ID` can contain letters (\[A-Za-z\]), numbers (\[0-9\]),
-    ///    hyphens (-), colons (:), or periods (.).
-    ///    For more information, see
-    ///    [Identifying
-    ///    projects](<https://cloud.google.com/resource-manager/docs/creating-managing-projects#identifying_projects>)
+    ///     hyphens (-), colons (:), or periods (.).
+    ///     For more information, see
+    ///     [Identifying
+    ///     projects](<https://cloud.google.com/resource-manager/docs/creating-managing-projects#identifying_projects>)
     /// * `LOCATION_ID` is the canonical ID for the task's location.
-    ///    The list of available locations can be obtained by calling
-    ///    \[ListLocations][google.cloud.location.Locations.ListLocations\].
-    ///    For more information, see <https://cloud.google.com/about/locations/.>
+    ///     The list of available locations can be obtained by calling
+    ///     \[ListLocations][google.cloud.location.Locations.ListLocations\].
+    ///     For more information, see <https://cloud.google.com/about/locations/.>
     /// * `QUEUE_ID` can contain letters (\[A-Za-z\]), numbers (\[0-9\]), or
-    ///   hyphens (-). The maximum length is 100 characters.
+    ///    hyphens (-). The maximum length is 100 characters.
     /// * `TASK_ID` can contain only letters (\[A-Za-z\]), numbers (\[0-9\]),
-    ///   hyphens (-), or underscores (_). The maximum length is 500 characters.
+    ///    hyphens (-), or underscores (_). The maximum length is 500 characters.
     #[prost(string, tag="1")]
     pub name: ::prost::alloc::string::String,
     /// The time when the task is scheduled to be attempted.
@@ -863,6 +893,19 @@ pub mod task {
         /// `cloudtasks.tasks.fullView` [Google IAM](<https://cloud.google.com/iam/>)
         /// permission on the \[Queue][google.cloud.tasks.v2beta2.Queue\] resource.
         Full = 2,
+    }
+    impl View {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                View::Unspecified => "VIEW_UNSPECIFIED",
+                View::Basic => "BASIC",
+                View::Full => "FULL",
+            }
+        }
     }
     /// Required.
     ///
@@ -1436,6 +1479,7 @@ pub struct RunTaskRequest {
 pub mod cloud_tasks_client {
     #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
     use tonic::codegen::*;
+    use tonic::codegen::http::Uri;
     /// Cloud Tasks allows developers to manage the execution of background
     /// work in their applications.
     #[derive(Debug, Clone)]
@@ -1451,6 +1495,10 @@ pub mod cloud_tasks_client {
     {
         pub fn new(inner: T) -> Self {
             let inner = tonic::client::Grpc::new(inner);
+            Self { inner }
+        }
+        pub fn with_origin(inner: T, origin: Uri) -> Self {
+            let inner = tonic::client::Grpc::with_origin(inner, origin);
             Self { inner }
         }
         pub fn with_interceptor<F>(
@@ -1472,19 +1520,19 @@ pub mod cloud_tasks_client {
         {
             CloudTasksClient::new(InterceptedService::new(inner, interceptor))
         }
-        /// Compress requests with `gzip`.
+        /// Compress requests with the given encoding.
         ///
         /// This requires the server to support it otherwise it might respond with an
         /// error.
         #[must_use]
-        pub fn send_gzip(mut self) -> Self {
-            self.inner = self.inner.send_gzip();
+        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.send_compressed(encoding);
             self
         }
-        /// Enable decompressing responses with `gzip`.
+        /// Enable decompressing responses.
         #[must_use]
-        pub fn accept_gzip(mut self) -> Self {
-            self.inner = self.inner.accept_gzip();
+        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.accept_compressed(encoding);
             self
         }
         /// Lists queues.

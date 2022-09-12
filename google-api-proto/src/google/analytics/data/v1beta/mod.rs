@@ -243,6 +243,23 @@ pub mod filter {
             /// Partial regular expression match with the string value.
             PartialRegexp = 6,
         }
+        impl MatchType {
+            /// String value of the enum field names used in the ProtoBuf definition.
+            ///
+            /// The values are not transformed in any way and thus are considered stable
+            /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+            pub fn as_str_name(&self) -> &'static str {
+                match self {
+                    MatchType::Unspecified => "MATCH_TYPE_UNSPECIFIED",
+                    MatchType::Exact => "EXACT",
+                    MatchType::BeginsWith => "BEGINS_WITH",
+                    MatchType::EndsWith => "ENDS_WITH",
+                    MatchType::Contains => "CONTAINS",
+                    MatchType::FullRegexp => "FULL_REGEXP",
+                    MatchType::PartialRegexp => "PARTIAL_REGEXP",
+                }
+            }
+        }
     }
     /// The result needs to be in a list of string values.
     #[derive(Clone, PartialEq, ::prost::Message)]
@@ -283,6 +300,22 @@ pub mod filter {
             GreaterThan = 4,
             /// Greater than or equal
             GreaterThanOrEqual = 5,
+        }
+        impl Operation {
+            /// String value of the enum field names used in the ProtoBuf definition.
+            ///
+            /// The values are not transformed in any way and thus are considered stable
+            /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+            pub fn as_str_name(&self) -> &'static str {
+                match self {
+                    Operation::Unspecified => "OPERATION_UNSPECIFIED",
+                    Operation::Equal => "EQUAL",
+                    Operation::LessThan => "LESS_THAN",
+                    Operation::LessThanOrEqual => "LESS_THAN_OR_EQUAL",
+                    Operation::GreaterThan => "GREATER_THAN",
+                    Operation::GreaterThanOrEqual => "GREATER_THAN_OR_EQUAL",
+                }
+            }
         }
     }
     /// To express that the result needs to be between two numbers (inclusive).
@@ -361,6 +394,20 @@ pub mod order_by {
             /// all numeric values.
             Numeric = 3,
         }
+        impl OrderType {
+            /// String value of the enum field names used in the ProtoBuf definition.
+            ///
+            /// The values are not transformed in any way and thus are considered stable
+            /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+            pub fn as_str_name(&self) -> &'static str {
+                match self {
+                    OrderType::Unspecified => "ORDER_TYPE_UNSPECIFIED",
+                    OrderType::Alphanumeric => "ALPHANUMERIC",
+                    OrderType::CaseInsensitiveAlphanumeric => "CASE_INSENSITIVE_ALPHANUMERIC",
+                    OrderType::Numeric => "NUMERIC",
+                }
+            }
+        }
     }
     /// Sorts by a pivot column group.
     #[derive(Clone, PartialEq, ::prost::Message)]
@@ -385,15 +432,15 @@ pub mod order_by {
         /// metric_name = "Sessions",
         /// then the rows will be sorted based on Sessions in Chrome.
         ///
-        ///     ---------|----------|----------------|----------|----------------
-        ///              |  Chrome  |    Chrome      |  Safari  |     Safari
-        ///     ---------|----------|----------------|----------|----------------
-        ///      Country | Sessions | Pages/Sessions | Sessions | Pages/Sessions
-        ///     ---------|----------|----------------|----------|----------------
-        ///         US   |    2     |       2        |     3    |        1
-        ///     ---------|----------|----------------|----------|----------------
-        ///       Canada |    3     |       1        |     4    |        1
-        ///     ---------|----------|----------------|----------|----------------
+        ///      ---------|----------|----------------|----------|----------------
+        ///               |  Chrome  |    Chrome      |  Safari  |     Safari
+        ///      ---------|----------|----------------|----------|----------------
+        ///       Country | Sessions | Pages/Sessions | Sessions | Pages/Sessions
+        ///      ---------|----------|----------------|----------|----------------
+        ///          US   |    2     |       2        |     3    |        1
+        ///      ---------|----------|----------------|----------|----------------
+        ///        Canada |    3     |       1        |     4    |        1
+        ///      ---------|----------|----------------|----------|----------------
         #[derive(Clone, PartialEq, ::prost::Message)]
         pub struct PivotSelection {
             /// Must be a dimension name from the request.
@@ -575,6 +622,20 @@ pub mod cohorts_range {
         /// in duration and the request contains `cohortNthMonth`.
         Monthly = 3,
     }
+    impl Granularity {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                Granularity::Unspecified => "GRANULARITY_UNSPECIFIED",
+                Granularity::Daily => "DAILY",
+                Granularity::Weekly => "WEEKLY",
+                Granularity::Monthly => "MONTHLY",
+            }
+        }
+    }
 }
 /// Optional settings of a cohort report.
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -694,17 +755,17 @@ pub struct PivotDimensionHeader {
 ///
 /// ```none
 /// "dimensions": [
-///   {
-///     "name": "eventName"
-///   },
-///   {
-///     "name": "countryId"
-///   }
+///    {
+///      "name": "eventName"
+///    },
+///    {
+///      "name": "countryId"
+///    }
 /// ],
 /// "metrics": [
-///   {
-///     "name": "eventCount"
-///   }
+///    {
+///      "name": "eventCount"
+///    }
 /// ]
 /// ```
 ///
@@ -713,17 +774,17 @@ pub struct PivotDimensionHeader {
 ///
 /// ```none
 /// "dimensionValues": [
-///   {
-///     "value": "in_app_purchase"
-///   },
-///   {
-///     "value": "JP"
-///   }
+///    {
+///      "value": "in_app_purchase"
+///    },
+///    {
+///      "value": "JP"
+///    }
 /// ],
 /// "metricValues": [
-///   {
-///     "value": "15"
-///   }
+///    {
+///      "value": "15"
+///    }
 /// ]
 /// ```
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -921,6 +982,19 @@ pub mod metric_metadata {
         /// property, and this metric is cost related.
         NoCostMetrics = 2,
     }
+    impl BlockedReason {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                BlockedReason::Unspecified => "BLOCKED_REASON_UNSPECIFIED",
+                BlockedReason::NoRevenueMetrics => "NO_REVENUE_METRICS",
+                BlockedReason::NoCostMetrics => "NO_COST_METRICS",
+            }
+        }
+    }
 }
 /// The compatibility for a single dimension.
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -963,6 +1037,21 @@ pub enum MetricAggregation {
     /// Count operator.
     Count = 4,
 }
+impl MetricAggregation {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            MetricAggregation::Unspecified => "METRIC_AGGREGATION_UNSPECIFIED",
+            MetricAggregation::Total => "TOTAL",
+            MetricAggregation::Minimum => "MINIMUM",
+            MetricAggregation::Maximum => "MAXIMUM",
+            MetricAggregation::Count => "COUNT",
+        }
+    }
+}
 /// A metric's value type.
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
 #[repr(i32)]
@@ -994,6 +1083,29 @@ pub enum MetricType {
     /// A length in kilometers; a special floating point type.
     TypeKilometers = 13,
 }
+impl MetricType {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            MetricType::Unspecified => "METRIC_TYPE_UNSPECIFIED",
+            MetricType::TypeInteger => "TYPE_INTEGER",
+            MetricType::TypeFloat => "TYPE_FLOAT",
+            MetricType::TypeSeconds => "TYPE_SECONDS",
+            MetricType::TypeMilliseconds => "TYPE_MILLISECONDS",
+            MetricType::TypeMinutes => "TYPE_MINUTES",
+            MetricType::TypeHours => "TYPE_HOURS",
+            MetricType::TypeStandard => "TYPE_STANDARD",
+            MetricType::TypeCurrency => "TYPE_CURRENCY",
+            MetricType::TypeFeet => "TYPE_FEET",
+            MetricType::TypeMiles => "TYPE_MILES",
+            MetricType::TypeMeters => "TYPE_METERS",
+            MetricType::TypeKilometers => "TYPE_KILOMETERS",
+        }
+    }
+}
 /// Categories of data that you may be restricted from viewing on certain GA4
 /// properties.
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
@@ -1005,6 +1117,19 @@ pub enum RestrictedMetricType {
     CostData = 1,
     /// Revenue metrics such as `purchaseRevenue`.
     RevenueData = 2,
+}
+impl RestrictedMetricType {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            RestrictedMetricType::Unspecified => "RESTRICTED_METRIC_TYPE_UNSPECIFIED",
+            RestrictedMetricType::CostData => "COST_DATA",
+            RestrictedMetricType::RevenueData => "REVENUE_DATA",
+        }
+    }
 }
 /// The compatibility types for a single dimension or metric.
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
@@ -1018,6 +1143,19 @@ pub enum Compatibility {
     /// The dimension or metric is incompatible. This dimension or metric cannot be
     /// successfully added to a report.
     Incompatible = 2,
+}
+impl Compatibility {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            Compatibility::Unspecified => "COMPATIBILITY_UNSPECIFIED",
+            Compatibility::Compatible => "COMPATIBLE",
+            Compatibility::Incompatible => "INCOMPATIBLE",
+        }
+    }
 }
 /// The request for compatibility information for a report's dimensions and
 /// metrics. Check compatibility provides a preview of the compatibility of a
@@ -1282,38 +1420,38 @@ pub struct RunPivotReportResponse {
     /// request produces one header in the response. If we have a request like
     /// this:
     ///
-    ///     "pivots": [{
-    ///       "fieldNames": ["country",
-    ///         "city"]
-    ///     },
-    ///     {
-    ///       "fieldNames": "eventName"
-    ///     }]
+    ///      "pivots": [{
+    ///        "fieldNames": ["country",
+    ///          "city"]
+    ///      },
+    ///      {
+    ///        "fieldNames": "eventName"
+    ///      }]
     ///
     /// We will have the following `pivotHeaders` in the response:
     ///
-    ///     "pivotHeaders" : [{
-    ///       "dimensionHeaders": [{
-    ///         "dimensionValues": [
-    ///            { "value": "United Kingdom" },
-    ///            { "value": "London" }
+    ///      "pivotHeaders" : [{
+    ///        "dimensionHeaders": [{
+    ///          "dimensionValues": [
+    ///             { "value": "United Kingdom" },
+    ///             { "value": "London" }
+    ///           ]
+    ///        },
+    ///        {
+    ///          "dimensionValues": [
+    ///          { "value": "Japan" },
+    ///          { "value": "Osaka" }
     ///          ]
-    ///       },
-    ///       {
-    ///         "dimensionValues": [
-    ///         { "value": "Japan" },
-    ///         { "value": "Osaka" }
-    ///         ]
-    ///       }]
-    ///     },
-    ///     {
-    ///       "dimensionHeaders": [{
-    ///         "dimensionValues": [{ "value": "session_start" }]
-    ///       },
-    ///       {
-    ///         "dimensionValues": [{ "value": "scroll" }]
-    ///       }]
-    ///     }]
+    ///        }]
+    ///      },
+    ///      {
+    ///        "dimensionHeaders": [{
+    ///          "dimensionValues": [{ "value": "session_start" }]
+    ///        },
+    ///        {
+    ///          "dimensionValues": [{ "value": "scroll" }]
+    ///        }]
+    ///      }]
     #[prost(message, repeated, tag="1")]
     pub pivot_headers: ::prost::alloc::vec::Vec<PivotHeader>,
     /// Describes dimension columns. The number of DimensionHeaders and ordering of
@@ -1523,6 +1661,7 @@ pub struct RunRealtimeReportResponse {
 pub mod beta_analytics_data_client {
     #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
     use tonic::codegen::*;
+    use tonic::codegen::http::Uri;
     /// Google Analytics reporting data service.
     #[derive(Debug, Clone)]
     pub struct BetaAnalyticsDataClient<T> {
@@ -1537,6 +1676,10 @@ pub mod beta_analytics_data_client {
     {
         pub fn new(inner: T) -> Self {
             let inner = tonic::client::Grpc::new(inner);
+            Self { inner }
+        }
+        pub fn with_origin(inner: T, origin: Uri) -> Self {
+            let inner = tonic::client::Grpc::with_origin(inner, origin);
             Self { inner }
         }
         pub fn with_interceptor<F>(
@@ -1558,19 +1701,19 @@ pub mod beta_analytics_data_client {
         {
             BetaAnalyticsDataClient::new(InterceptedService::new(inner, interceptor))
         }
-        /// Compress requests with `gzip`.
+        /// Compress requests with the given encoding.
         ///
         /// This requires the server to support it otherwise it might respond with an
         /// error.
         #[must_use]
-        pub fn send_gzip(mut self) -> Self {
-            self.inner = self.inner.send_gzip();
+        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.send_compressed(encoding);
             self
         }
-        /// Enable decompressing responses with `gzip`.
+        /// Enable decompressing responses.
         #[must_use]
-        pub fn accept_gzip(mut self) -> Self {
-            self.inner = self.inner.accept_gzip();
+        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.accept_compressed(encoding);
             self
         }
         /// Returns a customized report of your Google Analytics event data. Reports

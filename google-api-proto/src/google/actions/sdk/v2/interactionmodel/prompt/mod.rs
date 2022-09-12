@@ -68,6 +68,20 @@ pub mod static_image_prompt {
         /// playing a 4:3 video.
         Cropped = 3,
     }
+    impl ImageFill {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                ImageFill::Unspecified => "UNSPECIFIED",
+                ImageFill::Gray => "GRAY",
+                ImageFill::White => "WHITE",
+                ImageFill::Cropped => "CROPPED",
+            }
+        }
+    }
 }
 /// Defines a link which will be displayed as a suggestion chip and can be opened
 /// by the user.
@@ -100,6 +114,18 @@ pub enum UrlHint {
     /// URL that points directly to AMP content, or to a canonical URL
     /// which refers to AMP content via `<link rel="amphtml">`.
     Amp = 1,
+}
+impl UrlHint {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            UrlHint::HintUnspecified => "HINT_UNSPECIFIED",
+            UrlHint::Amp => "AMP",
+        }
+    }
 }
 /// A basic card for displaying some information, e.g. an image and/or text.
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -269,6 +295,19 @@ pub mod static_media_prompt {
         /// Response to acknowledge a media status report.
         MediaStatusAck = 2,
     }
+    impl MediaType {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                MediaType::Unspecified => "MEDIA_TYPE_UNSPECIFIED",
+                MediaType::Audio => "AUDIO",
+                MediaType::MediaStatusAck => "MEDIA_STATUS_ACK",
+            }
+        }
+    }
     /// Media control types the media response can supported optionally
     #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
     #[repr(i32)]
@@ -279,6 +318,19 @@ pub mod static_media_prompt {
         Paused = 1,
         /// Stopped event. Triggered when user exit out 3p session during media play.
         Stopped = 2,
+    }
+    impl OptionalMediaControls {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                OptionalMediaControls::Unspecified => "OPTIONAL_MEDIA_CONTROLS_UNSPECIFIED",
+                OptionalMediaControls::Paused => "PAUSED",
+                OptionalMediaControls::Stopped => "STOPPED",
+            }
+        }
     }
     /// The types of repeat mode for a list of media objects.
     #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
@@ -291,6 +343,19 @@ pub mod static_media_prompt {
         /// Loop to the beginning of the first media object when the end of the last
         /// media object is reached.
         All = 2,
+    }
+    impl RepeatMode {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                RepeatMode::Unspecified => "REPEAT_MODE_UNSPECIFIED",
+                RepeatMode::Off => "OFF",
+                RepeatMode::All => "ALL",
+            }
+        }
     }
 }
 /// Represents a single media object.
@@ -381,6 +446,20 @@ pub mod table_column {
         Center = 2,
         /// Content is aligned to the trailing edge of the column.
         Trailing = 3,
+    }
+    impl HorizontalAlignment {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                HorizontalAlignment::Unspecified => "UNSPECIFIED",
+                HorizontalAlignment::Leading => "LEADING",
+                HorizontalAlignment::Center => "CENTER",
+                HorizontalAlignment::Trailing => "TRAILING",
+            }
+        }
     }
 }
 /// Describes a cell in a row.
@@ -503,6 +582,23 @@ pub mod surface_capabilities {
         WebLink = 5,
         /// Device can support saving and fetching home storage.
         HomeStorage = 6,
+    }
+    impl Capability {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                Capability::Unspecified => "UNSPECIFIED",
+                Capability::Speech => "SPEECH",
+                Capability::RichResponse => "RICH_RESPONSE",
+                Capability::LongFormAudio => "LONG_FORM_AUDIO",
+                Capability::InteractiveCanvas => "INTERACTIVE_CANVAS",
+                Capability::WebLink => "WEB_LINK",
+                Capability::HomeStorage => "HOME_STORAGE",
+            }
+        }
     }
 }
 /// Represents a list of prompt candidates, one of which will be selected as the

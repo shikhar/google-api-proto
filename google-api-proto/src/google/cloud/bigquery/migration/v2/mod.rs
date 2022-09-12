@@ -1,3 +1,134 @@
+/// Provides details for errors and the corresponding resources.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ResourceErrorDetail {
+    /// Required. Information about the resource where the error is located.
+    #[prost(message, optional, tag="1")]
+    pub resource_info: ::core::option::Option<super::super::super::super::rpc::ResourceInfo>,
+    /// Required. The error details for the resource.
+    #[prost(message, repeated, tag="2")]
+    pub error_details: ::prost::alloc::vec::Vec<ErrorDetail>,
+    /// Required. How many errors there are in total for the resource. Truncation can be
+    /// indicated by having an `error_count` that is higher than the size of
+    /// `error_details`.
+    #[prost(int32, tag="3")]
+    pub error_count: i32,
+}
+/// Provides details for errors, e.g. issues that where encountered when
+/// processing a subtask.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ErrorDetail {
+    /// Optional. The exact location within the resource (if applicable).
+    #[prost(message, optional, tag="1")]
+    pub location: ::core::option::Option<ErrorLocation>,
+    /// Required. Describes the cause of the error with structured detail.
+    #[prost(message, optional, tag="2")]
+    pub error_info: ::core::option::Option<super::super::super::super::rpc::ErrorInfo>,
+}
+/// Holds information about where the error is located.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ErrorLocation {
+    /// Optional. If applicable, denotes the line where the error occurred. A zero value
+    /// means that there is no line information.
+    #[prost(int32, tag="1")]
+    pub line: i32,
+    /// Optional. If applicable, denotes the column where the error occurred. A zero value
+    /// means that there is no columns information.
+    #[prost(int32, tag="2")]
+    pub column: i32,
+}
+/// The metrics object for a SubTask.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct TimeSeries {
+    /// Required. The name of the metric.
+    ///
+    /// If the metric is not known by the service yet, it will be auto-created.
+    #[prost(string, tag="1")]
+    pub metric: ::prost::alloc::string::String,
+    /// Required. The value type of the time series.
+    #[prost(enumeration="super::super::super::super::api::metric_descriptor::ValueType", tag="2")]
+    pub value_type: i32,
+    /// Optional. The metric kind of the time series.
+    ///
+    /// If present, it must be the same as the metric kind of the associated
+    /// metric. If the associated metric's descriptor must be auto-created, then
+    /// this field specifies the metric kind of the new descriptor and must be
+    /// either `GAUGE` (the default) or `CUMULATIVE`.
+    #[prost(enumeration="super::super::super::super::api::metric_descriptor::MetricKind", tag="3")]
+    pub metric_kind: i32,
+    /// Required. The data points of this time series. When listing time series, points are
+    /// returned in reverse time order.
+    ///
+    /// When creating a time series, this field must contain exactly one point and
+    /// the point's type must be the same as the value type of the associated
+    /// metric. If the associated metric's descriptor must be auto-created, then
+    /// the value type of the descriptor is determined by the point's type, which
+    /// must be `BOOL`, `INT64`, `DOUBLE`, or `DISTRIBUTION`.
+    #[prost(message, repeated, tag="4")]
+    pub points: ::prost::alloc::vec::Vec<Point>,
+}
+/// A single data point in a time series.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct Point {
+    /// The time interval to which the data point applies.  For `GAUGE` metrics,
+    /// the start time does not need to be supplied, but if it is supplied, it must
+    /// equal the end time.  For `DELTA` metrics, the start and end time should
+    /// specify a non-zero interval, with subsequent points specifying contiguous
+    /// and non-overlapping intervals.  For `CUMULATIVE` metrics, the start and end
+    /// time should specify a non-zero interval, with subsequent points specifying
+    /// the same start time and increasing end times, until an event resets the
+    /// cumulative value to zero and sets a new start time for the following
+    /// points.
+    #[prost(message, optional, tag="1")]
+    pub interval: ::core::option::Option<TimeInterval>,
+    /// The value of the data point.
+    #[prost(message, optional, tag="2")]
+    pub value: ::core::option::Option<TypedValue>,
+}
+/// A time interval extending just after a start time through an end time.
+/// If the start time is the same as the end time, then the interval
+/// represents a single point in time.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct TimeInterval {
+    /// Optional. The beginning of the time interval.  The default value
+    /// for the start time is the end time. The start time must not be
+    /// later than the end time.
+    #[prost(message, optional, tag="1")]
+    pub start_time: ::core::option::Option<::prost_types::Timestamp>,
+    /// Required. The end of the time interval.
+    #[prost(message, optional, tag="2")]
+    pub end_time: ::core::option::Option<::prost_types::Timestamp>,
+}
+/// A single strongly-typed value.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct TypedValue {
+    /// The typed value field.
+    #[prost(oneof="typed_value::Value", tags="1, 2, 3, 4, 5")]
+    pub value: ::core::option::Option<typed_value::Value>,
+}
+/// Nested message and enum types in `TypedValue`.
+pub mod typed_value {
+    /// The typed value field.
+    #[derive(Clone, PartialEq, ::prost::Oneof)]
+    pub enum Value {
+        /// A Boolean value: `true` or `false`.
+        #[prost(bool, tag="1")]
+        BoolValue(bool),
+        /// A 64-bit integer. Its range is approximately `+/-9.2x10^18`.
+        #[prost(int64, tag="2")]
+        Int64Value(i64),
+        /// A 64-bit double-precision floating-point number. Its magnitude
+        /// is approximately `+/-10^(+/-300)` and it has 16 significant digits of
+        /// precision.
+        #[prost(double, tag="3")]
+        DoubleValue(f64),
+        /// A variable-length string value.
+        #[prost(string, tag="4")]
+        StringValue(::prost::alloc::string::String),
+        /// A distribution value.
+        #[prost(message, tag="5")]
+        DistributionValue(super::super::super::super::super::api::Distribution),
+    }
+}
 /// The translation config to capture necessary settings for a translation task
 /// and subtask.
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -135,6 +266,19 @@ pub mod teradata_dialect {
         /// BTEQ mode (which includes SQL).
         Bteq = 2,
     }
+    impl Mode {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                Mode::Unspecified => "MODE_UNSPECIFIED",
+                Mode::Sql => "SQL",
+                Mode::Bteq => "BTEQ",
+            }
+        }
+    }
 }
 /// The dialect definition for Oracle.
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -241,6 +385,24 @@ pub mod name_mapping_key {
         /// The object being mapped is a function.
         Function = 7,
     }
+    impl Type {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                Type::Unspecified => "TYPE_UNSPECIFIED",
+                Type::Database => "DATABASE",
+                Type::Schema => "SCHEMA",
+                Type::Relation => "RELATION",
+                Type::Attribute => "ATTRIBUTE",
+                Type::RelationAlias => "RELATION_ALIAS",
+                Type::AttributeAlias => "ATTRIBUTE_ALIAS",
+                Type::Function => "FUNCTION",
+            }
+        }
+    }
 }
 /// The potential components of a full name mapping that will be mapped
 /// during translation in the target data warehouse.
@@ -273,137 +435,6 @@ pub struct SourceEnv {
     /// translation engine will search through this list to find the value.
     #[prost(string, repeated, tag="2")]
     pub schema_search_path: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
-}
-/// Provides details for errors and the corresponding resources.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ResourceErrorDetail {
-    /// Required. Information about the resource where the error is located.
-    #[prost(message, optional, tag="1")]
-    pub resource_info: ::core::option::Option<super::super::super::super::rpc::ResourceInfo>,
-    /// Required. The error details for the resource.
-    #[prost(message, repeated, tag="2")]
-    pub error_details: ::prost::alloc::vec::Vec<ErrorDetail>,
-    /// Required. How many errors there are in total for the resource. Truncation can be
-    /// indicated by having an `error_count` that is higher than the size of
-    /// `error_details`.
-    #[prost(int32, tag="3")]
-    pub error_count: i32,
-}
-/// Provides details for errors, e.g. issues that where encountered when
-/// processing a subtask.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ErrorDetail {
-    /// Optional. The exact location within the resource (if applicable).
-    #[prost(message, optional, tag="1")]
-    pub location: ::core::option::Option<ErrorLocation>,
-    /// Required. Describes the cause of the error with structured detail.
-    #[prost(message, optional, tag="2")]
-    pub error_info: ::core::option::Option<super::super::super::super::rpc::ErrorInfo>,
-}
-/// Holds information about where the error is located.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ErrorLocation {
-    /// Optional. If applicable, denotes the line where the error occurred. A zero value
-    /// means that there is no line information.
-    #[prost(int32, tag="1")]
-    pub line: i32,
-    /// Optional. If applicable, denotes the column where the error occurred. A zero value
-    /// means that there is no columns information.
-    #[prost(int32, tag="2")]
-    pub column: i32,
-}
-/// The metrics object for a SubTask.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct TimeSeries {
-    /// Required. The name of the metric.
-    ///
-    /// If the metric is not known by the service yet, it will be auto-created.
-    #[prost(string, tag="1")]
-    pub metric: ::prost::alloc::string::String,
-    /// Required. The value type of the time series.
-    #[prost(enumeration="super::super::super::super::api::metric_descriptor::ValueType", tag="2")]
-    pub value_type: i32,
-    /// Optional. The metric kind of the time series.
-    ///
-    /// If present, it must be the same as the metric kind of the associated
-    /// metric. If the associated metric's descriptor must be auto-created, then
-    /// this field specifies the metric kind of the new descriptor and must be
-    /// either `GAUGE` (the default) or `CUMULATIVE`.
-    #[prost(enumeration="super::super::super::super::api::metric_descriptor::MetricKind", tag="3")]
-    pub metric_kind: i32,
-    /// Required. The data points of this time series. When listing time series, points are
-    /// returned in reverse time order.
-    ///
-    /// When creating a time series, this field must contain exactly one point and
-    /// the point's type must be the same as the value type of the associated
-    /// metric. If the associated metric's descriptor must be auto-created, then
-    /// the value type of the descriptor is determined by the point's type, which
-    /// must be `BOOL`, `INT64`, `DOUBLE`, or `DISTRIBUTION`.
-    #[prost(message, repeated, tag="4")]
-    pub points: ::prost::alloc::vec::Vec<Point>,
-}
-/// A single data point in a time series.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct Point {
-    /// The time interval to which the data point applies.  For `GAUGE` metrics,
-    /// the start time does not need to be supplied, but if it is supplied, it must
-    /// equal the end time.  For `DELTA` metrics, the start and end time should
-    /// specify a non-zero interval, with subsequent points specifying contiguous
-    /// and non-overlapping intervals.  For `CUMULATIVE` metrics, the start and end
-    /// time should specify a non-zero interval, with subsequent points specifying
-    /// the same start time and increasing end times, until an event resets the
-    /// cumulative value to zero and sets a new start time for the following
-    /// points.
-    #[prost(message, optional, tag="1")]
-    pub interval: ::core::option::Option<TimeInterval>,
-    /// The value of the data point.
-    #[prost(message, optional, tag="2")]
-    pub value: ::core::option::Option<TypedValue>,
-}
-/// A time interval extending just after a start time through an end time.
-/// If the start time is the same as the end time, then the interval
-/// represents a single point in time.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct TimeInterval {
-    /// Optional. The beginning of the time interval.  The default value
-    /// for the start time is the end time. The start time must not be
-    /// later than the end time.
-    #[prost(message, optional, tag="1")]
-    pub start_time: ::core::option::Option<::prost_types::Timestamp>,
-    /// Required. The end of the time interval.
-    #[prost(message, optional, tag="2")]
-    pub end_time: ::core::option::Option<::prost_types::Timestamp>,
-}
-/// A single strongly-typed value.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct TypedValue {
-    /// The typed value field.
-    #[prost(oneof="typed_value::Value", tags="1, 2, 3, 4, 5")]
-    pub value: ::core::option::Option<typed_value::Value>,
-}
-/// Nested message and enum types in `TypedValue`.
-pub mod typed_value {
-    /// The typed value field.
-    #[derive(Clone, PartialEq, ::prost::Oneof)]
-    pub enum Value {
-        /// A Boolean value: `true` or `false`.
-        #[prost(bool, tag="1")]
-        BoolValue(bool),
-        /// A 64-bit integer. Its range is approximately `+/-9.2x10^18`.
-        #[prost(int64, tag="2")]
-        Int64Value(i64),
-        /// A 64-bit double-precision floating-point number. Its magnitude
-        /// is approximately `+/-10^(+/-300)` and it has 16 significant digits of
-        /// precision.
-        #[prost(double, tag="3")]
-        DoubleValue(f64),
-        /// A variable-length string value.
-        #[prost(string, tag="4")]
-        StringValue(::prost::alloc::string::String),
-        /// A distribution value.
-        #[prost(message, tag="5")]
-        DistributionValue(super::super::super::super::super::api::Distribution),
-    }
 }
 /// A migration workflow which specifies what needs to be done for an EDW
 /// migration.
@@ -454,6 +485,21 @@ pub mod migration_workflow {
         /// state, but if they are (e.g. forced termination), they will not be
         /// scheduled.
         Completed = 4,
+    }
+    impl State {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                State::Unspecified => "STATE_UNSPECIFIED",
+                State::Draft => "DRAFT",
+                State::Running => "RUNNING",
+                State::Paused => "PAUSED",
+                State::Completed => "COMPLETED",
+            }
+        }
     }
 }
 /// A single task for a migration which has details about the configuration of
@@ -510,6 +556,23 @@ pub mod migration_task {
         Succeeded = 5,
         /// The task finished unsuccessfully.
         Failed = 6,
+    }
+    impl State {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                State::Unspecified => "STATE_UNSPECIFIED",
+                State::Pending => "PENDING",
+                State::Orchestrating => "ORCHESTRATING",
+                State::Running => "RUNNING",
+                State::Paused => "PAUSED",
+                State::Succeeded => "SUCCEEDED",
+                State::Failed => "FAILED",
+            }
+        }
     }
     /// The details of the task.
     #[derive(Clone, PartialEq, ::prost::Oneof)]
@@ -586,6 +649,22 @@ pub mod migration_subtask {
         /// The subtask is paused, i.e., it will not be scheduled. If it was already
         /// assigned,it might still finish but no new lease renewals will be granted.
         Paused = 5,
+    }
+    impl State {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                State::Unspecified => "STATE_UNSPECIFIED",
+                State::Active => "ACTIVE",
+                State::Running => "RUNNING",
+                State::Succeeded => "SUCCEEDED",
+                State::Failed => "FAILED",
+                State::Paused => "PAUSED",
+            }
+        }
     }
 }
 /// Request to create a migration workflow resource.
@@ -712,6 +791,7 @@ pub struct ListMigrationSubtasksResponse {
 pub mod migration_service_client {
     #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
     use tonic::codegen::*;
+    use tonic::codegen::http::Uri;
     /// Service to handle EDW migrations.
     #[derive(Debug, Clone)]
     pub struct MigrationServiceClient<T> {
@@ -726,6 +806,10 @@ pub mod migration_service_client {
     {
         pub fn new(inner: T) -> Self {
             let inner = tonic::client::Grpc::new(inner);
+            Self { inner }
+        }
+        pub fn with_origin(inner: T, origin: Uri) -> Self {
+            let inner = tonic::client::Grpc::with_origin(inner, origin);
             Self { inner }
         }
         pub fn with_interceptor<F>(
@@ -747,19 +831,19 @@ pub mod migration_service_client {
         {
             MigrationServiceClient::new(InterceptedService::new(inner, interceptor))
         }
-        /// Compress requests with `gzip`.
+        /// Compress requests with the given encoding.
         ///
         /// This requires the server to support it otherwise it might respond with an
         /// error.
         #[must_use]
-        pub fn send_gzip(mut self) -> Self {
-            self.inner = self.inner.send_gzip();
+        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.send_compressed(encoding);
             self
         }
-        /// Enable decompressing responses with `gzip`.
+        /// Enable decompressing responses.
         #[must_use]
-        pub fn accept_gzip(mut self) -> Self {
-            self.inner = self.inner.accept_gzip();
+        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.accept_compressed(encoding);
             self
         }
         /// Creates a migration workflow.

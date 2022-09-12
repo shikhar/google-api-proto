@@ -20,6 +20,18 @@ pub mod bundled_query {
         First = 0,
         Last = 1,
     }
+    impl LimitType {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                LimitType::First => "FIRST",
+                LimitType::Last => "LAST",
+            }
+        }
+    }
     /// The query to run.
     #[derive(Clone, PartialEq, ::prost::Oneof)]
     pub enum QueryType {

@@ -21,7 +21,7 @@ pub struct TranslateTextRequest {
     #[prost(string, repeated, tag="1")]
     pub contents: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
     /// Optional. The format of the source text, for example, "text/html",
-    ///  "text/plain". If left blank, the MIME type defaults to "text/html".
+    ///   "text/plain". If left blank, the MIME type defaults to "text/html".
     #[prost(string, tag="3")]
     pub mime_type: ::prost::alloc::string::String,
     /// Optional. The BCP-47 language code of the input text if
@@ -56,10 +56,10 @@ pub struct TranslateTextRequest {
     /// The format depends on model type:
     ///
     /// - AutoML Translation models:
-    ///   `projects/{project-number-or-id}/locations/{location-id}/models/{model-id}`
+    ///    `projects/{project-number-or-id}/locations/{location-id}/models/{model-id}`
     ///
     /// - General (built-in) models:
-    ///   `projects/{project-number-or-id}/locations/{location-id}/models/general/nmt`,
+    ///    `projects/{project-number-or-id}/locations/{location-id}/models/general/nmt`,
     ///
     ///
     /// For global (non-regionalized) requests, use `location-id` `global`.
@@ -230,10 +230,10 @@ pub struct GetSupportedLanguagesRequest {
     /// The format depends on model type:
     ///
     /// - AutoML Translation models:
-    ///   `projects/{project-number-or-id}/locations/{location-id}/models/{model-id}`
+    ///    `projects/{project-number-or-id}/locations/{location-id}/models/{model-id}`
     ///
     /// - General (built-in) models:
-    ///   `projects/{project-number-or-id}/locations/{location-id}/models/general/nmt`,
+    ///    `projects/{project-number-or-id}/locations/{location-id}/models/general/nmt`,
     ///
     ///
     /// Returns languages supported by the specified model.
@@ -303,7 +303,7 @@ pub mod input_config {
         /// of the text request. If the first column is missing, we use the row
         /// number (0-based) from the input file as the ID in the output file. The
         /// second column is the actual text to be
-        ///  translated. We recommend each row be <= 10K Unicode codepoints,
+        ///   translated. We recommend each row be <= 10K Unicode codepoints,
         /// otherwise an error might be returned.
         /// Note that the input tsv must be RFC 4180 compliant.
         ///
@@ -581,10 +581,10 @@ pub struct TranslateDocumentRequest {
     /// The format depends on model type:
     ///
     /// - AutoML Translation models:
-    ///   `projects/{project-number-or-id}/locations/{location-id}/models/{model-id}`
+    ///    `projects/{project-number-or-id}/locations/{location-id}/models/{model-id}`
     ///
     /// - General (built-in) models:
-    ///   `projects/{project-number-or-id}/locations/{location-id}/models/general/nmt`,
+    ///    `projects/{project-number-or-id}/locations/{location-id}/models/general/nmt`,
     ///
     ///
     /// If not provided, the default Google model (NMT) will be used for
@@ -679,10 +679,10 @@ pub struct BatchTranslateTextRequest {
     /// The value format depends on model type:
     ///
     /// - AutoML Translation models:
-    ///   `projects/{project-number-or-id}/locations/{location-id}/models/{model-id}`
+    ///    `projects/{project-number-or-id}/locations/{location-id}/models/{model-id}`
     ///
     /// - General (built-in) models:
-    ///   `projects/{project-number-or-id}/locations/{location-id}/models/general/nmt`,
+    ///    `projects/{project-number-or-id}/locations/{location-id}/models/general/nmt`,
     ///
     ///
     /// If the map is empty or a specific model is
@@ -760,6 +760,22 @@ pub mod batch_translate_metadata {
         /// cancel command are output as specified in the request.
         Cancelled = 5,
     }
+    impl State {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                State::Unspecified => "STATE_UNSPECIFIED",
+                State::Running => "RUNNING",
+                State::Succeeded => "SUCCEEDED",
+                State::Failed => "FAILED",
+                State::Cancelling => "CANCELLING",
+                State::Cancelled => "CANCELLED",
+            }
+        }
+    }
 }
 /// Stored in the
 /// \[google.longrunning.Operation.response][google.longrunning.Operation.response\]
@@ -806,9 +822,9 @@ pub mod glossary_input_config {
         /// For unidirectional glossaries:
         ///
         /// - TSV/CSV (`.tsv`/`.csv`): 2 column file, tab- or comma-separated.
-        ///   The first column is source text. The second column is target text.
-        ///   The file must not contain headers. That is, the first row is data, not
-        ///   column names.
+        ///    The first column is source text. The second column is target text.
+        ///    The file must not contain headers. That is, the first row is data, not
+        ///    column names.
         ///
         /// - TMX (`.tmx`): TMX file with parallel data defining source/target term
         /// pairs.
@@ -816,9 +832,9 @@ pub mod glossary_input_config {
         /// For equivalent term sets glossaries:
         ///
         /// - CSV (`.csv`): Multi-column CSV file defining equivalent glossary terms
-        ///   in multiple languages. The format is defined for Google Translation
-        ///   Toolkit and documented in [Use a
-        ///   glossary](<https://support.google.com/translatortoolkit/answer/6306379?hl=en>).
+        ///    in multiple languages. The format is defined for Google Translation
+        ///    Toolkit and documented in [Use a
+        ///    glossary](<https://support.google.com/translatortoolkit/answer/6306379?hl=en>).
         #[prost(message, tag="1")]
         GcsSource(super::GcsSource),
     }
@@ -987,6 +1003,22 @@ pub mod create_glossary_metadata {
         /// The glossary creation request was successfully canceled.
         Cancelled = 5,
     }
+    impl State {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                State::Unspecified => "STATE_UNSPECIFIED",
+                State::Running => "RUNNING",
+                State::Succeeded => "SUCCEEDED",
+                State::Failed => "FAILED",
+                State::Cancelling => "CANCELLING",
+                State::Cancelled => "CANCELLED",
+            }
+        }
+    }
 }
 /// Stored in the
 /// \[google.longrunning.Operation.metadata][google.longrunning.Operation.metadata\]
@@ -1022,6 +1054,22 @@ pub mod delete_glossary_metadata {
         Cancelling = 4,
         /// The glossary deletion request was successfully canceled.
         Cancelled = 5,
+    }
+    impl State {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                State::Unspecified => "STATE_UNSPECIFIED",
+                State::Running => "RUNNING",
+                State::Succeeded => "SUCCEEDED",
+                State::Failed => "FAILED",
+                State::Cancelling => "CANCELLING",
+                State::Cancelled => "CANCELLED",
+            }
+        }
     }
 }
 /// Stored in the
@@ -1082,10 +1130,10 @@ pub struct BatchTranslateDocumentRequest {
     /// The value format depends on model type:
     ///
     /// - AutoML Translation models:
-    ///   `projects/{project-number-or-id}/locations/{location-id}/models/{model-id}`
+    ///    `projects/{project-number-or-id}/locations/{location-id}/models/{model-id}`
     ///
     /// - General (built-in) models:
-    ///   `projects/{project-number-or-id}/locations/{location-id}/models/general/nmt`,
+    ///    `projects/{project-number-or-id}/locations/{location-id}/models/general/nmt`,
     ///
     ///
     /// If the map is empty or a specific model is not requested for a language
@@ -1101,7 +1149,7 @@ pub struct BatchTranslateDocumentRequest {
     ///
     /// Supported file format conversion includes:
     /// - `application/pdf` to
-    ///   `application/vnd.openxmlformats-officedocument.wordprocessingml.document`
+    ///    `application/vnd.openxmlformats-officedocument.wordprocessingml.document`
     ///
     /// If nothing specified, output files will be in the same format as the
     /// original file.
@@ -1315,11 +1363,28 @@ pub mod batch_translate_document_metadata {
         /// cancel command are output as specified in the request.
         Cancelled = 5,
     }
+    impl State {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                State::Unspecified => "STATE_UNSPECIFIED",
+                State::Running => "RUNNING",
+                State::Succeeded => "SUCCEEDED",
+                State::Failed => "FAILED",
+                State::Cancelling => "CANCELLING",
+                State::Cancelled => "CANCELLED",
+            }
+        }
+    }
 }
 /// Generated client implementations.
 pub mod translation_service_client {
     #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
     use tonic::codegen::*;
+    use tonic::codegen::http::Uri;
     /// Provides natural language translation operations.
     #[derive(Debug, Clone)]
     pub struct TranslationServiceClient<T> {
@@ -1334,6 +1399,10 @@ pub mod translation_service_client {
     {
         pub fn new(inner: T) -> Self {
             let inner = tonic::client::Grpc::new(inner);
+            Self { inner }
+        }
+        pub fn with_origin(inner: T, origin: Uri) -> Self {
+            let inner = tonic::client::Grpc::with_origin(inner, origin);
             Self { inner }
         }
         pub fn with_interceptor<F>(
@@ -1355,19 +1424,19 @@ pub mod translation_service_client {
         {
             TranslationServiceClient::new(InterceptedService::new(inner, interceptor))
         }
-        /// Compress requests with `gzip`.
+        /// Compress requests with the given encoding.
         ///
         /// This requires the server to support it otherwise it might respond with an
         /// error.
         #[must_use]
-        pub fn send_gzip(mut self) -> Self {
-            self.inner = self.inner.send_gzip();
+        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.send_compressed(encoding);
             self
         }
-        /// Enable decompressing responses with `gzip`.
+        /// Enable decompressing responses.
         #[must_use]
-        pub fn accept_gzip(mut self) -> Self {
-            self.inner = self.inner.accept_gzip();
+        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.accept_compressed(encoding);
             self
         }
         /// Translates input text and returns translated text.

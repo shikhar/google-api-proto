@@ -7,25 +7,25 @@
 /// task will be retried according to the following:
 ///
 /// * User-specified throttling: [retry configuration]\[google.cloud.tasks.v2.Queue.retry_config\],
-///   [rate limits]\[google.cloud.tasks.v2.Queue.rate_limits\], and the [queue's state]\[google.cloud.tasks.v2.Queue.state\].
+///    [rate limits]\[google.cloud.tasks.v2.Queue.rate_limits\], and the [queue's state]\[google.cloud.tasks.v2.Queue.state\].
 ///
 /// * System throttling: To prevent the worker from overloading, Cloud Tasks may
-///   temporarily reduce the queue's effective rate. User-specified settings
-///   will not be changed.
+///    temporarily reduce the queue's effective rate. User-specified settings
+///    will not be changed.
 ///
-///  System throttling happens because:
+///   System throttling happens because:
 ///
-///   * Cloud Tasks backs off on all errors. Normally the backoff specified in
-///     [rate limits]\[google.cloud.tasks.v2.Queue.rate_limits\] will be used. But if the worker returns
-///     `429` (Too Many Requests), `503` (Service Unavailable), or the rate of
-///     errors is high, Cloud Tasks will use a higher backoff rate. The retry
-///     specified in the `Retry-After` HTTP response header is considered.
+///    * Cloud Tasks backs off on all errors. Normally the backoff specified in
+///      [rate limits]\[google.cloud.tasks.v2.Queue.rate_limits\] will be used. But if the worker returns
+///      `429` (Too Many Requests), `503` (Service Unavailable), or the rate of
+///      errors is high, Cloud Tasks will use a higher backoff rate. The retry
+///      specified in the `Retry-After` HTTP response header is considered.
 ///
-///   * To prevent traffic spikes and to smooth sudden increases in traffic,
-///     dispatches ramp up slowly when the queue is newly created or idle and
-///     if large numbers of tasks suddenly become available to dispatch (due to
-///     spikes in create task rates, the queue being unpaused, or many tasks
-///     that are scheduled at the same time).
+///    * To prevent traffic spikes and to smooth sudden increases in traffic,
+///      dispatches ramp up slowly when the queue is newly created or idle and
+///      if large numbers of tasks suddenly become available to dispatch (due to
+///      spikes in create task rates, the queue being unpaused, or many tasks
+///      that are scheduled at the same time).
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct HttpRequest {
     /// Required. The full url path that the request will be sent to.
@@ -54,7 +54,7 @@ pub struct HttpRequest {
     /// A partial list of headers that will be ignored or replaced is:
     ///
     /// * Host: This will be computed by Cloud Tasks and derived from
-    ///   \[HttpRequest.url][google.cloud.tasks.v2.HttpRequest.url\].
+    ///    \[HttpRequest.url][google.cloud.tasks.v2.HttpRequest.url\].
     /// * Content-Length: This will be computed by Cloud Tasks.
     /// * User-Agent: This will be set to `"Google-Cloud-Tasks"`.
     /// * `X-Google-*`: Google use only.
@@ -62,9 +62,9 @@ pub struct HttpRequest {
     ///
     /// `Content-Type` won't be set by Cloud Tasks. You can explicitly set
     /// `Content-Type` to a media type when the
-    ///  [task is created]\[google.cloud.tasks.v2beta3.CloudTasks.CreateTask\].
-    ///  For example, `Content-Type` can be set to `"application/octet-stream"` or
-    ///  `"application/json"`.
+    ///   [task is created]\[google.cloud.tasks.v2beta3.CloudTasks.CreateTask\].
+    ///   For example, `Content-Type` can be set to `"application/octet-stream"` or
+    ///   `"application/json"`.
     ///
     /// Headers which can have multiple values (according to RFC2616) can be
     /// specified using comma-separated values.
@@ -144,15 +144,15 @@ pub mod http_request {
 /// delivered to can be set at the queue-level or task-level:
 ///
 /// * If [app_engine_routing_override is set on the
-///    queue]\[Queue.app_engine_routing_override\], this value is used for all
-///    tasks in the queue, no matter what the setting is for the [task-level
-///    app_engine_routing]\[AppEngineHttpRequest.app_engine_routing\].
+///     queue]\[Queue.app_engine_routing_override\], this value is used for all
+///     tasks in the queue, no matter what the setting is for the [task-level
+///     app_engine_routing]\[AppEngineHttpRequest.app_engine_routing\].
 ///
 ///
 /// The `url` that the task will be sent to is:
 ///
 /// * `url =` \[host][google.cloud.tasks.v2.AppEngineRouting.host\] `+`
-///   \[relative_uri][google.cloud.tasks.v2.AppEngineHttpRequest.relative_uri\]
+///    \[relative_uri][google.cloud.tasks.v2.AppEngineHttpRequest.relative_uri\]
 ///
 /// Tasks can be dispatched to secure app handlers, unsecure app handlers, and
 /// URIs restricted with
@@ -193,9 +193,9 @@ pub struct AppEngineHttpRequest {
     /// Task-level setting for App Engine routing.
     ///
     /// * If [app_engine_routing_override is set on the
-    ///    queue]\[Queue.app_engine_routing_override\], this value is used for all
-    ///    tasks in the queue, no matter what the setting is for the [task-level
-    ///    app_engine_routing]\[AppEngineHttpRequest.app_engine_routing\].
+    ///     queue]\[Queue.app_engine_routing_override\], this value is used for all
+    ///     tasks in the queue, no matter what the setting is for the [task-level
+    ///     app_engine_routing]\[AppEngineHttpRequest.app_engine_routing\].
     #[prost(message, optional, tag="2")]
     pub app_engine_routing: ::core::option::Option<AppEngineRouting>,
     /// The relative URI.
@@ -216,21 +216,21 @@ pub struct AppEngineHttpRequest {
     /// Cloud Tasks sets some headers to default values:
     ///
     /// * `User-Agent`: By default, this header is
-    ///   `"AppEngine-Google; (+<http://code.google.com/appengine>)"`.
-    ///   This header can be modified, but Cloud Tasks will append
-    ///   `"AppEngine-Google; (+<http://code.google.com/appengine>)"` to the
-    ///   modified `User-Agent`.
+    ///    `"AppEngine-Google; (+<http://code.google.com/appengine>)"`.
+    ///    This header can be modified, but Cloud Tasks will append
+    ///    `"AppEngine-Google; (+<http://code.google.com/appengine>)"` to the
+    ///    modified `User-Agent`.
     ///
     /// If the task has a \[body][google.cloud.tasks.v2.AppEngineHttpRequest.body\], Cloud
     /// Tasks sets the following headers:
     ///
     /// * `Content-Type`: By default, the `Content-Type` header is set to
-    ///   `"application/octet-stream"`. The default can be overridden by explicitly
-    ///   setting `Content-Type` to a particular media type when the
-    ///   [task is created]\[google.cloud.tasks.v2.CloudTasks.CreateTask\].
-    ///   For example, `Content-Type` can be set to `"application/json"`.
+    ///    `"application/octet-stream"`. The default can be overridden by explicitly
+    ///    setting `Content-Type` to a particular media type when the
+    ///    [task is created]\[google.cloud.tasks.v2.CloudTasks.CreateTask\].
+    ///    For example, `Content-Type` can be set to `"application/json"`.
     /// * `Content-Length`: This is computed by Cloud Tasks. This value is
-    ///   output only.   It cannot be changed.
+    ///    output only.   It cannot be changed.
     ///
     /// The headers below cannot be set or overridden:
     ///
@@ -405,6 +405,24 @@ pub enum HttpMethod {
     /// HTTP OPTIONS
     Options = 7,
 }
+impl HttpMethod {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            HttpMethod::Unspecified => "HTTP_METHOD_UNSPECIFIED",
+            HttpMethod::Post => "POST",
+            HttpMethod::Get => "GET",
+            HttpMethod::Head => "HEAD",
+            HttpMethod::Put => "PUT",
+            HttpMethod::Delete => "DELETE",
+            HttpMethod::Patch => "PATCH",
+            HttpMethod::Options => "OPTIONS",
+        }
+    }
+}
 /// A queue is a container of related tasks. Queues are configured to manage
 /// how those tasks are dispatched. Configurable properties include rate limits,
 /// retry options, queue types, and others.
@@ -419,16 +437,16 @@ pub struct Queue {
     /// `projects/PROJECT_ID/locations/LOCATION_ID/queues/QUEUE_ID`
     ///
     /// * `PROJECT_ID` can contain letters (\[A-Za-z\]), numbers (\[0-9\]),
-    ///    hyphens (-), colons (:), or periods (.).
-    ///    For more information, see
-    ///    [Identifying
-    ///    projects](<https://cloud.google.com/resource-manager/docs/creating-managing-projects#identifying_projects>)
+    ///     hyphens (-), colons (:), or periods (.).
+    ///     For more information, see
+    ///     [Identifying
+    ///     projects](<https://cloud.google.com/resource-manager/docs/creating-managing-projects#identifying_projects>)
     /// * `LOCATION_ID` is the canonical ID for the queue's location.
-    ///    The list of available locations can be obtained by calling
-    ///    \[ListLocations][google.cloud.location.Locations.ListLocations\].
-    ///    For more information, see <https://cloud.google.com/about/locations/.>
+    ///     The list of available locations can be obtained by calling
+    ///     \[ListLocations][google.cloud.location.Locations.ListLocations\].
+    ///     For more information, see <https://cloud.google.com/about/locations/.>
     /// * `QUEUE_ID` can contain letters (\[A-Za-z\]), numbers (\[0-9\]), or
-    ///   hyphens (-). The maximum length is 100 characters.
+    ///    hyphens (-). The maximum length is 100 characters.
     #[prost(string, tag="1")]
     pub name: ::prost::alloc::string::String,
     /// Overrides for
@@ -450,35 +468,35 @@ pub struct Queue {
     /// attempts in different ways:
     ///
     /// * \[rate_limits][google.cloud.tasks.v2.Queue.rate_limits\] controls the total rate of
-    ///   dispatches from a queue (i.e. all traffic dispatched from the
-    ///   queue, regardless of whether the dispatch is from a first
-    ///   attempt or a retry).
+    ///    dispatches from a queue (i.e. all traffic dispatched from the
+    ///    queue, regardless of whether the dispatch is from a first
+    ///    attempt or a retry).
     /// * \[retry_config][google.cloud.tasks.v2.Queue.retry_config\] controls what happens to
-    ///   particular a task after its first attempt fails. That is,
-    ///   \[retry_config][google.cloud.tasks.v2.Queue.retry_config\] controls task retries (the
-    ///   second attempt, third attempt, etc).
+    ///    particular a task after its first attempt fails. That is,
+    ///    \[retry_config][google.cloud.tasks.v2.Queue.retry_config\] controls task retries (the
+    ///    second attempt, third attempt, etc).
     ///
     /// The queue's actual dispatch rate is the result of:
     ///
     /// * Number of tasks in the queue
     /// * User-specified throttling: \[rate_limits][google.cloud.tasks.v2.Queue.rate_limits\],
-    ///   \[retry_config][google.cloud.tasks.v2.Queue.retry_config\], and the
-    ///   [queue's state]\[google.cloud.tasks.v2.Queue.state\].
+    ///    \[retry_config][google.cloud.tasks.v2.Queue.retry_config\], and the
+    ///    [queue's state]\[google.cloud.tasks.v2.Queue.state\].
     /// * System throttling due to `429` (Too Many Requests) or `503` (Service
-    ///   Unavailable) responses from the worker, high error rates, or to smooth
-    ///   sudden large traffic spikes.
+    ///    Unavailable) responses from the worker, high error rates, or to smooth
+    ///    sudden large traffic spikes.
     #[prost(message, optional, tag="3")]
     pub rate_limits: ::core::option::Option<RateLimits>,
     /// Settings that determine the retry behavior.
     ///
     /// * For tasks created using Cloud Tasks: the queue-level retry settings
-    ///   apply to all tasks in the queue that were created using Cloud Tasks.
-    ///   Retry settings cannot be set on individual tasks.
+    ///    apply to all tasks in the queue that were created using Cloud Tasks.
+    ///    Retry settings cannot be set on individual tasks.
     /// * For tasks created using the App Engine SDK: the queue-level retry
-    ///   settings apply to all tasks in the queue which do not have retry settings
-    ///   explicitly set on the task and were created by the App Engine SDK. See
-    ///   [App Engine
-    ///   documentation](<https://cloud.google.com/appengine/docs/standard/python/taskqueue/push/retrying-tasks>).
+    ///    settings apply to all tasks in the queue which do not have retry settings
+    ///    explicitly set on the task and were created by the App Engine SDK. See
+    ///    [App Engine
+    ///    documentation](<https://cloud.google.com/appengine/docs/standard/python/taskqueue/push/retrying-tasks>).
     #[prost(message, optional, tag="4")]
     pub retry_config: ::core::option::Option<RetryConfig>,
     /// Output only. The state of the queue.
@@ -545,6 +563,20 @@ pub mod queue {
         /// To permanently delete this queue and all of its tasks, call
         /// \[DeleteQueue][google.cloud.tasks.v2.CloudTasks.DeleteQueue\].
         Disabled = 3,
+    }
+    impl State {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                State::Unspecified => "STATE_UNSPECIFIED",
+                State::Running => "RUNNING",
+                State::Paused => "PAUSED",
+                State::Disabled => "DISABLED",
+            }
+        }
     }
 }
 /// Rate limits.
@@ -748,18 +780,18 @@ pub struct Task {
     /// `projects/PROJECT_ID/locations/LOCATION_ID/queues/QUEUE_ID/tasks/TASK_ID`
     ///
     /// * `PROJECT_ID` can contain letters (\[A-Za-z\]), numbers (\[0-9\]),
-    ///    hyphens (-), colons (:), or periods (.).
-    ///    For more information, see
-    ///    [Identifying
-    ///    projects](<https://cloud.google.com/resource-manager/docs/creating-managing-projects#identifying_projects>)
+    ///     hyphens (-), colons (:), or periods (.).
+    ///     For more information, see
+    ///     [Identifying
+    ///     projects](<https://cloud.google.com/resource-manager/docs/creating-managing-projects#identifying_projects>)
     /// * `LOCATION_ID` is the canonical ID for the task's location.
-    ///    The list of available locations can be obtained by calling
-    ///    \[ListLocations][google.cloud.location.Locations.ListLocations\].
-    ///    For more information, see <https://cloud.google.com/about/locations/.>
+    ///     The list of available locations can be obtained by calling
+    ///     \[ListLocations][google.cloud.location.Locations.ListLocations\].
+    ///     For more information, see <https://cloud.google.com/about/locations/.>
     /// * `QUEUE_ID` can contain letters (\[A-Za-z\]), numbers (\[0-9\]), or
-    ///   hyphens (-). The maximum length is 100 characters.
+    ///    hyphens (-). The maximum length is 100 characters.
     /// * `TASK_ID` can contain only letters (\[A-Za-z\]), numbers (\[0-9\]),
-    ///   hyphens (-), or underscores (_). The maximum length is 500 characters.
+    ///    hyphens (-), or underscores (_). The maximum length is 500 characters.
     #[prost(string, tag="1")]
     pub name: ::prost::alloc::string::String,
     /// The time when the task is scheduled to be attempted or retried.
@@ -785,21 +817,21 @@ pub struct Task {
     /// The default and maximum values depend on the type of request:
     ///
     /// * For [HTTP tasks]\[google.cloud.tasks.v2.HttpRequest\], the default is 10 minutes. The deadline
-    ///   must be in the interval [15 seconds, 30 minutes].
+    ///    must be in the interval [15 seconds, 30 minutes].
     ///
     /// * For [App Engine tasks]\[google.cloud.tasks.v2.AppEngineHttpRequest\], 0 indicates that the
-    ///   request has the default deadline. The default deadline depends on the
-    ///   [scaling
-    ///   type](<https://cloud.google.com/appengine/docs/standard/go/how-instances-are-managed#instance_scaling>)
-    ///   of the service: 10 minutes for standard apps with automatic scaling, 24
-    ///   hours for standard apps with manual and basic scaling, and 60 minutes for
-    ///   flex apps. If the request deadline is set, it must be in the interval [15
-    ///   seconds, 24 hours 15 seconds]. Regardless of the task's
-    ///   `dispatch_deadline`, the app handler will not run for longer than than
-    ///   the service's timeout. We recommend setting the `dispatch_deadline` to
-    ///   at most a few seconds more than the app handler's timeout. For more
-    ///   information see
-    ///   \[Timeouts\](<https://cloud.google.com/tasks/docs/creating-appengine-handlers#timeouts>).
+    ///    request has the default deadline. The default deadline depends on the
+    ///    [scaling
+    ///    type](<https://cloud.google.com/appengine/docs/standard/go/how-instances-are-managed#instance_scaling>)
+    ///    of the service: 10 minutes for standard apps with automatic scaling, 24
+    ///    hours for standard apps with manual and basic scaling, and 60 minutes for
+    ///    flex apps. If the request deadline is set, it must be in the interval [15
+    ///    seconds, 24 hours 15 seconds]. Regardless of the task's
+    ///    `dispatch_deadline`, the app handler will not run for longer than than
+    ///    the service's timeout. We recommend setting the `dispatch_deadline` to
+    ///    at most a few seconds more than the app handler's timeout. For more
+    ///    information see
+    ///    \[Timeouts\](<https://cloud.google.com/tasks/docs/creating-appengine-handlers#timeouts>).
     ///
     /// `dispatch_deadline` will be truncated to the nearest millisecond. The
     /// deadline is an approximate deadline.
@@ -860,6 +892,19 @@ pub mod task {
         /// `cloudtasks.tasks.fullView` [Google IAM](<https://cloud.google.com/iam/>)
         /// permission on the \[Queue][google.cloud.tasks.v2.Queue\] resource.
         Full = 2,
+    }
+    impl View {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                View::Unspecified => "VIEW_UNSPECIFIED",
+                View::Basic => "BASIC",
+                View::Full => "FULL",
+            }
+        }
     }
     /// Required. The message to send to the worker.
     #[derive(Clone, PartialEq, ::prost::Oneof)]
@@ -1210,6 +1255,7 @@ pub struct RunTaskRequest {
 pub mod cloud_tasks_client {
     #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
     use tonic::codegen::*;
+    use tonic::codegen::http::Uri;
     /// Cloud Tasks allows developers to manage the execution of background
     /// work in their applications.
     #[derive(Debug, Clone)]
@@ -1225,6 +1271,10 @@ pub mod cloud_tasks_client {
     {
         pub fn new(inner: T) -> Self {
             let inner = tonic::client::Grpc::new(inner);
+            Self { inner }
+        }
+        pub fn with_origin(inner: T, origin: Uri) -> Self {
+            let inner = tonic::client::Grpc::with_origin(inner, origin);
             Self { inner }
         }
         pub fn with_interceptor<F>(
@@ -1246,19 +1296,19 @@ pub mod cloud_tasks_client {
         {
             CloudTasksClient::new(InterceptedService::new(inner, interceptor))
         }
-        /// Compress requests with `gzip`.
+        /// Compress requests with the given encoding.
         ///
         /// This requires the server to support it otherwise it might respond with an
         /// error.
         #[must_use]
-        pub fn send_gzip(mut self) -> Self {
-            self.inner = self.inner.send_gzip();
+        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.send_compressed(encoding);
             self
         }
-        /// Enable decompressing responses with `gzip`.
+        /// Enable decompressing responses.
         #[must_use]
-        pub fn accept_gzip(mut self) -> Self {
-            self.inner = self.inner.accept_gzip();
+        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.accept_compressed(encoding);
             self
         }
         /// Lists queues.

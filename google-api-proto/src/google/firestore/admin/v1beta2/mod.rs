@@ -63,6 +63,19 @@ pub mod index {
             /// The field is ordered by descending field value.
             Descending = 2,
         }
+        impl Order {
+            /// String value of the enum field names used in the ProtoBuf definition.
+            ///
+            /// The values are not transformed in any way and thus are considered stable
+            /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+            pub fn as_str_name(&self) -> &'static str {
+                match self {
+                    Order::Unspecified => "ORDER_UNSPECIFIED",
+                    Order::Ascending => "ASCENDING",
+                    Order::Descending => "DESCENDING",
+                }
+            }
+        }
         /// The supported array value configurations.
         #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
         #[repr(i32)]
@@ -71,6 +84,18 @@ pub mod index {
             Unspecified = 0,
             /// The index supports array containment queries.
             Contains = 1,
+        }
+        impl ArrayConfig {
+            /// String value of the enum field names used in the ProtoBuf definition.
+            ///
+            /// The values are not transformed in any way and thus are considered stable
+            /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+            pub fn as_str_name(&self) -> &'static str {
+                match self {
+                    ArrayConfig::Unspecified => "ARRAY_CONFIG_UNSPECIFIED",
+                    ArrayConfig::Contains => "CONTAINS",
+                }
+            }
         }
         /// How the field value is indexed.
         #[derive(Clone, PartialEq, ::prost::Oneof)]
@@ -100,6 +125,19 @@ pub mod index {
         /// index.
         CollectionGroup = 2,
     }
+    impl QueryScope {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                QueryScope::Unspecified => "QUERY_SCOPE_UNSPECIFIED",
+                QueryScope::Collection => "COLLECTION",
+                QueryScope::CollectionGroup => "COLLECTION_GROUP",
+            }
+        }
+    }
     /// The state of an index. During index creation, an index will be in the
     /// `CREATING` state. If the index is created successfully, it will transition
     /// to the `READY` state. If the index creation encounters a problem, the index
@@ -128,6 +166,20 @@ pub mod index {
         /// index.
         NeedsRepair = 3,
     }
+    impl State {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                State::Unspecified => "STATE_UNSPECIFIED",
+                State::Creating => "CREATING",
+                State::Ready => "READY",
+                State::NeedsRepair => "NEEDS_REPAIR",
+            }
+        }
+    }
 }
 /// Represents a single field in the database.
 ///
@@ -151,7 +203,7 @@ pub struct Field {
     ///
     /// Examples:
     /// (Note: Comments here are written in markdown syntax, so there is an
-    ///  additional layer of backticks to represent a code block)
+    ///   additional layer of backticks to represent a code block)
     /// `\`address.city\`` represents a field named `address.city`, not the map key
     /// `city` in the field `address`.
     /// `\`*\`` represents a field named `*`, not any field.
@@ -352,6 +404,7 @@ pub struct ImportDocumentsRequest {
 pub mod firestore_admin_client {
     #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
     use tonic::codegen::*;
+    use tonic::codegen::http::Uri;
     /// Operations are created by service `FirestoreAdmin`, but are accessed via
     /// service `google.longrunning.Operations`.
     #[derive(Debug, Clone)]
@@ -367,6 +420,10 @@ pub mod firestore_admin_client {
     {
         pub fn new(inner: T) -> Self {
             let inner = tonic::client::Grpc::new(inner);
+            Self { inner }
+        }
+        pub fn with_origin(inner: T, origin: Uri) -> Self {
+            let inner = tonic::client::Grpc::with_origin(inner, origin);
             Self { inner }
         }
         pub fn with_interceptor<F>(
@@ -388,19 +445,19 @@ pub mod firestore_admin_client {
         {
             FirestoreAdminClient::new(InterceptedService::new(inner, interceptor))
         }
-        /// Compress requests with `gzip`.
+        /// Compress requests with the given encoding.
         ///
         /// This requires the server to support it otherwise it might respond with an
         /// error.
         #[must_use]
-        pub fn send_gzip(mut self) -> Self {
-            self.inner = self.inner.send_gzip();
+        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.send_compressed(encoding);
             self
         }
-        /// Enable decompressing responses with `gzip`.
+        /// Enable decompressing responses.
         #[must_use]
-        pub fn accept_gzip(mut self) -> Self {
-            self.inner = self.inner.accept_gzip();
+        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.accept_compressed(encoding);
             self
         }
         /// Creates a composite index. This returns a [google.longrunning.Operation][google.longrunning.Operation]
@@ -706,6 +763,19 @@ pub mod field_operation_metadata {
             /// The single field index is being removed.
             Remove = 2,
         }
+        impl ChangeType {
+            /// String value of the enum field names used in the ProtoBuf definition.
+            ///
+            /// The values are not transformed in any way and thus are considered stable
+            /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+            pub fn as_str_name(&self) -> &'static str {
+                match self {
+                    ChangeType::Unspecified => "CHANGE_TYPE_UNSPECIFIED",
+                    ChangeType::Add => "ADD",
+                    ChangeType::Remove => "REMOVE",
+                }
+            }
+        }
     }
 }
 /// Metadata for \[google.longrunning.Operation][google.longrunning.Operation\] results from
@@ -805,4 +875,22 @@ pub enum OperationState {
     /// Request has finished being cancelled after user called
     /// google.longrunning.Operations.CancelOperation.
     Cancelled = 7,
+}
+impl OperationState {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            OperationState::Unspecified => "OPERATION_STATE_UNSPECIFIED",
+            OperationState::Initializing => "INITIALIZING",
+            OperationState::Processing => "PROCESSING",
+            OperationState::Cancelling => "CANCELLING",
+            OperationState::Finalizing => "FINALIZING",
+            OperationState::Successful => "SUCCESSFUL",
+            OperationState::Failed => "FAILED",
+            OperationState::Cancelled => "CANCELLED",
+        }
+    }
 }

@@ -1,3 +1,122 @@
+/// ProtoSchema describes the schema of the serialized protocol buffer data rows.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ProtoSchema {
+    /// Descriptor for input message.  The provided descriptor must be self
+    /// contained, such that data rows sent can be fully decoded using only the
+    /// single descriptor.  For data rows that are compositions of multiple
+    /// independent messages, this means the descriptor may need to be transformed
+    /// to only use nested types:
+    /// <https://developers.google.com/protocol-buffers/docs/proto#nested>
+    ///
+    /// For additional information for how proto types and values map onto BigQuery
+    /// see: <https://cloud.google.com/bigquery/docs/write-api#data_type_conversions>
+    #[prost(message, optional, tag="1")]
+    pub proto_descriptor: ::core::option::Option<::prost_types::DescriptorProto>,
+}
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ProtoRows {
+    /// A sequence of rows serialized as a Protocol Buffer.
+    ///
+    /// See <https://developers.google.com/protocol-buffers/docs/overview> for more
+    /// information on deserializing this field.
+    #[prost(bytes="bytes", repeated, tag="1")]
+    pub serialized_rows: ::prost::alloc::vec::Vec<::prost::bytes::Bytes>,
+}
+/// Arrow schema as specified in
+/// <https://arrow.apache.org/docs/python/api/datatypes.html>
+/// and serialized to bytes using IPC:
+/// <https://arrow.apache.org/docs/format/Columnar.html#serialization-and-interprocess-communication-ipc>
+///
+/// See code samples on how this message can be deserialized.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ArrowSchema {
+    /// IPC serialized Arrow schema.
+    #[prost(bytes="bytes", tag="1")]
+    pub serialized_schema: ::prost::bytes::Bytes,
+}
+/// Arrow RecordBatch.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ArrowRecordBatch {
+    /// IPC-serialized Arrow RecordBatch.
+    #[prost(bytes="bytes", tag="1")]
+    pub serialized_record_batch: ::prost::bytes::Bytes,
+    /// \[Deprecated\] The count of rows in `serialized_record_batch`.
+    /// Please use the format-independent ReadRowsResponse.row_count instead.
+    #[deprecated]
+    #[prost(int64, tag="2")]
+    pub row_count: i64,
+}
+/// Contains options specific to Arrow Serialization.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ArrowSerializationOptions {
+    /// The compression codec to use for Arrow buffers in serialized record
+    /// batches.
+    #[prost(enumeration="arrow_serialization_options::CompressionCodec", tag="2")]
+    pub buffer_compression: i32,
+}
+/// Nested message and enum types in `ArrowSerializationOptions`.
+pub mod arrow_serialization_options {
+    /// Compression codec's supported by Arrow.
+    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+    #[repr(i32)]
+    pub enum CompressionCodec {
+        /// If unspecified no compression will be used.
+        CompressionUnspecified = 0,
+        /// LZ4 Frame (<https://github.com/lz4/lz4/blob/dev/doc/lz4_Frame_format.md>)
+        Lz4Frame = 1,
+        /// Zstandard compression.
+        Zstd = 2,
+    }
+    impl CompressionCodec {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                CompressionCodec::CompressionUnspecified => "COMPRESSION_UNSPECIFIED",
+                CompressionCodec::Lz4Frame => "LZ4_FRAME",
+                CompressionCodec::Zstd => "ZSTD",
+            }
+        }
+    }
+}
+/// Avro schema.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct AvroSchema {
+    /// Json serialized schema, as described at
+    /// <https://avro.apache.org/docs/1.8.1/spec.html.>
+    #[prost(string, tag="1")]
+    pub schema: ::prost::alloc::string::String,
+}
+/// Avro rows.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct AvroRows {
+    /// Binary serialized rows in a block.
+    #[prost(bytes="bytes", tag="1")]
+    pub serialized_binary_rows: ::prost::bytes::Bytes,
+    /// \[Deprecated\] The count of rows in the returning block.
+    /// Please use the format-independent ReadRowsResponse.row_count instead.
+    #[deprecated]
+    #[prost(int64, tag="2")]
+    pub row_count: i64,
+}
+/// Contains options specific to Avro Serialization.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct AvroSerializationOptions {
+    /// Enable displayName attribute in Avro schema.
+    ///
+    /// The Avro specification requires field names to be alphanumeric.  By
+    /// default, in cases when column names do not conform to these requirements
+    /// (e.g. non-ascii unicode codepoints) and Avro is requested as an output
+    /// format, the CreateReadSession call will fail.
+    ///
+    /// Setting this field to true, populates avro field names with a placeholder
+    /// value and populates a "displayName" attribute for every avro field with the
+    /// original column name.
+    #[prost(bool, tag="1")]
+    pub enable_display_name_attribute: bool,
+}
 /// Schema of a table. This schema is a subset of
 /// google.cloud.bigquery.v2.TableSchema containing information necessary to
 /// generate valid message to write to BigQuery.
@@ -54,17 +173,17 @@ pub struct TableFieldSchema {
     /// Values of this NUMERIC or BIGNUMERIC field must be in this range when:
     ///
     /// * Precision (P) and scale (S) are specified:
-    ///   [-10^(P-S) + 10^(-S), 10^(P-S) - 10^(-S)]
+    ///    [-10^(P-S) + 10^(-S), 10^(P-S) - 10^(-S)]
     /// * Precision (P) is specified but not scale (and thus scale is
-    ///   interpreted to be equal to zero):
-    ///   [-10^P + 1, 10^P - 1].
+    ///    interpreted to be equal to zero):
+    ///    [-10^P + 1, 10^P - 1].
     ///
     /// Acceptable values for precision and scale if both are specified:
     ///
     /// * If type = "NUMERIC":
-    ///   1 <= precision - scale <= 29 and 0 <= scale <= 9.
+    ///    1 <= precision - scale <= 29 and 0 <= scale <= 9.
     /// * If type = "BIGNUMERIC":
-    ///   1 <= precision - scale <= 38 and 0 <= scale <= 38.
+    ///    1 <= precision - scale <= 38 and 0 <= scale <= 38.
     ///
     /// Acceptable values for precision if only precision is specified but not
     /// scale (and thus scale is interpreted to be equal to zero):
@@ -117,6 +236,32 @@ pub mod table_field_schema {
         /// JSON, String
         Json = 15,
     }
+    impl Type {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                Type::Unspecified => "TYPE_UNSPECIFIED",
+                Type::String => "STRING",
+                Type::Int64 => "INT64",
+                Type::Double => "DOUBLE",
+                Type::Struct => "STRUCT",
+                Type::Bytes => "BYTES",
+                Type::Bool => "BOOL",
+                Type::Timestamp => "TIMESTAMP",
+                Type::Date => "DATE",
+                Type::Time => "TIME",
+                Type::Datetime => "DATETIME",
+                Type::Geography => "GEOGRAPHY",
+                Type::Numeric => "NUMERIC",
+                Type::Bignumeric => "BIGNUMERIC",
+                Type::Interval => "INTERVAL",
+                Type::Json => "JSON",
+            }
+        }
+    }
     #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
     #[repr(i32)]
     pub enum Mode {
@@ -126,112 +271,20 @@ pub mod table_field_schema {
         Required = 2,
         Repeated = 3,
     }
-}
-/// Arrow schema as specified in
-/// <https://arrow.apache.org/docs/python/api/datatypes.html>
-/// and serialized to bytes using IPC:
-/// <https://arrow.apache.org/docs/format/Columnar.html#serialization-and-interprocess-communication-ipc>
-///
-/// See code samples on how this message can be deserialized.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ArrowSchema {
-    /// IPC serialized Arrow schema.
-    #[prost(bytes="bytes", tag="1")]
-    pub serialized_schema: ::prost::bytes::Bytes,
-}
-/// Arrow RecordBatch.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ArrowRecordBatch {
-    /// IPC-serialized Arrow RecordBatch.
-    #[prost(bytes="bytes", tag="1")]
-    pub serialized_record_batch: ::prost::bytes::Bytes,
-    /// \[Deprecated\] The count of rows in `serialized_record_batch`.
-    /// Please use the format-independent ReadRowsResponse.row_count instead.
-    #[deprecated]
-    #[prost(int64, tag="2")]
-    pub row_count: i64,
-}
-/// Contains options specific to Arrow Serialization.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ArrowSerializationOptions {
-    /// The compression codec to use for Arrow buffers in serialized record
-    /// batches.
-    #[prost(enumeration="arrow_serialization_options::CompressionCodec", tag="2")]
-    pub buffer_compression: i32,
-}
-/// Nested message and enum types in `ArrowSerializationOptions`.
-pub mod arrow_serialization_options {
-    /// Compression codec's supported by Arrow.
-    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
-    #[repr(i32)]
-    pub enum CompressionCodec {
-        /// If unspecified no compression will be used.
-        CompressionUnspecified = 0,
-        /// LZ4 Frame (<https://github.com/lz4/lz4/blob/dev/doc/lz4_Frame_format.md>)
-        Lz4Frame = 1,
-        /// Zstandard compression.
-        Zstd = 2,
+    impl Mode {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                Mode::Unspecified => "MODE_UNSPECIFIED",
+                Mode::Nullable => "NULLABLE",
+                Mode::Required => "REQUIRED",
+                Mode::Repeated => "REPEATED",
+            }
+        }
     }
-}
-/// Avro schema.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct AvroSchema {
-    /// Json serialized schema, as described at
-    /// <https://avro.apache.org/docs/1.8.1/spec.html.>
-    #[prost(string, tag="1")]
-    pub schema: ::prost::alloc::string::String,
-}
-/// Avro rows.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct AvroRows {
-    /// Binary serialized rows in a block.
-    #[prost(bytes="bytes", tag="1")]
-    pub serialized_binary_rows: ::prost::bytes::Bytes,
-    /// \[Deprecated\] The count of rows in the returning block.
-    /// Please use the format-independent ReadRowsResponse.row_count instead.
-    #[deprecated]
-    #[prost(int64, tag="2")]
-    pub row_count: i64,
-}
-/// Contains options specific to Avro Serialization.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct AvroSerializationOptions {
-    /// Enable displayName attribute in Avro schema.
-    ///
-    /// The Avro specification requires field names to be alphanumeric.  By
-    /// default, in cases when column names do not conform to these requirements
-    /// (e.g. non-ascii unicode codepoints) and Avro is requested as an output
-    /// format, the CreateReadSession call will fail.
-    ///
-    /// Setting this field to true, populates avro field names with a placeholder
-    /// value and populates a "displayName" attribute for every avro field with the
-    /// original column name.
-    #[prost(bool, tag="1")]
-    pub enable_display_name_attribute: bool,
-}
-/// ProtoSchema describes the schema of the serialized protocol buffer data rows.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ProtoSchema {
-    /// Descriptor for input message.  The provided descriptor must be self
-    /// contained, such that data rows sent can be fully decoded using only the
-    /// single descriptor.  For data rows that are compositions of multiple
-    /// independent messages, this means the descriptor may need to be transformed
-    /// to only use nested types:
-    /// <https://developers.google.com/protocol-buffers/docs/proto#nested>
-    ///
-    /// For additional information for how proto types and values map onto BigQuery
-    /// see: <https://cloud.google.com/bigquery/docs/write-api#data_type_conversions>
-    #[prost(message, optional, tag="1")]
-    pub proto_descriptor: ::core::option::Option<::prost_types::DescriptorProto>,
-}
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ProtoRows {
-    /// A sequence of rows serialized as a Protocol Buffer.
-    ///
-    /// See <https://developers.google.com/protocol-buffers/docs/overview> for more
-    /// information on deserializing this field.
-    #[prost(bytes="bytes", repeated, tag="1")]
-    pub serialized_rows: ::prost::alloc::vec::Vec<::prost::bytes::Bytes>,
 }
 /// Information about the ReadSession.
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -308,38 +361,38 @@ pub mod read_session {
         ///
         /// As an example, consider a table with the following schema:
         ///
-        ///   {
-        ///       "name": "struct_field",
-        ///       "type": "RECORD",
-        ///       "mode": "NULLABLE",
-        ///       "fields": [
-        ///           {
-        ///               "name": "string_field1",
-        ///               "type": "STRING",
+        ///    {
+        ///        "name": "struct_field",
+        ///        "type": "RECORD",
+        ///        "mode": "NULLABLE",
+        ///        "fields": [
+        ///            {
+        ///                "name": "string_field1",
+        ///                "type": "STRING",
         /// .              "mode": "NULLABLE"
-        ///           },
-        ///           {
-        ///               "name": "string_field2",
-        ///               "type": "STRING",
-        ///               "mode": "NULLABLE"
-        ///           }
-        ///       ]
-        ///   }
+        ///            },
+        ///            {
+        ///                "name": "string_field2",
+        ///                "type": "STRING",
+        ///                "mode": "NULLABLE"
+        ///            }
+        ///        ]
+        ///    }
         ///
         /// Specifying "struct_field" in the selected fields list will result in a
         /// read session schema with the following logical structure:
         ///
-        ///   struct_field {
-        ///       string_field1
-        ///       string_field2
-        ///   }
+        ///    struct_field {
+        ///        string_field1
+        ///        string_field2
+        ///    }
         ///
         /// Specifying "struct_field.string_field1" in the selected fields list will
         /// result in a read session schema with the following logical structure:
         ///
-        ///   struct_field {
-        ///       string_field1
-        ///   }
+        ///    struct_field {
+        ///        string_field1
+        ///    }
         ///
         /// The order of the fields in the read session schema is derived from the
         /// table schema and does not correspond to the order in which the fields are
@@ -350,10 +403,10 @@ pub mod read_session {
         /// Aggregates are not supported.
         ///
         /// Examples: "int_field > 5"
-        ///           "date_field = CAST('2014-9-27' as DATE)"
-        ///           "nullable_field is not NULL"
-        ///           "st_equals(geo_field, st_geofromtext("POINT(2, 2)"))"
-        ///           "numeric_field BETWEEN 1.0 AND 5.0"
+        ///            "date_field = CAST('2014-9-27' as DATE)"
+        ///            "nullable_field is not NULL"
+        ///            "st_equals(geo_field, st_geofromtext("POINT(2, 2)"))"
+        ///            "numeric_field BETWEEN 1.0 AND 5.0"
         ///
         /// Restricted to a maximum length for 1 MB.
         #[prost(string, tag="2")]
@@ -447,6 +500,20 @@ pub mod write_stream {
         /// Data is only visible up to the offset to which it was flushed.
         Buffered = 3,
     }
+    impl Type {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                Type::Unspecified => "TYPE_UNSPECIFIED",
+                Type::Committed => "COMMITTED",
+                Type::Pending => "PENDING",
+                Type::Buffered => "BUFFERED",
+            }
+        }
+    }
     /// Mode enum of the stream.
     #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
     #[repr(i32)]
@@ -456,6 +523,18 @@ pub mod write_stream {
         /// Insert new records into the table.
         /// It is the default value if customers do not specify it.
         Insert = 1,
+    }
+    impl WriteMode {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                WriteMode::Unspecified => "WRITE_MODE_UNSPECIFIED",
+                WriteMode::Insert => "INSERT",
+            }
+        }
     }
 }
 /// Data format for input or output data.
@@ -470,6 +549,19 @@ pub enum DataFormat {
     /// Arrow is a standard open source column-based message format.
     /// See <https://arrow.apache.org/> for more details.
     Arrow = 2,
+}
+impl DataFormat {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            DataFormat::Unspecified => "DATA_FORMAT_UNSPECIFIED",
+            DataFormat::Avro => "AVRO",
+            DataFormat::Arrow => "ARROW",
+        }
+    }
 }
 /// WriteStreamView is a view enum that controls what details about a write
 /// stream should be returned.
@@ -486,6 +578,19 @@ pub enum WriteStreamView {
     /// the schema.  CreateWriteStream returns the full projection of write stream
     /// metadata.
     Full = 2,
+}
+impl WriteStreamView {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            WriteStreamView::Unspecified => "WRITE_STREAM_VIEW_UNSPECIFIED",
+            WriteStreamView::Basic => "BASIC",
+            WriteStreamView::Full => "FULL",
+        }
+    }
 }
 /// Request message for `CreateReadSession`.
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -911,6 +1016,26 @@ pub mod storage_error {
         /// Offset out of range.
         OffsetOutOfRange = 9,
     }
+    impl StorageErrorCode {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                StorageErrorCode::Unspecified => "STORAGE_ERROR_CODE_UNSPECIFIED",
+                StorageErrorCode::TableNotFound => "TABLE_NOT_FOUND",
+                StorageErrorCode::StreamAlreadyCommitted => "STREAM_ALREADY_COMMITTED",
+                StorageErrorCode::StreamNotFound => "STREAM_NOT_FOUND",
+                StorageErrorCode::InvalidStreamType => "INVALID_STREAM_TYPE",
+                StorageErrorCode::InvalidStreamState => "INVALID_STREAM_STATE",
+                StorageErrorCode::StreamFinalized => "STREAM_FINALIZED",
+                StorageErrorCode::SchemaMismatchExtraFields => "SCHEMA_MISMATCH_EXTRA_FIELDS",
+                StorageErrorCode::OffsetAlreadyExists => "OFFSET_ALREADY_EXISTS",
+                StorageErrorCode::OffsetOutOfRange => "OFFSET_OUT_OF_RANGE",
+            }
+        }
+    }
 }
 /// The message that presents row level error info in a request.
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -936,11 +1061,24 @@ pub mod row_error {
         /// One or more fields in the row has errors.
         FieldsError = 1,
     }
+    impl RowErrorCode {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                RowErrorCode::Unspecified => "ROW_ERROR_CODE_UNSPECIFIED",
+                RowErrorCode::FieldsError => "FIELDS_ERROR",
+            }
+        }
+    }
 }
 /// Generated client implementations.
 pub mod big_query_read_client {
     #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
     use tonic::codegen::*;
+    use tonic::codegen::http::Uri;
     /// BigQuery Read API.
     ///
     /// The Read API can be used to read data from BigQuery.
@@ -957,6 +1095,10 @@ pub mod big_query_read_client {
     {
         pub fn new(inner: T) -> Self {
             let inner = tonic::client::Grpc::new(inner);
+            Self { inner }
+        }
+        pub fn with_origin(inner: T, origin: Uri) -> Self {
+            let inner = tonic::client::Grpc::with_origin(inner, origin);
             Self { inner }
         }
         pub fn with_interceptor<F>(
@@ -978,19 +1120,19 @@ pub mod big_query_read_client {
         {
             BigQueryReadClient::new(InterceptedService::new(inner, interceptor))
         }
-        /// Compress requests with `gzip`.
+        /// Compress requests with the given encoding.
         ///
         /// This requires the server to support it otherwise it might respond with an
         /// error.
         #[must_use]
-        pub fn send_gzip(mut self) -> Self {
-            self.inner = self.inner.send_gzip();
+        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.send_compressed(encoding);
             self
         }
-        /// Enable decompressing responses with `gzip`.
+        /// Enable decompressing responses.
         #[must_use]
-        pub fn accept_gzip(mut self) -> Self {
-            self.inner = self.inner.accept_gzip();
+        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.accept_compressed(encoding);
             self
         }
         /// Creates a new read session. A read session divides the contents of a
@@ -1097,6 +1239,7 @@ pub mod big_query_read_client {
 pub mod big_query_write_client {
     #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
     use tonic::codegen::*;
+    use tonic::codegen::http::Uri;
     /// BigQuery Write API.
     ///
     /// The Write API can be used to write data to BigQuery.
@@ -1118,6 +1261,10 @@ pub mod big_query_write_client {
             let inner = tonic::client::Grpc::new(inner);
             Self { inner }
         }
+        pub fn with_origin(inner: T, origin: Uri) -> Self {
+            let inner = tonic::client::Grpc::with_origin(inner, origin);
+            Self { inner }
+        }
         pub fn with_interceptor<F>(
             inner: T,
             interceptor: F,
@@ -1137,19 +1284,19 @@ pub mod big_query_write_client {
         {
             BigQueryWriteClient::new(InterceptedService::new(inner, interceptor))
         }
-        /// Compress requests with `gzip`.
+        /// Compress requests with the given encoding.
         ///
         /// This requires the server to support it otherwise it might respond with an
         /// error.
         #[must_use]
-        pub fn send_gzip(mut self) -> Self {
-            self.inner = self.inner.send_gzip();
+        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.send_compressed(encoding);
             self
         }
-        /// Enable decompressing responses with `gzip`.
+        /// Enable decompressing responses.
         #[must_use]
-        pub fn accept_gzip(mut self) -> Self {
-            self.inner = self.inner.accept_gzip();
+        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.accept_compressed(encoding);
             self
         }
         /// Creates a write stream to the given table.

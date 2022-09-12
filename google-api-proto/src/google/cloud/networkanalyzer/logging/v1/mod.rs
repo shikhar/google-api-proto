@@ -74,6 +74,21 @@ pub mod report {
         Medium = 3,
         Low = 4,
     }
+    impl Priority {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                Priority::SeverityUnspecified => "SEVERITY_UNSPECIFIED",
+                Priority::Critical => "CRITICAL",
+                Priority::High => "HIGH",
+                Priority::Medium => "MEDIUM",
+                Priority::Low => "LOW",
+            }
+        }
+    }
     /// Type of an report.
     #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
     #[repr(i32)]
@@ -83,6 +98,20 @@ pub mod report {
         Warning = 2,
         Error = 3,
     }
+    impl Type {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                Type::ReportTypeUnspecified => "REPORT_TYPE_UNSPECIFIED",
+                Type::Info => "INFO",
+                Type::Warning => "WARNING",
+                Type::Error => "ERROR",
+            }
+        }
+    }
     /// Status of an report.
     #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
     #[repr(i32)]
@@ -91,6 +120,20 @@ pub mod report {
         Active = 1,
         Fixed = 2,
         Dismissed = 3,
+    }
+    impl ReportStatus {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                ReportStatus::Unspecified => "REPORT_STATUS_UNSPECIFIED",
+                ReportStatus::Active => "ACTIVE",
+                ReportStatus::Fixed => "FIXED",
+                ReportStatus::Dismissed => "DISMISSED",
+            }
+        }
     }
     /// Groups of an report.
     #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
@@ -102,6 +145,22 @@ pub mod report {
         KubernetesEngine = 3,
         HybridConnectivity = 4,
         ManagedServices = 5,
+    }
+    impl ReportGroup {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                ReportGroup::CategoryUnspecified => "CATEGORY_UNSPECIFIED",
+                ReportGroup::VpcNetwork => "VPC_NETWORK",
+                ReportGroup::NetworkServices => "NETWORK_SERVICES",
+                ReportGroup::KubernetesEngine => "KUBERNETES_ENGINE",
+                ReportGroup::HybridConnectivity => "HYBRID_CONNECTIVITY",
+                ReportGroup::ManagedServices => "MANAGED_SERVICES",
+            }
+        }
     }
     #[derive(Clone, PartialEq, ::prost::Oneof)]
     pub enum Content {
@@ -149,4 +208,46 @@ pub enum ReportCauseCode {
     LoadBalancerHealthCheckFirewallHealthCheckRangePartiallyBlocked = 1004,
     LoadBalancerBestPracticesBackendServiceBalancingModeBreaksSessionAffinity = 1021,
     LoadBalancerBestPracticesBackendServiceHealthCheckPortMismatch = 1024,
+}
+impl ReportCauseCode {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            ReportCauseCode::Unspecified => "REPORT_CAUSE_CODE_UNSPECIFIED",
+            ReportCauseCode::RouteInvalidNextHopVmIpForwardingDisabled => "ROUTE_INVALID_NEXT_HOP_VM_IP_FORWARDING_DISABLED",
+            ReportCauseCode::RouteInvalidNextHopVmDeleted => "ROUTE_INVALID_NEXT_HOP_VM_DELETED",
+            ReportCauseCode::RouteInvalidNextHopVmStopped => "ROUTE_INVALID_NEXT_HOP_VM_STOPPED",
+            ReportCauseCode::RouteInvalidNextHopIlbMisconfigured => "ROUTE_INVALID_NEXT_HOP_ILB_MISCONFIGURED",
+            ReportCauseCode::RouteInvalidNextHopVpnTunnelDeleted => "ROUTE_INVALID_NEXT_HOP_VPN_TUNNEL_DELETED",
+            ReportCauseCode::RouteInvalidNextHopIlbBackendIpForwardingDisabled => "ROUTE_INVALID_NEXT_HOP_ILB_BACKEND_IP_FORWARDING_DISABLED",
+            ReportCauseCode::IpUtilizationIpAllocationRatioHigh => "IP_UTILIZATION_IP_ALLOCATION_RATIO_HIGH",
+            ReportCauseCode::GkeNodeToControlPlaneBlockedByRoutingIssue => "GKE_NODE_TO_CONTROL_PLANE_BLOCKED_BY_ROUTING_ISSUE",
+            ReportCauseCode::GkeNodeToControlPlanePublicEndpointBlockedByEgressFirewall => "GKE_NODE_TO_CONTROL_PLANE_PUBLIC_ENDPOINT_BLOCKED_BY_EGRESS_FIREWALL",
+            ReportCauseCode::GkeNodeToControlPlanePrivateEndpointBlockedByEgressFirewall => "GKE_NODE_TO_CONTROL_PLANE_PRIVATE_ENDPOINT_BLOCKED_BY_EGRESS_FIREWALL",
+            ReportCauseCode::GkeControlPlaneToNodeBlockedByRoutingIssue => "GKE_CONTROL_PLANE_TO_NODE_BLOCKED_BY_ROUTING_ISSUE",
+            ReportCauseCode::GkeControlPlaneToNodeBlockedByIngressFirewallOnNode => "GKE_CONTROL_PLANE_TO_NODE_BLOCKED_BY_INGRESS_FIREWALL_ON_NODE",
+            ReportCauseCode::GkeIpUtilizationPodRangesAllocationHigh => "GKE_IP_UTILIZATION_POD_RANGES_ALLOCATION_HIGH",
+            ReportCauseCode::GkeIpUtilizationPodRangesAllocationLimitesAutoscaling => "GKE_IP_UTILIZATION_POD_RANGES_ALLOCATION_LIMITES_AUTOSCALING",
+            ReportCauseCode::CloudSqlPrivateIpBlockedByEgressFirewall => "CLOUD_SQL_PRIVATE_IP_BLOCKED_BY_EGRESS_FIREWALL",
+            ReportCauseCode::CloudSqlPrivateIpBlockedByRoutingIssue => "CLOUD_SQL_PRIVATE_IP_BLOCKED_BY_ROUTING_ISSUE",
+            ReportCauseCode::CloudSqlPrivateIpInstanceNotRunning => "CLOUD_SQL_PRIVATE_IP_INSTANCE_NOT_RUNNING",
+            ReportCauseCode::DynamicRouteShadowedFullyShadowedBySubnetRoute => "DYNAMIC_ROUTE_SHADOWED_FULLY_SHADOWED_BY_SUBNET_ROUTE",
+            ReportCauseCode::DynamicRouteShadowedFullyShadowedByPeeringSubnetRoute => "DYNAMIC_ROUTE_SHADOWED_FULLY_SHADOWED_BY_PEERING_SUBNET_ROUTE",
+            ReportCauseCode::DynamicRouteShadowedFullyShadowedByStaticRoute => "DYNAMIC_ROUTE_SHADOWED_FULLY_SHADOWED_BY_STATIC_ROUTE",
+            ReportCauseCode::DynamicRouteShadowedFullyShadowedByPeeringStaticRoute => "DYNAMIC_ROUTE_SHADOWED_FULLY_SHADOWED_BY_PEERING_STATIC_ROUTE",
+            ReportCauseCode::DynamicRouteShadowedPartiallyShadowedBySubnetRoute => "DYNAMIC_ROUTE_SHADOWED_PARTIALLY_SHADOWED_BY_SUBNET_ROUTE",
+            ReportCauseCode::DynamicRouteShadowedPartiallyShadowedByPeeringSubnetRoute => "DYNAMIC_ROUTE_SHADOWED_PARTIALLY_SHADOWED_BY_PEERING_SUBNET_ROUTE",
+            ReportCauseCode::DynamicRouteShadowedPartiallyShadowedByStaticRoute => "DYNAMIC_ROUTE_SHADOWED_PARTIALLY_SHADOWED_BY_STATIC_ROUTE",
+            ReportCauseCode::DynamicRouteShadowedPartiallyShadowedByPeeringStaticRoute => "DYNAMIC_ROUTE_SHADOWED_PARTIALLY_SHADOWED_BY_PEERING_STATIC_ROUTE",
+            ReportCauseCode::LoadBalancerHealthCheckFirewallHealthCheckFirewallNotConfigured => "LOAD_BALANCER_HEALTH_CHECK_FIREWALL_HEALTH_CHECK_FIREWALL_NOT_CONFIGURED",
+            ReportCauseCode::LoadBalancerHealthCheckFirewallHealthCheckRangeBlocked => "LOAD_BALANCER_HEALTH_CHECK_FIREWALL_HEALTH_CHECK_RANGE_BLOCKED",
+            ReportCauseCode::LoadBalancerHealthCheckFirewallFirewallConfigInconsistent => "LOAD_BALANCER_HEALTH_CHECK_FIREWALL_FIREWALL_CONFIG_INCONSISTENT",
+            ReportCauseCode::LoadBalancerHealthCheckFirewallHealthCheckRangePartiallyBlocked => "LOAD_BALANCER_HEALTH_CHECK_FIREWALL_HEALTH_CHECK_RANGE_PARTIALLY_BLOCKED",
+            ReportCauseCode::LoadBalancerBestPracticesBackendServiceBalancingModeBreaksSessionAffinity => "LOAD_BALANCER_BEST_PRACTICES_BACKEND_SERVICE_BALANCING_MODE_BREAKS_SESSION_AFFINITY",
+            ReportCauseCode::LoadBalancerBestPracticesBackendServiceHealthCheckPortMismatch => "LOAD_BALANCER_BEST_PRACTICES_BACKEND_SERVICE_HEALTH_CHECK_PORT_MISMATCH",
+        }
+    }
 }

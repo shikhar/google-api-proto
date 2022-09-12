@@ -129,10 +129,10 @@ pub struct Device {
     ///
     /// Keys may be repeated, and have the following interpretation:
     ///
-    ///    * Status context: the device can support *any* the listed values. For
-    ///    example, an "ISA" property might include "x86", "x86-64" and "sse4".
+    ///     * Status context: the device can support *any* the listed values. For
+    ///     example, an "ISA" property might include "x86", "x86-64" and "sse4".
     ///
-    ///    * Request context: the device *must* support *all* of the listed values.
+    ///     * Request context: the device *must* support *all* of the listed values.
     #[prost(message, repeated, tag="2")]
     pub properties: ::prost::alloc::vec::Vec<device::Property>,
 }
@@ -324,6 +324,21 @@ pub mod admin_temp {
         /// Restart the host computer. `arg` will be a message to log.
         HostRestart = 4,
     }
+    impl Command {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                Command::Unspecified => "UNSPECIFIED",
+                Command::BotUpdate => "BOT_UPDATE",
+                Command::BotRestart => "BOT_RESTART",
+                Command::BotTerminate => "BOT_TERMINATE",
+                Command::HostRestart => "HOST_RESTART",
+            }
+        }
+    }
 }
 /// Request message for CreateBotSession.
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -377,6 +392,22 @@ pub enum BotStatus {
     /// The bot is initializing and is not ready to accept leases.
     Initializing = 5,
 }
+impl BotStatus {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            BotStatus::Unspecified => "BOT_STATUS_UNSPECIFIED",
+            BotStatus::Ok => "OK",
+            BotStatus::Unhealthy => "UNHEALTHY",
+            BotStatus::HostRebooting => "HOST_REBOOTING",
+            BotStatus::BotTerminating => "BOT_TERMINATING",
+            BotStatus::Initializing => "INITIALIZING",
+        }
+    }
+}
 /// The state of the lease. All leases start in the PENDING state. A bot can
 /// change PENDING to ACTIVE or (in the case of an error) COMPLETED, or from
 /// ACTIVE to COMPLETED. The server can change PENDING or ACTIVE to CANCELLED if
@@ -399,10 +430,26 @@ pub enum LeaseState {
     /// the lease. This may only be set by the server.
     Cancelled = 5,
 }
+impl LeaseState {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            LeaseState::Unspecified => "LEASE_STATE_UNSPECIFIED",
+            LeaseState::Pending => "PENDING",
+            LeaseState::Active => "ACTIVE",
+            LeaseState::Completed => "COMPLETED",
+            LeaseState::Cancelled => "CANCELLED",
+        }
+    }
+}
 /// Generated client implementations.
 pub mod bots_client {
     #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
     use tonic::codegen::*;
+    use tonic::codegen::http::Uri;
     /// Design doc: https://goo.gl/oojM5H
     ///
     /// Loosely speaking, the Bots interface monitors a collection of workers (think
@@ -445,6 +492,10 @@ pub mod bots_client {
             let inner = tonic::client::Grpc::new(inner);
             Self { inner }
         }
+        pub fn with_origin(inner: T, origin: Uri) -> Self {
+            let inner = tonic::client::Grpc::with_origin(inner, origin);
+            Self { inner }
+        }
         pub fn with_interceptor<F>(
             inner: T,
             interceptor: F,
@@ -464,19 +515,19 @@ pub mod bots_client {
         {
             BotsClient::new(InterceptedService::new(inner, interceptor))
         }
-        /// Compress requests with `gzip`.
+        /// Compress requests with the given encoding.
         ///
         /// This requires the server to support it otherwise it might respond with an
         /// error.
         #[must_use]
-        pub fn send_gzip(mut self) -> Self {
-            self.inner = self.inner.send_gzip();
+        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.send_compressed(encoding);
             self
         }
-        /// Enable decompressing responses with `gzip`.
+        /// Enable decompressing responses.
         #[must_use]
-        pub fn accept_gzip(mut self) -> Self {
-            self.inner = self.inner.accept_gzip();
+        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.accept_compressed(encoding);
             self
         }
         /// CreateBotSession is called when the bot first joins the farm, and
@@ -660,8 +711,8 @@ pub struct CommandOutputs {
     pub exit_code: i32,
     /// The output files. The blob referenced by the digest should contain
     /// one of the following (implementation-dependent):
-    ///    * A marshalled DirectoryMetadata of the returned filesystem
-    ///    * A LUCI-style .isolated file
+    ///     * A marshalled DirectoryMetadata of the returned filesystem
+    ///     * A LUCI-style .isolated file
     #[prost(message, optional, tag="2")]
     pub outputs: ::core::option::Option<Digest>,
 }
@@ -695,8 +746,8 @@ pub struct CommandResult {
     pub exit_code: i32,
     /// The output files. The blob referenced by the digest should contain
     /// one of the following (implementation-dependent):
-    ///    * A marshalled DirectoryMetadata of the returned filesystem
-    ///    * A LUCI-style .isolated file
+    ///     * A marshalled DirectoryMetadata of the returned filesystem
+    ///     * A LUCI-style .isolated file
     #[prost(message, optional, tag="3")]
     pub outputs: ::core::option::Option<Digest>,
     /// The elapsed time between calling Accept and Complete. The server will also

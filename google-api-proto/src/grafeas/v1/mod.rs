@@ -15,87 +15,21 @@ pub enum Severity {
     /// Critical severity.
     Critical = 5,
 }
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ComplianceNote {
-    /// The title that identifies this compliance check.
-    #[prost(string, tag="1")]
-    pub title: ::prost::alloc::string::String,
-    /// A description about this compliance check.
-    #[prost(string, tag="2")]
-    pub description: ::prost::alloc::string::String,
-    /// The OS and config versions the benchmark applies to.
-    #[prost(message, repeated, tag="3")]
-    pub version: ::prost::alloc::vec::Vec<ComplianceVersion>,
-    /// A rationale for the existence of this compliance check.
-    #[prost(string, tag="4")]
-    pub rationale: ::prost::alloc::string::String,
-    /// A description of remediation steps if the compliance check fails.
-    #[prost(string, tag="5")]
-    pub remediation: ::prost::alloc::string::String,
-    /// Serialized scan instructions with a predefined format.
-    #[prost(bytes="bytes", tag="7")]
-    pub scan_instructions: ::prost::bytes::Bytes,
-    #[prost(oneof="compliance_note::ComplianceType", tags="6")]
-    pub compliance_type: ::core::option::Option<compliance_note::ComplianceType>,
-}
-/// Nested message and enum types in `ComplianceNote`.
-pub mod compliance_note {
-    /// A compliance check that is a CIS benchmark.
-    #[derive(Clone, PartialEq, ::prost::Message)]
-    pub struct CisBenchmark {
-        #[prost(int32, tag="1")]
-        pub profile_level: i32,
-        #[prost(enumeration="super::Severity", tag="2")]
-        pub severity: i32,
+impl Severity {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            Severity::Unspecified => "SEVERITY_UNSPECIFIED",
+            Severity::Minimal => "MINIMAL",
+            Severity::Low => "LOW",
+            Severity::Medium => "MEDIUM",
+            Severity::High => "HIGH",
+            Severity::Critical => "CRITICAL",
+        }
     }
-    #[derive(Clone, PartialEq, ::prost::Oneof)]
-    pub enum ComplianceType {
-        #[prost(message, tag="6")]
-        CisBenchmark(CisBenchmark),
-    }
-}
-/// Describes the CIS benchmark version that is applicable to a given OS and
-/// os version.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ComplianceVersion {
-    /// The CPE URI (<https://cpe.mitre.org/specification/>) this benchmark is
-    /// applicable to.
-    #[prost(string, tag="1")]
-    pub cpe_uri: ::prost::alloc::string::String,
-    /// The name of the document that defines this benchmark, e.g. "CIS
-    /// Container-Optimized OS".
-    #[prost(string, tag="3")]
-    pub benchmark_document: ::prost::alloc::string::String,
-    /// The version of the benchmark. This is set to the version of the OS-specific
-    /// CIS document the benchmark is defined in.
-    #[prost(string, tag="2")]
-    pub version: ::prost::alloc::string::String,
-}
-/// An indication that the compliance checks in the associated ComplianceNote
-/// were not satisfied for particular resources or a specified reason.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ComplianceOccurrence {
-    #[prost(message, repeated, tag="2")]
-    pub non_compliant_files: ::prost::alloc::vec::Vec<NonCompliantFile>,
-    #[prost(string, tag="3")]
-    pub non_compliance_reason: ::prost::alloc::string::String,
-}
-/// Details about files that caused a compliance check to fail.
-///
-/// display_command is a single command that can be used to display a list of
-/// non compliant files. When there is no such command, we can also iterate a
-/// list of non compliant file using 'path'.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct NonCompliantFile {
-    /// Empty if `display_command` is set.
-    #[prost(string, tag="1")]
-    pub path: ::prost::alloc::string::String,
-    /// Command to display the non-compliant files.
-    #[prost(string, tag="2")]
-    pub display_command: ::prost::alloc::string::String,
-    /// Explains why a file is non compliant for a CIS check.
-    #[prost(string, tag="3")]
-    pub reason: ::prost::alloc::string::String,
 }
 /// Metadata for any related URL information.
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -119,9 +53,9 @@ pub struct RelatedUrl {
 /// for quickly selecting a public key ALREADY CONFIGURED on the verifier through
 /// a trusted channel. Verification implementations MUST reject signatures in any
 /// of the following circumstances:
-///   * The `public_key_id` is not recognized by the verifier.
-///   * The public key that `public_key_id` refers to does not verify the
-///     signature with respect to the payload.
+///    * The `public_key_id` is not recognized by the verifier.
+///    * The public key that `public_key_id` refers to does not verify the
+///      signature with respect to the payload.
 ///
 /// The `signature` contents SHOULD NOT be "attached" (where the payload is
 /// included with the serialized `signature` bytes). Verifiers MUST ignore any
@@ -140,22 +74,22 @@ pub struct Signature {
     #[prost(bytes="bytes", tag="1")]
     pub signature: ::prost::bytes::Bytes,
     /// The identifier for the public key that verifies this signature.
-    ///   * The `public_key_id` is required.
-    ///   * The `public_key_id` SHOULD be an RFC3986 conformant URI.
-    ///   * When possible, the `public_key_id` SHOULD be an immutable reference,
-    ///     such as a cryptographic digest.
+    ///    * The `public_key_id` is required.
+    ///    * The `public_key_id` SHOULD be an RFC3986 conformant URI.
+    ///    * When possible, the `public_key_id` SHOULD be an immutable reference,
+    ///      such as a cryptographic digest.
     ///
     /// Examples of valid `public_key_id`s:
     ///
     /// OpenPGP V4 public key fingerprint:
-    ///   * "openpgp4fpr:74FAF3B861BDA0870C7B6DEF607E48D2A663AEEA"
+    ///    * "openpgp4fpr:74FAF3B861BDA0870C7B6DEF607E48D2A663AEEA"
     /// See <https://www.iana.org/assignments/uri-schemes/prov/openpgp4fpr> for more
     /// details on this scheme.
     ///
     /// RFC6920 digest-named SubjectPublicKeyInfo (digest of the DER
     /// serialization):
-    ///   * "ni:///sha-256;cD9o9Cq6LG3jD0iKXqEi_vdjJGecm_iXkbqVoScViaU"
-    ///   * "nih:///sha-256;703f68f42aba2c6de30f488a5ea122fef76324679c9bf89791ba95a1271589a5"
+    ///    * "ni:///sha-256;cD9o9Cq6LG3jD0iKXqEi_vdjJGecm_iXkbqVoScViaU"
+    ///    * "nih:///sha-256;703f68f42aba2c6de30f488a5ea122fef76324679c9bf89791ba95a1271589a5"
     #[prost(string, tag="2")]
     pub public_key_id: ::prost::alloc::string::String,
 }
@@ -237,176 +171,196 @@ pub enum NoteKind {
     /// This represents a DSSE attestation Note
     DsseAttestation = 10,
 }
-/// Common Vulnerability Scoring System version 3.
-/// For details, see <https://www.first.org/cvss/specification-document>
+impl NoteKind {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            NoteKind::Unspecified => "NOTE_KIND_UNSPECIFIED",
+            NoteKind::Vulnerability => "VULNERABILITY",
+            NoteKind::Build => "BUILD",
+            NoteKind::Image => "IMAGE",
+            NoteKind::Package => "PACKAGE",
+            NoteKind::Deployment => "DEPLOYMENT",
+            NoteKind::Discovery => "DISCOVERY",
+            NoteKind::Attestation => "ATTESTATION",
+            NoteKind::Upgrade => "UPGRADE",
+            NoteKind::Compliance => "COMPLIANCE",
+            NoteKind::DsseAttestation => "DSSE_ATTESTATION",
+        }
+    }
+}
+// An attestation wrapper with a PGP-compatible signature. This message only
+// supports `ATTACHED` signatures, where the payload that is signed is included
+// alongside the signature itself in the same file.
+
+/// Note kind that represents a logical attestation "role" or "authority". For
+/// example, an organization might have one `Authority` for "QA" and one for
+/// "build". This note is intended to act strictly as a grouping mechanism for
+/// the attached occurrences (Attestations). This grouping mechanism also
+/// provides a security boundary, since IAM ACLs gate the ability for a principle
+/// to attach an occurrence to a given note. It also provides a single point of
+/// lookup to find all attached attestation occurrences, even if they don't all
+/// live in the same project.
 #[derive(Clone, PartialEq, ::prost::Message)]
-pub struct CvsSv3 {
-    /// The base score is a function of the base metric scores.
-    #[prost(float, tag="1")]
-    pub base_score: f32,
-    #[prost(float, tag="2")]
-    pub exploitability_score: f32,
-    #[prost(float, tag="3")]
-    pub impact_score: f32,
-    /// Base Metrics
-    /// Represents the intrinsic characteristics of a vulnerability that are
-    /// constant over time and across user environments.
-    #[prost(enumeration="cvs_sv3::AttackVector", tag="5")]
-    pub attack_vector: i32,
-    #[prost(enumeration="cvs_sv3::AttackComplexity", tag="6")]
-    pub attack_complexity: i32,
-    #[prost(enumeration="cvs_sv3::PrivilegesRequired", tag="7")]
-    pub privileges_required: i32,
-    #[prost(enumeration="cvs_sv3::UserInteraction", tag="8")]
-    pub user_interaction: i32,
-    #[prost(enumeration="cvs_sv3::Scope", tag="9")]
-    pub scope: i32,
-    #[prost(enumeration="cvs_sv3::Impact", tag="10")]
-    pub confidentiality_impact: i32,
-    #[prost(enumeration="cvs_sv3::Impact", tag="11")]
-    pub integrity_impact: i32,
-    #[prost(enumeration="cvs_sv3::Impact", tag="12")]
-    pub availability_impact: i32,
+pub struct AttestationNote {
+    /// Hint hints at the purpose of the attestation authority.
+    #[prost(message, optional, tag="1")]
+    pub hint: ::core::option::Option<attestation_note::Hint>,
 }
-/// Nested message and enum types in `CVSSv3`.
-pub mod cvs_sv3 {
-    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
-    #[repr(i32)]
-    pub enum AttackVector {
-        Unspecified = 0,
-        Network = 1,
-        Adjacent = 2,
-        Local = 3,
-        Physical = 4,
-    }
-    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
-    #[repr(i32)]
-    pub enum AttackComplexity {
-        Unspecified = 0,
-        Low = 1,
-        High = 2,
-    }
-    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
-    #[repr(i32)]
-    pub enum PrivilegesRequired {
-        Unspecified = 0,
-        None = 1,
-        Low = 2,
-        High = 3,
-    }
-    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
-    #[repr(i32)]
-    pub enum UserInteraction {
-        Unspecified = 0,
-        None = 1,
-        Required = 2,
-    }
-    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
-    #[repr(i32)]
-    pub enum Scope {
-        Unspecified = 0,
-        Unchanged = 1,
-        Changed = 2,
-    }
-    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
-    #[repr(i32)]
-    pub enum Impact {
-        Unspecified = 0,
-        High = 1,
-        Low = 2,
-        None = 3,
+/// Nested message and enum types in `AttestationNote`.
+pub mod attestation_note {
+    /// This submessage provides human-readable hints about the purpose of the
+    /// authority. Because the name of a note acts as its resource reference, it is
+    /// important to disambiguate the canonical name of the Note (which might be a
+    /// UUID for security purposes) from "readable" names more suitable for debug
+    /// output. Note that these hints should not be used to look up authorities in
+    /// security sensitive contexts, such as when looking up attestations to
+    /// verify.
+    #[derive(Clone, PartialEq, ::prost::Message)]
+    pub struct Hint {
+        /// Required. The human readable name of this attestation authority, for
+        /// example "qa".
+        #[prost(string, tag="1")]
+        pub human_readable_name: ::prost::alloc::string::String,
     }
 }
-/// Common Vulnerability Scoring System.
-/// For details, see <https://www.first.org/cvss/specification-document>
-/// This is a message we will try to use for storing various versions of CVSS
-/// rather than making a separate proto for storing a specific version.
 #[derive(Clone, PartialEq, ::prost::Message)]
-pub struct Cvss {
-    /// The base score is a function of the base metric scores.
-    #[prost(float, tag="1")]
-    pub base_score: f32,
-    #[prost(float, tag="2")]
-    pub exploitability_score: f32,
-    #[prost(float, tag="3")]
-    pub impact_score: f32,
-    /// Base Metrics
-    /// Represents the intrinsic characteristics of a vulnerability that are
-    /// constant over time and across user environments.
-    #[prost(enumeration="cvss::AttackVector", tag="4")]
-    pub attack_vector: i32,
-    #[prost(enumeration="cvss::AttackComplexity", tag="5")]
-    pub attack_complexity: i32,
-    #[prost(enumeration="cvss::Authentication", tag="6")]
-    pub authentication: i32,
-    #[prost(enumeration="cvss::PrivilegesRequired", tag="7")]
-    pub privileges_required: i32,
-    #[prost(enumeration="cvss::UserInteraction", tag="8")]
-    pub user_interaction: i32,
-    #[prost(enumeration="cvss::Scope", tag="9")]
-    pub scope: i32,
-    #[prost(enumeration="cvss::Impact", tag="10")]
-    pub confidentiality_impact: i32,
-    #[prost(enumeration="cvss::Impact", tag="11")]
-    pub integrity_impact: i32,
-    #[prost(enumeration="cvss::Impact", tag="12")]
-    pub availability_impact: i32,
+pub struct Jwt {
+    /// The compact encoding of a JWS, which is always three base64 encoded strings
+    /// joined by periods. For details, see:
+    /// <https://tools.ietf.org/html/rfc7515.html#section-3.1>
+    #[prost(string, tag="1")]
+    pub compact_jwt: ::prost::alloc::string::String,
 }
-/// Nested message and enum types in `CVSS`.
-pub mod cvss {
+/// Occurrence that represents a single "attestation". The authenticity of an
+/// attestation can be verified using the attached signature. If the verifier
+/// trusts the public key of the signer, then verifying the signature is
+/// sufficient to establish trust. In this circumstance, the authority to which
+/// this attestation is attached is primarily useful for lookup (how to find
+/// this attestation if you already know the authority and artifact to be
+/// verified) and intent (for which authority this attestation was intended to
+/// sign.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct AttestationOccurrence {
+    /// Required. The serialized payload that is verified by one or more
+    /// `signatures`.
+    #[prost(bytes="bytes", tag="1")]
+    pub serialized_payload: ::prost::bytes::Bytes,
+    /// One or more signatures over `serialized_payload`.  Verifier implementations
+    /// should consider this attestation message verified if at least one
+    /// `signature` verifies `serialized_payload`.  See `Signature` in common.proto
+    /// for more details on signature structure and verification.
+    #[prost(message, repeated, tag="2")]
+    pub signatures: ::prost::alloc::vec::Vec<Signature>,
+    /// One or more JWTs encoding a self-contained attestation.
+    /// Each JWT encodes the payload that it verifies within the JWT itself.
+    /// Verifier implementation SHOULD ignore the `serialized_payload` field
+    /// when verifying these JWTs.
+    /// If only JWTs are present on this AttestationOccurrence, then the
+    /// `serialized_payload` SHOULD be left empty.
+    /// Each JWT SHOULD encode a claim specific to the `resource_uri` of this
+    /// Occurrence, but this is not validated by Grafeas metadata API
+    /// implementations.  The JWT itself is opaque to Grafeas.
+    #[prost(message, repeated, tag="3")]
+    pub jwts: ::prost::alloc::vec::Vec<Jwt>,
+}
+/// A note that indicates a type of analysis a provider would perform. This note
+/// exists in a provider's project. A `Discovery` occurrence is created in a
+/// consumer's project at the start of analysis.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct DiscoveryNote {
+    /// Required. Immutable. The kind of analysis that is handled by this
+    /// discovery.
+    #[prost(enumeration="NoteKind", tag="1")]
+    pub analysis_kind: i32,
+}
+/// Provides information about the analysis status of a discovered resource.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct DiscoveryOccurrence {
+    /// Whether the resource is continuously analyzed.
+    #[prost(enumeration="discovery_occurrence::ContinuousAnalysis", tag="1")]
+    pub continuous_analysis: i32,
+    /// The status of discovery for the resource.
+    #[prost(enumeration="discovery_occurrence::AnalysisStatus", tag="2")]
+    pub analysis_status: i32,
+    /// When an error is encountered this will contain a LocalizedMessage under
+    /// details to show to the user. The LocalizedMessage is output only and
+    /// populated by the API.
+    #[prost(message, optional, tag="3")]
+    pub analysis_status_error: ::core::option::Option<super::super::google::rpc::Status>,
+    /// The CPE of the resource being scanned.
+    #[prost(string, tag="4")]
+    pub cpe: ::prost::alloc::string::String,
+    /// The last time this resource was scanned.
+    #[prost(message, optional, tag="5")]
+    pub last_scan_time: ::core::option::Option<::prost_types::Timestamp>,
+    /// The time occurrences related to this discovery occurrence were archived.
+    #[prost(message, optional, tag="6")]
+    pub archive_time: ::core::option::Option<::prost_types::Timestamp>,
+}
+/// Nested message and enum types in `DiscoveryOccurrence`.
+pub mod discovery_occurrence {
+    /// Whether the resource is continuously analyzed.
     #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
     #[repr(i32)]
-    pub enum AttackVector {
+    pub enum ContinuousAnalysis {
+        /// Unknown.
         Unspecified = 0,
-        Network = 1,
-        Adjacent = 2,
-        Local = 3,
-        Physical = 4,
+        /// The resource is continuously analyzed.
+        Active = 1,
+        /// The resource is ignored for continuous analysis.
+        Inactive = 2,
     }
-    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
-    #[repr(i32)]
-    pub enum AttackComplexity {
-        Unspecified = 0,
-        Low = 1,
-        High = 2,
+    impl ContinuousAnalysis {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                ContinuousAnalysis::Unspecified => "CONTINUOUS_ANALYSIS_UNSPECIFIED",
+                ContinuousAnalysis::Active => "ACTIVE",
+                ContinuousAnalysis::Inactive => "INACTIVE",
+            }
+        }
     }
+    /// Analysis status for a resource. Currently for initial analysis only (not
+    /// updated in continuous analysis).
     #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
     #[repr(i32)]
-    pub enum Authentication {
+    pub enum AnalysisStatus {
+        /// Unknown.
         Unspecified = 0,
-        Multiple = 1,
-        Single = 2,
-        None = 3,
+        /// Resource is known but no action has been taken yet.
+        Pending = 1,
+        /// Resource is being analyzed.
+        Scanning = 2,
+        /// Analysis has finished successfully.
+        FinishedSuccess = 3,
+        /// Analysis has finished unsuccessfully, the analysis itself is in a bad
+        /// state.
+        FinishedFailed = 4,
+        /// The resource is known not to be supported
+        FinishedUnsupported = 5,
     }
-    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
-    #[repr(i32)]
-    pub enum PrivilegesRequired {
-        Unspecified = 0,
-        None = 1,
-        Low = 2,
-        High = 3,
-    }
-    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
-    #[repr(i32)]
-    pub enum UserInteraction {
-        Unspecified = 0,
-        None = 1,
-        Required = 2,
-    }
-    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
-    #[repr(i32)]
-    pub enum Scope {
-        Unspecified = 0,
-        Unchanged = 1,
-        Changed = 2,
-    }
-    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
-    #[repr(i32)]
-    pub enum Impact {
-        Unspecified = 0,
-        High = 1,
-        Low = 2,
-        None = 3,
+    impl AnalysisStatus {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                AnalysisStatus::Unspecified => "ANALYSIS_STATUS_UNSPECIFIED",
+                AnalysisStatus::Pending => "PENDING",
+                AnalysisStatus::Scanning => "SCANNING",
+                AnalysisStatus::FinishedSuccess => "FINISHED_SUCCESS",
+                AnalysisStatus::FinishedFailed => "FINISHED_FAILED",
+                AnalysisStatus::FinishedUnsupported => "FINISHED_UNSUPPORTED",
+            }
+        }
     }
 }
 /// This represents a particular channel of distribution for a given package.
@@ -568,6 +522,20 @@ pub mod version {
         /// A special version representing positive infinity.
         Maximum = 3,
     }
+    impl VersionKind {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                VersionKind::Unspecified => "VERSION_KIND_UNSPECIFIED",
+                VersionKind::Normal => "NORMAL",
+                VersionKind::Minimum => "MINIMUM",
+                VersionKind::Maximum => "MAXIMUM",
+            }
+        }
+    }
 }
 /// Instruction set architectures supported by various package managers.
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
@@ -580,307 +548,135 @@ pub enum Architecture {
     /// X64 architecture.
     X64 = 2,
 }
-/// A security vulnerability that can be found in resources.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct VulnerabilityNote {
-    /// The CVSS score of this vulnerability. CVSS score is on a scale of 0 - 10
-    /// where 0 indicates low severity and 10 indicates high severity.
-    #[prost(float, tag="1")]
-    pub cvss_score: f32,
-    /// The note provider assigned severity of this vulnerability.
-    #[prost(enumeration="Severity", tag="2")]
-    pub severity: i32,
-    /// Details of all known distros and packages affected by this vulnerability.
-    #[prost(message, repeated, tag="3")]
-    pub details: ::prost::alloc::vec::Vec<vulnerability_note::Detail>,
-    /// The full description of the CVSSv3 for this vulnerability.
-    #[prost(message, optional, tag="4")]
-    pub cvss_v3: ::core::option::Option<CvsSv3>,
-    /// Windows details get their own format because the information format and
-    /// model don't match a normal detail. Specifically Windows updates are done as
-    /// patches, thus Windows vulnerabilities really are a missing package, rather
-    /// than a package being at an incorrect version.
-    #[prost(message, repeated, tag="5")]
-    pub windows_details: ::prost::alloc::vec::Vec<vulnerability_note::WindowsDetail>,
-    /// The time this information was last changed at the source. This is an
-    /// upstream timestamp from the underlying information source - e.g. Ubuntu
-    /// security tracker.
-    #[prost(message, optional, tag="6")]
-    pub source_update_time: ::core::option::Option<::prost_types::Timestamp>,
-}
-/// Nested message and enum types in `VulnerabilityNote`.
-pub mod vulnerability_note {
-    /// A detail for a distro and package affected by this vulnerability and its
-    /// associated fix (if one is available).
-    #[derive(Clone, PartialEq, ::prost::Message)]
-    pub struct Detail {
-        /// The distro assigned severity of this vulnerability.
-        #[prost(string, tag="1")]
-        pub severity_name: ::prost::alloc::string::String,
-        /// A vendor-specific description of this vulnerability.
-        #[prost(string, tag="2")]
-        pub description: ::prost::alloc::string::String,
-        /// The type of package; whether native or non native (e.g., ruby gems,
-        /// node.js packages, etc.).
-        #[prost(string, tag="3")]
-        pub package_type: ::prost::alloc::string::String,
-        /// Required. The [CPE URI](<https://cpe.mitre.org/specification/>) this
-        /// vulnerability affects.
-        #[prost(string, tag="4")]
-        pub affected_cpe_uri: ::prost::alloc::string::String,
-        /// Required. The package this vulnerability affects.
-        #[prost(string, tag="5")]
-        pub affected_package: ::prost::alloc::string::String,
-        /// The version number at the start of an interval in which this
-        /// vulnerability exists. A vulnerability can affect a package between
-        /// version numbers that are disjoint sets of intervals (example:
-        /// \[1.0.0-1.1.0\], \[2.4.6-2.4.8\] and \[4.5.6-4.6.8\]) each of which will be
-        /// represented in its own Detail. If a specific affected version is provided
-        /// by a vulnerability database, affected_version_start and
-        /// affected_version_end will be the same in that Detail.
-        #[prost(message, optional, tag="6")]
-        pub affected_version_start: ::core::option::Option<super::Version>,
-        /// The version number at the end of an interval in which this vulnerability
-        /// exists. A vulnerability can affect a package between version numbers
-        /// that are disjoint sets of intervals (example: \[1.0.0-1.1.0\],
-        /// \[2.4.6-2.4.8\] and \[4.5.6-4.6.8\]) each of which will be represented in its
-        /// own Detail. If a specific affected version is provided by a vulnerability
-        /// database, affected_version_start and affected_version_end will be the
-        /// same in that Detail.
-        #[prost(message, optional, tag="7")]
-        pub affected_version_end: ::core::option::Option<super::Version>,
-        /// The distro recommended [CPE URI](<https://cpe.mitre.org/specification/>)
-        /// to update to that contains a fix for this vulnerability. It is possible
-        /// for this to be different from the affected_cpe_uri.
-        #[prost(string, tag="8")]
-        pub fixed_cpe_uri: ::prost::alloc::string::String,
-        /// The distro recommended package to update to that contains a fix for this
-        /// vulnerability. It is possible for this to be different from the
-        /// affected_package.
-        #[prost(string, tag="9")]
-        pub fixed_package: ::prost::alloc::string::String,
-        /// The distro recommended version to update to that contains a
-        /// fix for this vulnerability. Setting this to VersionKind.MAXIMUM means no
-        /// such version is yet available.
-        #[prost(message, optional, tag="10")]
-        pub fixed_version: ::core::option::Option<super::Version>,
-        /// Whether this detail is obsolete. Occurrences are expected not to point to
-        /// obsolete details.
-        #[prost(bool, tag="11")]
-        pub is_obsolete: bool,
-        /// The time this information was last changed at the source. This is an
-        /// upstream timestamp from the underlying information source - e.g. Ubuntu
-        /// security tracker.
-        #[prost(message, optional, tag="12")]
-        pub source_update_time: ::core::option::Option<::prost_types::Timestamp>,
-        /// The source from which the information in this Detail was obtained.
-        #[prost(string, tag="13")]
-        pub source: ::prost::alloc::string::String,
-        /// The name of the vendor of the product.
-        #[prost(string, tag="14")]
-        pub vendor: ::prost::alloc::string::String,
-    }
-    #[derive(Clone, PartialEq, ::prost::Message)]
-    pub struct WindowsDetail {
-        /// Required. The [CPE URI](<https://cpe.mitre.org/specification/>) this
-        /// vulnerability affects.
-        #[prost(string, tag="1")]
-        pub cpe_uri: ::prost::alloc::string::String,
-        /// Required. The name of this vulnerability.
-        #[prost(string, tag="2")]
-        pub name: ::prost::alloc::string::String,
-        /// The description of this vulnerability.
-        #[prost(string, tag="3")]
-        pub description: ::prost::alloc::string::String,
-        /// Required. The names of the KBs which have hotfixes to mitigate this
-        /// vulnerability. Note that there may be multiple hotfixes (and thus
-        /// multiple KBs) that mitigate a given vulnerability. Currently any listed
-        /// KBs presence is considered a fix.
-        #[prost(message, repeated, tag="4")]
-        pub fixing_kbs: ::prost::alloc::vec::Vec<windows_detail::KnowledgeBase>,
-    }
-    /// Nested message and enum types in `WindowsDetail`.
-    pub mod windows_detail {
-        #[derive(Clone, PartialEq, ::prost::Message)]
-        pub struct KnowledgeBase {
-            /// The KB name (generally of the form KB\[0-9\]+ (e.g., KB123456)).
-            #[prost(string, tag="1")]
-            pub name: ::prost::alloc::string::String,
-            /// A link to the KB in the [Windows update catalog]
-            /// (<https://www.catalog.update.microsoft.com/>).
-            #[prost(string, tag="2")]
-            pub url: ::prost::alloc::string::String,
+impl Architecture {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            Architecture::Unspecified => "ARCHITECTURE_UNSPECIFIED",
+            Architecture::X86 => "X86",
+            Architecture::X64 => "X64",
         }
     }
 }
-/// An occurrence of a severity vulnerability on a resource.
+/// An Upgrade Note represents a potential upgrade of a package to a given
+/// version. For each package version combination (i.e. bash 4.0, bash 4.1,
+/// bash 4.1.2), there will be an Upgrade Note. For Windows, windows_update field
+/// represents the information related to the update.
 #[derive(Clone, PartialEq, ::prost::Message)]
-pub struct VulnerabilityOccurrence {
-    /// The type of package; whether native or non native (e.g., ruby gems, node.js
-    /// packages, etc.).
+pub struct UpgradeNote {
+    /// Required for non-Windows OS. The package this Upgrade is for.
     #[prost(string, tag="1")]
-    pub r#type: ::prost::alloc::string::String,
-    /// Output only. The note provider assigned severity of this vulnerability.
-    #[prost(enumeration="Severity", tag="2")]
-    pub severity: i32,
-    /// Output only. The CVSS score of this vulnerability. CVSS score is on a
-    /// scale of 0 - 10 where 0 indicates low severity and 10 indicates high
-    /// severity.
-    #[prost(float, tag="3")]
-    pub cvss_score: f32,
-    /// The cvss v3 score for the vulnerability.
-    #[prost(message, optional, tag="10")]
-    pub cvssv3: ::core::option::Option<Cvss>,
-    /// Required. The set of affected locations and their fixes (if available)
-    /// within the associated resource.
-    #[prost(message, repeated, tag="4")]
-    pub package_issue: ::prost::alloc::vec::Vec<vulnerability_occurrence::PackageIssue>,
-    /// Output only. A one sentence description of this vulnerability.
-    #[prost(string, tag="5")]
-    pub short_description: ::prost::alloc::string::String,
-    /// Output only. A detailed description of this vulnerability.
-    #[prost(string, tag="6")]
-    pub long_description: ::prost::alloc::string::String,
-    /// Output only. URLs related to this vulnerability.
-    #[prost(message, repeated, tag="7")]
-    pub related_urls: ::prost::alloc::vec::Vec<RelatedUrl>,
-    /// The distro assigned severity for this vulnerability when it is available,
-    /// otherwise this is the note provider assigned severity.
-    ///
-    /// When there are multiple PackageIssues for this vulnerability, they can have
-    /// different effective severities because some might be provided by the distro
-    /// while others are provided by the language ecosystem for a language pack.
-    /// For this reason, it is advised to use the effective severity on the
-    /// PackageIssue level. In the case where multiple PackageIssues have differing
-    /// effective severities, this field should be the highest severity for any of
-    /// the PackageIssues.
-    #[prost(enumeration="Severity", tag="8")]
-    pub effective_severity: i32,
-    /// Output only. Whether at least one of the affected packages has a fix
-    /// available.
-    #[prost(bool, tag="9")]
-    pub fix_available: bool,
-}
-/// Nested message and enum types in `VulnerabilityOccurrence`.
-pub mod vulnerability_occurrence {
-    /// A detail for a distro and package this vulnerability occurrence was found
-    /// in and its associated fix (if one is available).
-    #[derive(Clone, PartialEq, ::prost::Message)]
-    pub struct PackageIssue {
-        /// Required. The [CPE URI](<https://cpe.mitre.org/specification/>) this
-        /// vulnerability was found in.
-        #[prost(string, tag="1")]
-        pub affected_cpe_uri: ::prost::alloc::string::String,
-        /// Required. The package this vulnerability was found in.
-        #[prost(string, tag="2")]
-        pub affected_package: ::prost::alloc::string::String,
-        /// Required. The version of the package that is installed on the resource
-        /// affected by this vulnerability.
-        #[prost(message, optional, tag="3")]
-        pub affected_version: ::core::option::Option<super::Version>,
-        /// The [CPE URI](<https://cpe.mitre.org/specification/>) this vulnerability
-        /// was fixed in. It is possible for this to be different from the
-        /// affected_cpe_uri.
-        #[prost(string, tag="4")]
-        pub fixed_cpe_uri: ::prost::alloc::string::String,
-        /// The package this vulnerability was fixed in. It is possible for this to
-        /// be different from the affected_package.
-        #[prost(string, tag="5")]
-        pub fixed_package: ::prost::alloc::string::String,
-        /// Required. The version of the package this vulnerability was fixed in.
-        /// Setting this to VersionKind.MAXIMUM means no fix is yet available.
-        #[prost(message, optional, tag="6")]
-        pub fixed_version: ::core::option::Option<super::Version>,
-        /// Output only. Whether a fix is available for this package.
-        #[prost(bool, tag="7")]
-        pub fix_available: bool,
-        /// The type of package (e.g. OS, MAVEN, GO).
-        #[prost(string, tag="8")]
-        pub package_type: ::prost::alloc::string::String,
-        /// The distro or language system assigned severity for this vulnerability
-        /// when that is available and note provider assigned severity when it is not
-        /// available.
-        #[prost(enumeration="super::Severity", tag="9")]
-        pub effective_severity: i32,
-        /// The location at which this package was found.
-        #[prost(message, repeated, tag="10")]
-        pub file_location: ::prost::alloc::vec::Vec<super::FileLocation>,
-    }
-}
-// An attestation wrapper with a PGP-compatible signature. This message only
-// supports `ATTACHED` signatures, where the payload that is signed is included
-// alongside the signature itself in the same file.
-
-/// Note kind that represents a logical attestation "role" or "authority". For
-/// example, an organization might have one `Authority` for "QA" and one for
-/// "build". This note is intended to act strictly as a grouping mechanism for
-/// the attached occurrences (Attestations). This grouping mechanism also
-/// provides a security boundary, since IAM ACLs gate the ability for a principle
-/// to attach an occurrence to a given note. It also provides a single point of
-/// lookup to find all attached attestation occurrences, even if they don't all
-/// live in the same project.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct AttestationNote {
-    /// Hint hints at the purpose of the attestation authority.
-    #[prost(message, optional, tag="1")]
-    pub hint: ::core::option::Option<attestation_note::Hint>,
-}
-/// Nested message and enum types in `AttestationNote`.
-pub mod attestation_note {
-    /// This submessage provides human-readable hints about the purpose of the
-    /// authority. Because the name of a note acts as its resource reference, it is
-    /// important to disambiguate the canonical name of the Note (which might be a
-    /// UUID for security purposes) from "readable" names more suitable for debug
-    /// output. Note that these hints should not be used to look up authorities in
-    /// security sensitive contexts, such as when looking up attestations to
-    /// verify.
-    #[derive(Clone, PartialEq, ::prost::Message)]
-    pub struct Hint {
-        /// Required. The human readable name of this attestation authority, for
-        /// example "qa".
-        #[prost(string, tag="1")]
-        pub human_readable_name: ::prost::alloc::string::String,
-    }
-}
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct Jwt {
-    /// The compact encoding of a JWS, which is always three base64 encoded strings
-    /// joined by periods. For details, see:
-    /// <https://tools.ietf.org/html/rfc7515.html#section-3.1>
-    #[prost(string, tag="1")]
-    pub compact_jwt: ::prost::alloc::string::String,
-}
-/// Occurrence that represents a single "attestation". The authenticity of an
-/// attestation can be verified using the attached signature. If the verifier
-/// trusts the public key of the signer, then verifying the signature is
-/// sufficient to establish trust. In this circumstance, the authority to which
-/// this attestation is attached is primarily useful for lookup (how to find
-/// this attestation if you already know the authority and artifact to be
-/// verified) and intent (for which authority this attestation was intended to
-/// sign.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct AttestationOccurrence {
-    /// Required. The serialized payload that is verified by one or more
-    /// `signatures`.
-    #[prost(bytes="bytes", tag="1")]
-    pub serialized_payload: ::prost::bytes::Bytes,
-    /// One or more signatures over `serialized_payload`.  Verifier implementations
-    /// should consider this attestation message verified if at least one
-    /// `signature` verifies `serialized_payload`.  See `Signature` in common.proto
-    /// for more details on signature structure and verification.
-    #[prost(message, repeated, tag="2")]
-    pub signatures: ::prost::alloc::vec::Vec<Signature>,
-    /// One or more JWTs encoding a self-contained attestation.
-    /// Each JWT encodes the payload that it verifies within the JWT itself.
-    /// Verifier implementation SHOULD ignore the `serialized_payload` field
-    /// when verifying these JWTs.
-    /// If only JWTs are present on this AttestationOccurrence, then the
-    /// `serialized_payload` SHOULD be left empty.
-    /// Each JWT SHOULD encode a claim specific to the `resource_uri` of this
-    /// Occurrence, but this is not validated by Grafeas metadata API
-    /// implementations.  The JWT itself is opaque to Grafeas.
+    pub package: ::prost::alloc::string::String,
+    /// Required for non-Windows OS. The version of the package in machine + human
+    /// readable form.
+    #[prost(message, optional, tag="2")]
+    pub version: ::core::option::Option<Version>,
+    /// Metadata about the upgrade for each specific operating system.
     #[prost(message, repeated, tag="3")]
-    pub jwts: ::prost::alloc::vec::Vec<Jwt>,
+    pub distributions: ::prost::alloc::vec::Vec<UpgradeDistribution>,
+    /// Required for Windows OS. Represents the metadata about the Windows update.
+    #[prost(message, optional, tag="4")]
+    pub windows_update: ::core::option::Option<WindowsUpdate>,
+}
+/// The Upgrade Distribution represents metadata about the Upgrade for each
+/// operating system (CPE). Some distributions have additional metadata around
+/// updates, classifying them into various categories and severities.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct UpgradeDistribution {
+    /// Required - The specific operating system this metadata applies to. See
+    /// <https://cpe.mitre.org/specification/.>
+    #[prost(string, tag="1")]
+    pub cpe_uri: ::prost::alloc::string::String,
+    /// The operating system classification of this Upgrade, as specified by the
+    /// upstream operating system upgrade feed. For Windows the classification is
+    /// one of the category_ids listed at
+    /// <https://docs.microsoft.com/en-us/previous-versions/windows/desktop/ff357803(v=vs.85>)
+    #[prost(string, tag="2")]
+    pub classification: ::prost::alloc::string::String,
+    /// The severity as specified by the upstream operating system.
+    #[prost(string, tag="3")]
+    pub severity: ::prost::alloc::string::String,
+    /// The cve tied to this Upgrade.
+    #[prost(string, repeated, tag="4")]
+    pub cve: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
+}
+/// Windows Update represents the metadata about the update for the Windows
+/// operating system. The fields in this message come from the Windows Update API
+/// documented at
+/// <https://docs.microsoft.com/en-us/windows/win32/api/wuapi/nn-wuapi-iupdate.>
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct WindowsUpdate {
+    /// Required - The unique identifier for the update.
+    #[prost(message, optional, tag="1")]
+    pub identity: ::core::option::Option<windows_update::Identity>,
+    /// The localized title of the update.
+    #[prost(string, tag="2")]
+    pub title: ::prost::alloc::string::String,
+    /// The localized description of the update.
+    #[prost(string, tag="3")]
+    pub description: ::prost::alloc::string::String,
+    /// The list of categories to which the update belongs.
+    #[prost(message, repeated, tag="4")]
+    pub categories: ::prost::alloc::vec::Vec<windows_update::Category>,
+    /// The Microsoft Knowledge Base article IDs that are associated with the
+    /// update.
+    #[prost(string, repeated, tag="5")]
+    pub kb_article_ids: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
+    /// The hyperlink to the support information for the update.
+    #[prost(string, tag="6")]
+    pub support_url: ::prost::alloc::string::String,
+    /// The last published timestamp of the update.
+    #[prost(message, optional, tag="7")]
+    pub last_published_timestamp: ::core::option::Option<::prost_types::Timestamp>,
+}
+/// Nested message and enum types in `WindowsUpdate`.
+pub mod windows_update {
+    /// The unique identifier of the update.
+    #[derive(Clone, PartialEq, ::prost::Message)]
+    pub struct Identity {
+        /// The revision independent identifier of the update.
+        #[prost(string, tag="1")]
+        pub update_id: ::prost::alloc::string::String,
+        /// The revision number of the update.
+        #[prost(int32, tag="2")]
+        pub revision: i32,
+    }
+    /// The category to which the update belongs.
+    #[derive(Clone, PartialEq, ::prost::Message)]
+    pub struct Category {
+        /// The identifier of the category.
+        #[prost(string, tag="1")]
+        pub category_id: ::prost::alloc::string::String,
+        /// The localized name of the category.
+        #[prost(string, tag="2")]
+        pub name: ::prost::alloc::string::String,
+    }
+}
+/// An Upgrade Occurrence represents that a specific resource_url could install a
+/// specific upgrade. This presence is supplied via local sources (i.e. it is
+/// present in the mirror and the running system has noticed its availability).
+/// For Windows, both distribution and windows_update contain information for the
+/// Windows update.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct UpgradeOccurrence {
+    /// Required for non-Windows OS. The package this Upgrade is for.
+    #[prost(string, tag="1")]
+    pub package: ::prost::alloc::string::String,
+    /// Required for non-Windows OS. The version of the package in a machine +
+    /// human readable form.
+    #[prost(message, optional, tag="3")]
+    pub parsed_version: ::core::option::Option<Version>,
+    /// Metadata about the upgrade for available for the specific operating system
+    /// for the resource_url. This allows efficient filtering, as well as
+    /// making it easier to use the occurrence.
+    #[prost(message, optional, tag="4")]
+    pub distribution: ::core::option::Option<UpgradeDistribution>,
+    /// Required for Windows OS. Represents the metadata about the Windows update.
+    #[prost(message, optional, tag="5")]
+    pub windows_update: ::core::option::Option<WindowsUpdate>,
 }
 // Spec defined at
 // <https://github.com/in-toto/attestation/blob/main/spec/predicates/provenance.md>
@@ -1226,6 +1022,130 @@ pub struct Subject {
     #[prost(btree_map="string, string", tag="2")]
     pub digest: ::prost::alloc::collections::BTreeMap<::prost::alloc::string::String, ::prost::alloc::string::String>,
 }
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct DsseAttestationNote {
+    /// DSSEHint hints at the purpose of the attestation authority.
+    #[prost(message, optional, tag="1")]
+    pub hint: ::core::option::Option<dsse_attestation_note::DsseHint>,
+}
+/// Nested message and enum types in `DSSEAttestationNote`.
+pub mod dsse_attestation_note {
+    /// This submessage provides human-readable hints about the purpose of the
+    /// authority. Because the name of a note acts as its resource reference, it is
+    /// important to disambiguate the canonical name of the Note (which might be a
+    /// UUID for security purposes) from "readable" names more suitable for debug
+    /// output. Note that these hints should not be used to look up authorities in
+    /// security sensitive contexts, such as when looking up attestations to
+    /// verify.
+    #[derive(Clone, PartialEq, ::prost::Message)]
+    pub struct DsseHint {
+        /// Required. The human readable name of this attestation authority, for
+        /// example "cloudbuild-prod".
+        #[prost(string, tag="1")]
+        pub human_readable_name: ::prost::alloc::string::String,
+    }
+}
+/// Deprecated. Prefer to use a regular Occurrence, and populate the
+/// Envelope at the top level of the Occurrence.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct DsseAttestationOccurrence {
+    /// If doing something security critical, make sure to verify the signatures in
+    /// this metadata.
+    #[prost(message, optional, tag="1")]
+    pub envelope: ::core::option::Option<Envelope>,
+    #[prost(oneof="dsse_attestation_occurrence::DecodedPayload", tags="2")]
+    pub decoded_payload: ::core::option::Option<dsse_attestation_occurrence::DecodedPayload>,
+}
+/// Nested message and enum types in `DSSEAttestationOccurrence`.
+pub mod dsse_attestation_occurrence {
+    #[derive(Clone, PartialEq, ::prost::Oneof)]
+    pub enum DecodedPayload {
+        #[prost(message, tag="2")]
+        Statement(super::InTotoStatement),
+    }
+}
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ComplianceNote {
+    /// The title that identifies this compliance check.
+    #[prost(string, tag="1")]
+    pub title: ::prost::alloc::string::String,
+    /// A description about this compliance check.
+    #[prost(string, tag="2")]
+    pub description: ::prost::alloc::string::String,
+    /// The OS and config versions the benchmark applies to.
+    #[prost(message, repeated, tag="3")]
+    pub version: ::prost::alloc::vec::Vec<ComplianceVersion>,
+    /// A rationale for the existence of this compliance check.
+    #[prost(string, tag="4")]
+    pub rationale: ::prost::alloc::string::String,
+    /// A description of remediation steps if the compliance check fails.
+    #[prost(string, tag="5")]
+    pub remediation: ::prost::alloc::string::String,
+    /// Serialized scan instructions with a predefined format.
+    #[prost(bytes="bytes", tag="7")]
+    pub scan_instructions: ::prost::bytes::Bytes,
+    #[prost(oneof="compliance_note::ComplianceType", tags="6")]
+    pub compliance_type: ::core::option::Option<compliance_note::ComplianceType>,
+}
+/// Nested message and enum types in `ComplianceNote`.
+pub mod compliance_note {
+    /// A compliance check that is a CIS benchmark.
+    #[derive(Clone, PartialEq, ::prost::Message)]
+    pub struct CisBenchmark {
+        #[prost(int32, tag="1")]
+        pub profile_level: i32,
+        #[prost(enumeration="super::Severity", tag="2")]
+        pub severity: i32,
+    }
+    #[derive(Clone, PartialEq, ::prost::Oneof)]
+    pub enum ComplianceType {
+        #[prost(message, tag="6")]
+        CisBenchmark(CisBenchmark),
+    }
+}
+/// Describes the CIS benchmark version that is applicable to a given OS and
+/// os version.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ComplianceVersion {
+    /// The CPE URI (<https://cpe.mitre.org/specification/>) this benchmark is
+    /// applicable to.
+    #[prost(string, tag="1")]
+    pub cpe_uri: ::prost::alloc::string::String,
+    /// The name of the document that defines this benchmark, e.g. "CIS
+    /// Container-Optimized OS".
+    #[prost(string, tag="3")]
+    pub benchmark_document: ::prost::alloc::string::String,
+    /// The version of the benchmark. This is set to the version of the OS-specific
+    /// CIS document the benchmark is defined in.
+    #[prost(string, tag="2")]
+    pub version: ::prost::alloc::string::String,
+}
+/// An indication that the compliance checks in the associated ComplianceNote
+/// were not satisfied for particular resources or a specified reason.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ComplianceOccurrence {
+    #[prost(message, repeated, tag="2")]
+    pub non_compliant_files: ::prost::alloc::vec::Vec<NonCompliantFile>,
+    #[prost(string, tag="3")]
+    pub non_compliance_reason: ::prost::alloc::string::String,
+}
+/// Details about files that caused a compliance check to fail.
+///
+/// display_command is a single command that can be used to display a list of
+/// non compliant files. When there is no such command, we can also iterate a
+/// list of non compliant file using 'path'.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct NonCompliantFile {
+    /// Empty if `display_command` is set.
+    #[prost(string, tag="1")]
+    pub path: ::prost::alloc::string::String,
+    /// Command to display the non-compliant files.
+    #[prost(string, tag="2")]
+    pub display_command: ::prost::alloc::string::String,
+    /// Explains why a file is non compliant for a CIS check.
+    #[prost(string, tag="3")]
+    pub reason: ::prost::alloc::string::String,
+}
 /// Provenance of a build. Contains all information needed to verify the full
 /// details about the build from source to completion.
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -1415,6 +1335,20 @@ pub mod alias_context {
         /// ref named "refs/foo/bar".
         Other = 4,
     }
+    impl Kind {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                Kind::Unspecified => "KIND_UNSPECIFIED",
+                Kind::Fixed => "FIXED",
+                Kind::Movable => "MOVABLE",
+                Kind::Other => "OTHER",
+            }
+        }
+    }
 }
 /// A CloudRepoSourceContext denotes a particular revision in a Google Cloud
 /// Source Repo.
@@ -1602,114 +1536,19 @@ pub mod deployment_occurrence {
         /// Custom user-defined platform.
         Custom = 3,
     }
-}
-/// A note that indicates a type of analysis a provider would perform. This note
-/// exists in a provider's project. A `Discovery` occurrence is created in a
-/// consumer's project at the start of analysis.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct DiscoveryNote {
-    /// Required. Immutable. The kind of analysis that is handled by this
-    /// discovery.
-    #[prost(enumeration="NoteKind", tag="1")]
-    pub analysis_kind: i32,
-}
-/// Provides information about the analysis status of a discovered resource.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct DiscoveryOccurrence {
-    /// Whether the resource is continuously analyzed.
-    #[prost(enumeration="discovery_occurrence::ContinuousAnalysis", tag="1")]
-    pub continuous_analysis: i32,
-    /// The status of discovery for the resource.
-    #[prost(enumeration="discovery_occurrence::AnalysisStatus", tag="2")]
-    pub analysis_status: i32,
-    /// When an error is encountered this will contain a LocalizedMessage under
-    /// details to show to the user. The LocalizedMessage is output only and
-    /// populated by the API.
-    #[prost(message, optional, tag="3")]
-    pub analysis_status_error: ::core::option::Option<super::super::google::rpc::Status>,
-    /// The CPE of the resource being scanned.
-    #[prost(string, tag="4")]
-    pub cpe: ::prost::alloc::string::String,
-    /// The last time this resource was scanned.
-    #[prost(message, optional, tag="5")]
-    pub last_scan_time: ::core::option::Option<::prost_types::Timestamp>,
-    /// The time occurrences related to this discovery occurrence were archived.
-    #[prost(message, optional, tag="6")]
-    pub archive_time: ::core::option::Option<::prost_types::Timestamp>,
-}
-/// Nested message and enum types in `DiscoveryOccurrence`.
-pub mod discovery_occurrence {
-    /// Whether the resource is continuously analyzed.
-    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
-    #[repr(i32)]
-    pub enum ContinuousAnalysis {
-        /// Unknown.
-        Unspecified = 0,
-        /// The resource is continuously analyzed.
-        Active = 1,
-        /// The resource is ignored for continuous analysis.
-        Inactive = 2,
-    }
-    /// Analysis status for a resource. Currently for initial analysis only (not
-    /// updated in continuous analysis).
-    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
-    #[repr(i32)]
-    pub enum AnalysisStatus {
-        /// Unknown.
-        Unspecified = 0,
-        /// Resource is known but no action has been taken yet.
-        Pending = 1,
-        /// Resource is being analyzed.
-        Scanning = 2,
-        /// Analysis has finished successfully.
-        FinishedSuccess = 3,
-        /// Analysis has finished unsuccessfully, the analysis itself is in a bad
-        /// state.
-        FinishedFailed = 4,
-        /// The resource is known not to be supported
-        FinishedUnsupported = 5,
-    }
-}
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct DsseAttestationNote {
-    /// DSSEHint hints at the purpose of the attestation authority.
-    #[prost(message, optional, tag="1")]
-    pub hint: ::core::option::Option<dsse_attestation_note::DsseHint>,
-}
-/// Nested message and enum types in `DSSEAttestationNote`.
-pub mod dsse_attestation_note {
-    /// This submessage provides human-readable hints about the purpose of the
-    /// authority. Because the name of a note acts as its resource reference, it is
-    /// important to disambiguate the canonical name of the Note (which might be a
-    /// UUID for security purposes) from "readable" names more suitable for debug
-    /// output. Note that these hints should not be used to look up authorities in
-    /// security sensitive contexts, such as when looking up attestations to
-    /// verify.
-    #[derive(Clone, PartialEq, ::prost::Message)]
-    pub struct DsseHint {
-        /// Required. The human readable name of this attestation authority, for
-        /// example "cloudbuild-prod".
-        #[prost(string, tag="1")]
-        pub human_readable_name: ::prost::alloc::string::String,
-    }
-}
-/// Deprecated. Prefer to use a regular Occurrence, and populate the
-/// Envelope at the top level of the Occurrence.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct DsseAttestationOccurrence {
-    /// If doing something security critical, make sure to verify the signatures in
-    /// this metadata.
-    #[prost(message, optional, tag="1")]
-    pub envelope: ::core::option::Option<Envelope>,
-    #[prost(oneof="dsse_attestation_occurrence::DecodedPayload", tags="2")]
-    pub decoded_payload: ::core::option::Option<dsse_attestation_occurrence::DecodedPayload>,
-}
-/// Nested message and enum types in `DSSEAttestationOccurrence`.
-pub mod dsse_attestation_occurrence {
-    #[derive(Clone, PartialEq, ::prost::Oneof)]
-    pub enum DecodedPayload {
-        #[prost(message, tag="2")]
-        Statement(super::InTotoStatement),
+    impl Platform {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                Platform::Unspecified => "PLATFORM_UNSPECIFIED",
+                Platform::Gke => "GKE",
+                Platform::Flex => "FLEX",
+                Platform::Custom => "CUSTOM",
+            }
+        }
     }
 }
 /// Layer holds metadata specific to a layer of a Docker image.
@@ -1734,8 +1573,8 @@ pub struct Fingerprint {
     #[prost(string, repeated, tag="2")]
     pub v2_blob: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
     /// Output only. The name of the image's v2 blobs computed via:
-    ///   \[bottom\] := v2_blob\[bottom\]
-    ///   \[N\] := sha256(v2_blob\[N\] + " " + v2_name\[N+1\])
+    ///    \[bottom\] := v2_blob\[bottom\]
+    ///    \[N\] := sha256(v2_blob\[N\] + " " + v2_name\[N+1\])
     /// Only the name of the final blob is kept.
     #[prost(string, tag="3")]
     pub v2_name: ::prost::alloc::string::String,
@@ -1743,7 +1582,7 @@ pub struct Fingerprint {
 /// Basis describes the base image portion (Note) of the DockerImage
 /// relationship. Linked occurrences are derived from this or an equivalent image
 /// via:
-///   FROM <Basis.resource_url>
+///    FROM <Basis.resource_url>
 /// Or an equivalent reference, e.g., a tag of the resource_url.
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ImageNote {
@@ -1777,122 +1616,582 @@ pub struct ImageOccurrence {
     #[prost(string, tag="4")]
     pub base_resource_url: ::prost::alloc::string::String,
 }
-/// An Upgrade Note represents a potential upgrade of a package to a given
-/// version. For each package version combination (i.e. bash 4.0, bash 4.1,
-/// bash 4.1.2), there will be an Upgrade Note. For Windows, windows_update field
-/// represents the information related to the update.
+/// Common Vulnerability Scoring System version 3.
+/// For details, see <https://www.first.org/cvss/specification-document>
 #[derive(Clone, PartialEq, ::prost::Message)]
-pub struct UpgradeNote {
-    /// Required for non-Windows OS. The package this Upgrade is for.
-    #[prost(string, tag="1")]
-    pub package: ::prost::alloc::string::String,
-    /// Required for non-Windows OS. The version of the package in machine + human
-    /// readable form.
-    #[prost(message, optional, tag="2")]
-    pub version: ::core::option::Option<Version>,
-    /// Metadata about the upgrade for each specific operating system.
-    #[prost(message, repeated, tag="3")]
-    pub distributions: ::prost::alloc::vec::Vec<UpgradeDistribution>,
-    /// Required for Windows OS. Represents the metadata about the Windows update.
-    #[prost(message, optional, tag="4")]
-    pub windows_update: ::core::option::Option<WindowsUpdate>,
+pub struct CvsSv3 {
+    /// The base score is a function of the base metric scores.
+    #[prost(float, tag="1")]
+    pub base_score: f32,
+    #[prost(float, tag="2")]
+    pub exploitability_score: f32,
+    #[prost(float, tag="3")]
+    pub impact_score: f32,
+    /// Base Metrics
+    /// Represents the intrinsic characteristics of a vulnerability that are
+    /// constant over time and across user environments.
+    #[prost(enumeration="cvs_sv3::AttackVector", tag="5")]
+    pub attack_vector: i32,
+    #[prost(enumeration="cvs_sv3::AttackComplexity", tag="6")]
+    pub attack_complexity: i32,
+    #[prost(enumeration="cvs_sv3::PrivilegesRequired", tag="7")]
+    pub privileges_required: i32,
+    #[prost(enumeration="cvs_sv3::UserInteraction", tag="8")]
+    pub user_interaction: i32,
+    #[prost(enumeration="cvs_sv3::Scope", tag="9")]
+    pub scope: i32,
+    #[prost(enumeration="cvs_sv3::Impact", tag="10")]
+    pub confidentiality_impact: i32,
+    #[prost(enumeration="cvs_sv3::Impact", tag="11")]
+    pub integrity_impact: i32,
+    #[prost(enumeration="cvs_sv3::Impact", tag="12")]
+    pub availability_impact: i32,
 }
-/// The Upgrade Distribution represents metadata about the Upgrade for each
-/// operating system (CPE). Some distributions have additional metadata around
-/// updates, classifying them into various categories and severities.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct UpgradeDistribution {
-    /// Required - The specific operating system this metadata applies to. See
-    /// <https://cpe.mitre.org/specification/.>
-    #[prost(string, tag="1")]
-    pub cpe_uri: ::prost::alloc::string::String,
-    /// The operating system classification of this Upgrade, as specified by the
-    /// upstream operating system upgrade feed. For Windows the classification is
-    /// one of the category_ids listed at
-    /// <https://docs.microsoft.com/en-us/previous-versions/windows/desktop/ff357803(v=vs.85>)
-    #[prost(string, tag="2")]
-    pub classification: ::prost::alloc::string::String,
-    /// The severity as specified by the upstream operating system.
-    #[prost(string, tag="3")]
-    pub severity: ::prost::alloc::string::String,
-    /// The cve tied to this Upgrade.
-    #[prost(string, repeated, tag="4")]
-    pub cve: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
-}
-/// Windows Update represents the metadata about the update for the Windows
-/// operating system. The fields in this message come from the Windows Update API
-/// documented at
-/// <https://docs.microsoft.com/en-us/windows/win32/api/wuapi/nn-wuapi-iupdate.>
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct WindowsUpdate {
-    /// Required - The unique identifier for the update.
-    #[prost(message, optional, tag="1")]
-    pub identity: ::core::option::Option<windows_update::Identity>,
-    /// The localized title of the update.
-    #[prost(string, tag="2")]
-    pub title: ::prost::alloc::string::String,
-    /// The localized description of the update.
-    #[prost(string, tag="3")]
-    pub description: ::prost::alloc::string::String,
-    /// The list of categories to which the update belongs.
-    #[prost(message, repeated, tag="4")]
-    pub categories: ::prost::alloc::vec::Vec<windows_update::Category>,
-    /// The Microsoft Knowledge Base article IDs that are associated with the
-    /// update.
-    #[prost(string, repeated, tag="5")]
-    pub kb_article_ids: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
-    /// The hyperlink to the support information for the update.
-    #[prost(string, tag="6")]
-    pub support_url: ::prost::alloc::string::String,
-    /// The last published timestamp of the update.
-    #[prost(message, optional, tag="7")]
-    pub last_published_timestamp: ::core::option::Option<::prost_types::Timestamp>,
-}
-/// Nested message and enum types in `WindowsUpdate`.
-pub mod windows_update {
-    /// The unique identifier of the update.
-    #[derive(Clone, PartialEq, ::prost::Message)]
-    pub struct Identity {
-        /// The revision independent identifier of the update.
-        #[prost(string, tag="1")]
-        pub update_id: ::prost::alloc::string::String,
-        /// The revision number of the update.
-        #[prost(int32, tag="2")]
-        pub revision: i32,
+/// Nested message and enum types in `CVSSv3`.
+pub mod cvs_sv3 {
+    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+    #[repr(i32)]
+    pub enum AttackVector {
+        Unspecified = 0,
+        Network = 1,
+        Adjacent = 2,
+        Local = 3,
+        Physical = 4,
     }
-    /// The category to which the update belongs.
+    impl AttackVector {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                AttackVector::Unspecified => "ATTACK_VECTOR_UNSPECIFIED",
+                AttackVector::Network => "ATTACK_VECTOR_NETWORK",
+                AttackVector::Adjacent => "ATTACK_VECTOR_ADJACENT",
+                AttackVector::Local => "ATTACK_VECTOR_LOCAL",
+                AttackVector::Physical => "ATTACK_VECTOR_PHYSICAL",
+            }
+        }
+    }
+    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+    #[repr(i32)]
+    pub enum AttackComplexity {
+        Unspecified = 0,
+        Low = 1,
+        High = 2,
+    }
+    impl AttackComplexity {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                AttackComplexity::Unspecified => "ATTACK_COMPLEXITY_UNSPECIFIED",
+                AttackComplexity::Low => "ATTACK_COMPLEXITY_LOW",
+                AttackComplexity::High => "ATTACK_COMPLEXITY_HIGH",
+            }
+        }
+    }
+    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+    #[repr(i32)]
+    pub enum PrivilegesRequired {
+        Unspecified = 0,
+        None = 1,
+        Low = 2,
+        High = 3,
+    }
+    impl PrivilegesRequired {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                PrivilegesRequired::Unspecified => "PRIVILEGES_REQUIRED_UNSPECIFIED",
+                PrivilegesRequired::None => "PRIVILEGES_REQUIRED_NONE",
+                PrivilegesRequired::Low => "PRIVILEGES_REQUIRED_LOW",
+                PrivilegesRequired::High => "PRIVILEGES_REQUIRED_HIGH",
+            }
+        }
+    }
+    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+    #[repr(i32)]
+    pub enum UserInteraction {
+        Unspecified = 0,
+        None = 1,
+        Required = 2,
+    }
+    impl UserInteraction {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                UserInteraction::Unspecified => "USER_INTERACTION_UNSPECIFIED",
+                UserInteraction::None => "USER_INTERACTION_NONE",
+                UserInteraction::Required => "USER_INTERACTION_REQUIRED",
+            }
+        }
+    }
+    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+    #[repr(i32)]
+    pub enum Scope {
+        Unspecified = 0,
+        Unchanged = 1,
+        Changed = 2,
+    }
+    impl Scope {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                Scope::Unspecified => "SCOPE_UNSPECIFIED",
+                Scope::Unchanged => "SCOPE_UNCHANGED",
+                Scope::Changed => "SCOPE_CHANGED",
+            }
+        }
+    }
+    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+    #[repr(i32)]
+    pub enum Impact {
+        Unspecified = 0,
+        High = 1,
+        Low = 2,
+        None = 3,
+    }
+    impl Impact {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                Impact::Unspecified => "IMPACT_UNSPECIFIED",
+                Impact::High => "IMPACT_HIGH",
+                Impact::Low => "IMPACT_LOW",
+                Impact::None => "IMPACT_NONE",
+            }
+        }
+    }
+}
+/// Common Vulnerability Scoring System.
+/// For details, see <https://www.first.org/cvss/specification-document>
+/// This is a message we will try to use for storing various versions of CVSS
+/// rather than making a separate proto for storing a specific version.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct Cvss {
+    /// The base score is a function of the base metric scores.
+    #[prost(float, tag="1")]
+    pub base_score: f32,
+    #[prost(float, tag="2")]
+    pub exploitability_score: f32,
+    #[prost(float, tag="3")]
+    pub impact_score: f32,
+    /// Base Metrics
+    /// Represents the intrinsic characteristics of a vulnerability that are
+    /// constant over time and across user environments.
+    #[prost(enumeration="cvss::AttackVector", tag="4")]
+    pub attack_vector: i32,
+    #[prost(enumeration="cvss::AttackComplexity", tag="5")]
+    pub attack_complexity: i32,
+    #[prost(enumeration="cvss::Authentication", tag="6")]
+    pub authentication: i32,
+    #[prost(enumeration="cvss::PrivilegesRequired", tag="7")]
+    pub privileges_required: i32,
+    #[prost(enumeration="cvss::UserInteraction", tag="8")]
+    pub user_interaction: i32,
+    #[prost(enumeration="cvss::Scope", tag="9")]
+    pub scope: i32,
+    #[prost(enumeration="cvss::Impact", tag="10")]
+    pub confidentiality_impact: i32,
+    #[prost(enumeration="cvss::Impact", tag="11")]
+    pub integrity_impact: i32,
+    #[prost(enumeration="cvss::Impact", tag="12")]
+    pub availability_impact: i32,
+}
+/// Nested message and enum types in `CVSS`.
+pub mod cvss {
+    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+    #[repr(i32)]
+    pub enum AttackVector {
+        Unspecified = 0,
+        Network = 1,
+        Adjacent = 2,
+        Local = 3,
+        Physical = 4,
+    }
+    impl AttackVector {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                AttackVector::Unspecified => "ATTACK_VECTOR_UNSPECIFIED",
+                AttackVector::Network => "ATTACK_VECTOR_NETWORK",
+                AttackVector::Adjacent => "ATTACK_VECTOR_ADJACENT",
+                AttackVector::Local => "ATTACK_VECTOR_LOCAL",
+                AttackVector::Physical => "ATTACK_VECTOR_PHYSICAL",
+            }
+        }
+    }
+    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+    #[repr(i32)]
+    pub enum AttackComplexity {
+        Unspecified = 0,
+        Low = 1,
+        High = 2,
+    }
+    impl AttackComplexity {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                AttackComplexity::Unspecified => "ATTACK_COMPLEXITY_UNSPECIFIED",
+                AttackComplexity::Low => "ATTACK_COMPLEXITY_LOW",
+                AttackComplexity::High => "ATTACK_COMPLEXITY_HIGH",
+            }
+        }
+    }
+    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+    #[repr(i32)]
+    pub enum Authentication {
+        Unspecified = 0,
+        Multiple = 1,
+        Single = 2,
+        None = 3,
+    }
+    impl Authentication {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                Authentication::Unspecified => "AUTHENTICATION_UNSPECIFIED",
+                Authentication::Multiple => "AUTHENTICATION_MULTIPLE",
+                Authentication::Single => "AUTHENTICATION_SINGLE",
+                Authentication::None => "AUTHENTICATION_NONE",
+            }
+        }
+    }
+    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+    #[repr(i32)]
+    pub enum PrivilegesRequired {
+        Unspecified = 0,
+        None = 1,
+        Low = 2,
+        High = 3,
+    }
+    impl PrivilegesRequired {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                PrivilegesRequired::Unspecified => "PRIVILEGES_REQUIRED_UNSPECIFIED",
+                PrivilegesRequired::None => "PRIVILEGES_REQUIRED_NONE",
+                PrivilegesRequired::Low => "PRIVILEGES_REQUIRED_LOW",
+                PrivilegesRequired::High => "PRIVILEGES_REQUIRED_HIGH",
+            }
+        }
+    }
+    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+    #[repr(i32)]
+    pub enum UserInteraction {
+        Unspecified = 0,
+        None = 1,
+        Required = 2,
+    }
+    impl UserInteraction {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                UserInteraction::Unspecified => "USER_INTERACTION_UNSPECIFIED",
+                UserInteraction::None => "USER_INTERACTION_NONE",
+                UserInteraction::Required => "USER_INTERACTION_REQUIRED",
+            }
+        }
+    }
+    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+    #[repr(i32)]
+    pub enum Scope {
+        Unspecified = 0,
+        Unchanged = 1,
+        Changed = 2,
+    }
+    impl Scope {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                Scope::Unspecified => "SCOPE_UNSPECIFIED",
+                Scope::Unchanged => "SCOPE_UNCHANGED",
+                Scope::Changed => "SCOPE_CHANGED",
+            }
+        }
+    }
+    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+    #[repr(i32)]
+    pub enum Impact {
+        Unspecified = 0,
+        High = 1,
+        Low = 2,
+        None = 3,
+    }
+    impl Impact {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                Impact::Unspecified => "IMPACT_UNSPECIFIED",
+                Impact::High => "IMPACT_HIGH",
+                Impact::Low => "IMPACT_LOW",
+                Impact::None => "IMPACT_NONE",
+            }
+        }
+    }
+}
+/// A security vulnerability that can be found in resources.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct VulnerabilityNote {
+    /// The CVSS score of this vulnerability. CVSS score is on a scale of 0 - 10
+    /// where 0 indicates low severity and 10 indicates high severity.
+    #[prost(float, tag="1")]
+    pub cvss_score: f32,
+    /// The note provider assigned severity of this vulnerability.
+    #[prost(enumeration="Severity", tag="2")]
+    pub severity: i32,
+    /// Details of all known distros and packages affected by this vulnerability.
+    #[prost(message, repeated, tag="3")]
+    pub details: ::prost::alloc::vec::Vec<vulnerability_note::Detail>,
+    /// The full description of the CVSSv3 for this vulnerability.
+    #[prost(message, optional, tag="4")]
+    pub cvss_v3: ::core::option::Option<CvsSv3>,
+    /// Windows details get their own format because the information format and
+    /// model don't match a normal detail. Specifically Windows updates are done as
+    /// patches, thus Windows vulnerabilities really are a missing package, rather
+    /// than a package being at an incorrect version.
+    #[prost(message, repeated, tag="5")]
+    pub windows_details: ::prost::alloc::vec::Vec<vulnerability_note::WindowsDetail>,
+    /// The time this information was last changed at the source. This is an
+    /// upstream timestamp from the underlying information source - e.g. Ubuntu
+    /// security tracker.
+    #[prost(message, optional, tag="6")]
+    pub source_update_time: ::core::option::Option<::prost_types::Timestamp>,
+}
+/// Nested message and enum types in `VulnerabilityNote`.
+pub mod vulnerability_note {
+    /// A detail for a distro and package affected by this vulnerability and its
+    /// associated fix (if one is available).
     #[derive(Clone, PartialEq, ::prost::Message)]
-    pub struct Category {
-        /// The identifier of the category.
+    pub struct Detail {
+        /// The distro assigned severity of this vulnerability.
         #[prost(string, tag="1")]
-        pub category_id: ::prost::alloc::string::String,
-        /// The localized name of the category.
+        pub severity_name: ::prost::alloc::string::String,
+        /// A vendor-specific description of this vulnerability.
+        #[prost(string, tag="2")]
+        pub description: ::prost::alloc::string::String,
+        /// The type of package; whether native or non native (e.g., ruby gems,
+        /// node.js packages, etc.).
+        #[prost(string, tag="3")]
+        pub package_type: ::prost::alloc::string::String,
+        /// Required. The [CPE URI](<https://cpe.mitre.org/specification/>) this
+        /// vulnerability affects.
+        #[prost(string, tag="4")]
+        pub affected_cpe_uri: ::prost::alloc::string::String,
+        /// Required. The package this vulnerability affects.
+        #[prost(string, tag="5")]
+        pub affected_package: ::prost::alloc::string::String,
+        /// The version number at the start of an interval in which this
+        /// vulnerability exists. A vulnerability can affect a package between
+        /// version numbers that are disjoint sets of intervals (example:
+        /// \[1.0.0-1.1.0\], \[2.4.6-2.4.8\] and \[4.5.6-4.6.8\]) each of which will be
+        /// represented in its own Detail. If a specific affected version is provided
+        /// by a vulnerability database, affected_version_start and
+        /// affected_version_end will be the same in that Detail.
+        #[prost(message, optional, tag="6")]
+        pub affected_version_start: ::core::option::Option<super::Version>,
+        /// The version number at the end of an interval in which this vulnerability
+        /// exists. A vulnerability can affect a package between version numbers
+        /// that are disjoint sets of intervals (example: \[1.0.0-1.1.0\],
+        /// \[2.4.6-2.4.8\] and \[4.5.6-4.6.8\]) each of which will be represented in its
+        /// own Detail. If a specific affected version is provided by a vulnerability
+        /// database, affected_version_start and affected_version_end will be the
+        /// same in that Detail.
+        #[prost(message, optional, tag="7")]
+        pub affected_version_end: ::core::option::Option<super::Version>,
+        /// The distro recommended [CPE URI](<https://cpe.mitre.org/specification/>)
+        /// to update to that contains a fix for this vulnerability. It is possible
+        /// for this to be different from the affected_cpe_uri.
+        #[prost(string, tag="8")]
+        pub fixed_cpe_uri: ::prost::alloc::string::String,
+        /// The distro recommended package to update to that contains a fix for this
+        /// vulnerability. It is possible for this to be different from the
+        /// affected_package.
+        #[prost(string, tag="9")]
+        pub fixed_package: ::prost::alloc::string::String,
+        /// The distro recommended version to update to that contains a
+        /// fix for this vulnerability. Setting this to VersionKind.MAXIMUM means no
+        /// such version is yet available.
+        #[prost(message, optional, tag="10")]
+        pub fixed_version: ::core::option::Option<super::Version>,
+        /// Whether this detail is obsolete. Occurrences are expected not to point to
+        /// obsolete details.
+        #[prost(bool, tag="11")]
+        pub is_obsolete: bool,
+        /// The time this information was last changed at the source. This is an
+        /// upstream timestamp from the underlying information source - e.g. Ubuntu
+        /// security tracker.
+        #[prost(message, optional, tag="12")]
+        pub source_update_time: ::core::option::Option<::prost_types::Timestamp>,
+        /// The source from which the information in this Detail was obtained.
+        #[prost(string, tag="13")]
+        pub source: ::prost::alloc::string::String,
+        /// The name of the vendor of the product.
+        #[prost(string, tag="14")]
+        pub vendor: ::prost::alloc::string::String,
+    }
+    #[derive(Clone, PartialEq, ::prost::Message)]
+    pub struct WindowsDetail {
+        /// Required. The [CPE URI](<https://cpe.mitre.org/specification/>) this
+        /// vulnerability affects.
+        #[prost(string, tag="1")]
+        pub cpe_uri: ::prost::alloc::string::String,
+        /// Required. The name of this vulnerability.
         #[prost(string, tag="2")]
         pub name: ::prost::alloc::string::String,
+        /// The description of this vulnerability.
+        #[prost(string, tag="3")]
+        pub description: ::prost::alloc::string::String,
+        /// Required. The names of the KBs which have hotfixes to mitigate this
+        /// vulnerability. Note that there may be multiple hotfixes (and thus
+        /// multiple KBs) that mitigate a given vulnerability. Currently any listed
+        /// KBs presence is considered a fix.
+        #[prost(message, repeated, tag="4")]
+        pub fixing_kbs: ::prost::alloc::vec::Vec<windows_detail::KnowledgeBase>,
+    }
+    /// Nested message and enum types in `WindowsDetail`.
+    pub mod windows_detail {
+        #[derive(Clone, PartialEq, ::prost::Message)]
+        pub struct KnowledgeBase {
+            /// The KB name (generally of the form KB\[0-9\]+ (e.g., KB123456)).
+            #[prost(string, tag="1")]
+            pub name: ::prost::alloc::string::String,
+            /// A link to the KB in the [Windows update catalog]
+            /// (<https://www.catalog.update.microsoft.com/>).
+            #[prost(string, tag="2")]
+            pub url: ::prost::alloc::string::String,
+        }
     }
 }
-/// An Upgrade Occurrence represents that a specific resource_url could install a
-/// specific upgrade. This presence is supplied via local sources (i.e. it is
-/// present in the mirror and the running system has noticed its availability).
-/// For Windows, both distribution and windows_update contain information for the
-/// Windows update.
+/// An occurrence of a severity vulnerability on a resource.
 #[derive(Clone, PartialEq, ::prost::Message)]
-pub struct UpgradeOccurrence {
-    /// Required for non-Windows OS. The package this Upgrade is for.
+pub struct VulnerabilityOccurrence {
+    /// The type of package; whether native or non native (e.g., ruby gems, node.js
+    /// packages, etc.).
     #[prost(string, tag="1")]
-    pub package: ::prost::alloc::string::String,
-    /// Required for non-Windows OS. The version of the package in a machine +
-    /// human readable form.
-    #[prost(message, optional, tag="3")]
-    pub parsed_version: ::core::option::Option<Version>,
-    /// Metadata about the upgrade for available for the specific operating system
-    /// for the resource_url. This allows efficient filtering, as well as
-    /// making it easier to use the occurrence.
-    #[prost(message, optional, tag="4")]
-    pub distribution: ::core::option::Option<UpgradeDistribution>,
-    /// Required for Windows OS. Represents the metadata about the Windows update.
-    #[prost(message, optional, tag="5")]
-    pub windows_update: ::core::option::Option<WindowsUpdate>,
+    pub r#type: ::prost::alloc::string::String,
+    /// Output only. The note provider assigned severity of this vulnerability.
+    #[prost(enumeration="Severity", tag="2")]
+    pub severity: i32,
+    /// Output only. The CVSS score of this vulnerability. CVSS score is on a
+    /// scale of 0 - 10 where 0 indicates low severity and 10 indicates high
+    /// severity.
+    #[prost(float, tag="3")]
+    pub cvss_score: f32,
+    /// The cvss v3 score for the vulnerability.
+    #[prost(message, optional, tag="10")]
+    pub cvssv3: ::core::option::Option<Cvss>,
+    /// Required. The set of affected locations and their fixes (if available)
+    /// within the associated resource.
+    #[prost(message, repeated, tag="4")]
+    pub package_issue: ::prost::alloc::vec::Vec<vulnerability_occurrence::PackageIssue>,
+    /// Output only. A one sentence description of this vulnerability.
+    #[prost(string, tag="5")]
+    pub short_description: ::prost::alloc::string::String,
+    /// Output only. A detailed description of this vulnerability.
+    #[prost(string, tag="6")]
+    pub long_description: ::prost::alloc::string::String,
+    /// Output only. URLs related to this vulnerability.
+    #[prost(message, repeated, tag="7")]
+    pub related_urls: ::prost::alloc::vec::Vec<RelatedUrl>,
+    /// The distro assigned severity for this vulnerability when it is available,
+    /// otherwise this is the note provider assigned severity.
+    ///
+    /// When there are multiple PackageIssues for this vulnerability, they can have
+    /// different effective severities because some might be provided by the distro
+    /// while others are provided by the language ecosystem for a language pack.
+    /// For this reason, it is advised to use the effective severity on the
+    /// PackageIssue level. In the case where multiple PackageIssues have differing
+    /// effective severities, this field should be the highest severity for any of
+    /// the PackageIssues.
+    #[prost(enumeration="Severity", tag="8")]
+    pub effective_severity: i32,
+    /// Output only. Whether at least one of the affected packages has a fix
+    /// available.
+    #[prost(bool, tag="9")]
+    pub fix_available: bool,
+}
+/// Nested message and enum types in `VulnerabilityOccurrence`.
+pub mod vulnerability_occurrence {
+    /// A detail for a distro and package this vulnerability occurrence was found
+    /// in and its associated fix (if one is available).
+    #[derive(Clone, PartialEq, ::prost::Message)]
+    pub struct PackageIssue {
+        /// Required. The [CPE URI](<https://cpe.mitre.org/specification/>) this
+        /// vulnerability was found in.
+        #[prost(string, tag="1")]
+        pub affected_cpe_uri: ::prost::alloc::string::String,
+        /// Required. The package this vulnerability was found in.
+        #[prost(string, tag="2")]
+        pub affected_package: ::prost::alloc::string::String,
+        /// Required. The version of the package that is installed on the resource
+        /// affected by this vulnerability.
+        #[prost(message, optional, tag="3")]
+        pub affected_version: ::core::option::Option<super::Version>,
+        /// The [CPE URI](<https://cpe.mitre.org/specification/>) this vulnerability
+        /// was fixed in. It is possible for this to be different from the
+        /// affected_cpe_uri.
+        #[prost(string, tag="4")]
+        pub fixed_cpe_uri: ::prost::alloc::string::String,
+        /// The package this vulnerability was fixed in. It is possible for this to
+        /// be different from the affected_package.
+        #[prost(string, tag="5")]
+        pub fixed_package: ::prost::alloc::string::String,
+        /// Required. The version of the package this vulnerability was fixed in.
+        /// Setting this to VersionKind.MAXIMUM means no fix is yet available.
+        #[prost(message, optional, tag="6")]
+        pub fixed_version: ::core::option::Option<super::Version>,
+        /// Output only. Whether a fix is available for this package.
+        #[prost(bool, tag="7")]
+        pub fix_available: bool,
+        /// The type of package (e.g. OS, MAVEN, GO).
+        #[prost(string, tag="8")]
+        pub package_type: ::prost::alloc::string::String,
+        /// The distro or language system assigned severity for this vulnerability
+        /// when that is available and note provider assigned severity when it is not
+        /// available.
+        #[prost(enumeration="super::Severity", tag="9")]
+        pub effective_severity: i32,
+        /// The location at which this package was found.
+        #[prost(message, repeated, tag="10")]
+        pub file_location: ::prost::alloc::vec::Vec<super::FileLocation>,
+    }
 }
 /// An instance of an analysis type that has been found on a resource.
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -2266,6 +2565,7 @@ pub struct BatchCreateOccurrencesResponse {
 pub mod grafeas_client {
     #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
     use tonic::codegen::*;
+    use tonic::codegen::http::Uri;
     /// [Grafeas](https://grafeas.io) API.
     ///
     /// Retrieves analysis results of Cloud components such as Docker container
@@ -2295,6 +2595,10 @@ pub mod grafeas_client {
             let inner = tonic::client::Grpc::new(inner);
             Self { inner }
         }
+        pub fn with_origin(inner: T, origin: Uri) -> Self {
+            let inner = tonic::client::Grpc::with_origin(inner, origin);
+            Self { inner }
+        }
         pub fn with_interceptor<F>(
             inner: T,
             interceptor: F,
@@ -2314,19 +2618,19 @@ pub mod grafeas_client {
         {
             GrafeasClient::new(InterceptedService::new(inner, interceptor))
         }
-        /// Compress requests with `gzip`.
+        /// Compress requests with the given encoding.
         ///
         /// This requires the server to support it otherwise it might respond with an
         /// error.
         #[must_use]
-        pub fn send_gzip(mut self) -> Self {
-            self.inner = self.inner.send_gzip();
+        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.send_compressed(encoding);
             self
         }
-        /// Enable decompressing responses with `gzip`.
+        /// Enable decompressing responses.
         #[must_use]
-        pub fn accept_gzip(mut self) -> Self {
-            self.inner = self.inner.accept_gzip();
+        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.accept_compressed(encoding);
             self
         }
         /// Gets the specified occurrence.

@@ -85,6 +85,27 @@ pub mod region_identifier {
         /// School district.
         SchoolDistrict = 10,
     }
+    impl PlaceType {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                PlaceType::Unspecified => "PLACE_TYPE_UNSPECIFIED",
+                PlaceType::PostalCode => "POSTAL_CODE",
+                PlaceType::AdministrativeAreaLevel1 => "ADMINISTRATIVE_AREA_LEVEL_1",
+                PlaceType::AdministrativeAreaLevel2 => "ADMINISTRATIVE_AREA_LEVEL_2",
+                PlaceType::Locality => "LOCALITY",
+                PlaceType::Neighborhood => "NEIGHBORHOOD",
+                PlaceType::Country => "COUNTRY",
+                PlaceType::Sublocality => "SUBLOCALITY",
+                PlaceType::AdministrativeAreaLevel3 => "ADMINISTRATIVE_AREA_LEVEL_3",
+                PlaceType::AdministrativeAreaLevel4 => "ADMINISTRATIVE_AREA_LEVEL_4",
+                PlaceType::SchoolDistrict => "SCHOOL_DISTRICT",
+            }
+        }
+    }
     /// The location must be specified by one of the following:
     #[derive(Clone, PartialEq, ::prost::Oneof)]
     pub enum Location {
@@ -232,6 +253,27 @@ pub mod region_search_value {
         /// School district.
         SchoolDistrict = 10,
     }
+    impl PlaceType {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                PlaceType::Unspecified => "PLACE_TYPE_UNSPECIFIED",
+                PlaceType::PostalCode => "POSTAL_CODE",
+                PlaceType::AdministrativeAreaLevel1 => "ADMINISTRATIVE_AREA_LEVEL_1",
+                PlaceType::AdministrativeAreaLevel2 => "ADMINISTRATIVE_AREA_LEVEL_2",
+                PlaceType::Locality => "LOCALITY",
+                PlaceType::Neighborhood => "NEIGHBORHOOD",
+                PlaceType::Country => "COUNTRY",
+                PlaceType::Sublocality => "SUBLOCALITY",
+                PlaceType::AdministrativeAreaLevel3 => "ADMINISTRATIVE_AREA_LEVEL_3",
+                PlaceType::AdministrativeAreaLevel4 => "ADMINISTRATIVE_AREA_LEVEL_4",
+                PlaceType::SchoolDistrict => "SCHOOL_DISTRICT",
+            }
+        }
+    }
     /// The location must be specified by one of the following:
     #[derive(Clone, PartialEq, ::prost::Oneof)]
     pub enum Location {
@@ -328,6 +370,7 @@ pub struct SearchRegionResponse {
 pub mod region_lookup_client {
     #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
     use tonic::codegen::*;
+    use tonic::codegen::http::Uri;
     /// Service definition for the Region Lookup API.
     #[derive(Debug, Clone)]
     pub struct RegionLookupClient<T> {
@@ -342,6 +385,10 @@ pub mod region_lookup_client {
     {
         pub fn new(inner: T) -> Self {
             let inner = tonic::client::Grpc::new(inner);
+            Self { inner }
+        }
+        pub fn with_origin(inner: T, origin: Uri) -> Self {
+            let inner = tonic::client::Grpc::with_origin(inner, origin);
             Self { inner }
         }
         pub fn with_interceptor<F>(
@@ -363,19 +410,19 @@ pub mod region_lookup_client {
         {
             RegionLookupClient::new(InterceptedService::new(inner, interceptor))
         }
-        /// Compress requests with `gzip`.
+        /// Compress requests with the given encoding.
         ///
         /// This requires the server to support it otherwise it might respond with an
         /// error.
         #[must_use]
-        pub fn send_gzip(mut self) -> Self {
-            self.inner = self.inner.send_gzip();
+        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.send_compressed(encoding);
             self
         }
-        /// Enable decompressing responses with `gzip`.
+        /// Enable decompressing responses.
         #[must_use]
-        pub fn accept_gzip(mut self) -> Self {
-            self.inner = self.inner.accept_gzip();
+        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.accept_compressed(encoding);
             self
         }
         /// Lookup region RPC.

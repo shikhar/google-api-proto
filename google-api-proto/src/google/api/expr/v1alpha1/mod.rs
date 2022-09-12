@@ -1,214 +1,3 @@
-// Contains representations for CEL runtime values.
-
-/// Represents a CEL value.
-///
-/// This is similar to `google.protobuf.Value`, but can represent CEL's full
-/// range of values.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct Value {
-    /// Required. The valid kinds of values.
-    #[prost(oneof="value::Kind", tags="1, 2, 3, 4, 5, 6, 7, 9, 10, 11, 12, 15")]
-    pub kind: ::core::option::Option<value::Kind>,
-}
-/// Nested message and enum types in `Value`.
-pub mod value {
-    /// Required. The valid kinds of values.
-    #[derive(Clone, PartialEq, ::prost::Oneof)]
-    pub enum Kind {
-        /// Null value.
-        #[prost(enumeration="::prost_types::NullValue", tag="1")]
-        NullValue(i32),
-        /// Boolean value.
-        #[prost(bool, tag="2")]
-        BoolValue(bool),
-        /// Signed integer value.
-        #[prost(int64, tag="3")]
-        Int64Value(i64),
-        /// Unsigned integer value.
-        #[prost(uint64, tag="4")]
-        Uint64Value(u64),
-        /// Floating point value.
-        #[prost(double, tag="5")]
-        DoubleValue(f64),
-        /// UTF-8 string value.
-        #[prost(string, tag="6")]
-        StringValue(::prost::alloc::string::String),
-        /// Byte string value.
-        #[prost(bytes, tag="7")]
-        BytesValue(::prost::bytes::Bytes),
-        /// An enum value.
-        #[prost(message, tag="9")]
-        EnumValue(super::EnumValue),
-        /// The proto message backing an object value.
-        #[prost(message, tag="10")]
-        ObjectValue(::prost_types::Any),
-        /// Map value.
-        #[prost(message, tag="11")]
-        MapValue(super::MapValue),
-        /// List value.
-        #[prost(message, tag="12")]
-        ListValue(super::ListValue),
-        /// Type value.
-        #[prost(string, tag="15")]
-        TypeValue(::prost::alloc::string::String),
-    }
-}
-/// An enum value.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct EnumValue {
-    /// The fully qualified name of the enum type.
-    #[prost(string, tag="1")]
-    pub r#type: ::prost::alloc::string::String,
-    /// The value of the enum.
-    #[prost(int32, tag="2")]
-    pub value: i32,
-}
-/// A list.
-///
-/// Wrapped in a message so 'not set' and empty can be differentiated, which is
-/// required for use in a 'oneof'.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ListValue {
-    /// The ordered values in the list.
-    #[prost(message, repeated, tag="1")]
-    pub values: ::prost::alloc::vec::Vec<Value>,
-}
-/// A map.
-///
-/// Wrapped in a message so 'not set' and empty can be differentiated, which is
-/// required for use in a 'oneof'.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct MapValue {
-    /// The set of map entries.
-    ///
-    /// CEL has fewer restrictions on keys, so a protobuf map represenation
-    /// cannot be used.
-    #[prost(message, repeated, tag="1")]
-    pub entries: ::prost::alloc::vec::Vec<map_value::Entry>,
-}
-/// Nested message and enum types in `MapValue`.
-pub mod map_value {
-    /// An entry in the map.
-    #[derive(Clone, PartialEq, ::prost::Message)]
-    pub struct Entry {
-        /// The key.
-        ///
-        /// Must be unique with in the map.
-        /// Currently only boolean, int, uint, and string values can be keys.
-        #[prost(message, optional, tag="1")]
-        pub key: ::core::option::Option<super::Value>,
-        /// The value.
-        #[prost(message, optional, tag="2")]
-        pub value: ::core::option::Option<super::Value>,
-    }
-}
-/// The state of an evaluation.
-///
-/// Can represent an inital, partial, or completed state of evaluation.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct EvalState {
-    /// The unique values referenced in this message.
-    #[prost(message, repeated, tag="1")]
-    pub values: ::prost::alloc::vec::Vec<ExprValue>,
-    /// An ordered list of results.
-    ///
-    /// Tracks the flow of evaluation through the expression.
-    /// May be sparse.
-    #[prost(message, repeated, tag="3")]
-    pub results: ::prost::alloc::vec::Vec<eval_state::Result>,
-}
-/// Nested message and enum types in `EvalState`.
-pub mod eval_state {
-    /// A single evalution result.
-    #[derive(Clone, PartialEq, ::prost::Message)]
-    pub struct Result {
-        /// The id of the expression this result if for.
-        #[prost(int64, tag="1")]
-        pub expr: i64,
-        /// The index in `values` of the resulting value.
-        #[prost(int64, tag="2")]
-        pub value: i64,
-    }
-}
-/// The value of an evaluated expression.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ExprValue {
-    /// An expression can resolve to a value, error or unknown.
-    #[prost(oneof="expr_value::Kind", tags="1, 2, 3")]
-    pub kind: ::core::option::Option<expr_value::Kind>,
-}
-/// Nested message and enum types in `ExprValue`.
-pub mod expr_value {
-    /// An expression can resolve to a value, error or unknown.
-    #[derive(Clone, PartialEq, ::prost::Oneof)]
-    pub enum Kind {
-        /// A concrete value.
-        #[prost(message, tag="1")]
-        Value(super::Value),
-        /// The set of errors in the critical path of evalution.
-        ///
-        /// Only errors in the critical path are included. For example,
-        /// `(<error1> || true) && <error2>` will only result in `<error2>`,
-        /// while `<error1> || <error2>` will result in both `<error1>` and
-        /// `<error2>`.
-        ///
-        /// Errors cause by the presence of other errors are not included in the
-        /// set. For example `<error1>.foo`, `foo(<error1>)`, and `<error1> + 1` will
-        /// only result in `<error1>`.
-        ///
-        /// Multiple errors *might* be included when evaluation could result
-        /// in different errors. For example `<error1> + <error2>` and
-        /// `foo(<error1>, <error2>)` may result in `<error1>`, `<error2>` or both.
-        /// The exact subset of errors included for this case is unspecified and
-        /// depends on the implementation details of the evaluator.
-        #[prost(message, tag="2")]
-        Error(super::ErrorSet),
-        /// The set of unknowns in the critical path of evaluation.
-        ///
-        /// Unknown behaves identically to Error with regards to propagation.
-        /// Specifically, only unknowns in the critical path are included, unknowns
-        /// caused by the presence of other unknowns are not included, and multiple
-        /// unknowns *might* be included included when evaluation could result in
-        /// different unknowns. For example:
-        ///
-        ///     (<unknown\[1\]> || true) && <unknown\[2\]> -> <unknown\[2\]>
-        ///     <unknown\[1\]> || <unknown\[2\]> -> <unknown\[1,2\]>
-        ///     <unknown\[1\]>.foo -> <unknown\[1\]>
-        ///     foo(<unknown\[1\]>) -> <unknown\[1\]>
-        ///     <unknown\[1\]> + <unknown\[2\]> -> <unknown\[1\]> or <unknown[2[>
-        ///
-        /// Unknown takes precidence over Error in cases where a `Value` can short
-        /// circuit the result:
-        ///
-        ///     <error> || <unknown> -> <unknown>
-        ///     <error> && <unknown> -> <unknown>
-        ///
-        /// Errors take precidence in all other cases:
-        ///
-        ///     <unknown> + <error> -> <error>
-        ///     foo(<unknown>, <error>) -> <error>
-        #[prost(message, tag="3")]
-        Unknown(super::UnknownSet),
-    }
-}
-/// A set of errors.
-///
-/// The errors included depend on the context. See `ExprValue.error`.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ErrorSet {
-    /// The errors in the set.
-    #[prost(message, repeated, tag="1")]
-    pub errors: ::prost::alloc::vec::Vec<super::super::super::rpc::Status>,
-}
-/// A set of expressions for which the value is unknown.
-///
-/// The unknowns included depend on the context. See `ExprValue.unknown`.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct UnknownSet {
-    /// The ids of the expressions with unknown values.
-    #[prost(int64, repeated, tag="1")]
-    pub exprs: ::prost::alloc::vec::Vec<i64>,
-}
 // A representation of the abstract syntax of the Common Expression Language.
 
 /// An expression together with source information as returned by the parser.
@@ -365,13 +154,13 @@ pub mod expr {
     /// in a map:
     ///
     /// *  `all`, `exists`, `exists_one` -  test a predicate expression against
-    ///    the inputs and return `true` if the predicate is satisfied for all,
-    ///    any, or only one value `list.all(x, x < 10)`.
+    ///     the inputs and return `true` if the predicate is satisfied for all,
+    ///     any, or only one value `list.all(x, x < 10)`.
     /// *  `filter` - test a predicate expression against the inputs and return
-    ///    the subset of elements which satisfy the predicate:
-    ///    `payments.filter(p, p > 1000)`.
+    ///     the subset of elements which satisfy the predicate:
+    ///     `payments.filter(p, p > 1000)`.
     /// *  `map` - apply an expression to all elements in the input and return the
-    ///    output aggregate type: `[1, 2, 3].map(i, i * i)`.
+    ///     output aggregate type: `[1, 2, 3].map(i, i * i)`.
     ///
     /// The `has(m.x)` macro tests whether the property `x` is present in struct
     /// `m`. The semantics of this macro depend on the type of `m`. For proto2
@@ -556,16 +345,16 @@ pub struct CheckedExpr {
     /// The following entries are in this table:
     ///
     /// - An Ident or Select expression is represented here if it resolves to a
-    ///   declaration. For instance, if `a.b.c` is represented by
-    ///   `select(select(id(a), b), c)`, and `a.b` resolves to a declaration,
-    ///   while `c` is a field selection, then the reference is attached to the
-    ///   nested select expression (but not to the id or or the outer select).
-    ///   In turn, if `a` resolves to a declaration and `b.c` are field selections,
-    ///   the reference is attached to the ident expression.
+    ///    declaration. For instance, if `a.b.c` is represented by
+    ///    `select(select(id(a), b), c)`, and `a.b` resolves to a declaration,
+    ///    while `c` is a field selection, then the reference is attached to the
+    ///    nested select expression (but not to the id or or the outer select).
+    ///    In turn, if `a` resolves to a declaration and `b.c` are field selections,
+    ///    the reference is attached to the ident expression.
     /// - Every Call expression has an entry here, identifying the function being
-    ///   called.
+    ///    called.
     /// - Every CreateStruct expression for a message has an entry, identifying
-    ///   the message.
+    ///    the message.
     #[prost(btree_map="int64, message", tag="2")]
     pub reference_map: ::prost::alloc::collections::BTreeMap<i64, Reference>,
     /// A map from expression ids to types.
@@ -664,6 +453,23 @@ pub mod r#type {
         /// Bytes type.
         Bytes = 6,
     }
+    impl PrimitiveType {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                PrimitiveType::Unspecified => "PRIMITIVE_TYPE_UNSPECIFIED",
+                PrimitiveType::Bool => "BOOL",
+                PrimitiveType::Int64 => "INT64",
+                PrimitiveType::Uint64 => "UINT64",
+                PrimitiveType::Double => "DOUBLE",
+                PrimitiveType::String => "STRING",
+                PrimitiveType::Bytes => "BYTES",
+            }
+        }
+    }
     /// Well-known protobuf types treated with first-class support in CEL.
     #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
     #[repr(i32)]
@@ -680,6 +486,20 @@ pub mod r#type {
         Timestamp = 2,
         /// Well-known protobuf.Duration type, internally referenced as `duration`.
         Duration = 3,
+    }
+    impl WellKnownType {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                WellKnownType::Unspecified => "WELL_KNOWN_TYPE_UNSPECIFIED",
+                WellKnownType::Any => "ANY",
+                WellKnownType::Timestamp => "TIMESTAMP",
+                WellKnownType::Duration => "DURATION",
+            }
+        }
     }
     /// The kind of type.
     #[derive(Clone, PartialEq, ::prost::Oneof)]
@@ -878,6 +698,110 @@ pub struct Reference {
     #[prost(message, optional, tag="4")]
     pub value: ::core::option::Option<Constant>,
 }
+// Contains representations for CEL runtime values.
+
+/// Represents a CEL value.
+///
+/// This is similar to `google.protobuf.Value`, but can represent CEL's full
+/// range of values.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct Value {
+    /// Required. The valid kinds of values.
+    #[prost(oneof="value::Kind", tags="1, 2, 3, 4, 5, 6, 7, 9, 10, 11, 12, 15")]
+    pub kind: ::core::option::Option<value::Kind>,
+}
+/// Nested message and enum types in `Value`.
+pub mod value {
+    /// Required. The valid kinds of values.
+    #[derive(Clone, PartialEq, ::prost::Oneof)]
+    pub enum Kind {
+        /// Null value.
+        #[prost(enumeration="::prost_types::NullValue", tag="1")]
+        NullValue(i32),
+        /// Boolean value.
+        #[prost(bool, tag="2")]
+        BoolValue(bool),
+        /// Signed integer value.
+        #[prost(int64, tag="3")]
+        Int64Value(i64),
+        /// Unsigned integer value.
+        #[prost(uint64, tag="4")]
+        Uint64Value(u64),
+        /// Floating point value.
+        #[prost(double, tag="5")]
+        DoubleValue(f64),
+        /// UTF-8 string value.
+        #[prost(string, tag="6")]
+        StringValue(::prost::alloc::string::String),
+        /// Byte string value.
+        #[prost(bytes, tag="7")]
+        BytesValue(::prost::bytes::Bytes),
+        /// An enum value.
+        #[prost(message, tag="9")]
+        EnumValue(super::EnumValue),
+        /// The proto message backing an object value.
+        #[prost(message, tag="10")]
+        ObjectValue(::prost_types::Any),
+        /// Map value.
+        #[prost(message, tag="11")]
+        MapValue(super::MapValue),
+        /// List value.
+        #[prost(message, tag="12")]
+        ListValue(super::ListValue),
+        /// Type value.
+        #[prost(string, tag="15")]
+        TypeValue(::prost::alloc::string::String),
+    }
+}
+/// An enum value.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct EnumValue {
+    /// The fully qualified name of the enum type.
+    #[prost(string, tag="1")]
+    pub r#type: ::prost::alloc::string::String,
+    /// The value of the enum.
+    #[prost(int32, tag="2")]
+    pub value: i32,
+}
+/// A list.
+///
+/// Wrapped in a message so 'not set' and empty can be differentiated, which is
+/// required for use in a 'oneof'.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ListValue {
+    /// The ordered values in the list.
+    #[prost(message, repeated, tag="1")]
+    pub values: ::prost::alloc::vec::Vec<Value>,
+}
+/// A map.
+///
+/// Wrapped in a message so 'not set' and empty can be differentiated, which is
+/// required for use in a 'oneof'.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct MapValue {
+    /// The set of map entries.
+    ///
+    /// CEL has fewer restrictions on keys, so a protobuf map represenation
+    /// cannot be used.
+    #[prost(message, repeated, tag="1")]
+    pub entries: ::prost::alloc::vec::Vec<map_value::Entry>,
+}
+/// Nested message and enum types in `MapValue`.
+pub mod map_value {
+    /// An entry in the map.
+    #[derive(Clone, PartialEq, ::prost::Message)]
+    pub struct Entry {
+        /// The key.
+        ///
+        /// Must be unique with in the map.
+        /// Currently only boolean, int, uint, and string values can be keys.
+        #[prost(message, optional, tag="1")]
+        pub key: ::core::option::Option<super::Value>,
+        /// The value.
+        #[prost(message, optional, tag="2")]
+        pub value: ::core::option::Option<super::Value>,
+    }
+}
 /// Values of intermediate expressions produced when evaluating expression.
 /// Deprecated, use `EvalState` instead.
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -908,4 +832,111 @@ pub mod explain {
         #[prost(int32, tag="2")]
         pub value_index: i32,
     }
+}
+/// The state of an evaluation.
+///
+/// Can represent an inital, partial, or completed state of evaluation.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct EvalState {
+    /// The unique values referenced in this message.
+    #[prost(message, repeated, tag="1")]
+    pub values: ::prost::alloc::vec::Vec<ExprValue>,
+    /// An ordered list of results.
+    ///
+    /// Tracks the flow of evaluation through the expression.
+    /// May be sparse.
+    #[prost(message, repeated, tag="3")]
+    pub results: ::prost::alloc::vec::Vec<eval_state::Result>,
+}
+/// Nested message and enum types in `EvalState`.
+pub mod eval_state {
+    /// A single evalution result.
+    #[derive(Clone, PartialEq, ::prost::Message)]
+    pub struct Result {
+        /// The id of the expression this result if for.
+        #[prost(int64, tag="1")]
+        pub expr: i64,
+        /// The index in `values` of the resulting value.
+        #[prost(int64, tag="2")]
+        pub value: i64,
+    }
+}
+/// The value of an evaluated expression.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ExprValue {
+    /// An expression can resolve to a value, error or unknown.
+    #[prost(oneof="expr_value::Kind", tags="1, 2, 3")]
+    pub kind: ::core::option::Option<expr_value::Kind>,
+}
+/// Nested message and enum types in `ExprValue`.
+pub mod expr_value {
+    /// An expression can resolve to a value, error or unknown.
+    #[derive(Clone, PartialEq, ::prost::Oneof)]
+    pub enum Kind {
+        /// A concrete value.
+        #[prost(message, tag="1")]
+        Value(super::Value),
+        /// The set of errors in the critical path of evalution.
+        ///
+        /// Only errors in the critical path are included. For example,
+        /// `(<error1> || true) && <error2>` will only result in `<error2>`,
+        /// while `<error1> || <error2>` will result in both `<error1>` and
+        /// `<error2>`.
+        ///
+        /// Errors cause by the presence of other errors are not included in the
+        /// set. For example `<error1>.foo`, `foo(<error1>)`, and `<error1> + 1` will
+        /// only result in `<error1>`.
+        ///
+        /// Multiple errors *might* be included when evaluation could result
+        /// in different errors. For example `<error1> + <error2>` and
+        /// `foo(<error1>, <error2>)` may result in `<error1>`, `<error2>` or both.
+        /// The exact subset of errors included for this case is unspecified and
+        /// depends on the implementation details of the evaluator.
+        #[prost(message, tag="2")]
+        Error(super::ErrorSet),
+        /// The set of unknowns in the critical path of evaluation.
+        ///
+        /// Unknown behaves identically to Error with regards to propagation.
+        /// Specifically, only unknowns in the critical path are included, unknowns
+        /// caused by the presence of other unknowns are not included, and multiple
+        /// unknowns *might* be included included when evaluation could result in
+        /// different unknowns. For example:
+        ///
+        ///      (<unknown\[1\]> || true) && <unknown\[2\]> -> <unknown\[2\]>
+        ///      <unknown\[1\]> || <unknown\[2\]> -> <unknown\[1,2\]>
+        ///      <unknown\[1\]>.foo -> <unknown\[1\]>
+        ///      foo(<unknown\[1\]>) -> <unknown\[1\]>
+        ///      <unknown\[1\]> + <unknown\[2\]> -> <unknown\[1\]> or <unknown[2[>
+        ///
+        /// Unknown takes precidence over Error in cases where a `Value` can short
+        /// circuit the result:
+        ///
+        ///      <error> || <unknown> -> <unknown>
+        ///      <error> && <unknown> -> <unknown>
+        ///
+        /// Errors take precidence in all other cases:
+        ///
+        ///      <unknown> + <error> -> <error>
+        ///      foo(<unknown>, <error>) -> <error>
+        #[prost(message, tag="3")]
+        Unknown(super::UnknownSet),
+    }
+}
+/// A set of errors.
+///
+/// The errors included depend on the context. See `ExprValue.error`.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ErrorSet {
+    /// The errors in the set.
+    #[prost(message, repeated, tag="1")]
+    pub errors: ::prost::alloc::vec::Vec<super::super::super::rpc::Status>,
+}
+/// A set of expressions for which the value is unknown.
+///
+/// The unknowns included depend on the context. See `ExprValue.unknown`.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct UnknownSet {
+    /// The ids of the expressions with unknown values.
+    #[prost(int64, repeated, tag="1")]
+    pub exprs: ::prost::alloc::vec::Vec<i64>,
 }

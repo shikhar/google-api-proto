@@ -44,6 +44,22 @@ pub mod player_report {
         /// business has closed for renovations.
         TemporarilyInaccessible = 6,
     }
+    impl BadLocationReason {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                BadLocationReason::Unspecified => "BAD_LOCATION_REASON_UNSPECIFIED",
+                BadLocationReason::Other => "OTHER",
+                BadLocationReason::NotPedestrianAccessible => "NOT_PEDESTRIAN_ACCESSIBLE",
+                BadLocationReason::NotOpenToPublic => "NOT_OPEN_TO_PUBLIC",
+                BadLocationReason::PermanentlyClosed => "PERMANENTLY_CLOSED",
+                BadLocationReason::TemporarilyInaccessible => "TEMPORARILY_INACCESSIBLE",
+            }
+        }
+    }
 }
 /// Encapsulates impression event details.
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -79,6 +95,19 @@ pub mod impression {
         Presented = 1,
         /// A player interacted with the playable location.
         Interacted = 2,
+    }
+    impl ImpressionType {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                ImpressionType::Unspecified => "IMPRESSION_TYPE_UNSPECIFIED",
+                ImpressionType::Presented => "PRESENTED",
+                ImpressionType::Interacted => "INTERACTED",
+            }
+        }
     }
 }
 ///
@@ -196,6 +225,7 @@ pub struct LogImpressionsResponse {
 pub mod playable_locations_client {
     #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
     use tonic::codegen::*;
+    use tonic::codegen::http::Uri;
     /// The Playable Locations API for v3.
     #[derive(Debug, Clone)]
     pub struct PlayableLocationsClient<T> {
@@ -210,6 +240,10 @@ pub mod playable_locations_client {
     {
         pub fn new(inner: T) -> Self {
             let inner = tonic::client::Grpc::new(inner);
+            Self { inner }
+        }
+        pub fn with_origin(inner: T, origin: Uri) -> Self {
+            let inner = tonic::client::Grpc::with_origin(inner, origin);
             Self { inner }
         }
         pub fn with_interceptor<F>(
@@ -231,19 +265,19 @@ pub mod playable_locations_client {
         {
             PlayableLocationsClient::new(InterceptedService::new(inner, interceptor))
         }
-        /// Compress requests with `gzip`.
+        /// Compress requests with the given encoding.
         ///
         /// This requires the server to support it otherwise it might respond with an
         /// error.
         #[must_use]
-        pub fn send_gzip(mut self) -> Self {
-            self.inner = self.inner.send_gzip();
+        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.send_compressed(encoding);
             self
         }
-        /// Enable decompressing responses with `gzip`.
+        /// Enable decompressing responses.
         #[must_use]
-        pub fn accept_gzip(mut self) -> Self {
-            self.inner = self.inner.accept_gzip();
+        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.accept_compressed(encoding);
             self
         }
         /// Returns a set of playable locations that lie within a specified area,

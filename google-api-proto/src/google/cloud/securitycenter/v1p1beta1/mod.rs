@@ -1,181 +1,3 @@
-/// Security Command Center finding source. A finding source
-/// is an entity or a mechanism that can produce a finding. A source is like a
-/// container of findings that come from the same scanner, logger, monitor, etc.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct Source {
-    /// The relative resource name of this source. See:
-    /// <https://cloud.google.com/apis/design/resource_names#relative_resource_name>
-    /// Example:
-    /// "organizations/{organization_id}/sources/{source_id}"
-    #[prost(string, tag="1")]
-    pub name: ::prost::alloc::string::String,
-    /// The source's display name.
-    /// A source's display name must be unique amongst its siblings, for example,
-    /// two sources with the same parent can't share the same display name.
-    /// The display name must have a length between 1 and 64 characters
-    /// (inclusive).
-    #[prost(string, tag="2")]
-    pub display_name: ::prost::alloc::string::String,
-    /// The description of the source (max of 1024 characters).
-    /// Example:
-    /// "Web Security Scanner is a web security scanner for common
-    /// vulnerabilities in App Engine applications. It can automatically
-    /// scan and detect four common vulnerabilities, including cross-site-scripting
-    /// (XSS), Flash injection, mixed content (HTTP in HTTPS), and
-    /// outdated/insecure libraries."
-    #[prost(string, tag="3")]
-    pub description: ::prost::alloc::string::String,
-    /// The canonical name of the finding. It's either
-    /// "organizations/{organization_id}/sources/{source_id}",
-    /// "folders/{folder_id}/sources/{source_id}" or
-    /// "projects/{project_number}/sources/{source_id}",
-    /// depending on the closest CRM ancestor of the resource associated with the
-    /// finding.
-    #[prost(string, tag="14")]
-    pub canonical_name: ::prost::alloc::string::String,
-}
-/// Message that contains the resource name and display name of a folder
-/// resource.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct Folder {
-    /// Full resource name of this folder. See:
-    /// <https://cloud.google.com/apis/design/resource_names#full_resource_name>
-    #[prost(string, tag="1")]
-    pub resource_folder: ::prost::alloc::string::String,
-    /// The user defined display name for this folder.
-    #[prost(string, tag="2")]
-    pub resource_folder_display_name: ::prost::alloc::string::String,
-}
-/// Information related to the Google Cloud resource.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct Resource {
-    /// The full resource name of the resource. See:
-    /// <https://cloud.google.com/apis/design/resource_names#full_resource_name>
-    #[prost(string, tag="1")]
-    pub name: ::prost::alloc::string::String,
-    /// The full resource name of project that the resource belongs to.
-    #[prost(string, tag="2")]
-    pub project: ::prost::alloc::string::String,
-    /// The human readable name of project that the resource belongs to.
-    #[prost(string, tag="3")]
-    pub project_display_name: ::prost::alloc::string::String,
-    /// The full resource name of resource's parent.
-    #[prost(string, tag="4")]
-    pub parent: ::prost::alloc::string::String,
-    /// The human readable name of resource's parent.
-    #[prost(string, tag="5")]
-    pub parent_display_name: ::prost::alloc::string::String,
-    /// Output only. Contains a Folder message for each folder in the assets ancestry.
-    /// The first folder is the deepest nested folder, and the last folder is the
-    /// folder directly under the Organization.
-    #[prost(message, repeated, tag="7")]
-    pub folders: ::prost::alloc::vec::Vec<Folder>,
-}
-/// Response of asset discovery run
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct RunAssetDiscoveryResponse {
-    /// The state of an asset discovery run.
-    #[prost(enumeration="run_asset_discovery_response::State", tag="1")]
-    pub state: i32,
-    /// The duration between asset discovery run start and end
-    #[prost(message, optional, tag="2")]
-    pub duration: ::core::option::Option<::prost_types::Duration>,
-}
-/// Nested message and enum types in `RunAssetDiscoveryResponse`.
-pub mod run_asset_discovery_response {
-    /// The state of an asset discovery run.
-    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
-    #[repr(i32)]
-    pub enum State {
-        /// Asset discovery run state was unspecified.
-        Unspecified = 0,
-        /// Asset discovery run completed successfully.
-        Completed = 1,
-        /// Asset discovery run was cancelled with tasks still pending, as another
-        /// run for the same organization was started with a higher priority.
-        Superseded = 2,
-        /// Asset discovery run was killed and terminated.
-        Terminated = 3,
-    }
-}
-/// Security Command Center notification configs.
-///
-/// A notification config is a Security Command Center resource that contains the
-/// configuration to send notifications for create/update events of findings,
-/// assets and etc.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct NotificationConfig {
-    /// The relative resource name of this notification config. See:
-    /// <https://cloud.google.com/apis/design/resource_names#relative_resource_name>
-    /// Example:
-    /// "organizations/{organization_id}/notificationConfigs/notify_public_bucket".
-    #[prost(string, tag="1")]
-    pub name: ::prost::alloc::string::String,
-    /// The description of the notification config (max of 1024 characters).
-    #[prost(string, tag="2")]
-    pub description: ::prost::alloc::string::String,
-    /// The type of events the config is for, e.g. FINDING.
-    #[prost(enumeration="notification_config::EventType", tag="3")]
-    pub event_type: i32,
-    /// The Pub/Sub topic to send notifications to. Its format is
-    /// "projects/\[project_id]/topics/[topic\]".
-    #[prost(string, tag="4")]
-    pub pubsub_topic: ::prost::alloc::string::String,
-    /// Output only. The service account that needs "pubsub.topics.publish"
-    /// permission to publish to the Pub/Sub topic.
-    #[prost(string, tag="5")]
-    pub service_account: ::prost::alloc::string::String,
-    /// The config for triggering notifications.
-    #[prost(oneof="notification_config::NotifyConfig", tags="6")]
-    pub notify_config: ::core::option::Option<notification_config::NotifyConfig>,
-}
-/// Nested message and enum types in `NotificationConfig`.
-pub mod notification_config {
-    /// The config for streaming-based notifications, which send each event as soon
-    /// as it is detected.
-    #[derive(Clone, PartialEq, ::prost::Message)]
-    pub struct StreamingConfig {
-        /// Expression that defines the filter to apply across create/update events
-        /// of assets or findings as specified by the event type. The expression is a
-        /// list of zero or more restrictions combined via logical operators `AND`
-        /// and `OR`. Parentheses are supported, and `OR` has higher precedence than
-        /// `AND`.
-        ///
-        /// Restrictions have the form `<field> <operator> <value>` and may have a
-        /// `-` character in front of them to indicate negation. The fields map to
-        /// those defined in the corresponding resource.
-        ///
-        /// The supported operators are:
-        ///
-        /// * `=` for all value types.
-        /// * `>`, `<`, `>=`, `<=` for integer values.
-        /// * `:`, meaning substring matching, for strings.
-        ///
-        /// The supported value types are:
-        ///
-        /// * string literals in quotes.
-        /// * integer literals without quotes.
-        /// * boolean literals `true` and `false` without quotes.
-        #[prost(string, tag="1")]
-        pub filter: ::prost::alloc::string::String,
-    }
-    /// The type of events.
-    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
-    #[repr(i32)]
-    pub enum EventType {
-        /// Unspecified event type.
-        Unspecified = 0,
-        /// Events for findings.
-        Finding = 1,
-    }
-    /// The config for triggering notifications.
-    #[derive(Clone, PartialEq, ::prost::Oneof)]
-    pub enum NotifyConfig {
-        /// The config for triggering streaming-based notifications.
-        #[prost(message, tag="6")]
-        StreamingConfig(StreamingConfig),
-    }
-}
 /// User specified security marks that are attached to the parent Security
 /// Command Center resource. Security marks are scoped within a Security Command
 /// Center organization -- they can be modified and viewed by all users who have
@@ -192,11 +14,11 @@ pub struct SecurityMarks {
     /// Mutable user specified security marks belonging to the parent resource.
     /// Constraints are as follows:
     ///
-    ///   * Keys and values are treated as case insensitive
-    ///   * Keys must be between 1 - 256 characters (inclusive)
-    ///   * Keys must be letters, numbers, underscores, or dashes
-    ///   * Values have leading and trailing whitespace trimmed, remaining
-    ///     characters must be between 1 - 4096 characters (inclusive)
+    ///    * Keys and values are treated as case insensitive
+    ///    * Keys must be between 1 - 256 characters (inclusive)
+    ///    * Keys must be letters, numbers, underscores, or dashes
+    ///    * Values have leading and trailing whitespace trimmed, remaining
+    ///      characters must be between 1 - 4096 characters (inclusive)
     #[prost(btree_map="string, string", tag="2")]
     pub marks: ::prost::alloc::collections::BTreeMap<::prost::alloc::string::String, ::prost::alloc::string::String>,
     /// The canonical name of the marks.
@@ -301,6 +123,19 @@ pub mod finding {
         /// and is no longer active.
         Inactive = 2,
     }
+    impl State {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                State::Unspecified => "STATE_UNSPECIFIED",
+                State::Active => "ACTIVE",
+                State::Inactive => "INACTIVE",
+            }
+        }
+    }
     /// The severity of the finding. This field is managed by the source that
     /// writes the finding.
     #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
@@ -317,30 +152,33 @@ pub mod finding {
         /// Low severity.
         Low = 4,
     }
-}
-/// Security Command Center's Notification
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct NotificationMessage {
-    /// Name of the notification config that generated current notification.
-    #[prost(string, tag="1")]
-    pub notification_config_name: ::prost::alloc::string::String,
-    /// The Cloud resource tied to the notification.
-    #[prost(message, optional, tag="3")]
-    pub resource: ::core::option::Option<Resource>,
-    /// Notification Event.
-    #[prost(oneof="notification_message::Event", tags="2")]
-    pub event: ::core::option::Option<notification_message::Event>,
-}
-/// Nested message and enum types in `NotificationMessage`.
-pub mod notification_message {
-    /// Notification Event.
-    #[derive(Clone, PartialEq, ::prost::Oneof)]
-    pub enum Event {
-        /// If it's a Finding based notification config, this field will be
-        /// populated.
-        #[prost(message, tag="2")]
-        Finding(super::Finding),
+    impl Severity {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                Severity::Unspecified => "SEVERITY_UNSPECIFIED",
+                Severity::Critical => "CRITICAL",
+                Severity::High => "HIGH",
+                Severity::Medium => "MEDIUM",
+                Severity::Low => "LOW",
+            }
+        }
     }
+}
+/// Message that contains the resource name and display name of a folder
+/// resource.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct Folder {
+    /// Full resource name of this folder. See:
+    /// <https://cloud.google.com/apis/design/resource_names#full_resource_name>
+    #[prost(string, tag="1")]
+    pub resource_folder: ::prost::alloc::string::String,
+    /// The user defined display name for this folder.
+    #[prost(string, tag="2")]
+    pub resource_folder_display_name: ::prost::alloc::string::String,
 }
 /// Security Command Center representation of a Google Cloud
 /// resource.
@@ -445,6 +283,222 @@ pub mod asset {
         pub policy_blob: ::prost::alloc::string::String,
     }
 }
+/// Security Command Center finding source. A finding source
+/// is an entity or a mechanism that can produce a finding. A source is like a
+/// container of findings that come from the same scanner, logger, monitor, etc.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct Source {
+    /// The relative resource name of this source. See:
+    /// <https://cloud.google.com/apis/design/resource_names#relative_resource_name>
+    /// Example:
+    /// "organizations/{organization_id}/sources/{source_id}"
+    #[prost(string, tag="1")]
+    pub name: ::prost::alloc::string::String,
+    /// The source's display name.
+    /// A source's display name must be unique amongst its siblings, for example,
+    /// two sources with the same parent can't share the same display name.
+    /// The display name must have a length between 1 and 64 characters
+    /// (inclusive).
+    #[prost(string, tag="2")]
+    pub display_name: ::prost::alloc::string::String,
+    /// The description of the source (max of 1024 characters).
+    /// Example:
+    /// "Web Security Scanner is a web security scanner for common
+    /// vulnerabilities in App Engine applications. It can automatically
+    /// scan and detect four common vulnerabilities, including cross-site-scripting
+    /// (XSS), Flash injection, mixed content (HTTP in HTTPS), and
+    /// outdated/insecure libraries."
+    #[prost(string, tag="3")]
+    pub description: ::prost::alloc::string::String,
+    /// The canonical name of the finding. It's either
+    /// "organizations/{organization_id}/sources/{source_id}",
+    /// "folders/{folder_id}/sources/{source_id}" or
+    /// "projects/{project_number}/sources/{source_id}",
+    /// depending on the closest CRM ancestor of the resource associated with the
+    /// finding.
+    #[prost(string, tag="14")]
+    pub canonical_name: ::prost::alloc::string::String,
+}
+/// Information related to the Google Cloud resource.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct Resource {
+    /// The full resource name of the resource. See:
+    /// <https://cloud.google.com/apis/design/resource_names#full_resource_name>
+    #[prost(string, tag="1")]
+    pub name: ::prost::alloc::string::String,
+    /// The full resource name of project that the resource belongs to.
+    #[prost(string, tag="2")]
+    pub project: ::prost::alloc::string::String,
+    /// The human readable name of project that the resource belongs to.
+    #[prost(string, tag="3")]
+    pub project_display_name: ::prost::alloc::string::String,
+    /// The full resource name of resource's parent.
+    #[prost(string, tag="4")]
+    pub parent: ::prost::alloc::string::String,
+    /// The human readable name of resource's parent.
+    #[prost(string, tag="5")]
+    pub parent_display_name: ::prost::alloc::string::String,
+    /// Output only. Contains a Folder message for each folder in the assets ancestry.
+    /// The first folder is the deepest nested folder, and the last folder is the
+    /// folder directly under the Organization.
+    #[prost(message, repeated, tag="7")]
+    pub folders: ::prost::alloc::vec::Vec<Folder>,
+}
+/// Security Command Center's Notification
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct NotificationMessage {
+    /// Name of the notification config that generated current notification.
+    #[prost(string, tag="1")]
+    pub notification_config_name: ::prost::alloc::string::String,
+    /// The Cloud resource tied to the notification.
+    #[prost(message, optional, tag="3")]
+    pub resource: ::core::option::Option<Resource>,
+    /// Notification Event.
+    #[prost(oneof="notification_message::Event", tags="2")]
+    pub event: ::core::option::Option<notification_message::Event>,
+}
+/// Nested message and enum types in `NotificationMessage`.
+pub mod notification_message {
+    /// Notification Event.
+    #[derive(Clone, PartialEq, ::prost::Oneof)]
+    pub enum Event {
+        /// If it's a Finding based notification config, this field will be
+        /// populated.
+        #[prost(message, tag="2")]
+        Finding(super::Finding),
+    }
+}
+/// Response of asset discovery run
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct RunAssetDiscoveryResponse {
+    /// The state of an asset discovery run.
+    #[prost(enumeration="run_asset_discovery_response::State", tag="1")]
+    pub state: i32,
+    /// The duration between asset discovery run start and end
+    #[prost(message, optional, tag="2")]
+    pub duration: ::core::option::Option<::prost_types::Duration>,
+}
+/// Nested message and enum types in `RunAssetDiscoveryResponse`.
+pub mod run_asset_discovery_response {
+    /// The state of an asset discovery run.
+    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+    #[repr(i32)]
+    pub enum State {
+        /// Asset discovery run state was unspecified.
+        Unspecified = 0,
+        /// Asset discovery run completed successfully.
+        Completed = 1,
+        /// Asset discovery run was cancelled with tasks still pending, as another
+        /// run for the same organization was started with a higher priority.
+        Superseded = 2,
+        /// Asset discovery run was killed and terminated.
+        Terminated = 3,
+    }
+    impl State {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                State::Unspecified => "STATE_UNSPECIFIED",
+                State::Completed => "COMPLETED",
+                State::Superseded => "SUPERSEDED",
+                State::Terminated => "TERMINATED",
+            }
+        }
+    }
+}
+/// Security Command Center notification configs.
+///
+/// A notification config is a Security Command Center resource that contains the
+/// configuration to send notifications for create/update events of findings,
+/// assets and etc.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct NotificationConfig {
+    /// The relative resource name of this notification config. See:
+    /// <https://cloud.google.com/apis/design/resource_names#relative_resource_name>
+    /// Example:
+    /// "organizations/{organization_id}/notificationConfigs/notify_public_bucket".
+    #[prost(string, tag="1")]
+    pub name: ::prost::alloc::string::String,
+    /// The description of the notification config (max of 1024 characters).
+    #[prost(string, tag="2")]
+    pub description: ::prost::alloc::string::String,
+    /// The type of events the config is for, e.g. FINDING.
+    #[prost(enumeration="notification_config::EventType", tag="3")]
+    pub event_type: i32,
+    /// The Pub/Sub topic to send notifications to. Its format is
+    /// "projects/\[project_id]/topics/[topic\]".
+    #[prost(string, tag="4")]
+    pub pubsub_topic: ::prost::alloc::string::String,
+    /// Output only. The service account that needs "pubsub.topics.publish"
+    /// permission to publish to the Pub/Sub topic.
+    #[prost(string, tag="5")]
+    pub service_account: ::prost::alloc::string::String,
+    /// The config for triggering notifications.
+    #[prost(oneof="notification_config::NotifyConfig", tags="6")]
+    pub notify_config: ::core::option::Option<notification_config::NotifyConfig>,
+}
+/// Nested message and enum types in `NotificationConfig`.
+pub mod notification_config {
+    /// The config for streaming-based notifications, which send each event as soon
+    /// as it is detected.
+    #[derive(Clone, PartialEq, ::prost::Message)]
+    pub struct StreamingConfig {
+        /// Expression that defines the filter to apply across create/update events
+        /// of assets or findings as specified by the event type. The expression is a
+        /// list of zero or more restrictions combined via logical operators `AND`
+        /// and `OR`. Parentheses are supported, and `OR` has higher precedence than
+        /// `AND`.
+        ///
+        /// Restrictions have the form `<field> <operator> <value>` and may have a
+        /// `-` character in front of them to indicate negation. The fields map to
+        /// those defined in the corresponding resource.
+        ///
+        /// The supported operators are:
+        ///
+        /// * `=` for all value types.
+        /// * `>`, `<`, `>=`, `<=` for integer values.
+        /// * `:`, meaning substring matching, for strings.
+        ///
+        /// The supported value types are:
+        ///
+        /// * string literals in quotes.
+        /// * integer literals without quotes.
+        /// * boolean literals `true` and `false` without quotes.
+        #[prost(string, tag="1")]
+        pub filter: ::prost::alloc::string::String,
+    }
+    /// The type of events.
+    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+    #[repr(i32)]
+    pub enum EventType {
+        /// Unspecified event type.
+        Unspecified = 0,
+        /// Events for findings.
+        Finding = 1,
+    }
+    impl EventType {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                EventType::Unspecified => "EVENT_TYPE_UNSPECIFIED",
+                EventType::Finding => "FINDING",
+            }
+        }
+    }
+    /// The config for triggering notifications.
+    #[derive(Clone, PartialEq, ::prost::Oneof)]
+    pub enum NotifyConfig {
+        /// The config for triggering streaming-based notifications.
+        #[prost(message, tag="6")]
+        StreamingConfig(StreamingConfig),
+    }
+}
 /// User specified settings that are attached to the Security Command
 /// Center organization.
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -503,6 +557,19 @@ pub mod organization_settings {
             /// Asset Discovery will ignore all resources under the projects specified.
             /// All other resources will be retrieved.
             Exclude = 2,
+        }
+        impl InclusionMode {
+            /// String value of the enum field names used in the ProtoBuf definition.
+            ///
+            /// The values are not transformed in any way and thus are considered stable
+            /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+            pub fn as_str_name(&self) -> &'static str {
+                match self {
+                    InclusionMode::Unspecified => "INCLUSION_MODE_UNSPECIFIED",
+                    InclusionMode::IncludeOnly => "INCLUDE_ONLY",
+                    InclusionMode::Exclude => "EXCLUDE",
+                }
+            }
         }
     }
 }
@@ -621,17 +688,17 @@ pub struct GroupAssetsRequest {
     /// * name: `=`
     /// * update_time: `=`, `>`, `<`, `>=`, `<=`
     ///
-    ///   Usage: This should be milliseconds since epoch or an RFC3339 string.
-    ///   Examples:
-    ///     `update_time = "2019-06-10T16:07:18-07:00"`
-    ///     `update_time = 1560208038000`
+    ///    Usage: This should be milliseconds since epoch or an RFC3339 string.
+    ///    Examples:
+    ///      `update_time = "2019-06-10T16:07:18-07:00"`
+    ///      `update_time = 1560208038000`
     ///
     /// * create_time: `=`, `>`, `<`, `>=`, `<=`
     ///
-    ///   Usage: This should be milliseconds since epoch or an RFC3339 string.
-    ///   Examples:
-    ///     `create_time = "2019-06-10T16:07:18-07:00"`
-    ///     `create_time = 1560208038000`
+    ///    Usage: This should be milliseconds since epoch or an RFC3339 string.
+    ///    Examples:
+    ///      `create_time = "2019-06-10T16:07:18-07:00"`
+    ///      `create_time = 1560208038000`
     ///
     /// * iam_policy.policy_blob: `=`, `:`
     /// * resource_properties: `=`, `:`, `>`, `<`, `>=`, `<=`
@@ -688,12 +755,12 @@ pub struct GroupAssetsRequest {
     /// Possible "state_change" values when compare_duration is specified:
     ///
     /// * "ADDED":   indicates that the asset was not present at the start of
-    ///                compare_duration, but present at reference_time.
+    ///                 compare_duration, but present at reference_time.
     /// * "REMOVED": indicates that the asset was present at the start of
-    ///                compare_duration, but not present at reference_time.
+    ///                 compare_duration, but not present at reference_time.
     /// * "ACTIVE":  indicates that the asset was present at both the
-    ///                start and the end of the time period defined by
-    ///                compare_duration and reference_time.
+    ///                 start and the end of the time period defined by
+    ///                 compare_duration and reference_time.
     ///
     /// If compare_duration is not specified, then the only possible state_change
     /// is "UNUSED", which will be the state_change set for all assets present at
@@ -758,9 +825,9 @@ pub struct GroupFindingsRequest {
     /// Restrictions have the form `<field> <operator> <value>` and may have a `-`
     /// character in front of them to indicate negation. Examples include:
     ///
-    ///  * name
-    ///  * source_properties.a_property
-    ///  * security_marks.marks.marka
+    ///   * name
+    ///   * source_properties.a_property
+    ///   * security_marks.marks.marka
     ///
     /// The supported operators are:
     ///
@@ -785,10 +852,10 @@ pub struct GroupFindingsRequest {
     /// * event_time: `=`, `>`, `<`, `>=`, `<=`
     /// * severity: `=`, `:`
     ///
-    ///   Usage: This should be milliseconds since epoch or an RFC3339 string.
-    ///   Examples:
-    ///     `event_time = "2019-06-10T16:07:18-07:00"`
-    ///     `event_time = 1560208038000`
+    ///    Usage: This should be milliseconds since epoch or an RFC3339 string.
+    ///    Examples:
+    ///      `event_time = "2019-06-10T16:07:18-07:00"`
+    ///      `event_time = 1560208038000`
     ///
     /// * security_marks.marks: `=`, `:`
     /// * source_properties: `=`, `:`, `>`, `<`, `>=`, `<=`
@@ -839,17 +906,17 @@ pub struct GroupFindingsRequest {
     /// Possible "state_change" values when compare_duration is specified:
     ///
     /// * "CHANGED":   indicates that the finding was present and matched the given
-    ///                  filter at the start of compare_duration, but changed its
-    ///                  state at read_time.
+    ///                   filter at the start of compare_duration, but changed its
+    ///                   state at read_time.
     /// * "UNCHANGED": indicates that the finding was present and matched the given
-    ///                  filter at the start of compare_duration and did not change
-    ///                  state at read_time.
+    ///                   filter at the start of compare_duration and did not change
+    ///                   state at read_time.
     /// * "ADDED":     indicates that the finding did not match the given filter or
-    ///                  was not present at the start of compare_duration, but was
-    ///                  present at read_time.
+    ///                   was not present at the start of compare_duration, but was
+    ///                   present at read_time.
     /// * "REMOVED":   indicates that the finding was present and matched the
-    ///                  filter at the start of compare_duration, but did not match
-    ///                  the filter at read_time.
+    ///                   filter at the start of compare_duration, but did not match
+    ///                   the filter at read_time.
     ///
     /// If compare_duration is not specified, then the only possible state_change
     /// is "UNUSED",  which will be the state_change set for all findings present
@@ -994,17 +1061,17 @@ pub struct ListAssetsRequest {
     /// * name: `=`
     /// * update_time: `=`, `>`, `<`, `>=`, `<=`
     ///
-    ///   Usage: This should be milliseconds since epoch or an RFC3339 string.
-    ///   Examples:
-    ///     `update_time = "2019-06-10T16:07:18-07:00"`
-    ///     `update_time = 1560208038000`
+    ///    Usage: This should be milliseconds since epoch or an RFC3339 string.
+    ///    Examples:
+    ///      `update_time = "2019-06-10T16:07:18-07:00"`
+    ///      `update_time = 1560208038000`
     ///
     /// * create_time: `=`, `>`, `<`, `>=`, `<=`
     ///
-    ///   Usage: This should be milliseconds since epoch or an RFC3339 string.
-    ///   Examples:
-    ///     `create_time = "2019-06-10T16:07:18-07:00"`
-    ///     `create_time = 1560208038000`
+    ///    Usage: This should be milliseconds since epoch or an RFC3339 string.
+    ///    Examples:
+    ///      `create_time = "2019-06-10T16:07:18-07:00"`
+    ///      `create_time = 1560208038000`
     ///
     /// * iam_policy.policy_blob: `=`, `:`
     /// * resource_properties: `=`, `:`, `>`, `<`, `>=`, `<=`
@@ -1070,12 +1137,12 @@ pub struct ListAssetsRequest {
     /// Possible "state_change" values when compare_duration is specified:
     ///
     /// * "ADDED":   indicates that the asset was not present at the start of
-    ///                compare_duration, but present at read_time.
+    ///                 compare_duration, but present at read_time.
     /// * "REMOVED": indicates that the asset was present at the start of
-    ///                compare_duration, but not present at read_time.
+    ///                 compare_duration, but not present at read_time.
     /// * "ACTIVE":  indicates that the asset was present at both the
-    ///                start and the end of the time period defined by
-    ///                compare_duration and read_time.
+    ///                 start and the end of the time period defined by
+    ///                 compare_duration and read_time.
     ///
     /// If compare_duration is not specified, then the only possible state_change
     /// is "UNUSED",  which will be the state_change set for all assets present at
@@ -1146,6 +1213,20 @@ pub mod list_assets_response {
             /// Asset was present at both point(s) in time.
             Active = 3,
         }
+        impl StateChange {
+            /// String value of the enum field names used in the ProtoBuf definition.
+            ///
+            /// The values are not transformed in any way and thus are considered stable
+            /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+            pub fn as_str_name(&self) -> &'static str {
+                match self {
+                    StateChange::Unused => "UNUSED",
+                    StateChange::Added => "ADDED",
+                    StateChange::Removed => "REMOVED",
+                    StateChange::Active => "ACTIVE",
+                }
+            }
+        }
     }
 }
 /// Request message for listing findings.
@@ -1168,9 +1249,9 @@ pub struct ListFindingsRequest {
     /// Restrictions have the form `<field> <operator> <value>` and may have a `-`
     /// character in front of them to indicate negation. Examples include:
     ///
-    ///  * name
-    ///  * source_properties.a_property
-    ///  * security_marks.marks.marka
+    ///   * name
+    ///   * source_properties.a_property
+    ///   * security_marks.marks.marka
     ///
     /// The supported operators are:
     ///
@@ -1195,10 +1276,10 @@ pub struct ListFindingsRequest {
     /// * event_time: `=`, `>`, `<`, `>=`, `<=`
     /// * severity: `=`, `:`
     ///
-    ///   Usage: This should be milliseconds since epoch or an RFC3339 string.
-    ///   Examples:
-    ///     `event_time = "2019-06-10T16:07:18-07:00"`
-    ///     `event_time = 1560208038000`
+    ///    Usage: This should be milliseconds since epoch or an RFC3339 string.
+    ///    Examples:
+    ///      `event_time = "2019-06-10T16:07:18-07:00"`
+    ///      `event_time = 1560208038000`
     ///
     /// security_marks.marks: `=`, `:`
     /// source_properties: `=`, `:`, `>`, `<`, `>=`, `<=`
@@ -1253,17 +1334,17 @@ pub struct ListFindingsRequest {
     /// Possible "state_change" values when compare_duration is specified:
     ///
     /// * "CHANGED":   indicates that the finding was present and matched the given
-    ///                  filter at the start of compare_duration, but changed its
-    ///                  state at read_time.
+    ///                   filter at the start of compare_duration, but changed its
+    ///                   state at read_time.
     /// * "UNCHANGED": indicates that the finding was present and matched the given
-    ///                  filter at the start of compare_duration and did not change
-    ///                  state at read_time.
+    ///                   filter at the start of compare_duration and did not change
+    ///                   state at read_time.
     /// * "ADDED":     indicates that the finding did not match the given filter or
-    ///                  was not present at the start of compare_duration, but was
-    ///                  present at read_time.
+    ///                   was not present at the start of compare_duration, but was
+    ///                   present at read_time.
     /// * "REMOVED":   indicates that the finding was present and matched the
-    ///                  filter at the start of compare_duration, but did not match
-    ///                  the filter at read_time.
+    ///                   filter at the start of compare_duration, but did not match
+    ///                   the filter at read_time.
     ///
     /// If compare_duration is not specified, then the only possible state_change
     /// is "UNUSED", which will be the state_change set for all findings present at
@@ -1368,6 +1449,21 @@ pub mod list_findings_response {
             /// The finding at timestamp does not match the filter specified, but it
             /// did at timestamp - compare_duration.
             Removed = 4,
+        }
+        impl StateChange {
+            /// String value of the enum field names used in the ProtoBuf definition.
+            ///
+            /// The values are not transformed in any way and thus are considered stable
+            /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+            pub fn as_str_name(&self) -> &'static str {
+                match self {
+                    StateChange::Unused => "UNUSED",
+                    StateChange::Changed => "CHANGED",
+                    StateChange::Unchanged => "UNCHANGED",
+                    StateChange::Added => "ADDED",
+                    StateChange::Removed => "REMOVED",
+                }
+            }
         }
     }
 }
@@ -1475,6 +1571,7 @@ pub struct UpdateSecurityMarksRequest {
 pub mod security_center_client {
     #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
     use tonic::codegen::*;
+    use tonic::codegen::http::Uri;
     /// V1p1Beta1 APIs for Security Center service.
     #[derive(Debug, Clone)]
     pub struct SecurityCenterClient<T> {
@@ -1489,6 +1586,10 @@ pub mod security_center_client {
     {
         pub fn new(inner: T) -> Self {
             let inner = tonic::client::Grpc::new(inner);
+            Self { inner }
+        }
+        pub fn with_origin(inner: T, origin: Uri) -> Self {
+            let inner = tonic::client::Grpc::with_origin(inner, origin);
             Self { inner }
         }
         pub fn with_interceptor<F>(
@@ -1510,19 +1611,19 @@ pub mod security_center_client {
         {
             SecurityCenterClient::new(InterceptedService::new(inner, interceptor))
         }
-        /// Compress requests with `gzip`.
+        /// Compress requests with the given encoding.
         ///
         /// This requires the server to support it otherwise it might respond with an
         /// error.
         #[must_use]
-        pub fn send_gzip(mut self) -> Self {
-            self.inner = self.inner.send_gzip();
+        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.send_compressed(encoding);
             self
         }
-        /// Enable decompressing responses with `gzip`.
+        /// Enable decompressing responses.
         #[must_use]
-        pub fn accept_gzip(mut self) -> Self {
-            self.inner = self.inner.accept_gzip();
+        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.accept_compressed(encoding);
             self
         }
         /// Creates a source.

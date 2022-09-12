@@ -7,37 +7,37 @@ pub struct TranslateSpeechConfig {
     ///
     /// - `linear16`
     ///
-    ///   Uncompressed 16-bit signed little-endian samples (Linear PCM).
+    ///    Uncompressed 16-bit signed little-endian samples (Linear PCM).
     ///
     /// - `flac`
     ///
-    ///   `flac` (Free Lossless Audio Codec) is the recommended encoding
-    ///   because it is lossless--therefore recognition is not compromised--and
-    ///   requires only about half the bandwidth of `linear16`.
+    ///    `flac` (Free Lossless Audio Codec) is the recommended encoding
+    ///    because it is lossless--therefore recognition is not compromised--and
+    ///    requires only about half the bandwidth of `linear16`.
     ///
     /// - `mulaw`
     ///
-    ///   8-bit samples that compand 14-bit audio samples using G.711 PCMU/mu-law.
+    ///    8-bit samples that compand 14-bit audio samples using G.711 PCMU/mu-law.
     ///
     /// - `amr`
     ///
-    ///   Adaptive Multi-Rate Narrowband codec. `sample_rate_hertz` must be 8000.
+    ///    Adaptive Multi-Rate Narrowband codec. `sample_rate_hertz` must be 8000.
     ///
     /// - `amr-wb`
     ///
-    ///   Adaptive Multi-Rate Wideband codec. `sample_rate_hertz` must be 16000.
+    ///    Adaptive Multi-Rate Wideband codec. `sample_rate_hertz` must be 16000.
     ///
     /// - `ogg-opus`
     ///
-    ///   Opus encoded audio frames in \[Ogg\](<https://wikipedia.org/wiki/Ogg>)
-    ///   container. `sample_rate_hertz` must be one of 8000, 12000, 16000, 24000,
-    ///   or 48000.
+    ///    Opus encoded audio frames in \[Ogg\](<https://wikipedia.org/wiki/Ogg>)
+    ///    container. `sample_rate_hertz` must be one of 8000, 12000, 16000, 24000,
+    ///    or 48000.
     ///
     /// - `mp3`
     ///
-    ///   MP3 audio. Support all standard MP3 bitrates (which range from 32-320
-    ///   kbps). When using this encoding, `sample_rate_hertz` has to match the
-    ///   sample rate of the file being used.
+    ///    MP3 audio. Support all standard MP3 bitrates (which range from 32-320
+    ///    kbps). When using this encoding, `sample_rate_hertz` has to match the
+    ///    sample rate of the file being used.
     #[prost(string, tag="1")]
     pub audio_encoding: ::prost::alloc::string::String,
     /// Required. Source language code (BCP-47) of the input audio.
@@ -183,11 +183,24 @@ pub mod streaming_translate_speech_response {
         /// `single_utterance` was set to `true`, and is not used otherwise.
         EndOfSingleUtterance = 1,
     }
+    impl SpeechEventType {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                SpeechEventType::Unspecified => "SPEECH_EVENT_TYPE_UNSPECIFIED",
+                SpeechEventType::EndOfSingleUtterance => "END_OF_SINGLE_UTTERANCE",
+            }
+        }
+    }
 }
 /// Generated client implementations.
 pub mod speech_translation_service_client {
     #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
     use tonic::codegen::*;
+    use tonic::codegen::http::Uri;
     /// Provides translation from/to media types.
     #[derive(Debug, Clone)]
     pub struct SpeechTranslationServiceClient<T> {
@@ -202,6 +215,10 @@ pub mod speech_translation_service_client {
     {
         pub fn new(inner: T) -> Self {
             let inner = tonic::client::Grpc::new(inner);
+            Self { inner }
+        }
+        pub fn with_origin(inner: T, origin: Uri) -> Self {
+            let inner = tonic::client::Grpc::with_origin(inner, origin);
             Self { inner }
         }
         pub fn with_interceptor<F>(
@@ -225,19 +242,19 @@ pub mod speech_translation_service_client {
                 InterceptedService::new(inner, interceptor),
             )
         }
-        /// Compress requests with `gzip`.
+        /// Compress requests with the given encoding.
         ///
         /// This requires the server to support it otherwise it might respond with an
         /// error.
         #[must_use]
-        pub fn send_gzip(mut self) -> Self {
-            self.inner = self.inner.send_gzip();
+        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.send_compressed(encoding);
             self
         }
-        /// Enable decompressing responses with `gzip`.
+        /// Enable decompressing responses.
         #[must_use]
-        pub fn accept_gzip(mut self) -> Self {
-            self.inner = self.inner.accept_gzip();
+        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.accept_compressed(encoding);
             self
         }
         /// Performs bidirectional streaming speech translation: receive results while

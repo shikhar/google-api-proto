@@ -358,6 +358,19 @@ pub enum MqttState {
     /// Disables a MQTT connection.
     MqttDisabled = 2,
 }
+impl MqttState {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            MqttState::Unspecified => "MQTT_STATE_UNSPECIFIED",
+            MqttState::MqttEnabled => "MQTT_ENABLED",
+            MqttState::MqttDisabled => "MQTT_DISABLED",
+        }
+    }
+}
 /// Indicates whether DeviceService (HTTP) is enabled or disabled for the
 /// registry. See the field description for details.
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
@@ -370,6 +383,19 @@ pub enum HttpState {
     HttpEnabled = 1,
     /// Disables DeviceService (HTTP) service for the registry.
     HttpDisabled = 2,
+}
+impl HttpState {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            HttpState::Unspecified => "HTTP_STATE_UNSPECIFIED",
+            HttpState::HttpEnabled => "HTTP_ENABLED",
+            HttpState::HttpDisabled => "HTTP_DISABLED",
+        }
+    }
 }
 /// **Beta Feature**
 ///
@@ -392,6 +418,21 @@ pub enum LogLevel {
     /// All events will be logged.
     Debug = 40,
 }
+impl LogLevel {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            LogLevel::Unspecified => "LOG_LEVEL_UNSPECIFIED",
+            LogLevel::None => "NONE",
+            LogLevel::Error => "ERROR",
+            LogLevel::Info => "INFO",
+            LogLevel::Debug => "DEBUG",
+        }
+    }
+}
 /// Gateway type.
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
 #[repr(i32)]
@@ -402,6 +443,19 @@ pub enum GatewayType {
     Gateway = 1,
     /// The device is not a gateway.
     NonGateway = 2,
+}
+impl GatewayType {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            GatewayType::Unspecified => "GATEWAY_TYPE_UNSPECIFIED",
+            GatewayType::Gateway => "GATEWAY",
+            GatewayType::NonGateway => "NON_GATEWAY",
+        }
+    }
 }
 /// The gateway authorization/authentication method. This setting determines how
 /// Cloud IoT Core authorizes/authenticate devices to access the gateway.
@@ -422,6 +476,20 @@ pub enum GatewayAuthMethod {
     /// own credentials.
     AssociationAndDeviceAuthToken = 3,
 }
+impl GatewayAuthMethod {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            GatewayAuthMethod::Unspecified => "GATEWAY_AUTH_METHOD_UNSPECIFIED",
+            GatewayAuthMethod::AssociationOnly => "ASSOCIATION_ONLY",
+            GatewayAuthMethod::DeviceAuthTokenOnly => "DEVICE_AUTH_TOKEN_ONLY",
+            GatewayAuthMethod::AssociationAndDeviceAuthToken => "ASSOCIATION_AND_DEVICE_AUTH_TOKEN",
+        }
+    }
+}
 /// The supported formats for the public key.
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
 #[repr(i32)]
@@ -433,6 +501,18 @@ pub enum PublicKeyCertificateFormat {
     /// encoded in base64, and wrapped by `-----BEGIN CERTIFICATE-----` and
     /// `-----END CERTIFICATE-----`.
     X509CertificatePem = 1,
+}
+impl PublicKeyCertificateFormat {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            PublicKeyCertificateFormat::UnspecifiedPublicKeyCertificateFormat => "UNSPECIFIED_PUBLIC_KEY_CERTIFICATE_FORMAT",
+            PublicKeyCertificateFormat::X509CertificatePem => "X509_CERTIFICATE_PEM",
+        }
+    }
 }
 /// The supported formats for the public key.
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
@@ -460,6 +540,21 @@ pub enum PublicKeyFormat {
     /// <https://www.ietf.org/rfc/rfc5280.txt>)), encoded in base64, and wrapped by
     /// `-----BEGIN CERTIFICATE-----` and `-----END CERTIFICATE-----`.
     Es256X509Pem = 4,
+}
+impl PublicKeyFormat {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            PublicKeyFormat::UnspecifiedPublicKeyFormat => "UNSPECIFIED_PUBLIC_KEY_FORMAT",
+            PublicKeyFormat::RsaPem => "RSA_PEM",
+            PublicKeyFormat::RsaX509Pem => "RSA_X509_PEM",
+            PublicKeyFormat::Es256Pem => "ES256_PEM",
+            PublicKeyFormat::Es256X509Pem => "ES256_X509_PEM",
+        }
+    }
 }
 /// Request for `CreateDeviceRegistry`.
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -802,6 +897,7 @@ pub struct UnbindDeviceFromGatewayResponse {
 pub mod device_manager_client {
     #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
     use tonic::codegen::*;
+    use tonic::codegen::http::Uri;
     /// Internet of Things (IoT) service. Securely connect and manage IoT devices.
     #[derive(Debug, Clone)]
     pub struct DeviceManagerClient<T> {
@@ -816,6 +912,10 @@ pub mod device_manager_client {
     {
         pub fn new(inner: T) -> Self {
             let inner = tonic::client::Grpc::new(inner);
+            Self { inner }
+        }
+        pub fn with_origin(inner: T, origin: Uri) -> Self {
+            let inner = tonic::client::Grpc::with_origin(inner, origin);
             Self { inner }
         }
         pub fn with_interceptor<F>(
@@ -837,19 +937,19 @@ pub mod device_manager_client {
         {
             DeviceManagerClient::new(InterceptedService::new(inner, interceptor))
         }
-        /// Compress requests with `gzip`.
+        /// Compress requests with the given encoding.
         ///
         /// This requires the server to support it otherwise it might respond with an
         /// error.
         #[must_use]
-        pub fn send_gzip(mut self) -> Self {
-            self.inner = self.inner.send_gzip();
+        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.send_compressed(encoding);
             self
         }
-        /// Enable decompressing responses with `gzip`.
+        /// Enable decompressing responses.
         #[must_use]
-        pub fn accept_gzip(mut self) -> Self {
-            self.inner = self.inner.accept_gzip();
+        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.accept_compressed(encoding);
             self
         }
         /// Creates a device registry that contains devices.

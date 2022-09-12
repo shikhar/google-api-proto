@@ -292,6 +292,20 @@ pub mod vpn_connection {
             /// Error occurred.
             Error = 3,
         }
+        impl State {
+            /// String value of the enum field names used in the ProtoBuf definition.
+            ///
+            /// The values are not transformed in any way and thus are considered stable
+            /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+            pub fn as_str_name(&self) -> &'static str {
+                match self {
+                    State::Unspecified => "STATE_UNSPECIFIED",
+                    State::Connected => "STATE_CONNECTED",
+                    State::Connecting => "STATE_CONNECTING",
+                    State::Error => "STATE_ERROR",
+                }
+            }
+        }
     }
     /// Routing mode.
     #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
@@ -303,6 +317,19 @@ pub mod vpn_connection {
         Regional = 1,
         /// Global mode.
         Global = 2,
+    }
+    impl BgpRoutingMode {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                BgpRoutingMode::Unspecified => "BGP_ROUTING_MODE_UNSPECIFIED",
+                BgpRoutingMode::Regional => "REGIONAL",
+                BgpRoutingMode::Global => "GLOBAL",
+            }
+        }
     }
 }
 /// Metadata for a given \[google.cloud.location.Location][google.cloud.location.Location\].
@@ -382,6 +409,19 @@ pub enum KmsKeyState {
     /// The key is unavailable for an unspecified reason. Dependent resources may
     /// be inaccessible.
     KeyUnavailable = 2,
+}
+impl KmsKeyState {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            KmsKeyState::Unspecified => "KMS_KEY_STATE_UNSPECIFIED",
+            KmsKeyState::KeyAvailable => "KMS_KEY_STATE_KEY_AVAILABLE",
+            KmsKeyState::KeyUnavailable => "KMS_KEY_STATE_KEY_UNAVAILABLE",
+        }
+    }
 }
 /// Long-running operation metadata for Edge Container API methods.
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -717,6 +757,7 @@ pub struct DeleteVpnConnectionRequest {
 pub mod edge_container_client {
     #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
     use tonic::codegen::*;
+    use tonic::codegen::http::Uri;
     /// EdgeContainer API provides management of Kubernetes Clusters on Google Edge
     /// Cloud deployments.
     #[derive(Debug, Clone)]
@@ -732,6 +773,10 @@ pub mod edge_container_client {
     {
         pub fn new(inner: T) -> Self {
             let inner = tonic::client::Grpc::new(inner);
+            Self { inner }
+        }
+        pub fn with_origin(inner: T, origin: Uri) -> Self {
+            let inner = tonic::client::Grpc::with_origin(inner, origin);
             Self { inner }
         }
         pub fn with_interceptor<F>(
@@ -753,19 +798,19 @@ pub mod edge_container_client {
         {
             EdgeContainerClient::new(InterceptedService::new(inner, interceptor))
         }
-        /// Compress requests with `gzip`.
+        /// Compress requests with the given encoding.
         ///
         /// This requires the server to support it otherwise it might respond with an
         /// error.
         #[must_use]
-        pub fn send_gzip(mut self) -> Self {
-            self.inner = self.inner.send_gzip();
+        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.send_compressed(encoding);
             self
         }
-        /// Enable decompressing responses with `gzip`.
+        /// Enable decompressing responses.
         #[must_use]
-        pub fn accept_gzip(mut self) -> Self {
-            self.inner = self.inner.accept_gzip();
+        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.accept_compressed(encoding);
             self
         }
         /// Lists Clusters in a given project and location.

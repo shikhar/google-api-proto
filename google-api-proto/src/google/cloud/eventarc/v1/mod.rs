@@ -1,3 +1,60 @@
+/// A representation of the Provider resource.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct Provider {
+    /// Output only. In `projects/{project}/locations/{location}/providers/{provider_id}`
+    /// format.
+    #[prost(string, tag="1")]
+    pub name: ::prost::alloc::string::String,
+    /// Output only. Human friendly name for the Provider. For example "Cloud Storage".
+    #[prost(string, tag="2")]
+    pub display_name: ::prost::alloc::string::String,
+    /// Output only. Event types for this provider.
+    #[prost(message, repeated, tag="3")]
+    pub event_types: ::prost::alloc::vec::Vec<EventType>,
+}
+/// A representation of the event type resource.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct EventType {
+    /// Output only. The full name of the event type (for example,
+    /// "google.cloud.storage.object.v1.finalized"). In the form of
+    /// {provider-specific-prefix}.{resource}.{version}.{verb}. Types MUST be
+    /// versioned and event schemas are guaranteed to remain backward compatible
+    /// within one version. Note that event type versions and API versions do not
+    /// need to match.
+    #[prost(string, tag="1")]
+    pub r#type: ::prost::alloc::string::String,
+    /// Output only. Human friendly description of what the event type is about.
+    /// For example "Bucket created in Cloud Storage".
+    #[prost(string, tag="2")]
+    pub description: ::prost::alloc::string::String,
+    /// Output only. Filtering attributes for the event type.
+    #[prost(message, repeated, tag="3")]
+    pub filtering_attributes: ::prost::alloc::vec::Vec<FilteringAttribute>,
+    /// Output only. URI for the event schema.
+    /// For example
+    /// "<https://github.com/googleapis/google-cloudevents/blob/master/proto/google/events/cloud/storage/v1/events.proto">
+    #[prost(string, tag="4")]
+    pub event_schema_uri: ::prost::alloc::string::String,
+}
+/// A representation of the FilteringAttribute resource.
+/// Filtering attributes are per event type.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct FilteringAttribute {
+    /// Output only. Attribute used for filtering the event type.
+    #[prost(string, tag="1")]
+    pub attribute: ::prost::alloc::string::String,
+    /// Output only. Description of the purpose of the attribute.
+    #[prost(string, tag="2")]
+    pub description: ::prost::alloc::string::String,
+    /// Output only. If true, the triggers for this provider should always specify a filter
+    /// on these attributes. Trigger creation will fail otherwise.
+    #[prost(bool, tag="3")]
+    pub required: bool,
+    /// Output only. If true, the attribute accepts matching expressions in the Eventarc
+    /// PathPattern format.
+    #[prost(bool, tag="4")]
+    pub path_pattern_supported: bool,
+}
 /// A representation of the Channel resource.
 /// A Channel is a resource on which event providers publish their events.
 /// The published events are delivered through the transport associated with the
@@ -56,10 +113,24 @@ pub mod channel {
         /// permanently. There are two possible cases this state can happen:
         /// 1. The SaaS provider disconnected from this Channel.
         /// 2. The Channel activation token has expired but the SaaS provider
-        ///    wasn't connected.
+        ///     wasn't connected.
         /// To re-establish a Connection with a provider, the subscriber
         /// should create a new Channel and give it to the provider.
         Inactive = 3,
+    }
+    impl State {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                State::Unspecified => "STATE_UNSPECIFIED",
+                State::Pending => "PENDING",
+                State::Active => "ACTIVE",
+                State::Inactive => "INACTIVE",
+            }
+        }
     }
     #[derive(Clone, PartialEq, ::prost::Oneof)]
     pub enum Transport {
@@ -100,63 +171,6 @@ pub struct ChannelConnection {
     /// provider project. This field will not be stored in the provider resource.
     #[prost(string, tag="8")]
     pub activation_token: ::prost::alloc::string::String,
-}
-/// A representation of the Provider resource.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct Provider {
-    /// Output only. In `projects/{project}/locations/{location}/providers/{provider_id}`
-    /// format.
-    #[prost(string, tag="1")]
-    pub name: ::prost::alloc::string::String,
-    /// Output only. Human friendly name for the Provider. For example "Cloud Storage".
-    #[prost(string, tag="2")]
-    pub display_name: ::prost::alloc::string::String,
-    /// Output only. Event types for this provider.
-    #[prost(message, repeated, tag="3")]
-    pub event_types: ::prost::alloc::vec::Vec<EventType>,
-}
-/// A representation of the event type resource.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct EventType {
-    /// Output only. The full name of the event type (for example,
-    /// "google.cloud.storage.object.v1.finalized"). In the form of
-    /// {provider-specific-prefix}.{resource}.{version}.{verb}. Types MUST be
-    /// versioned and event schemas are guaranteed to remain backward compatible
-    /// within one version. Note that event type versions and API versions do not
-    /// need to match.
-    #[prost(string, tag="1")]
-    pub r#type: ::prost::alloc::string::String,
-    /// Output only. Human friendly description of what the event type is about.
-    /// For example "Bucket created in Cloud Storage".
-    #[prost(string, tag="2")]
-    pub description: ::prost::alloc::string::String,
-    /// Output only. Filtering attributes for the event type.
-    #[prost(message, repeated, tag="3")]
-    pub filtering_attributes: ::prost::alloc::vec::Vec<FilteringAttribute>,
-    /// Output only. URI for the event schema.
-    /// For example
-    /// "<https://github.com/googleapis/google-cloudevents/blob/master/proto/google/events/cloud/storage/v1/events.proto">
-    #[prost(string, tag="4")]
-    pub event_schema_uri: ::prost::alloc::string::String,
-}
-/// A representation of the FilteringAttribute resource.
-/// Filtering attributes are per event type.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct FilteringAttribute {
-    /// Output only. Attribute used for filtering the event type.
-    #[prost(string, tag="1")]
-    pub attribute: ::prost::alloc::string::String,
-    /// Output only. Description of the purpose of the attribute.
-    #[prost(string, tag="2")]
-    pub description: ::prost::alloc::string::String,
-    /// Output only. If true, the triggers for this provider should always specify a filter
-    /// on these attributes. Trigger creation will fail otherwise.
-    #[prost(bool, tag="3")]
-    pub required: bool,
-    /// Output only. If true, the attribute accepts matching expressions in the Eventarc
-    /// PathPattern format.
-    #[prost(bool, tag="4")]
-    pub path_pattern_supported: bool,
 }
 /// A representation of the trigger resource.
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -672,6 +686,7 @@ pub struct OperationMetadata {
 pub mod eventarc_client {
     #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
     use tonic::codegen::*;
+    use tonic::codegen::http::Uri;
     /// Eventarc allows users to subscribe to various events that are provided by
     /// Google Cloud services and forward them to supported destinations.
     #[derive(Debug, Clone)]
@@ -687,6 +702,10 @@ pub mod eventarc_client {
     {
         pub fn new(inner: T) -> Self {
             let inner = tonic::client::Grpc::new(inner);
+            Self { inner }
+        }
+        pub fn with_origin(inner: T, origin: Uri) -> Self {
+            let inner = tonic::client::Grpc::with_origin(inner, origin);
             Self { inner }
         }
         pub fn with_interceptor<F>(
@@ -708,19 +727,19 @@ pub mod eventarc_client {
         {
             EventarcClient::new(InterceptedService::new(inner, interceptor))
         }
-        /// Compress requests with `gzip`.
+        /// Compress requests with the given encoding.
         ///
         /// This requires the server to support it otherwise it might respond with an
         /// error.
         #[must_use]
-        pub fn send_gzip(mut self) -> Self {
-            self.inner = self.inner.send_gzip();
+        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.send_compressed(encoding);
             self
         }
-        /// Enable decompressing responses with `gzip`.
+        /// Enable decompressing responses.
         #[must_use]
-        pub fn accept_gzip(mut self) -> Self {
-            self.inner = self.inner.accept_gzip();
+        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.accept_compressed(encoding);
             self
         }
         /// Get a single trigger.

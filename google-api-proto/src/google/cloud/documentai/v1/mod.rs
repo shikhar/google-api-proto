@@ -1,75 +1,3 @@
-/// A vertex represents a 2D point in the image.
-/// NOTE: the vertex coordinates are in the same scale as the original image.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct Vertex {
-    /// X coordinate.
-    #[prost(int32, tag="1")]
-    pub x: i32,
-    /// Y coordinate (starts from the top of the image).
-    #[prost(int32, tag="2")]
-    pub y: i32,
-}
-/// A vertex represents a 2D point in the image.
-/// NOTE: the normalized vertex coordinates are relative to the original image
-/// and range from 0 to 1.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct NormalizedVertex {
-    /// X coordinate.
-    #[prost(float, tag="1")]
-    pub x: f32,
-    /// Y coordinate (starts from the top of the image).
-    #[prost(float, tag="2")]
-    pub y: f32,
-}
-/// A bounding polygon for the detected image annotation.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct BoundingPoly {
-    /// The bounding polygon vertices.
-    #[prost(message, repeated, tag="1")]
-    pub vertices: ::prost::alloc::vec::Vec<Vertex>,
-    /// The bounding polygon normalized vertices.
-    #[prost(message, repeated, tag="2")]
-    pub normalized_vertices: ::prost::alloc::vec::Vec<NormalizedVertex>,
-}
-/// The common metadata for long running operations.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct CommonOperationMetadata {
-    /// The state of the operation.
-    #[prost(enumeration="common_operation_metadata::State", tag="1")]
-    pub state: i32,
-    /// A message providing more details about the current state of processing.
-    #[prost(string, tag="2")]
-    pub state_message: ::prost::alloc::string::String,
-    /// A related resource to this operation.
-    #[prost(string, tag="5")]
-    pub resource: ::prost::alloc::string::String,
-    /// The creation time of the operation.
-    #[prost(message, optional, tag="3")]
-    pub create_time: ::core::option::Option<::prost_types::Timestamp>,
-    /// The last update time of the operation.
-    #[prost(message, optional, tag="4")]
-    pub update_time: ::core::option::Option<::prost_types::Timestamp>,
-}
-/// Nested message and enum types in `CommonOperationMetadata`.
-pub mod common_operation_metadata {
-    /// State of the longrunning operation.
-    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
-    #[repr(i32)]
-    pub enum State {
-        /// Unspecified state.
-        Unspecified = 0,
-        /// Operation is still running.
-        Running = 1,
-        /// Operation is being cancelled.
-        Cancelling = 2,
-        /// Operation succeeded.
-        Succeeded = 3,
-        /// Operation failed.
-        Failed = 4,
-        /// Operation is cancelled.
-        Cancelled = 5,
-    }
-}
 /// The schema defines the output of the processed document by a processor.
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct DocumentSchema {
@@ -104,11 +32,11 @@ pub mod document_schema {
         /// - Maximum 64 characters.
         /// - Must start with a letter.
         /// - Allowed characters: ASCII letters `\[a-z0-9_-\]`.  (For backward
-        ///   compatibility internal infrastructure and tooling can handle any ascii
-        ///   character)
+        ///    compatibility internal infrastructure and tooling can handle any ascii
+        ///    character)
         /// - The '/' is sometimes used to denote a property of a type.  For example
-        ///   line_item/amount.  This convention is deprecated, but will still be
-        ///   honored for backward compatibility.
+        ///    line_item/amount.  This convention is deprecated, but will still be
+        ///    honored for backward compatibility.
         #[prost(string, tag="1")]
         pub name: ::prost::alloc::string::String,
         /// The entity type that this type is derived from.  For now, one and only
@@ -165,6 +93,21 @@ pub mod document_schema {
                 /// The entity type will appear once or more times.
                 RequiredMultiple = 4,
             }
+            impl OccurrenceType {
+                /// String value of the enum field names used in the ProtoBuf definition.
+                ///
+                /// The values are not transformed in any way and thus are considered stable
+                /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+                pub fn as_str_name(&self) -> &'static str {
+                    match self {
+                        OccurrenceType::Unspecified => "OCCURRENCE_TYPE_UNSPECIFIED",
+                        OccurrenceType::OptionalOnce => "OPTIONAL_ONCE",
+                        OccurrenceType::OptionalMultiple => "OPTIONAL_MULTIPLE",
+                        OccurrenceType::RequiredOnce => "REQUIRED_ONCE",
+                        OccurrenceType::RequiredMultiple => "REQUIRED_MULTIPLE",
+                    }
+                }
+            }
         }
         #[derive(Clone, PartialEq, ::prost::Oneof)]
         pub enum ValueSource {
@@ -199,83 +142,81 @@ pub mod document_schema {
         pub skip_naming_validation: bool,
     }
 }
-/// A processor type is responsible for performing a certain document
-/// understanding task on a certain type of document.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ProcessorType {
-    /// The resource name of the processor type.
-    /// Format: projects/{project}/processorTypes/{processor_type}
-    #[prost(string, tag="1")]
-    pub name: ::prost::alloc::string::String,
-    /// The type of the processor, e.g., "invoice_parsing".
-    #[prost(string, tag="2")]
-    pub r#type: ::prost::alloc::string::String,
-    /// The processor category, used by UI to group processor types.
-    #[prost(string, tag="3")]
-    pub category: ::prost::alloc::string::String,
-    /// The locations in which this processor is available.
-    #[prost(message, repeated, tag="4")]
-    pub available_locations: ::prost::alloc::vec::Vec<processor_type::LocationInfo>,
-    /// Whether the processor type allows creation. If true, users can create a
-    /// processor of this processor type. Otherwise, users need to request access.
-    #[prost(bool, tag="6")]
-    pub allow_creation: bool,
-    /// Launch stage of the processor type
-    #[prost(enumeration="super::super::super::api::LaunchStage", tag="8")]
-    pub launch_stage: i32,
-}
-/// Nested message and enum types in `ProcessorType`.
-pub mod processor_type {
-    /// The location information about where the processor is available.
-    #[derive(Clone, PartialEq, ::prost::Message)]
-    pub struct LocationInfo {
-        /// The location id, currently must be one of [us, eu].
-        #[prost(string, tag="1")]
-        pub location_id: ::prost::alloc::string::String,
-    }
-}
 /// Encodes the detailed information of a barcode.
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct Barcode {
     /// Format of a barcode.
     /// The supported formats are:
-    ///   CODE_128: Code 128 type.
-    ///   CODE_39: Code 39 type.
-    ///   CODE_93: Code 93 type.
-    ///   CODABAR: Codabar type.
-    ///   DATA_MATRIX: 2D Data Matrix type.
-    ///   ITF: ITF type.
-    ///   EAN_13: EAN-13 type.
-    ///   EAN_8: EAN-8 type.
-    ///   QR_CODE: 2D QR code type.
-    ///   UPC_A: UPC-A type.
-    ///   UPC_E: UPC-E type.
-    ///   PDF417: PDF417 type.
-    ///   AZTEC: 2D Aztec code type.
-    ///   DATABAR: GS1 DataBar code type.
+    ///    CODE_128: Code 128 type.
+    ///    CODE_39: Code 39 type.
+    ///    CODE_93: Code 93 type.
+    ///    CODABAR: Codabar type.
+    ///    DATA_MATRIX: 2D Data Matrix type.
+    ///    ITF: ITF type.
+    ///    EAN_13: EAN-13 type.
+    ///    EAN_8: EAN-8 type.
+    ///    QR_CODE: 2D QR code type.
+    ///    UPC_A: UPC-A type.
+    ///    UPC_E: UPC-E type.
+    ///    PDF417: PDF417 type.
+    ///    AZTEC: 2D Aztec code type.
+    ///    DATABAR: GS1 DataBar code type.
     #[prost(string, tag="1")]
     pub format: ::prost::alloc::string::String,
     /// Value format describes the format of the value that a barcode
     /// encodes.
     /// The supported formats are:
-    ///   CONTACT_INFO: Contact information.
-    ///   EMAIL: Email address.
-    ///   ISBN: ISBN identifier.
-    ///   PHONE: Phone number.
-    ///   PRODUCT: Product.
-    ///   SMS: SMS message.
-    ///   TEXT: Text string.
-    ///   URL: URL address.
-    ///   WIFI: Wifi information.
-    ///   GEO: Geo-localization.
-    ///   CALENDAR_EVENT: Calendar event.
-    ///   DRIVER_LICENSE: Driver's license.
+    ///    CONTACT_INFO: Contact information.
+    ///    EMAIL: Email address.
+    ///    ISBN: ISBN identifier.
+    ///    PHONE: Phone number.
+    ///    PRODUCT: Product.
+    ///    SMS: SMS message.
+    ///    TEXT: Text string.
+    ///    URL: URL address.
+    ///    WIFI: Wifi information.
+    ///    GEO: Geo-localization.
+    ///    CALENDAR_EVENT: Calendar event.
+    ///    DRIVER_LICENSE: Driver's license.
     #[prost(string, tag="2")]
     pub value_format: ::prost::alloc::string::String,
     /// Raw value encoded in the barcode.
     /// For example, 'MEBKM:TITLE:Google;URL:<https://www.google.com;;'.>
     #[prost(string, tag="3")]
     pub raw_value: ::prost::alloc::string::String,
+}
+/// A vertex represents a 2D point in the image.
+/// NOTE: the vertex coordinates are in the same scale as the original image.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct Vertex {
+    /// X coordinate.
+    #[prost(int32, tag="1")]
+    pub x: i32,
+    /// Y coordinate (starts from the top of the image).
+    #[prost(int32, tag="2")]
+    pub y: i32,
+}
+/// A vertex represents a 2D point in the image.
+/// NOTE: the normalized vertex coordinates are relative to the original image
+/// and range from 0 to 1.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct NormalizedVertex {
+    /// X coordinate.
+    #[prost(float, tag="1")]
+    pub x: f32,
+    /// Y coordinate (starts from the top of the image).
+    #[prost(float, tag="2")]
+    pub y: f32,
+}
+/// A bounding polygon for the detected image annotation.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct BoundingPoly {
+    /// The bounding polygon vertices.
+    #[prost(message, repeated, tag="1")]
+    pub vertices: ::prost::alloc::vec::Vec<Vertex>,
+    /// The bounding polygon normalized vertices.
+    #[prost(message, repeated, tag="2")]
+    pub normalized_vertices: ::prost::alloc::vec::Vec<NormalizedVertex>,
 }
 /// Document represents the canonical document resource in Document AI. It is an
 /// interchange format that provides insights into documents and allows for
@@ -535,6 +476,21 @@ pub mod document {
                 /// Turn the head 90 degrees counterclockwise from upright to read.
                 PageLeft = 4,
             }
+            impl Orientation {
+                /// String value of the enum field names used in the ProtoBuf definition.
+                ///
+                /// The values are not transformed in any way and thus are considered stable
+                /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+                pub fn as_str_name(&self) -> &'static str {
+                    match self {
+                        Orientation::Unspecified => "ORIENTATION_UNSPECIFIED",
+                        Orientation::PageUp => "PAGE_UP",
+                        Orientation::PageRight => "PAGE_RIGHT",
+                        Orientation::PageDown => "PAGE_DOWN",
+                        Orientation::PageLeft => "PAGE_LEFT",
+                    }
+                }
+            }
         }
         /// A block has a set of lines (collected into paragraphs) that have a
         /// common line-spacing and orientation.
@@ -616,6 +572,20 @@ pub mod document {
                     WideSpace = 2,
                     /// A hyphen that indicates that a token has been split across lines.
                     Hyphen = 3,
+                }
+                impl Type {
+                    /// String value of the enum field names used in the ProtoBuf definition.
+                    ///
+                    /// The values are not transformed in any way and thus are considered stable
+                    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+                    pub fn as_str_name(&self) -> &'static str {
+                        match self {
+                            Type::Unspecified => "TYPE_UNSPECIFIED",
+                            Type::Space => "SPACE",
+                            Type::WideSpace => "WIDE_SPACE",
+                            Type::Hyphen => "HYPHEN",
+                        }
+                    }
                 }
             }
         }
@@ -951,6 +921,24 @@ pub mod document {
                 /// References a \[Page.form_fields][google.cloud.documentai.v1.Document.Page.form_fields\] element.
                 FormField = 7,
             }
+            impl LayoutType {
+                /// String value of the enum field names used in the ProtoBuf definition.
+                ///
+                /// The values are not transformed in any way and thus are considered stable
+                /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+                pub fn as_str_name(&self) -> &'static str {
+                    match self {
+                        LayoutType::Unspecified => "LAYOUT_TYPE_UNSPECIFIED",
+                        LayoutType::Block => "BLOCK",
+                        LayoutType::Paragraph => "PARAGRAPH",
+                        LayoutType::Line => "LINE",
+                        LayoutType::Token => "TOKEN",
+                        LayoutType::VisualElement => "VISUAL_ELEMENT",
+                        LayoutType::Table => "TABLE",
+                        LayoutType::FormField => "FORM_FIELD",
+                    }
+                }
+            }
         }
     }
     /// Structure to identify provenance relationships between annotations in
@@ -1010,6 +998,23 @@ pub mod document {
             EvalApproved = 5,
             /// Element is skipped in the validation process.
             EvalSkipped = 6,
+        }
+        impl OperationType {
+            /// String value of the enum field names used in the ProtoBuf definition.
+            ///
+            /// The values are not transformed in any way and thus are considered stable
+            /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+            pub fn as_str_name(&self) -> &'static str {
+                match self {
+                    OperationType::Unspecified => "OPERATION_TYPE_UNSPECIFIED",
+                    OperationType::Add => "ADD",
+                    OperationType::Remove => "REMOVE",
+                    OperationType::Replace => "REPLACE",
+                    OperationType::EvalRequested => "EVAL_REQUESTED",
+                    OperationType::EvalApproved => "EVAL_APPROVED",
+                    OperationType::EvalSkipped => "EVAL_SKIPPED",
+                }
+            }
         }
     }
     /// Contains past or forward revisions of this document.
@@ -1086,10 +1091,10 @@ pub mod document {
     #[derive(Clone, PartialEq, ::prost::Oneof)]
     pub enum Source {
         /// Optional. Currently supports Google Cloud Storage URI of the form
-        ///    `gs://bucket_name/object_name`. Object versioning is not supported.
-        ///    See [Google Cloud Storage Request
-        ///    URIs](<https://cloud.google.com/storage/docs/reference-uris>) for more
-        ///    info.
+        ///     `gs://bucket_name/object_name`. Object versioning is not supported.
+        ///     See [Google Cloud Storage Request
+        ///     URIs](<https://cloud.google.com/storage/docs/reference-uris>) for more
+        ///     info.
         #[prost(string, tag="1")]
         Uri(::prost::alloc::string::String),
         /// Optional. Inline document content, represented as a stream of bytes.
@@ -1097,6 +1102,61 @@ pub mod document {
         /// representation, whereas JSON representations use base64.
         #[prost(bytes, tag="2")]
         Content(::prost::bytes::Bytes),
+    }
+}
+/// The common metadata for long running operations.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct CommonOperationMetadata {
+    /// The state of the operation.
+    #[prost(enumeration="common_operation_metadata::State", tag="1")]
+    pub state: i32,
+    /// A message providing more details about the current state of processing.
+    #[prost(string, tag="2")]
+    pub state_message: ::prost::alloc::string::String,
+    /// A related resource to this operation.
+    #[prost(string, tag="5")]
+    pub resource: ::prost::alloc::string::String,
+    /// The creation time of the operation.
+    #[prost(message, optional, tag="3")]
+    pub create_time: ::core::option::Option<::prost_types::Timestamp>,
+    /// The last update time of the operation.
+    #[prost(message, optional, tag="4")]
+    pub update_time: ::core::option::Option<::prost_types::Timestamp>,
+}
+/// Nested message and enum types in `CommonOperationMetadata`.
+pub mod common_operation_metadata {
+    /// State of the longrunning operation.
+    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+    #[repr(i32)]
+    pub enum State {
+        /// Unspecified state.
+        Unspecified = 0,
+        /// Operation is still running.
+        Running = 1,
+        /// Operation is being cancelled.
+        Cancelling = 2,
+        /// Operation succeeded.
+        Succeeded = 3,
+        /// Operation failed.
+        Failed = 4,
+        /// Operation is cancelled.
+        Cancelled = 5,
+    }
+    impl State {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                State::Unspecified => "STATE_UNSPECIFIED",
+                State::Running => "RUNNING",
+                State::Cancelling => "CANCELLING",
+                State::Succeeded => "SUCCEEDED",
+                State::Failed => "FAILED",
+                State::Cancelled => "CANCELLED",
+            }
+        }
     }
 }
 /// Payload message of raw document content (bytes).
@@ -1179,6 +1239,41 @@ pub mod document_output_config {
         GcsOutputConfig(GcsOutputConfig),
     }
 }
+/// A processor type is responsible for performing a certain document
+/// understanding task on a certain type of document.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ProcessorType {
+    /// The resource name of the processor type.
+    /// Format: projects/{project}/processorTypes/{processor_type}
+    #[prost(string, tag="1")]
+    pub name: ::prost::alloc::string::String,
+    /// The type of the processor, e.g., "invoice_parsing".
+    #[prost(string, tag="2")]
+    pub r#type: ::prost::alloc::string::String,
+    /// The processor category, used by UI to group processor types.
+    #[prost(string, tag="3")]
+    pub category: ::prost::alloc::string::String,
+    /// The locations in which this processor is available.
+    #[prost(message, repeated, tag="4")]
+    pub available_locations: ::prost::alloc::vec::Vec<processor_type::LocationInfo>,
+    /// Whether the processor type allows creation. If true, users can create a
+    /// processor of this processor type. Otherwise, users need to request access.
+    #[prost(bool, tag="6")]
+    pub allow_creation: bool,
+    /// Launch stage of the processor type
+    #[prost(enumeration="super::super::super::api::LaunchStage", tag="8")]
+    pub launch_stage: i32,
+}
+/// Nested message and enum types in `ProcessorType`.
+pub mod processor_type {
+    /// The location information about where the processor is available.
+    #[derive(Clone, PartialEq, ::prost::Message)]
+    pub struct LocationInfo {
+        /// The location id, currently must be one of [us, eu].
+        #[prost(string, tag="1")]
+        pub location_id: ::prost::alloc::string::String,
+    }
+}
 /// A processor version is an implementation of a processor. Each processor
 /// can have multiple versions, pre-trained by Google internally or up-trained
 /// by the customer. At a time, a processor can only have one default version
@@ -1246,6 +1341,24 @@ pub mod processor_version {
         /// The processor version failed and is in an indeterminate state.
         Failed = 7,
     }
+    impl State {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                State::Unspecified => "STATE_UNSPECIFIED",
+                State::Deployed => "DEPLOYED",
+                State::Deploying => "DEPLOYING",
+                State::Undeployed => "UNDEPLOYED",
+                State::Undeploying => "UNDEPLOYING",
+                State::Creating => "CREATING",
+                State::Deleting => "DELETING",
+                State::Failed => "FAILED",
+            }
+        }
+    }
 }
 /// The first-class citizen for Document AI. Each processor defines how to
 /// extract structural information from a document.
@@ -1310,6 +1423,24 @@ pub mod processor {
         Failed = 6,
         /// The processor is being deleted, will be removed if successful.
         Deleting = 7,
+    }
+    impl State {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                State::Unspecified => "STATE_UNSPECIFIED",
+                State::Enabled => "ENABLED",
+                State::Disabled => "DISABLED",
+                State::Enabling => "ENABLING",
+                State::Disabling => "DISABLING",
+                State::Creating => "CREATING",
+                State::Failed => "FAILED",
+                State::Deleting => "DELETING",
+            }
+        }
     }
 }
 /// Request message for the process document method.
@@ -1382,6 +1513,21 @@ pub mod human_review_status {
         /// Some error happened during triggering human review, see the
         /// \[state_message\] for details.
         Error = 4,
+    }
+    impl State {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                State::Unspecified => "STATE_UNSPECIFIED",
+                State::Skipped => "SKIPPED",
+                State::ValidationPassed => "VALIDATION_PASSED",
+                State::InProgress => "IN_PROGRESS",
+                State::Error => "ERROR",
+            }
+        }
     }
 }
 /// Response message for the process document method.
@@ -1480,6 +1626,23 @@ pub mod batch_process_metadata {
         Cancelled = 5,
         /// The batch processing has failed.
         Failed = 6,
+    }
+    impl State {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                State::Unspecified => "STATE_UNSPECIFIED",
+                State::Waiting => "WAITING",
+                State::Running => "RUNNING",
+                State::Succeeded => "SUCCEEDED",
+                State::Cancelling => "CANCELLING",
+                State::Cancelled => "CANCELLED",
+                State::Failed => "FAILED",
+            }
+        }
     }
 }
 /// Request message for fetch processor types.
@@ -1766,6 +1929,18 @@ pub mod review_document_request {
         /// resource to the urgent task queue to respect this priority level.
         Urgent = 1,
     }
+    impl Priority {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                Priority::Default => "DEFAULT",
+                Priority::Urgent => "URGENT",
+            }
+        }
+    }
     /// The document payload.
     #[derive(Clone, PartialEq, ::prost::Oneof)]
     pub enum Source {
@@ -1801,6 +1976,19 @@ pub mod review_document_response {
         /// The review operation is succeeded.
         Succeeded = 2,
     }
+    impl State {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                State::Unspecified => "STATE_UNSPECIFIED",
+                State::Rejected => "REJECTED",
+                State::Succeeded => "SUCCEEDED",
+            }
+        }
+    }
 }
 /// The long running operation metadata for review document method.
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -1816,6 +2004,7 @@ pub struct ReviewDocumentOperationMetadata {
 pub mod document_processor_service_client {
     #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
     use tonic::codegen::*;
+    use tonic::codegen::http::Uri;
     /// Service to call Cloud DocumentAI to process documents according to the
     /// processor's definition. Processors are built using state-of-the-art Google
     /// AI such as natural language, computer vision, and translation to extract
@@ -1833,6 +2022,10 @@ pub mod document_processor_service_client {
     {
         pub fn new(inner: T) -> Self {
             let inner = tonic::client::Grpc::new(inner);
+            Self { inner }
+        }
+        pub fn with_origin(inner: T, origin: Uri) -> Self {
+            let inner = tonic::client::Grpc::with_origin(inner, origin);
             Self { inner }
         }
         pub fn with_interceptor<F>(
@@ -1856,19 +2049,19 @@ pub mod document_processor_service_client {
                 InterceptedService::new(inner, interceptor),
             )
         }
-        /// Compress requests with `gzip`.
+        /// Compress requests with the given encoding.
         ///
         /// This requires the server to support it otherwise it might respond with an
         /// error.
         #[must_use]
-        pub fn send_gzip(mut self) -> Self {
-            self.inner = self.inner.send_gzip();
+        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.send_compressed(encoding);
             self
         }
-        /// Enable decompressing responses with `gzip`.
+        /// Enable decompressing responses.
         #[must_use]
-        pub fn accept_gzip(mut self) -> Self {
-            self.inner = self.inner.accept_gzip();
+        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.accept_compressed(encoding);
             self
         }
         /// Processes a single document.

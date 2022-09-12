@@ -56,6 +56,19 @@ pub mod build_signature {
         /// `PKIX PEM` public key.
         PkixPem = 2,
     }
+    impl KeyType {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                KeyType::Unspecified => "KEY_TYPE_UNSPECIFIED",
+                KeyType::PgpAsciiArmored => "PGP_ASCII_ARMORED",
+                KeyType::PkixPem => "PKIX_PEM",
+            }
+        }
+    }
 }
 /// Details of a build occurrence.
 #[derive(Clone, PartialEq, ::prost::Message)]

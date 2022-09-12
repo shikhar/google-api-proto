@@ -1,565 +1,241 @@
-/// An individual entry in a log.
+/// Describes a logs-based metric. The value of the metric is the number of log
+/// entries that match a logs filter in a given time interval.
+///
+/// Logs-based metrics can also be used to extract values from logs and create a
+/// distribution of the values. The distribution records the statistics of the
+/// extracted values along with an optional histogram of the values as specified
+/// by the bucket options.
 #[derive(Clone, PartialEq, ::prost::Message)]
-pub struct LogEntry {
-    /// Required. The resource name of the log to which this log entry belongs:
+pub struct LogMetric {
+    /// Required. The client-assigned metric identifier.
+    /// Examples: `"error_count"`, `"nginx/requests"`.
     ///
-    ///     "projects/\[PROJECT_ID]/logs/[LOG_ID\]"
-    ///     "organizations/\[ORGANIZATION_ID]/logs/[LOG_ID\]"
-    ///     "billingAccounts/\[BILLING_ACCOUNT_ID]/logs/[LOG_ID\]"
-    ///     "folders/\[FOLDER_ID]/logs/[LOG_ID\]"
+    /// Metric identifiers are limited to 100 characters and can include only the
+    /// following characters: `A-Z`, `a-z`, `0-9`, and the special characters
+    /// `_-.,+!*',()%/`. The forward-slash character (`/`) denotes a hierarchy of
+    /// name pieces, and it cannot be the first character of the name.
     ///
-    /// A project number may be used in place of PROJECT_ID. The project number is
-    /// translated to its corresponding PROJECT_ID internally and the `log_name`
-    /// field will contain PROJECT_ID in queries and exports.
+    /// This field is the `\[METRIC_ID\]` part of a metric resource name in the
+    /// format "projects/\[PROJECT_ID]/metrics/[METRIC_ID\]". Example: If the
+    /// resource name of a metric is
+    /// `"projects/my-project/metrics/nginx%2Frequests"`, this field's value is
+    /// `"nginx/requests"`.
+    #[prost(string, tag="1")]
+    pub name: ::prost::alloc::string::String,
+    /// Optional. A description of this metric, which is used in documentation.
+    /// The maximum length of the description is 8000 characters.
+    #[prost(string, tag="2")]
+    pub description: ::prost::alloc::string::String,
+    /// Required. An [advanced logs
+    /// filter](<https://cloud.google.com/logging/docs/view/advanced_filters>) which
+    /// is used to match log entries. Example:
     ///
-    /// `\[LOG_ID\]` must be URL-encoded within `log_name`. Example:
-    /// `"organizations/1234567890/logs/cloudresourcemanager.googleapis.com%2Factivity"`.
+    ///      "resource.type=gae_app AND severity>=ERROR"
     ///
-    /// `\[LOG_ID\]` must be less than 512 characters long and can only include the
-    /// following characters: upper and lower case alphanumeric characters,
-    /// forward-slash, underscore, hyphen, and period.
+    /// The maximum length of the filter is 20000 characters.
+    #[prost(string, tag="3")]
+    pub filter: ::prost::alloc::string::String,
+    /// Optional. If set to True, then this metric is disabled and it does not
+    /// generate any points.
+    #[prost(bool, tag="12")]
+    pub disabled: bool,
+    /// Optional. The metric descriptor associated with the logs-based metric.
+    /// If unspecified, it uses a default metric descriptor with a DELTA metric
+    /// kind, INT64 value type, with no labels and a unit of "1". Such a metric
+    /// counts the number of log entries matching the `filter` expression.
     ///
-    /// For backward compatibility, if `log_name` begins with a forward-slash, such
-    /// as `/projects/...`, then the log entry is ingested as usual, but the
-    /// forward-slash is removed. Listing the log entry will not show the leading
-    /// slash and filtering for a log name with a leading slash will never return
-    /// any results.
-    #[prost(string, tag="12")]
-    pub log_name: ::prost::alloc::string::String,
-    /// Required. The monitored resource that produced this log entry.
+    /// The `name`, `type`, and `description` fields in the `metric_descriptor`
+    /// are output only, and is constructed using the `name` and `description`
+    /// field in the LogMetric.
     ///
-    /// Example: a log entry that reports a database error would be associated with
-    /// the monitored resource designating the particular database that reported
-    /// the error.
+    /// To create a logs-based metric that records a distribution of log values, a
+    /// DELTA metric kind with a DISTRIBUTION value type must be used along with
+    /// a `value_extractor` expression in the LogMetric.
+    ///
+    /// Each label in the metric descriptor must have a matching label
+    /// name as the key and an extractor expression as the value in the
+    /// `label_extractors` map.
+    ///
+    /// The `metric_kind` and `value_type` fields in the `metric_descriptor` cannot
+    /// be updated once initially configured. New labels can be added in the
+    /// `metric_descriptor`, but existing labels cannot be modified except for
+    /// their description.
+    #[prost(message, optional, tag="5")]
+    pub metric_descriptor: ::core::option::Option<super::super::api::MetricDescriptor>,
+    /// Optional. A `value_extractor` is required when using a distribution
+    /// logs-based metric to extract the values to record from a log entry.
+    /// Two functions are supported for value extraction: `EXTRACT(field)` or
+    /// `REGEXP_EXTRACT(field, regex)`. The argument are:
+    ///    1. field: The name of the log entry field from which the value is to be
+    ///       extracted.
+    ///    2. regex: A regular expression using the Google RE2 syntax
+    ///       (<https://github.com/google/re2/wiki/Syntax>) with a single capture
+    ///       group to extract data from the specified log entry field. The value
+    ///       of the field is converted to a string before applying the regex.
+    ///       It is an error to specify a regex that does not include exactly one
+    ///       capture group.
+    ///
+    /// The result of the extraction must be convertible to a double type, as the
+    /// distribution always records double values. If either the extraction or
+    /// the conversion to double fails, then those values are not recorded in the
+    /// distribution.
+    ///
+    /// Example: `REGEXP_EXTRACT(jsonPayload.request, ".*quantity=(\d+).*")`
+    #[prost(string, tag="6")]
+    pub value_extractor: ::prost::alloc::string::String,
+    /// Optional. A map from a label key string to an extractor expression which is
+    /// used to extract data from a log entry field and assign as the label value.
+    /// Each label key specified in the LabelDescriptor must have an associated
+    /// extractor expression in this map. The syntax of the extractor expression
+    /// is the same as for the `value_extractor` field.
+    ///
+    /// The extracted value is converted to the type defined in the label
+    /// descriptor. If the either the extraction or the type conversion fails,
+    /// the label will have a default value. The default value for a string
+    /// label is an empty string, for an integer label its 0, and for a boolean
+    /// label its `false`.
+    ///
+    /// Note that there are upper bounds on the maximum number of labels and the
+    /// number of active time series that are allowed in a project.
+    #[prost(btree_map="string, string", tag="7")]
+    pub label_extractors: ::prost::alloc::collections::BTreeMap<::prost::alloc::string::String, ::prost::alloc::string::String>,
+    /// Optional. The `bucket_options` are required when the logs-based metric is
+    /// using a DISTRIBUTION value type and it describes the bucket boundaries
+    /// used to create a histogram of the extracted values.
     #[prost(message, optional, tag="8")]
-    pub resource: ::core::option::Option<super::super::api::MonitoredResource>,
-    /// Optional. The time the event described by the log entry occurred. This time is used
-    /// to compute the log entry's age and to enforce the logs retention period.
-    /// If this field is omitted in a new log entry, then Logging assigns it the
-    /// current time. Timestamps have nanosecond accuracy, but trailing zeros in
-    /// the fractional seconds might be omitted when the timestamp is displayed.
+    pub bucket_options: ::core::option::Option<super::super::api::distribution::BucketOptions>,
+    /// Output only. The creation timestamp of the metric.
     ///
-    /// Incoming log entries must have timestamps that don't exceed the
-    /// [logs retention
-    /// period](<https://cloud.google.com/logging/quotas#logs_retention_periods>) in
-    /// the past, and that don't exceed 24 hours in the future. Log entries outside
-    /// those time boundaries aren't ingested by Logging.
+    /// This field may not be present for older metrics.
     #[prost(message, optional, tag="9")]
-    pub timestamp: ::core::option::Option<::prost_types::Timestamp>,
-    /// Output only. The time the log entry was received by Logging.
-    #[prost(message, optional, tag="24")]
-    pub receive_timestamp: ::core::option::Option<::prost_types::Timestamp>,
-    /// Optional. The severity of the log entry. The default value is `LogSeverity.DEFAULT`.
-    #[prost(enumeration="super::r#type::LogSeverity", tag="10")]
-    pub severity: i32,
-    /// Optional. A unique identifier for the log entry. If you provide a value, then
-    /// Logging considers other log entries in the same project, with the same
-    /// `timestamp`, and with the same `insert_id` to be duplicates which are
-    /// removed in a single query result. However, there are no guarantees of
-    /// de-duplication in the export of logs.
+    pub create_time: ::core::option::Option<::prost_types::Timestamp>,
+    /// Output only. The last update timestamp of the metric.
     ///
-    /// If the `insert_id` is omitted when writing a log entry, the Logging API
-    /// assigns its own unique identifier in this field.
-    ///
-    /// In queries, the `insert_id` is also used to order log entries that have
-    /// the same `log_name` and `timestamp` values.
-    #[prost(string, tag="4")]
-    pub insert_id: ::prost::alloc::string::String,
-    /// Optional. Information about the HTTP request associated with this log entry, if
-    /// applicable.
-    #[prost(message, optional, tag="7")]
-    pub http_request: ::core::option::Option<super::r#type::HttpRequest>,
-    /// Optional. A map of key, value pairs that provides additional information about the
-    /// log entry. The labels can be user-defined or system-defined.
-    ///
-    /// User-defined labels are arbitrary key, value pairs that you can use to
-    /// classify logs.
-    ///
-    /// System-defined labels are defined by GCP services for platform logs.
-    /// They have two components - a service namespace component and the
-    /// attribute name. For example: `compute.googleapis.com/resource_name`.
-    ///
-    /// Cloud Logging truncates label keys that exceed 512 B and label
-    /// values that exceed 64 KB upon their associated log entry being
-    /// written. The truncation is indicated by an ellipsis at the
-    /// end of the character string.
-    #[prost(btree_map="string, string", tag="11")]
-    pub labels: ::prost::alloc::collections::BTreeMap<::prost::alloc::string::String, ::prost::alloc::string::String>,
-    /// Optional. Information about an operation associated with the log entry, if
-    /// applicable.
-    #[prost(message, optional, tag="15")]
-    pub operation: ::core::option::Option<LogEntryOperation>,
-    /// Optional. Resource name of the trace associated with the log entry, if any. If it
-    /// contains a relative resource name, the name is assumed to be relative to
-    /// `//tracing.googleapis.com`. Example:
-    /// `projects/my-projectid/traces/06796866738c859f2f19b7cfb3214824`
-    #[prost(string, tag="22")]
-    pub trace: ::prost::alloc::string::String,
-    /// Optional. The span ID within the trace associated with the log entry.
-    ///
-    /// For Trace spans, this is the same format that the Trace API v2 uses: a
-    /// 16-character hexadecimal encoding of an 8-byte array, such as
-    /// `000000000000004a`.
-    #[prost(string, tag="27")]
-    pub span_id: ::prost::alloc::string::String,
-    /// Optional. The sampling decision of the trace associated with the log entry.
-    ///
-    /// True means that the trace resource name in the `trace` field was sampled
-    /// for storage in a trace backend. False means that the trace was not sampled
-    /// for storage when this log entry was written, or the sampling decision was
-    /// unknown at the time. A non-sampled `trace` value is still useful as a
-    /// request correlation identifier. The default is False.
-    #[prost(bool, tag="30")]
-    pub trace_sampled: bool,
-    /// Optional. Source code location information associated with the log entry, if any.
-    #[prost(message, optional, tag="23")]
-    pub source_location: ::core::option::Option<LogEntrySourceLocation>,
-    /// Optional. Information indicating this LogEntry is part of a sequence of multiple log
-    /// entries split from a single LogEntry.
-    #[prost(message, optional, tag="35")]
-    pub split: ::core::option::Option<LogSplit>,
-    /// The log entry payload, which can be one of multiple types.
-    #[prost(oneof="log_entry::Payload", tags="2, 3, 6")]
-    pub payload: ::core::option::Option<log_entry::Payload>,
+    /// This field may not be present for older metrics.
+    #[prost(message, optional, tag="10")]
+    pub update_time: ::core::option::Option<::prost_types::Timestamp>,
+    /// Deprecated. The API version that created or updated this metric.
+    /// The v2 format is used by default and cannot be changed.
+    #[deprecated]
+    #[prost(enumeration="log_metric::ApiVersion", tag="4")]
+    pub version: i32,
 }
-/// Nested message and enum types in `LogEntry`.
-pub mod log_entry {
-    /// The log entry payload, which can be one of multiple types.
-    #[derive(Clone, PartialEq, ::prost::Oneof)]
-    pub enum Payload {
-        /// The log entry payload, represented as a protocol buffer. Some Google
-        /// Cloud Platform services use this field for their log entry payloads.
-        ///
-        /// The following protocol buffer types are supported; user-defined types
-        /// are not supported:
-        ///
-        ///   "type.googleapis.com/google.cloud.audit.AuditLog"
-        ///   "type.googleapis.com/google.appengine.logging.v1.RequestLog"
-        #[prost(message, tag="2")]
-        ProtoPayload(::prost_types::Any),
-        /// The log entry payload, represented as a Unicode string (UTF-8).
-        #[prost(string, tag="3")]
-        TextPayload(::prost::alloc::string::String),
-        /// The log entry payload, represented as a structure that is
-        /// expressed as a JSON object.
-        #[prost(message, tag="6")]
-        JsonPayload(::prost_types::Struct),
+/// Nested message and enum types in `LogMetric`.
+pub mod log_metric {
+    /// Logging API version.
+    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+    #[repr(i32)]
+    pub enum ApiVersion {
+        /// Logging API v2.
+        V2 = 0,
+        /// Logging API v1.
+        V1 = 1,
     }
-}
-/// Additional information about a potentially long-running operation with which
-/// a log entry is associated.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct LogEntryOperation {
-    /// Optional. An arbitrary operation identifier. Log entries with the same
-    /// identifier are assumed to be part of the same operation.
-    #[prost(string, tag="1")]
-    pub id: ::prost::alloc::string::String,
-    /// Optional. An arbitrary producer identifier. The combination of `id` and
-    /// `producer` must be globally unique. Examples for `producer`:
-    /// `"MyDivision.MyBigCompany.com"`, `"github.com/MyProject/MyApplication"`.
-    #[prost(string, tag="2")]
-    pub producer: ::prost::alloc::string::String,
-    /// Optional. Set this to True if this is the first log entry in the operation.
-    #[prost(bool, tag="3")]
-    pub first: bool,
-    /// Optional. Set this to True if this is the last log entry in the operation.
-    #[prost(bool, tag="4")]
-    pub last: bool,
-}
-/// Additional information about the source code location that produced the log
-/// entry.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct LogEntrySourceLocation {
-    /// Optional. Source file name. Depending on the runtime environment, this
-    /// might be a simple name or a fully-qualified name.
-    #[prost(string, tag="1")]
-    pub file: ::prost::alloc::string::String,
-    /// Optional. Line within the source file. 1-based; 0 indicates no line number
-    /// available.
-    #[prost(int64, tag="2")]
-    pub line: i64,
-    /// Optional. Human-readable name of the function or method being invoked, with
-    /// optional context such as the class or package name. This information may be
-    /// used in contexts such as the logs viewer, where a file and line number are
-    /// less meaningful. The format can vary by language. For example:
-    /// `qual.if.ied.Class.method` (Java), `dir/package.func` (Go), `function`
-    /// (Python).
-    #[prost(string, tag="3")]
-    pub function: ::prost::alloc::string::String,
-}
-/// Additional information used to correlate multiple log entries. Used when a
-/// single LogEntry would exceed the Google Cloud Logging size limit and is
-/// split across multiple log entries.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct LogSplit {
-    /// A globally unique identifier for all log entries in a sequence of split log
-    /// entries. All log entries with the same |LogSplit.uid| are assumed to be
-    /// part of the same sequence of split log entries.
-    #[prost(string, tag="1")]
-    pub uid: ::prost::alloc::string::String,
-    /// The index of this LogEntry in the sequence of split log entries. Log
-    /// entries are given |index| values 0, 1, ..., n-1 for a sequence of n log
-    /// entries.
-    #[prost(int32, tag="2")]
-    pub index: i32,
-    /// The total number of log entries that the original LogEntry was split into.
-    #[prost(int32, tag="3")]
-    pub total_splits: i32,
-}
-/// The parameters to DeleteLog.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct DeleteLogRequest {
-    /// Required. The resource name of the log to delete:
-    ///
-    /// * `projects/\[PROJECT_ID]/logs/[LOG_ID\]`
-    /// * `organizations/\[ORGANIZATION_ID]/logs/[LOG_ID\]`
-    /// * `billingAccounts/\[BILLING_ACCOUNT_ID]/logs/[LOG_ID\]`
-    /// * `folders/\[FOLDER_ID]/logs/[LOG_ID\]`
-    ///
-    /// `\[LOG_ID\]` must be URL-encoded. For example,
-    /// `"projects/my-project-id/logs/syslog"`,
-    /// `"organizations/123/logs/cloudaudit.googleapis.com%2Factivity"`.
-    ///
-    /// For more information about log names, see
-    /// \[LogEntry][google.logging.v2.LogEntry\].
-    #[prost(string, tag="1")]
-    pub log_name: ::prost::alloc::string::String,
-}
-/// The parameters to WriteLogEntries.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct WriteLogEntriesRequest {
-    /// Optional. A default log resource name that is assigned to all log entries
-    /// in `entries` that do not specify a value for `log_name`:
-    ///
-    /// * `projects/\[PROJECT_ID]/logs/[LOG_ID\]`
-    /// * `organizations/\[ORGANIZATION_ID]/logs/[LOG_ID\]`
-    /// * `billingAccounts/\[BILLING_ACCOUNT_ID]/logs/[LOG_ID\]`
-    /// * `folders/\[FOLDER_ID]/logs/[LOG_ID\]`
-    ///
-    /// `\[LOG_ID\]` must be URL-encoded. For example:
-    ///
-    ///     "projects/my-project-id/logs/syslog"
-    ///     "organizations/123/logs/cloudaudit.googleapis.com%2Factivity"
-    ///
-    /// The permission `logging.logEntries.create` is needed on each project,
-    /// organization, billing account, or folder that is receiving new log
-    /// entries, whether the resource is specified in `logName` or in an
-    /// individual log entry.
-    #[prost(string, tag="1")]
-    pub log_name: ::prost::alloc::string::String,
-    /// Optional. A default monitored resource object that is assigned to all log
-    /// entries in `entries` that do not specify a value for `resource`. Example:
-    ///
-    ///     { "type": "gce_instance",
-    ///       "labels": {
-    ///         "zone": "us-central1-a", "instance_id": "00000000000000000000" }}
-    ///
-    /// See \[LogEntry][google.logging.v2.LogEntry\].
-    #[prost(message, optional, tag="2")]
-    pub resource: ::core::option::Option<super::super::api::MonitoredResource>,
-    /// Optional. Default labels that are added to the `labels` field of all log
-    /// entries in `entries`. If a log entry already has a label with the same key
-    /// as a label in this parameter, then the log entry's label is not changed.
-    /// See \[LogEntry][google.logging.v2.LogEntry\].
-    #[prost(btree_map="string, string", tag="3")]
-    pub labels: ::prost::alloc::collections::BTreeMap<::prost::alloc::string::String, ::prost::alloc::string::String>,
-    /// Required. The log entries to send to Logging. The order of log
-    /// entries in this list does not matter. Values supplied in this method's
-    /// `log_name`, `resource`, and `labels` fields are copied into those log
-    /// entries in this list that do not include values for their corresponding
-    /// fields. For more information, see the
-    /// \[LogEntry][google.logging.v2.LogEntry\] type.
-    ///
-    /// If the `timestamp` or `insert_id` fields are missing in log entries, then
-    /// this method supplies the current time or a unique identifier, respectively.
-    /// The supplied values are chosen so that, among the log entries that did not
-    /// supply their own values, the entries earlier in the list will sort before
-    /// the entries later in the list. See the `entries.list` method.
-    ///
-    /// Log entries with timestamps that are more than the
-    /// [logs retention period](<https://cloud.google.com/logging/quotas>) in
-    /// the past or more than 24 hours in the future will not be available when
-    /// calling `entries.list`. However, those log entries can still be [exported
-    /// with
-    /// LogSinks](<https://cloud.google.com/logging/docs/api/tasks/exporting-logs>).
-    ///
-    /// To improve throughput and to avoid exceeding the
-    /// [quota limit](<https://cloud.google.com/logging/quotas>) for calls to
-    /// `entries.write`, you should try to include several log entries in this
-    /// list, rather than calling this method for each individual log entry.
-    #[prost(message, repeated, tag="4")]
-    pub entries: ::prost::alloc::vec::Vec<LogEntry>,
-    /// Optional. Whether valid entries should be written even if some other
-    /// entries fail due to INVALID_ARGUMENT or PERMISSION_DENIED errors. If any
-    /// entry is not written, then the response status is the error associated
-    /// with one of the failed entries and the response includes error details
-    /// keyed by the entries' zero-based index in the `entries.write` method.
-    #[prost(bool, tag="5")]
-    pub partial_success: bool,
-    /// Optional. If true, the request should expect normal response, but the
-    /// entries won't be persisted nor exported. Useful for checking whether the
-    /// logging API endpoints are working properly before sending valuable data.
-    #[prost(bool, tag="6")]
-    pub dry_run: bool,
-}
-/// Result returned from WriteLogEntries.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct WriteLogEntriesResponse {
-}
-/// Error details for WriteLogEntries with partial success.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct WriteLogEntriesPartialErrors {
-    /// When `WriteLogEntriesRequest.partial_success` is true, records the error
-    /// status for entries that were not written due to a permanent error, keyed
-    /// by the entry's zero-based index in `WriteLogEntriesRequest.entries`.
-    ///
-    /// Failed requests for which no entries are written will not include
-    /// per-entry errors.
-    #[prost(btree_map="int32, message", tag="1")]
-    pub log_entry_errors: ::prost::alloc::collections::BTreeMap<i32, super::super::rpc::Status>,
-}
-/// The parameters to `ListLogEntries`.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ListLogEntriesRequest {
-    /// Required. Names of one or more parent resources from which to
-    /// retrieve log entries:
-    ///
-    /// *  `projects/\[PROJECT_ID\]`
-    /// *  `organizations/\[ORGANIZATION_ID\]`
-    /// *  `billingAccounts/\[BILLING_ACCOUNT_ID\]`
-    /// *  `folders/\[FOLDER_ID\]`
-    ///
-    /// May alternatively be one or more views:
-    ///
-    ///  * `projects/\[PROJECT_ID]/locations/[LOCATION_ID]/buckets/[BUCKET_ID]/views/[VIEW_ID\]`
-    ///  * `organizations/\[ORGANIZATION_ID]/locations/[LOCATION_ID]/buckets/[BUCKET_ID]/views/[VIEW_ID\]`
-    ///  * `billingAccounts/\[BILLING_ACCOUNT_ID]/locations/[LOCATION_ID]/buckets/[BUCKET_ID]/views/[VIEW_ID\]`
-    ///  * `folders/\[FOLDER_ID]/locations/[LOCATION_ID]/buckets/[BUCKET_ID]/views/[VIEW_ID\]`
-    ///
-    /// Projects listed in the `project_ids` field are added to this list.
-    #[prost(string, repeated, tag="8")]
-    pub resource_names: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
-    /// Optional. A filter that chooses which log entries to return.  See [Advanced
-    /// Logs Queries](<https://cloud.google.com/logging/docs/view/advanced-queries>).
-    /// Only log entries that match the filter are returned.  An empty filter
-    /// matches all log entries in the resources listed in `resource_names`.
-    /// Referencing a parent resource that is not listed in `resource_names` will
-    /// cause the filter to return no results. The maximum length of the filter is
-    /// 20000 characters.
-    #[prost(string, tag="2")]
-    pub filter: ::prost::alloc::string::String,
-    /// Optional. How the results should be sorted.  Presently, the only permitted
-    /// values are `"timestamp asc"` (default) and `"timestamp desc"`. The first
-    /// option returns entries in order of increasing values of
-    /// `LogEntry.timestamp` (oldest first), and the second option returns entries
-    /// in order of decreasing timestamps (newest first).  Entries with equal
-    /// timestamps are returned in order of their `insert_id` values.
-    #[prost(string, tag="3")]
-    pub order_by: ::prost::alloc::string::String,
-    /// Optional. The maximum number of results to return from this request. Default is 50.
-    /// If the value is negative or exceeds 1000, the request is rejected. The
-    /// presence of `next_page_token` in the response indicates that more results
-    /// might be available.
-    #[prost(int32, tag="4")]
-    pub page_size: i32,
-    /// Optional. If present, then retrieve the next batch of results from the
-    /// preceding call to this method.  `page_token` must be the value of
-    /// `next_page_token` from the previous response.  The values of other method
-    /// parameters should be identical to those in the previous call.
-    #[prost(string, tag="5")]
-    pub page_token: ::prost::alloc::string::String,
-}
-/// Result returned from `ListLogEntries`.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ListLogEntriesResponse {
-    /// A list of log entries.  If `entries` is empty, `nextPageToken` may still be
-    /// returned, indicating that more entries may exist.  See `nextPageToken` for
-    /// more information.
-    #[prost(message, repeated, tag="1")]
-    pub entries: ::prost::alloc::vec::Vec<LogEntry>,
-    /// If there might be more results than those appearing in this response, then
-    /// `nextPageToken` is included.  To get the next set of results, call this
-    /// method again using the value of `nextPageToken` as `pageToken`.
-    ///
-    /// If a value for `next_page_token` appears and the `entries` field is empty,
-    /// it means that the search found no log entries so far but it did not have
-    /// time to search all the possible log entries.  Retry the method with this
-    /// value for `page_token` to continue the search.  Alternatively, consider
-    /// speeding up the search by changing your filter to specify a single log name
-    /// or resource type, or to narrow the time range of the search.
-    #[prost(string, tag="2")]
-    pub next_page_token: ::prost::alloc::string::String,
-}
-/// The parameters to ListMonitoredResourceDescriptors
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ListMonitoredResourceDescriptorsRequest {
-    /// Optional. The maximum number of results to return from this request.
-    /// Non-positive values are ignored.  The presence of `nextPageToken` in the
-    /// response indicates that more results might be available.
-    #[prost(int32, tag="1")]
-    pub page_size: i32,
-    /// Optional. If present, then retrieve the next batch of results from the
-    /// preceding call to this method.  `pageToken` must be the value of
-    /// `nextPageToken` from the previous response.  The values of other method
-    /// parameters should be identical to those in the previous call.
-    #[prost(string, tag="2")]
-    pub page_token: ::prost::alloc::string::String,
-}
-/// Result returned from ListMonitoredResourceDescriptors.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ListMonitoredResourceDescriptorsResponse {
-    /// A list of resource descriptors.
-    #[prost(message, repeated, tag="1")]
-    pub resource_descriptors: ::prost::alloc::vec::Vec<super::super::api::MonitoredResourceDescriptor>,
-    /// If there might be more results than those appearing in this response, then
-    /// `nextPageToken` is included.  To get the next set of results, call this
-    /// method again using the value of `nextPageToken` as `pageToken`.
-    #[prost(string, tag="2")]
-    pub next_page_token: ::prost::alloc::string::String,
-}
-/// The parameters to ListLogs.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ListLogsRequest {
-    /// Required. The resource name that owns the logs:
-    ///
-    /// *  `projects/\[PROJECT_ID\]`
-    /// *  `organizations/\[ORGANIZATION_ID\]`
-    /// *  `billingAccounts/\[BILLING_ACCOUNT_ID\]`
-    /// *  `folders/\[FOLDER_ID\]`
-    #[prost(string, tag="1")]
-    pub parent: ::prost::alloc::string::String,
-    /// Optional. The maximum number of results to return from this request.
-    /// Non-positive values are ignored.  The presence of `nextPageToken` in the
-    /// response indicates that more results might be available.
-    #[prost(int32, tag="2")]
-    pub page_size: i32,
-    /// Optional. If present, then retrieve the next batch of results from the
-    /// preceding call to this method.  `pageToken` must be the value of
-    /// `nextPageToken` from the previous response.  The values of other method
-    /// parameters should be identical to those in the previous call.
-    #[prost(string, tag="3")]
-    pub page_token: ::prost::alloc::string::String,
-    /// Optional. The resource name that owns the logs:
-    ///
-    ///  * `projects/\[PROJECT_ID]/locations/[LOCATION_ID]/buckets/[BUCKET_ID]/views/[VIEW_ID\]`
-    ///  * `organizations/\[ORGANIZATION_ID]/locations/[LOCATION_ID]/buckets/[BUCKET_ID]/views/[VIEW_ID\]`
-    ///  * `billingAccounts/\[BILLING_ACCOUNT_ID]/locations/[LOCATION_ID]/buckets/[BUCKET_ID]/views/[VIEW_ID\]`
-    ///  * `folders/\[FOLDER_ID]/locations/[LOCATION_ID]/buckets/[BUCKET_ID]/views/[VIEW_ID\]`
-    ///
-    /// To support legacy queries, it could also be:
-    ///
-    /// *  `projects/\[PROJECT_ID\]`
-    /// *  `organizations/\[ORGANIZATION_ID\]`
-    /// *  `billingAccounts/\[BILLING_ACCOUNT_ID\]`
-    /// *  `folders/\[FOLDER_ID\]`
-    #[prost(string, repeated, tag="8")]
-    pub resource_names: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
-}
-/// Result returned from ListLogs.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ListLogsResponse {
-    /// A list of log names. For example,
-    /// `"projects/my-project/logs/syslog"` or
-    /// `"organizations/123/logs/cloudresourcemanager.googleapis.com%2Factivity"`.
-    #[prost(string, repeated, tag="3")]
-    pub log_names: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
-    /// If there might be more results than those appearing in this response, then
-    /// `nextPageToken` is included.  To get the next set of results, call this
-    /// method again using the value of `nextPageToken` as `pageToken`.
-    #[prost(string, tag="2")]
-    pub next_page_token: ::prost::alloc::string::String,
-}
-/// The parameters to `TailLogEntries`.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct TailLogEntriesRequest {
-    /// Required. Name of a parent resource from which to retrieve log entries:
-    ///
-    /// *  `projects/\[PROJECT_ID\]`
-    /// *  `organizations/\[ORGANIZATION_ID\]`
-    /// *  `billingAccounts/\[BILLING_ACCOUNT_ID\]`
-    /// *  `folders/\[FOLDER_ID\]`
-    ///
-    /// May alternatively be one or more views:
-    ///
-    ///  * `projects/\[PROJECT_ID]/locations/[LOCATION_ID]/buckets/[BUCKET_ID]/views/[VIEW_ID\]`
-    ///  * `organizations/\[ORGANIZATION_ID]/locations/[LOCATION_ID]/buckets/[BUCKET_ID]/views/[VIEW_ID\]`
-    ///  * `billingAccounts/\[BILLING_ACCOUNT_ID]/locations/[LOCATION_ID]/buckets/[BUCKET_ID]/views/[VIEW_ID\]`
-    ///  * `folders/\[FOLDER_ID]/locations/[LOCATION_ID]/buckets/[BUCKET_ID]/views/[VIEW_ID\]`
-    #[prost(string, repeated, tag="1")]
-    pub resource_names: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
-    /// Optional. A filter that chooses which log entries to return.  See [Advanced
-    /// Logs Filters](<https://cloud.google.com/logging/docs/view/advanced_filters>).
-    /// Only log entries that match the filter are returned.  An empty filter
-    /// matches all log entries in the resources listed in `resource_names`.
-    /// Referencing a parent resource that is not in `resource_names` will cause
-    /// the filter to return no results. The maximum length of the filter is 20000
-    /// characters.
-    #[prost(string, tag="2")]
-    pub filter: ::prost::alloc::string::String,
-    /// Optional. The amount of time to buffer log entries at the server before
-    /// being returned to prevent out of order results due to late arriving log
-    /// entries. Valid values are between 0-60000 milliseconds. Defaults to 2000
-    /// milliseconds.
-    #[prost(message, optional, tag="3")]
-    pub buffer_window: ::core::option::Option<::prost_types::Duration>,
-}
-/// Result returned from `TailLogEntries`.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct TailLogEntriesResponse {
-    /// A list of log entries. Each response in the stream will order entries with
-    /// increasing values of `LogEntry.timestamp`. Ordering is not guaranteed
-    /// between separate responses.
-    #[prost(message, repeated, tag="1")]
-    pub entries: ::prost::alloc::vec::Vec<LogEntry>,
-    /// If entries that otherwise would have been included in the session were not
-    /// sent back to the client, counts of relevant entries omitted from the
-    /// session with the reason that they were not included. There will be at most
-    /// one of each reason per response. The counts represent the number of
-    /// suppressed entries since the last streamed response.
-    #[prost(message, repeated, tag="2")]
-    pub suppression_info: ::prost::alloc::vec::Vec<tail_log_entries_response::SuppressionInfo>,
-}
-/// Nested message and enum types in `TailLogEntriesResponse`.
-pub mod tail_log_entries_response {
-    /// Information about entries that were omitted from the session.
-    #[derive(Clone, PartialEq, ::prost::Message)]
-    pub struct SuppressionInfo {
-        /// The reason that entries were omitted from the session.
-        #[prost(enumeration="suppression_info::Reason", tag="1")]
-        pub reason: i32,
-        /// A lower bound on the count of entries omitted due to `reason`.
-        #[prost(int32, tag="2")]
-        pub suppressed_count: i32,
-    }
-    /// Nested message and enum types in `SuppressionInfo`.
-    pub mod suppression_info {
-        /// An indicator of why entries were omitted.
-        #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
-        #[repr(i32)]
-        pub enum Reason {
-            /// Unexpected default.
-            Unspecified = 0,
-            /// Indicates suppression occurred due to relevant entries being
-            /// received in excess of rate limits. For quotas and limits, see
-            /// [Logging API quotas and
-            /// limits](<https://cloud.google.com/logging/quotas#api-limits>).
-            RateLimit = 1,
-            /// Indicates suppression occurred due to the client not consuming
-            /// responses quickly enough.
-            NotConsumed = 2,
+    impl ApiVersion {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                ApiVersion::V2 => "V2",
+                ApiVersion::V1 => "V1",
+            }
         }
     }
 }
+/// The parameters to ListLogMetrics.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ListLogMetricsRequest {
+    /// Required. The name of the project containing the metrics:
+    ///
+    ///      "projects/\[PROJECT_ID\]"
+    #[prost(string, tag="1")]
+    pub parent: ::prost::alloc::string::String,
+    /// Optional. If present, then retrieve the next batch of results from the
+    /// preceding call to this method. `pageToken` must be the value of
+    /// `nextPageToken` from the previous response. The values of other method
+    /// parameters should be identical to those in the previous call.
+    #[prost(string, tag="2")]
+    pub page_token: ::prost::alloc::string::String,
+    /// Optional. The maximum number of results to return from this request.
+    /// Non-positive values are ignored. The presence of `nextPageToken` in the
+    /// response indicates that more results might be available.
+    #[prost(int32, tag="3")]
+    pub page_size: i32,
+}
+/// Result returned from ListLogMetrics.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ListLogMetricsResponse {
+    /// A list of logs-based metrics.
+    #[prost(message, repeated, tag="1")]
+    pub metrics: ::prost::alloc::vec::Vec<LogMetric>,
+    /// If there might be more results than appear in this response, then
+    /// `nextPageToken` is included. To get the next set of results, call this
+    /// method again using the value of `nextPageToken` as `pageToken`.
+    #[prost(string, tag="2")]
+    pub next_page_token: ::prost::alloc::string::String,
+}
+/// The parameters to GetLogMetric.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct GetLogMetricRequest {
+    /// Required. The resource name of the desired metric:
+    ///
+    ///      "projects/\[PROJECT_ID]/metrics/[METRIC_ID\]"
+    #[prost(string, tag="1")]
+    pub metric_name: ::prost::alloc::string::String,
+}
+/// The parameters to CreateLogMetric.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct CreateLogMetricRequest {
+    /// Required. The resource name of the project in which to create the metric:
+    ///
+    ///      "projects/\[PROJECT_ID\]"
+    ///
+    /// The new metric must be provided in the request.
+    #[prost(string, tag="1")]
+    pub parent: ::prost::alloc::string::String,
+    /// Required. The new logs-based metric, which must not have an identifier that
+    /// already exists.
+    #[prost(message, optional, tag="2")]
+    pub metric: ::core::option::Option<LogMetric>,
+}
+/// The parameters to UpdateLogMetric.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct UpdateLogMetricRequest {
+    /// Required. The resource name of the metric to update:
+    ///
+    ///      "projects/\[PROJECT_ID]/metrics/[METRIC_ID\]"
+    ///
+    /// The updated metric must be provided in the request and it's
+    /// `name` field must be the same as `\[METRIC_ID\]` If the metric
+    /// does not exist in `\[PROJECT_ID\]`, then a new metric is created.
+    #[prost(string, tag="1")]
+    pub metric_name: ::prost::alloc::string::String,
+    /// Required. The updated metric.
+    #[prost(message, optional, tag="2")]
+    pub metric: ::core::option::Option<LogMetric>,
+}
+/// The parameters to DeleteLogMetric.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct DeleteLogMetricRequest {
+    /// Required. The resource name of the metric to delete:
+    ///
+    ///      "projects/\[PROJECT_ID]/metrics/[METRIC_ID\]"
+    #[prost(string, tag="1")]
+    pub metric_name: ::prost::alloc::string::String,
+}
 /// Generated client implementations.
-pub mod logging_service_v2_client {
+pub mod metrics_service_v2_client {
     #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
     use tonic::codegen::*;
-    /// Service for ingesting and querying logs.
+    use tonic::codegen::http::Uri;
+    /// Service for configuring logs-based metrics.
     #[derive(Debug, Clone)]
-    pub struct LoggingServiceV2Client<T> {
+    pub struct MetricsServiceV2Client<T> {
         inner: tonic::client::Grpc<T>,
     }
-    impl<T> LoggingServiceV2Client<T>
+    impl<T> MetricsServiceV2Client<T>
     where
         T: tonic::client::GrpcService<tonic::body::BoxBody>,
         T::Error: Into<StdError>,
@@ -570,10 +246,14 @@ pub mod logging_service_v2_client {
             let inner = tonic::client::Grpc::new(inner);
             Self { inner }
         }
+        pub fn with_origin(inner: T, origin: Uri) -> Self {
+            let inner = tonic::client::Grpc::with_origin(inner, origin);
+            Self { inner }
+        }
         pub fn with_interceptor<F>(
             inner: T,
             interceptor: F,
-        ) -> LoggingServiceV2Client<InterceptedService<T, F>>
+        ) -> MetricsServiceV2Client<InterceptedService<T, F>>
         where
             F: tonic::service::Interceptor,
             T::ResponseBody: Default,
@@ -587,30 +267,107 @@ pub mod logging_service_v2_client {
                 http::Request<tonic::body::BoxBody>,
             >>::Error: Into<StdError> + Send + Sync,
         {
-            LoggingServiceV2Client::new(InterceptedService::new(inner, interceptor))
+            MetricsServiceV2Client::new(InterceptedService::new(inner, interceptor))
         }
-        /// Compress requests with `gzip`.
+        /// Compress requests with the given encoding.
         ///
         /// This requires the server to support it otherwise it might respond with an
         /// error.
         #[must_use]
-        pub fn send_gzip(mut self) -> Self {
-            self.inner = self.inner.send_gzip();
+        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.send_compressed(encoding);
             self
         }
-        /// Enable decompressing responses with `gzip`.
+        /// Enable decompressing responses.
         #[must_use]
-        pub fn accept_gzip(mut self) -> Self {
-            self.inner = self.inner.accept_gzip();
+        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.accept_compressed(encoding);
             self
         }
-        /// Deletes all the log entries in a log for the _Default Log Bucket. The log
-        /// reappears if it receives new entries. Log entries written shortly before
-        /// the delete operation might not be deleted. Entries received after the
-        /// delete operation with a timestamp before the operation will be deleted.
-        pub async fn delete_log(
+        /// Lists logs-based metrics.
+        pub async fn list_log_metrics(
             &mut self,
-            request: impl tonic::IntoRequest<super::DeleteLogRequest>,
+            request: impl tonic::IntoRequest<super::ListLogMetricsRequest>,
+        ) -> Result<tonic::Response<super::ListLogMetricsResponse>, tonic::Status> {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/google.logging.v2.MetricsServiceV2/ListLogMetrics",
+            );
+            self.inner.unary(request.into_request(), path, codec).await
+        }
+        /// Gets a logs-based metric.
+        pub async fn get_log_metric(
+            &mut self,
+            request: impl tonic::IntoRequest<super::GetLogMetricRequest>,
+        ) -> Result<tonic::Response<super::LogMetric>, tonic::Status> {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/google.logging.v2.MetricsServiceV2/GetLogMetric",
+            );
+            self.inner.unary(request.into_request(), path, codec).await
+        }
+        /// Creates a logs-based metric.
+        pub async fn create_log_metric(
+            &mut self,
+            request: impl tonic::IntoRequest<super::CreateLogMetricRequest>,
+        ) -> Result<tonic::Response<super::LogMetric>, tonic::Status> {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/google.logging.v2.MetricsServiceV2/CreateLogMetric",
+            );
+            self.inner.unary(request.into_request(), path, codec).await
+        }
+        /// Creates or updates a logs-based metric.
+        pub async fn update_log_metric(
+            &mut self,
+            request: impl tonic::IntoRequest<super::UpdateLogMetricRequest>,
+        ) -> Result<tonic::Response<super::LogMetric>, tonic::Status> {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/google.logging.v2.MetricsServiceV2/UpdateLogMetric",
+            );
+            self.inner.unary(request.into_request(), path, codec).await
+        }
+        /// Deletes a logs-based metric.
+        pub async fn delete_log_metric(
+            &mut self,
+            request: impl tonic::IntoRequest<super::DeleteLogMetricRequest>,
         ) -> Result<tonic::Response<()>, tonic::Status> {
             self.inner
                 .ready()
@@ -623,130 +380,9 @@ pub mod logging_service_v2_client {
                 })?;
             let codec = tonic::codec::ProstCodec::default();
             let path = http::uri::PathAndQuery::from_static(
-                "/google.logging.v2.LoggingServiceV2/DeleteLog",
+                "/google.logging.v2.MetricsServiceV2/DeleteLogMetric",
             );
             self.inner.unary(request.into_request(), path, codec).await
-        }
-        /// Writes log entries to Logging. This API method is the
-        /// only way to send log entries to Logging. This method
-        /// is used, directly or indirectly, by the Logging agent
-        /// (fluentd) and all logging libraries configured to use Logging.
-        /// A single request may contain log entries for a maximum of 1000
-        /// different resources (projects, organizations, billing accounts or
-        /// folders)
-        pub async fn write_log_entries(
-            &mut self,
-            request: impl tonic::IntoRequest<super::WriteLogEntriesRequest>,
-        ) -> Result<tonic::Response<super::WriteLogEntriesResponse>, tonic::Status> {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/google.logging.v2.LoggingServiceV2/WriteLogEntries",
-            );
-            self.inner.unary(request.into_request(), path, codec).await
-        }
-        /// Lists log entries.  Use this method to retrieve log entries that originated
-        /// from a project/folder/organization/billing account.  For ways to export log
-        /// entries, see [Exporting
-        /// Logs](https://cloud.google.com/logging/docs/export).
-        pub async fn list_log_entries(
-            &mut self,
-            request: impl tonic::IntoRequest<super::ListLogEntriesRequest>,
-        ) -> Result<tonic::Response<super::ListLogEntriesResponse>, tonic::Status> {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/google.logging.v2.LoggingServiceV2/ListLogEntries",
-            );
-            self.inner.unary(request.into_request(), path, codec).await
-        }
-        /// Lists the descriptors for monitored resource types used by Logging.
-        pub async fn list_monitored_resource_descriptors(
-            &mut self,
-            request: impl tonic::IntoRequest<
-                super::ListMonitoredResourceDescriptorsRequest,
-            >,
-        ) -> Result<
-            tonic::Response<super::ListMonitoredResourceDescriptorsResponse>,
-            tonic::Status,
-        > {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/google.logging.v2.LoggingServiceV2/ListMonitoredResourceDescriptors",
-            );
-            self.inner.unary(request.into_request(), path, codec).await
-        }
-        /// Lists the logs in projects, organizations, folders, or billing accounts.
-        /// Only logs that have entries are listed.
-        pub async fn list_logs(
-            &mut self,
-            request: impl tonic::IntoRequest<super::ListLogsRequest>,
-        ) -> Result<tonic::Response<super::ListLogsResponse>, tonic::Status> {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/google.logging.v2.LoggingServiceV2/ListLogs",
-            );
-            self.inner.unary(request.into_request(), path, codec).await
-        }
-        /// Streaming read of log entries as they are ingested. Until the stream is
-        /// terminated, it will continue reading logs.
-        pub async fn tail_log_entries(
-            &mut self,
-            request: impl tonic::IntoStreamingRequest<
-                Message = super::TailLogEntriesRequest,
-            >,
-        ) -> Result<
-            tonic::Response<tonic::codec::Streaming<super::TailLogEntriesResponse>>,
-            tonic::Status,
-        > {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/google.logging.v2.LoggingServiceV2/TailLogEntries",
-            );
-            self.inner.streaming(request.into_streaming_request(), path, codec).await
         }
     }
 }
@@ -757,7 +393,7 @@ pub struct LogBucket {
     ///
     /// For example:
     ///
-    ///   `projects/my-project/locations/global/buckets/my-bucket`
+    ///    `projects/my-project/locations/global/buckets/my-bucket`
     ///
     /// For a list of supported locations, see [Supported
     /// Regions](<https://cloud.google.com/logging/docs/region-support>)
@@ -817,7 +453,7 @@ pub struct LogView {
     ///
     /// For example:
     ///
-    ///   `projects/my-project/locations/global/buckets/my-bucket/views/my-view`
+    ///    `projects/my-project/locations/global/buckets/my-bucket/views/my-view`
     #[prost(string, tag="1")]
     pub name: ::prost::alloc::string::String,
     /// Describes this view.
@@ -835,14 +471,14 @@ pub struct LogView {
     /// Filters are restricted to be a logical AND of ==/!= of any of the
     /// following:
     ///
-    ///   - originating project/folder/organization/billing account.
-    ///   - resource type
-    ///   - log id
+    ///    - originating project/folder/organization/billing account.
+    ///    - resource type
+    ///    - log id
     ///
     /// For example:
     ///
-    ///   SOURCE("projects/myproject") AND resource.type = "gce_instance"
-    ///                                AND LOG_ID("stdout")
+    ///    SOURCE("projects/myproject") AND resource.type = "gce_instance"
+    ///                                 AND LOG_ID("stdout")
     #[prost(string, tag="7")]
     pub filter: ::prost::alloc::string::String,
 }
@@ -863,9 +499,9 @@ pub struct LogSink {
     pub name: ::prost::alloc::string::String,
     /// Required. The export destination:
     ///
-    ///     "storage.googleapis.com/\[GCS_BUCKET\]"
-    ///     "bigquery.googleapis.com/projects/\[PROJECT_ID]/datasets/[DATASET\]"
-    ///     "pubsub.googleapis.com/projects/\[PROJECT_ID]/topics/[TOPIC_ID\]"
+    ///      "storage.googleapis.com/\[GCS_BUCKET\]"
+    ///      "bigquery.googleapis.com/projects/\[PROJECT_ID]/datasets/[DATASET\]"
+    ///      "pubsub.googleapis.com/projects/\[PROJECT_ID]/topics/[TOPIC_ID\]"
     ///
     /// The sink's `writer_identity`, set when the sink is created, must have
     /// permission to write to the destination or else the log entries are not
@@ -881,7 +517,7 @@ pub struct LogSink {
     ///
     /// For example:
     ///
-    ///   `logName="projects/\[PROJECT_ID]/logs/[LOG_ID\]" AND severity>=ERROR`
+    ///    `logName="projects/\[PROJECT_ID]/logs/[LOG_ID\]" AND severity>=ERROR`
     #[prost(string, tag="5")]
     pub filter: ::prost::alloc::string::String,
     /// Optional. A description of this sink.
@@ -937,8 +573,8 @@ pub struct LogSink {
     /// To only export entries from certain child projects, filter on the project
     /// part of the log name:
     ///
-    ///   logName:("projects/test-project1/" OR "projects/test-project2/") AND
-    ///   resource.type=gce_instance
+    ///    logName:("projects/test-project1/" OR "projects/test-project2/") AND
+    ///    resource.type=gce_instance
     #[prost(bool, tag="9")]
     pub include_children: bool,
     /// Output only. The creation timestamp of the sink.
@@ -967,6 +603,19 @@ pub mod log_sink {
         V2 = 1,
         /// `LogEntry` version 1 format.
         V1 = 2,
+    }
+    impl VersionFormat {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                VersionFormat::Unspecified => "VERSION_FORMAT_UNSPECIFIED",
+                VersionFormat::V2 => "V2",
+                VersionFormat::V1 => "V1",
+            }
+        }
     }
     /// Destination dependent options.
     #[derive(Clone, PartialEq, ::prost::Oneof)]
@@ -1004,10 +653,10 @@ pub struct BigQueryOptions {
 pub struct ListBucketsRequest {
     /// Required. The parent resource whose buckets are to be listed:
     ///
-    ///     "projects/\[PROJECT_ID]/locations/[LOCATION_ID\]"
-    ///     "organizations/\[ORGANIZATION_ID]/locations/[LOCATION_ID\]"
-    ///     "billingAccounts/\[BILLING_ACCOUNT_ID]/locations/[LOCATION_ID\]"
-    ///     "folders/\[FOLDER_ID]/locations/[LOCATION_ID\]"
+    ///      "projects/\[PROJECT_ID]/locations/[LOCATION_ID\]"
+    ///      "organizations/\[ORGANIZATION_ID]/locations/[LOCATION_ID\]"
+    ///      "billingAccounts/\[BILLING_ACCOUNT_ID]/locations/[LOCATION_ID\]"
+    ///      "folders/\[FOLDER_ID]/locations/[LOCATION_ID\]"
     ///
     /// Note: The locations portion of the resource must be specified, but
     /// supplying the character `-` in place of \[LOCATION_ID\] will return all
@@ -1043,11 +692,11 @@ pub struct ListBucketsResponse {
 pub struct CreateBucketRequest {
     /// Required. The resource in which to create the log bucket:
     ///
-    ///     "projects/\[PROJECT_ID]/locations/[LOCATION_ID\]"
+    ///      "projects/\[PROJECT_ID]/locations/[LOCATION_ID\]"
     ///
     /// For example:
     ///
-    ///   `"projects/my-project/locations/global"`
+    ///    `"projects/my-project/locations/global"`
     #[prost(string, tag="1")]
     pub parent: ::prost::alloc::string::String,
     /// Required. A client-assigned identifier such as `"my-bucket"`. Identifiers are limited
@@ -1066,14 +715,14 @@ pub struct CreateBucketRequest {
 pub struct UpdateBucketRequest {
     /// Required. The full resource name of the bucket to update.
     ///
-    ///     "projects/\[PROJECT_ID]/locations/[LOCATION_ID]/buckets/[BUCKET_ID\]"
-    ///     "organizations/\[ORGANIZATION_ID]/locations/[LOCATION_ID]/buckets/[BUCKET_ID\]"
-    ///     "billingAccounts/\[BILLING_ACCOUNT_ID]/locations/[LOCATION_ID]/buckets/[BUCKET_ID\]"
-    ///     "folders/\[FOLDER_ID]/locations/[LOCATION_ID]/buckets/[BUCKET_ID\]"
+    ///      "projects/\[PROJECT_ID]/locations/[LOCATION_ID]/buckets/[BUCKET_ID\]"
+    ///      "organizations/\[ORGANIZATION_ID]/locations/[LOCATION_ID]/buckets/[BUCKET_ID\]"
+    ///      "billingAccounts/\[BILLING_ACCOUNT_ID]/locations/[LOCATION_ID]/buckets/[BUCKET_ID\]"
+    ///      "folders/\[FOLDER_ID]/locations/[LOCATION_ID]/buckets/[BUCKET_ID\]"
     ///
     /// For example:
     ///
-    ///   `"projects/my-project/locations/global/buckets/my-bucket"`
+    ///    `"projects/my-project/locations/global/buckets/my-bucket"`
     #[prost(string, tag="1")]
     pub name: ::prost::alloc::string::String,
     /// Required. The updated bucket.
@@ -1095,14 +744,14 @@ pub struct UpdateBucketRequest {
 pub struct GetBucketRequest {
     /// Required. The resource name of the bucket:
     ///
-    ///     "projects/\[PROJECT_ID]/locations/[LOCATION_ID]/buckets/[BUCKET_ID\]"
-    ///     "organizations/\[ORGANIZATION_ID]/locations/[LOCATION_ID]/buckets/[BUCKET_ID\]"
-    ///     "billingAccounts/\[BILLING_ACCOUNT_ID]/locations/[LOCATION_ID]/buckets/[BUCKET_ID\]"
-    ///     "folders/\[FOLDER_ID]/locations/[LOCATION_ID]/buckets/[BUCKET_ID\]"
+    ///      "projects/\[PROJECT_ID]/locations/[LOCATION_ID]/buckets/[BUCKET_ID\]"
+    ///      "organizations/\[ORGANIZATION_ID]/locations/[LOCATION_ID]/buckets/[BUCKET_ID\]"
+    ///      "billingAccounts/\[BILLING_ACCOUNT_ID]/locations/[LOCATION_ID]/buckets/[BUCKET_ID\]"
+    ///      "folders/\[FOLDER_ID]/locations/[LOCATION_ID]/buckets/[BUCKET_ID\]"
     ///
     /// For example:
     ///
-    ///   `"projects/my-project/locations/global/buckets/my-bucket"`
+    ///    `"projects/my-project/locations/global/buckets/my-bucket"`
     #[prost(string, tag="1")]
     pub name: ::prost::alloc::string::String,
 }
@@ -1111,14 +760,14 @@ pub struct GetBucketRequest {
 pub struct DeleteBucketRequest {
     /// Required. The full resource name of the bucket to delete.
     ///
-    ///     "projects/\[PROJECT_ID]/locations/[LOCATION_ID]/buckets/[BUCKET_ID\]"
-    ///     "organizations/\[ORGANIZATION_ID]/locations/[LOCATION_ID]/buckets/[BUCKET_ID\]"
-    ///     "billingAccounts/\[BILLING_ACCOUNT_ID]/locations/[LOCATION_ID]/buckets/[BUCKET_ID\]"
-    ///     "folders/\[FOLDER_ID]/locations/[LOCATION_ID]/buckets/[BUCKET_ID\]"
+    ///      "projects/\[PROJECT_ID]/locations/[LOCATION_ID]/buckets/[BUCKET_ID\]"
+    ///      "organizations/\[ORGANIZATION_ID]/locations/[LOCATION_ID]/buckets/[BUCKET_ID\]"
+    ///      "billingAccounts/\[BILLING_ACCOUNT_ID]/locations/[LOCATION_ID]/buckets/[BUCKET_ID\]"
+    ///      "folders/\[FOLDER_ID]/locations/[LOCATION_ID]/buckets/[BUCKET_ID\]"
     ///
     /// For example:
     ///
-    ///   `"projects/my-project/locations/global/buckets/my-bucket"`
+    ///    `"projects/my-project/locations/global/buckets/my-bucket"`
     #[prost(string, tag="1")]
     pub name: ::prost::alloc::string::String,
 }
@@ -1127,14 +776,14 @@ pub struct DeleteBucketRequest {
 pub struct UndeleteBucketRequest {
     /// Required. The full resource name of the bucket to undelete.
     ///
-    ///     "projects/\[PROJECT_ID]/locations/[LOCATION_ID]/buckets/[BUCKET_ID\]"
-    ///     "organizations/\[ORGANIZATION_ID]/locations/[LOCATION_ID]/buckets/[BUCKET_ID\]"
-    ///     "billingAccounts/\[BILLING_ACCOUNT_ID]/locations/[LOCATION_ID]/buckets/[BUCKET_ID\]"
-    ///     "folders/\[FOLDER_ID]/locations/[LOCATION_ID]/buckets/[BUCKET_ID\]"
+    ///      "projects/\[PROJECT_ID]/locations/[LOCATION_ID]/buckets/[BUCKET_ID\]"
+    ///      "organizations/\[ORGANIZATION_ID]/locations/[LOCATION_ID]/buckets/[BUCKET_ID\]"
+    ///      "billingAccounts/\[BILLING_ACCOUNT_ID]/locations/[LOCATION_ID]/buckets/[BUCKET_ID\]"
+    ///      "folders/\[FOLDER_ID]/locations/[LOCATION_ID]/buckets/[BUCKET_ID\]"
     ///
     /// For example:
     ///
-    ///   `"projects/my-project/locations/global/buckets/my-bucket"`
+    ///    `"projects/my-project/locations/global/buckets/my-bucket"`
     #[prost(string, tag="1")]
     pub name: ::prost::alloc::string::String,
 }
@@ -1143,7 +792,7 @@ pub struct UndeleteBucketRequest {
 pub struct ListViewsRequest {
     /// Required. The bucket whose views are to be listed:
     ///
-    ///     "projects/\[PROJECT_ID]/locations/[LOCATION_ID]/buckets/[BUCKET_ID\]"
+    ///      "projects/\[PROJECT_ID]/locations/[LOCATION_ID]/buckets/[BUCKET_ID\]"
     #[prost(string, tag="1")]
     pub parent: ::prost::alloc::string::String,
     /// Optional. If present, then retrieve the next batch of results from the preceding call
@@ -1176,11 +825,11 @@ pub struct ListViewsResponse {
 pub struct CreateViewRequest {
     /// Required. The bucket in which to create the view
     ///
-    ///     `"projects/\[PROJECT_ID]/locations/[LOCATION_ID]/buckets/[BUCKET_ID\]"`
+    ///      `"projects/\[PROJECT_ID]/locations/[LOCATION_ID]/buckets/[BUCKET_ID\]"`
     ///
     /// For example:
     ///
-    ///   `"projects/my-project/locations/global/buckets/my-bucket"`
+    ///    `"projects/my-project/locations/global/buckets/my-bucket"`
     #[prost(string, tag="1")]
     pub parent: ::prost::alloc::string::String,
     /// Required. The id to use for this view.
@@ -1195,11 +844,11 @@ pub struct CreateViewRequest {
 pub struct UpdateViewRequest {
     /// Required. The full resource name of the view to update
     ///
-    ///     "projects/\[PROJECT_ID]/locations/[LOCATION_ID]/buckets/[BUCKET_ID]/views/[VIEW_ID\]"
+    ///      "projects/\[PROJECT_ID]/locations/[LOCATION_ID]/buckets/[BUCKET_ID]/views/[VIEW_ID\]"
     ///
     /// For example:
     ///
-    ///   `"projects/my-project/locations/global/buckets/my-bucket/views/my-view"`
+    ///    `"projects/my-project/locations/global/buckets/my-bucket/views/my-view"`
     #[prost(string, tag="1")]
     pub name: ::prost::alloc::string::String,
     /// Required. The updated view.
@@ -1221,11 +870,11 @@ pub struct UpdateViewRequest {
 pub struct GetViewRequest {
     /// Required. The resource name of the policy:
     ///
-    ///     "projects/\[PROJECT_ID]/locations/[LOCATION_ID]/buckets/[BUCKET_ID]/views/[VIEW_ID\]"
+    ///      "projects/\[PROJECT_ID]/locations/[LOCATION_ID]/buckets/[BUCKET_ID]/views/[VIEW_ID\]"
     ///
     /// For example:
     ///
-    ///   `"projects/my-project/locations/global/buckets/my-bucket/views/my-view"`
+    ///    `"projects/my-project/locations/global/buckets/my-bucket/views/my-view"`
     #[prost(string, tag="1")]
     pub name: ::prost::alloc::string::String,
 }
@@ -1234,11 +883,11 @@ pub struct GetViewRequest {
 pub struct DeleteViewRequest {
     /// Required. The full resource name of the view to delete:
     ///
-    ///     "projects/\[PROJECT_ID]/locations/[LOCATION_ID]/buckets/[BUCKET_ID]/views/[VIEW_ID\]"
+    ///      "projects/\[PROJECT_ID]/locations/[LOCATION_ID]/buckets/[BUCKET_ID]/views/[VIEW_ID\]"
     ///
     /// For example:
     ///
-    ///    `"projects/my-project/locations/global/buckets/my-bucket/views/my-view"`
+    ///     `"projects/my-project/locations/global/buckets/my-bucket/views/my-view"`
     #[prost(string, tag="1")]
     pub name: ::prost::alloc::string::String,
 }
@@ -1247,10 +896,10 @@ pub struct DeleteViewRequest {
 pub struct ListSinksRequest {
     /// Required. The parent resource whose sinks are to be listed:
     ///
-    ///     "projects/\[PROJECT_ID\]"
-    ///     "organizations/\[ORGANIZATION_ID\]"
-    ///     "billingAccounts/\[BILLING_ACCOUNT_ID\]"
-    ///     "folders/\[FOLDER_ID\]"
+    ///      "projects/\[PROJECT_ID\]"
+    ///      "organizations/\[ORGANIZATION_ID\]"
+    ///      "billingAccounts/\[BILLING_ACCOUNT_ID\]"
+    ///      "folders/\[FOLDER_ID\]"
     #[prost(string, tag="1")]
     pub parent: ::prost::alloc::string::String,
     /// Optional. If present, then retrieve the next batch of results from the
@@ -1282,14 +931,14 @@ pub struct ListSinksResponse {
 pub struct GetSinkRequest {
     /// Required. The resource name of the sink:
     ///
-    ///     "projects/\[PROJECT_ID]/sinks/[SINK_ID\]"
-    ///     "organizations/\[ORGANIZATION_ID]/sinks/[SINK_ID\]"
-    ///     "billingAccounts/\[BILLING_ACCOUNT_ID]/sinks/[SINK_ID\]"
-    ///     "folders/\[FOLDER_ID]/sinks/[SINK_ID\]"
+    ///      "projects/\[PROJECT_ID]/sinks/[SINK_ID\]"
+    ///      "organizations/\[ORGANIZATION_ID]/sinks/[SINK_ID\]"
+    ///      "billingAccounts/\[BILLING_ACCOUNT_ID]/sinks/[SINK_ID\]"
+    ///      "folders/\[FOLDER_ID]/sinks/[SINK_ID\]"
     ///
     /// For example:
     ///
-    ///   `"projects/my-project/sinks/my-sink"`
+    ///    `"projects/my-project/sinks/my-sink"`
     #[prost(string, tag="1")]
     pub sink_name: ::prost::alloc::string::String,
 }
@@ -1298,15 +947,15 @@ pub struct GetSinkRequest {
 pub struct CreateSinkRequest {
     /// Required. The resource in which to create the sink:
     ///
-    ///     "projects/\[PROJECT_ID\]"
-    ///     "organizations/\[ORGANIZATION_ID\]"
-    ///     "billingAccounts/\[BILLING_ACCOUNT_ID\]"
-    ///     "folders/\[FOLDER_ID\]"
+    ///      "projects/\[PROJECT_ID\]"
+    ///      "organizations/\[ORGANIZATION_ID\]"
+    ///      "billingAccounts/\[BILLING_ACCOUNT_ID\]"
+    ///      "folders/\[FOLDER_ID\]"
     ///
     /// For examples:
     ///
-    ///   `"projects/my-project"`
-    ///   `"organizations/123456789"`
+    ///    `"projects/my-project"`
+    ///    `"organizations/123456789"`
     #[prost(string, tag="1")]
     pub parent: ::prost::alloc::string::String,
     /// Required. The new sink, whose `name` parameter is a sink identifier that
@@ -1333,14 +982,14 @@ pub struct UpdateSinkRequest {
     /// Required. The full resource name of the sink to update, including the parent
     /// resource and the sink identifier:
     ///
-    ///     "projects/\[PROJECT_ID]/sinks/[SINK_ID\]"
-    ///     "organizations/\[ORGANIZATION_ID]/sinks/[SINK_ID\]"
-    ///     "billingAccounts/\[BILLING_ACCOUNT_ID]/sinks/[SINK_ID\]"
-    ///     "folders/\[FOLDER_ID]/sinks/[SINK_ID\]"
+    ///      "projects/\[PROJECT_ID]/sinks/[SINK_ID\]"
+    ///      "organizations/\[ORGANIZATION_ID]/sinks/[SINK_ID\]"
+    ///      "billingAccounts/\[BILLING_ACCOUNT_ID]/sinks/[SINK_ID\]"
+    ///      "folders/\[FOLDER_ID]/sinks/[SINK_ID\]"
     ///
     /// For example:
     ///
-    ///   `"projects/my-project/sinks/my-sink"`
+    ///    `"projects/my-project/sinks/my-sink"`
     #[prost(string, tag="1")]
     pub sink_name: ::prost::alloc::string::String,
     /// Required. The updated sink, whose name is the same identifier that appears as part
@@ -1353,11 +1002,11 @@ pub struct UpdateSinkRequest {
     /// the old and new values of this field:
     ///
     /// +   If the old and new values of this field are both false or both true,
-    ///     then there is no change to the sink's `writer_identity`.
+    ///      then there is no change to the sink's `writer_identity`.
     /// +   If the old value is false and the new value is true, then
-    ///     `writer_identity` is changed to a unique service account.
+    ///      `writer_identity` is changed to a unique service account.
     /// +   It is an error if the old value is true and the new value is
-    ///     set to false or defaulted to false.
+    ///      set to false or defaulted to false.
     #[prost(bool, tag="3")]
     pub unique_writer_identity: bool,
     /// Optional. Field mask that specifies the fields in `sink` that need
@@ -1367,7 +1016,7 @@ pub struct UpdateSinkRequest {
     /// An empty `updateMask` is temporarily treated as using the following mask
     /// for backwards compatibility purposes:
     ///
-    ///   `destination,filter,includeChildren`
+    ///    `destination,filter,includeChildren`
     ///
     /// At some point in the future, behavior will be removed and specifying an
     /// empty `updateMask` will be an error.
@@ -1385,14 +1034,14 @@ pub struct DeleteSinkRequest {
     /// Required. The full resource name of the sink to delete, including the parent
     /// resource and the sink identifier:
     ///
-    ///     "projects/\[PROJECT_ID]/sinks/[SINK_ID\]"
-    ///     "organizations/\[ORGANIZATION_ID]/sinks/[SINK_ID\]"
-    ///     "billingAccounts/\[BILLING_ACCOUNT_ID]/sinks/[SINK_ID\]"
-    ///     "folders/\[FOLDER_ID]/sinks/[SINK_ID\]"
+    ///      "projects/\[PROJECT_ID]/sinks/[SINK_ID\]"
+    ///      "organizations/\[ORGANIZATION_ID]/sinks/[SINK_ID\]"
+    ///      "billingAccounts/\[BILLING_ACCOUNT_ID]/sinks/[SINK_ID\]"
+    ///      "folders/\[FOLDER_ID]/sinks/[SINK_ID\]"
     ///
     /// For example:
     ///
-    ///   `"projects/my-project/sinks/my-sink"`
+    ///    `"projects/my-project/sinks/my-sink"`
     #[prost(string, tag="1")]
     pub sink_name: ::prost::alloc::string::String,
 }
@@ -1421,7 +1070,7 @@ pub struct LogExclusion {
     /// For example, the following query matches 99% of low-severity log entries
     /// from Google Cloud Storage buckets:
     ///
-    ///   `resource.type=gcs_bucket severity<ERROR sample(insertId, 0.99)`
+    ///    `resource.type=gcs_bucket severity<ERROR sample(insertId, 0.99)`
     #[prost(string, tag="3")]
     pub filter: ::prost::alloc::string::String,
     /// Optional. If set to True, then this exclusion is disabled and it does not
@@ -1446,10 +1095,10 @@ pub struct LogExclusion {
 pub struct ListExclusionsRequest {
     /// Required. The parent resource whose exclusions are to be listed.
     ///
-    ///     "projects/\[PROJECT_ID\]"
-    ///     "organizations/\[ORGANIZATION_ID\]"
-    ///     "billingAccounts/\[BILLING_ACCOUNT_ID\]"
-    ///     "folders/\[FOLDER_ID\]"
+    ///      "projects/\[PROJECT_ID\]"
+    ///      "organizations/\[ORGANIZATION_ID\]"
+    ///      "billingAccounts/\[BILLING_ACCOUNT_ID\]"
+    ///      "folders/\[FOLDER_ID\]"
     #[prost(string, tag="1")]
     pub parent: ::prost::alloc::string::String,
     /// Optional. If present, then retrieve the next batch of results from the
@@ -1481,14 +1130,14 @@ pub struct ListExclusionsResponse {
 pub struct GetExclusionRequest {
     /// Required. The resource name of an existing exclusion:
     ///
-    ///     "projects/\[PROJECT_ID]/exclusions/[EXCLUSION_ID\]"
-    ///     "organizations/\[ORGANIZATION_ID]/exclusions/[EXCLUSION_ID\]"
-    ///     "billingAccounts/\[BILLING_ACCOUNT_ID]/exclusions/[EXCLUSION_ID\]"
-    ///     "folders/\[FOLDER_ID]/exclusions/[EXCLUSION_ID\]"
+    ///      "projects/\[PROJECT_ID]/exclusions/[EXCLUSION_ID\]"
+    ///      "organizations/\[ORGANIZATION_ID]/exclusions/[EXCLUSION_ID\]"
+    ///      "billingAccounts/\[BILLING_ACCOUNT_ID]/exclusions/[EXCLUSION_ID\]"
+    ///      "folders/\[FOLDER_ID]/exclusions/[EXCLUSION_ID\]"
     ///
     /// For example:
     ///
-    ///   `"projects/my-project/exclusions/my-exclusion"`
+    ///    `"projects/my-project/exclusions/my-exclusion"`
     #[prost(string, tag="1")]
     pub name: ::prost::alloc::string::String,
 }
@@ -1497,15 +1146,15 @@ pub struct GetExclusionRequest {
 pub struct CreateExclusionRequest {
     /// Required. The parent resource in which to create the exclusion:
     ///
-    ///     "projects/\[PROJECT_ID\]"
-    ///     "organizations/\[ORGANIZATION_ID\]"
-    ///     "billingAccounts/\[BILLING_ACCOUNT_ID\]"
-    ///     "folders/\[FOLDER_ID\]"
+    ///      "projects/\[PROJECT_ID\]"
+    ///      "organizations/\[ORGANIZATION_ID\]"
+    ///      "billingAccounts/\[BILLING_ACCOUNT_ID\]"
+    ///      "folders/\[FOLDER_ID\]"
     ///
     /// For examples:
     ///
-    ///   `"projects/my-logging-project"`
-    ///   `"organizations/123456789"`
+    ///    `"projects/my-logging-project"`
+    ///    `"organizations/123456789"`
     #[prost(string, tag="1")]
     pub parent: ::prost::alloc::string::String,
     /// Required. The new exclusion, whose `name` parameter is an exclusion name
@@ -1518,14 +1167,14 @@ pub struct CreateExclusionRequest {
 pub struct UpdateExclusionRequest {
     /// Required. The resource name of the exclusion to update:
     ///
-    ///     "projects/\[PROJECT_ID]/exclusions/[EXCLUSION_ID\]"
-    ///     "organizations/\[ORGANIZATION_ID]/exclusions/[EXCLUSION_ID\]"
-    ///     "billingAccounts/\[BILLING_ACCOUNT_ID]/exclusions/[EXCLUSION_ID\]"
-    ///     "folders/\[FOLDER_ID]/exclusions/[EXCLUSION_ID\]"
+    ///      "projects/\[PROJECT_ID]/exclusions/[EXCLUSION_ID\]"
+    ///      "organizations/\[ORGANIZATION_ID]/exclusions/[EXCLUSION_ID\]"
+    ///      "billingAccounts/\[BILLING_ACCOUNT_ID]/exclusions/[EXCLUSION_ID\]"
+    ///      "folders/\[FOLDER_ID]/exclusions/[EXCLUSION_ID\]"
     ///
     /// For example:
     ///
-    ///   `"projects/my-project/exclusions/my-exclusion"`
+    ///    `"projects/my-project/exclusions/my-exclusion"`
     #[prost(string, tag="1")]
     pub name: ::prost::alloc::string::String,
     /// Required. New values for the existing exclusion. Only the fields specified in
@@ -1547,14 +1196,14 @@ pub struct UpdateExclusionRequest {
 pub struct DeleteExclusionRequest {
     /// Required. The resource name of an existing exclusion to delete:
     ///
-    ///     "projects/\[PROJECT_ID]/exclusions/[EXCLUSION_ID\]"
-    ///     "organizations/\[ORGANIZATION_ID]/exclusions/[EXCLUSION_ID\]"
-    ///     "billingAccounts/\[BILLING_ACCOUNT_ID]/exclusions/[EXCLUSION_ID\]"
-    ///     "folders/\[FOLDER_ID]/exclusions/[EXCLUSION_ID\]"
+    ///      "projects/\[PROJECT_ID]/exclusions/[EXCLUSION_ID\]"
+    ///      "organizations/\[ORGANIZATION_ID]/exclusions/[EXCLUSION_ID\]"
+    ///      "billingAccounts/\[BILLING_ACCOUNT_ID]/exclusions/[EXCLUSION_ID\]"
+    ///      "folders/\[FOLDER_ID]/exclusions/[EXCLUSION_ID\]"
     ///
     /// For example:
     ///
-    ///   `"projects/my-project/exclusions/my-exclusion"`
+    ///    `"projects/my-project/exclusions/my-exclusion"`
     #[prost(string, tag="1")]
     pub name: ::prost::alloc::string::String,
 }
@@ -1568,14 +1217,14 @@ pub struct DeleteExclusionRequest {
 pub struct GetCmekSettingsRequest {
     /// Required. The resource for which to retrieve CMEK settings.
     ///
-    ///     "projects/\[PROJECT_ID\]/cmekSettings"
-    ///     "organizations/\[ORGANIZATION_ID\]/cmekSettings"
-    ///     "billingAccounts/\[BILLING_ACCOUNT_ID\]/cmekSettings"
-    ///     "folders/\[FOLDER_ID\]/cmekSettings"
+    ///      "projects/\[PROJECT_ID\]/cmekSettings"
+    ///      "organizations/\[ORGANIZATION_ID\]/cmekSettings"
+    ///      "billingAccounts/\[BILLING_ACCOUNT_ID\]/cmekSettings"
+    ///      "folders/\[FOLDER_ID\]/cmekSettings"
     ///
     /// For example:
     ///
-    ///   `"organizations/12345/cmekSettings"`
+    ///    `"organizations/12345/cmekSettings"`
     ///
     /// Note: CMEK for the Log Router can be configured for Google Cloud projects,
     /// folders, organizations and billing accounts. Once configured for an
@@ -1594,14 +1243,14 @@ pub struct GetCmekSettingsRequest {
 pub struct UpdateCmekSettingsRequest {
     /// Required. The resource name for the CMEK settings to update.
     ///
-    ///     "projects/\[PROJECT_ID\]/cmekSettings"
-    ///     "organizations/\[ORGANIZATION_ID\]/cmekSettings"
-    ///     "billingAccounts/\[BILLING_ACCOUNT_ID\]/cmekSettings"
-    ///     "folders/\[FOLDER_ID\]/cmekSettings"
+    ///      "projects/\[PROJECT_ID\]/cmekSettings"
+    ///      "organizations/\[ORGANIZATION_ID\]/cmekSettings"
+    ///      "billingAccounts/\[BILLING_ACCOUNT_ID\]/cmekSettings"
+    ///      "folders/\[FOLDER_ID\]/cmekSettings"
     ///
     /// For example:
     ///
-    ///   `"organizations/12345/cmekSettings"`
+    ///    `"organizations/12345/cmekSettings"`
     ///
     /// Note: CMEK for the Log Router can currently only be configured for Google
     /// Cloud organizations. Once configured, it applies to all projects and
@@ -1644,11 +1293,11 @@ pub struct CmekSettings {
     ///
     /// KMS key name format:
     ///
-    ///     "projects/\[PROJECT_ID]/locations/[LOCATION]/keyRings/[KEYRING]/cryptoKeys/[KEY\]"
+    ///      "projects/\[PROJECT_ID]/locations/[LOCATION]/keyRings/[KEYRING]/cryptoKeys/[KEY\]"
     ///
     /// For example:
     ///
-    ///   `"projects/my-project/locations/us-central1/keyRings/my-ring/cryptoKeys/my-key"`
+    ///    `"projects/my-project/locations/us-central1/keyRings/my-ring/cryptoKeys/my-key"`
     ///
     ///
     ///
@@ -1695,14 +1344,14 @@ pub struct CmekSettings {
 pub struct GetSettingsRequest {
     /// Required. The resource for which to retrieve settings.
     ///
-    ///     "projects/\[PROJECT_ID\]/settings"
-    ///     "organizations/\[ORGANIZATION_ID\]/settings"
-    ///     "billingAccounts/\[BILLING_ACCOUNT_ID\]/settings"
-    ///     "folders/\[FOLDER_ID\]/settings"
+    ///      "projects/\[PROJECT_ID\]/settings"
+    ///      "organizations/\[ORGANIZATION_ID\]/settings"
+    ///      "billingAccounts/\[BILLING_ACCOUNT_ID\]/settings"
+    ///      "folders/\[FOLDER_ID\]/settings"
     ///
     /// For example:
     ///
-    ///   `"organizations/12345/settings"`
+    ///    `"organizations/12345/settings"`
     ///
     /// Note: Settings for the Log Router can be get for Google Cloud projects,
     /// folders, organizations and billing accounts. Currently it can only be
@@ -1721,11 +1370,11 @@ pub struct GetSettingsRequest {
 pub struct UpdateSettingsRequest {
     /// Required. The resource name for the settings to update.
     ///
-    ///     "organizations/\[ORGANIZATION_ID\]/settings"
+    ///      "organizations/\[ORGANIZATION_ID\]/settings"
     ///
     /// For example:
     ///
-    ///   `"organizations/12345/settings"`
+    ///    `"organizations/12345/settings"`
     ///
     /// Note: Settings for the Log Router can currently only be configured for
     /// Google Cloud organizations. Once configured, it applies to all projects and
@@ -1760,11 +1409,11 @@ pub struct Settings {
     ///
     /// KMS key name format:
     ///
-    ///     "projects/\[PROJECT_ID]/locations/[LOCATION]/keyRings/[KEYRING]/cryptoKeys/[KEY\]"
+    ///      "projects/\[PROJECT_ID]/locations/[LOCATION]/keyRings/[KEYRING]/cryptoKeys/[KEY\]"
     ///
     /// For example:
     ///
-    ///   `"projects/my-project/locations/us-central1/keyRings/my-ring/cryptoKeys/my-key"`
+    ///    `"projects/my-project/locations/us-central1/keyRings/my-ring/cryptoKeys/my-key"`
     ///
     ///
     ///
@@ -1818,7 +1467,7 @@ pub struct CopyLogEntriesRequest {
     ///
     /// For example:
     ///
-    ///   `"projects/my-project/locations/global/buckets/my-source-bucket"`
+    ///    `"projects/my-project/locations/global/buckets/my-source-bucket"`
     #[prost(string, tag="1")]
     pub name: ::prost::alloc::string::String,
     /// Optional. A filter specifying which log entries to copy. The filter must be no more
@@ -1880,6 +1529,19 @@ pub enum LifecycleState {
     /// (e.g. buckets), this can be reversed by an un-delete operation.
     DeleteRequested = 2,
 }
+impl LifecycleState {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            LifecycleState::Unspecified => "LIFECYCLE_STATE_UNSPECIFIED",
+            LifecycleState::Active => "ACTIVE",
+            LifecycleState::DeleteRequested => "DELETE_REQUESTED",
+        }
+    }
+}
 /// List of different operation states.
 /// High level state of the operation. This is used to report the job's
 /// current state to the user. Once a long running operation is created,
@@ -1903,10 +1565,28 @@ pub enum OperationState {
     /// The operation was cancelled by the user.
     Cancelled = 6,
 }
+impl OperationState {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            OperationState::Unspecified => "OPERATION_STATE_UNSPECIFIED",
+            OperationState::Scheduled => "OPERATION_STATE_SCHEDULED",
+            OperationState::WaitingForPermissions => "OPERATION_STATE_WAITING_FOR_PERMISSIONS",
+            OperationState::Running => "OPERATION_STATE_RUNNING",
+            OperationState::Succeeded => "OPERATION_STATE_SUCCEEDED",
+            OperationState::Failed => "OPERATION_STATE_FAILED",
+            OperationState::Cancelled => "OPERATION_STATE_CANCELLED",
+        }
+    }
+}
 /// Generated client implementations.
 pub mod config_service_v2_client {
     #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
     use tonic::codegen::*;
+    use tonic::codegen::http::Uri;
     /// Service for configuring sinks used to route log entries.
     #[derive(Debug, Clone)]
     pub struct ConfigServiceV2Client<T> {
@@ -1921,6 +1601,10 @@ pub mod config_service_v2_client {
     {
         pub fn new(inner: T) -> Self {
             let inner = tonic::client::Grpc::new(inner);
+            Self { inner }
+        }
+        pub fn with_origin(inner: T, origin: Uri) -> Self {
+            let inner = tonic::client::Grpc::with_origin(inner, origin);
             Self { inner }
         }
         pub fn with_interceptor<F>(
@@ -1942,19 +1626,19 @@ pub mod config_service_v2_client {
         {
             ConfigServiceV2Client::new(InterceptedService::new(inner, interceptor))
         }
-        /// Compress requests with `gzip`.
+        /// Compress requests with the given encoding.
         ///
         /// This requires the server to support it otherwise it might respond with an
         /// error.
         #[must_use]
-        pub fn send_gzip(mut self) -> Self {
-            self.inner = self.inner.send_gzip();
+        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.send_compressed(encoding);
             self
         }
-        /// Enable decompressing responses with `gzip`.
+        /// Enable decompressing responses.
         #[must_use]
-        pub fn accept_gzip(mut self) -> Self {
-            self.inner = self.inner.accept_gzip();
+        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.accept_compressed(encoding);
             self
         }
         /// Lists log buckets.
@@ -2563,231 +2247,582 @@ pub mod config_service_v2_client {
         }
     }
 }
-/// Describes a logs-based metric. The value of the metric is the number of log
-/// entries that match a logs filter in a given time interval.
-///
-/// Logs-based metrics can also be used to extract values from logs and create a
-/// distribution of the values. The distribution records the statistics of the
-/// extracted values along with an optional histogram of the values as specified
-/// by the bucket options.
+/// An individual entry in a log.
 #[derive(Clone, PartialEq, ::prost::Message)]
-pub struct LogMetric {
-    /// Required. The client-assigned metric identifier.
-    /// Examples: `"error_count"`, `"nginx/requests"`.
+pub struct LogEntry {
+    /// Required. The resource name of the log to which this log entry belongs:
     ///
-    /// Metric identifiers are limited to 100 characters and can include only the
-    /// following characters: `A-Z`, `a-z`, `0-9`, and the special characters
-    /// `_-.,+!*',()%/`. The forward-slash character (`/`) denotes a hierarchy of
-    /// name pieces, and it cannot be the first character of the name.
+    ///      "projects/\[PROJECT_ID]/logs/[LOG_ID\]"
+    ///      "organizations/\[ORGANIZATION_ID]/logs/[LOG_ID\]"
+    ///      "billingAccounts/\[BILLING_ACCOUNT_ID]/logs/[LOG_ID\]"
+    ///      "folders/\[FOLDER_ID]/logs/[LOG_ID\]"
     ///
-    /// This field is the `\[METRIC_ID\]` part of a metric resource name in the
-    /// format "projects/\[PROJECT_ID]/metrics/[METRIC_ID\]". Example: If the
-    /// resource name of a metric is
-    /// `"projects/my-project/metrics/nginx%2Frequests"`, this field's value is
-    /// `"nginx/requests"`.
-    #[prost(string, tag="1")]
-    pub name: ::prost::alloc::string::String,
-    /// Optional. A description of this metric, which is used in documentation.
-    /// The maximum length of the description is 8000 characters.
-    #[prost(string, tag="2")]
-    pub description: ::prost::alloc::string::String,
-    /// Required. An [advanced logs
-    /// filter](<https://cloud.google.com/logging/docs/view/advanced_filters>) which
-    /// is used to match log entries. Example:
+    /// A project number may be used in place of PROJECT_ID. The project number is
+    /// translated to its corresponding PROJECT_ID internally and the `log_name`
+    /// field will contain PROJECT_ID in queries and exports.
     ///
-    ///     "resource.type=gae_app AND severity>=ERROR"
+    /// `\[LOG_ID\]` must be URL-encoded within `log_name`. Example:
+    /// `"organizations/1234567890/logs/cloudresourcemanager.googleapis.com%2Factivity"`.
     ///
-    /// The maximum length of the filter is 20000 characters.
-    #[prost(string, tag="3")]
-    pub filter: ::prost::alloc::string::String,
-    /// Optional. If set to True, then this metric is disabled and it does not
-    /// generate any points.
-    #[prost(bool, tag="12")]
-    pub disabled: bool,
-    /// Optional. The metric descriptor associated with the logs-based metric.
-    /// If unspecified, it uses a default metric descriptor with a DELTA metric
-    /// kind, INT64 value type, with no labels and a unit of "1". Such a metric
-    /// counts the number of log entries matching the `filter` expression.
+    /// `\[LOG_ID\]` must be less than 512 characters long and can only include the
+    /// following characters: upper and lower case alphanumeric characters,
+    /// forward-slash, underscore, hyphen, and period.
     ///
-    /// The `name`, `type`, and `description` fields in the `metric_descriptor`
-    /// are output only, and is constructed using the `name` and `description`
-    /// field in the LogMetric.
+    /// For backward compatibility, if `log_name` begins with a forward-slash, such
+    /// as `/projects/...`, then the log entry is ingested as usual, but the
+    /// forward-slash is removed. Listing the log entry will not show the leading
+    /// slash and filtering for a log name with a leading slash will never return
+    /// any results.
+    #[prost(string, tag="12")]
+    pub log_name: ::prost::alloc::string::String,
+    /// Required. The monitored resource that produced this log entry.
     ///
-    /// To create a logs-based metric that records a distribution of log values, a
-    /// DELTA metric kind with a DISTRIBUTION value type must be used along with
-    /// a `value_extractor` expression in the LogMetric.
-    ///
-    /// Each label in the metric descriptor must have a matching label
-    /// name as the key and an extractor expression as the value in the
-    /// `label_extractors` map.
-    ///
-    /// The `metric_kind` and `value_type` fields in the `metric_descriptor` cannot
-    /// be updated once initially configured. New labels can be added in the
-    /// `metric_descriptor`, but existing labels cannot be modified except for
-    /// their description.
-    #[prost(message, optional, tag="5")]
-    pub metric_descriptor: ::core::option::Option<super::super::api::MetricDescriptor>,
-    /// Optional. A `value_extractor` is required when using a distribution
-    /// logs-based metric to extract the values to record from a log entry.
-    /// Two functions are supported for value extraction: `EXTRACT(field)` or
-    /// `REGEXP_EXTRACT(field, regex)`. The argument are:
-    ///   1. field: The name of the log entry field from which the value is to be
-    ///      extracted.
-    ///   2. regex: A regular expression using the Google RE2 syntax
-    ///      (<https://github.com/google/re2/wiki/Syntax>) with a single capture
-    ///      group to extract data from the specified log entry field. The value
-    ///      of the field is converted to a string before applying the regex.
-    ///      It is an error to specify a regex that does not include exactly one
-    ///      capture group.
-    ///
-    /// The result of the extraction must be convertible to a double type, as the
-    /// distribution always records double values. If either the extraction or
-    /// the conversion to double fails, then those values are not recorded in the
-    /// distribution.
-    ///
-    /// Example: `REGEXP_EXTRACT(jsonPayload.request, ".*quantity=(\d+).*")`
-    #[prost(string, tag="6")]
-    pub value_extractor: ::prost::alloc::string::String,
-    /// Optional. A map from a label key string to an extractor expression which is
-    /// used to extract data from a log entry field and assign as the label value.
-    /// Each label key specified in the LabelDescriptor must have an associated
-    /// extractor expression in this map. The syntax of the extractor expression
-    /// is the same as for the `value_extractor` field.
-    ///
-    /// The extracted value is converted to the type defined in the label
-    /// descriptor. If the either the extraction or the type conversion fails,
-    /// the label will have a default value. The default value for a string
-    /// label is an empty string, for an integer label its 0, and for a boolean
-    /// label its `false`.
-    ///
-    /// Note that there are upper bounds on the maximum number of labels and the
-    /// number of active time series that are allowed in a project.
-    #[prost(btree_map="string, string", tag="7")]
-    pub label_extractors: ::prost::alloc::collections::BTreeMap<::prost::alloc::string::String, ::prost::alloc::string::String>,
-    /// Optional. The `bucket_options` are required when the logs-based metric is
-    /// using a DISTRIBUTION value type and it describes the bucket boundaries
-    /// used to create a histogram of the extracted values.
+    /// Example: a log entry that reports a database error would be associated with
+    /// the monitored resource designating the particular database that reported
+    /// the error.
     #[prost(message, optional, tag="8")]
-    pub bucket_options: ::core::option::Option<super::super::api::distribution::BucketOptions>,
-    /// Output only. The creation timestamp of the metric.
+    pub resource: ::core::option::Option<super::super::api::MonitoredResource>,
+    /// Optional. The time the event described by the log entry occurred. This time is used
+    /// to compute the log entry's age and to enforce the logs retention period.
+    /// If this field is omitted in a new log entry, then Logging assigns it the
+    /// current time. Timestamps have nanosecond accuracy, but trailing zeros in
+    /// the fractional seconds might be omitted when the timestamp is displayed.
     ///
-    /// This field may not be present for older metrics.
+    /// Incoming log entries must have timestamps that don't exceed the
+    /// [logs retention
+    /// period](<https://cloud.google.com/logging/quotas#logs_retention_periods>) in
+    /// the past, and that don't exceed 24 hours in the future. Log entries outside
+    /// those time boundaries aren't ingested by Logging.
     #[prost(message, optional, tag="9")]
-    pub create_time: ::core::option::Option<::prost_types::Timestamp>,
-    /// Output only. The last update timestamp of the metric.
+    pub timestamp: ::core::option::Option<::prost_types::Timestamp>,
+    /// Output only. The time the log entry was received by Logging.
+    #[prost(message, optional, tag="24")]
+    pub receive_timestamp: ::core::option::Option<::prost_types::Timestamp>,
+    /// Optional. The severity of the log entry. The default value is `LogSeverity.DEFAULT`.
+    #[prost(enumeration="super::r#type::LogSeverity", tag="10")]
+    pub severity: i32,
+    /// Optional. A unique identifier for the log entry. If you provide a value, then
+    /// Logging considers other log entries in the same project, with the same
+    /// `timestamp`, and with the same `insert_id` to be duplicates which are
+    /// removed in a single query result. However, there are no guarantees of
+    /// de-duplication in the export of logs.
     ///
-    /// This field may not be present for older metrics.
-    #[prost(message, optional, tag="10")]
-    pub update_time: ::core::option::Option<::prost_types::Timestamp>,
-    /// Deprecated. The API version that created or updated this metric.
-    /// The v2 format is used by default and cannot be changed.
-    #[deprecated]
-    #[prost(enumeration="log_metric::ApiVersion", tag="4")]
-    pub version: i32,
+    /// If the `insert_id` is omitted when writing a log entry, the Logging API
+    /// assigns its own unique identifier in this field.
+    ///
+    /// In queries, the `insert_id` is also used to order log entries that have
+    /// the same `log_name` and `timestamp` values.
+    #[prost(string, tag="4")]
+    pub insert_id: ::prost::alloc::string::String,
+    /// Optional. Information about the HTTP request associated with this log entry, if
+    /// applicable.
+    #[prost(message, optional, tag="7")]
+    pub http_request: ::core::option::Option<super::r#type::HttpRequest>,
+    /// Optional. A map of key, value pairs that provides additional information about the
+    /// log entry. The labels can be user-defined or system-defined.
+    ///
+    /// User-defined labels are arbitrary key, value pairs that you can use to
+    /// classify logs.
+    ///
+    /// System-defined labels are defined by GCP services for platform logs.
+    /// They have two components - a service namespace component and the
+    /// attribute name. For example: `compute.googleapis.com/resource_name`.
+    ///
+    /// Cloud Logging truncates label keys that exceed 512 B and label
+    /// values that exceed 64 KB upon their associated log entry being
+    /// written. The truncation is indicated by an ellipsis at the
+    /// end of the character string.
+    #[prost(btree_map="string, string", tag="11")]
+    pub labels: ::prost::alloc::collections::BTreeMap<::prost::alloc::string::String, ::prost::alloc::string::String>,
+    /// Optional. Information about an operation associated with the log entry, if
+    /// applicable.
+    #[prost(message, optional, tag="15")]
+    pub operation: ::core::option::Option<LogEntryOperation>,
+    /// Optional. Resource name of the trace associated with the log entry, if any. If it
+    /// contains a relative resource name, the name is assumed to be relative to
+    /// `//tracing.googleapis.com`. Example:
+    /// `projects/my-projectid/traces/06796866738c859f2f19b7cfb3214824`
+    #[prost(string, tag="22")]
+    pub trace: ::prost::alloc::string::String,
+    /// Optional. The span ID within the trace associated with the log entry.
+    ///
+    /// For Trace spans, this is the same format that the Trace API v2 uses: a
+    /// 16-character hexadecimal encoding of an 8-byte array, such as
+    /// `000000000000004a`.
+    #[prost(string, tag="27")]
+    pub span_id: ::prost::alloc::string::String,
+    /// Optional. The sampling decision of the trace associated with the log entry.
+    ///
+    /// True means that the trace resource name in the `trace` field was sampled
+    /// for storage in a trace backend. False means that the trace was not sampled
+    /// for storage when this log entry was written, or the sampling decision was
+    /// unknown at the time. A non-sampled `trace` value is still useful as a
+    /// request correlation identifier. The default is False.
+    #[prost(bool, tag="30")]
+    pub trace_sampled: bool,
+    /// Optional. Source code location information associated with the log entry, if any.
+    #[prost(message, optional, tag="23")]
+    pub source_location: ::core::option::Option<LogEntrySourceLocation>,
+    /// Optional. Information indicating this LogEntry is part of a sequence of multiple log
+    /// entries split from a single LogEntry.
+    #[prost(message, optional, tag="35")]
+    pub split: ::core::option::Option<LogSplit>,
+    /// The log entry payload, which can be one of multiple types.
+    #[prost(oneof="log_entry::Payload", tags="2, 3, 6")]
+    pub payload: ::core::option::Option<log_entry::Payload>,
 }
-/// Nested message and enum types in `LogMetric`.
-pub mod log_metric {
-    /// Logging API version.
-    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
-    #[repr(i32)]
-    pub enum ApiVersion {
-        /// Logging API v2.
-        V2 = 0,
-        /// Logging API v1.
-        V1 = 1,
+/// Nested message and enum types in `LogEntry`.
+pub mod log_entry {
+    /// The log entry payload, which can be one of multiple types.
+    #[derive(Clone, PartialEq, ::prost::Oneof)]
+    pub enum Payload {
+        /// The log entry payload, represented as a protocol buffer. Some Google
+        /// Cloud Platform services use this field for their log entry payloads.
+        ///
+        /// The following protocol buffer types are supported; user-defined types
+        /// are not supported:
+        ///
+        ///    "type.googleapis.com/google.cloud.audit.AuditLog"
+        ///    "type.googleapis.com/google.appengine.logging.v1.RequestLog"
+        #[prost(message, tag="2")]
+        ProtoPayload(::prost_types::Any),
+        /// The log entry payload, represented as a Unicode string (UTF-8).
+        #[prost(string, tag="3")]
+        TextPayload(::prost::alloc::string::String),
+        /// The log entry payload, represented as a structure that is
+        /// expressed as a JSON object.
+        #[prost(message, tag="6")]
+        JsonPayload(::prost_types::Struct),
     }
 }
-/// The parameters to ListLogMetrics.
+/// Additional information about a potentially long-running operation with which
+/// a log entry is associated.
 #[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ListLogMetricsRequest {
-    /// Required. The name of the project containing the metrics:
-    ///
-    ///     "projects/\[PROJECT_ID\]"
+pub struct LogEntryOperation {
+    /// Optional. An arbitrary operation identifier. Log entries with the same
+    /// identifier are assumed to be part of the same operation.
     #[prost(string, tag="1")]
-    pub parent: ::prost::alloc::string::String,
+    pub id: ::prost::alloc::string::String,
+    /// Optional. An arbitrary producer identifier. The combination of `id` and
+    /// `producer` must be globally unique. Examples for `producer`:
+    /// `"MyDivision.MyBigCompany.com"`, `"github.com/MyProject/MyApplication"`.
+    #[prost(string, tag="2")]
+    pub producer: ::prost::alloc::string::String,
+    /// Optional. Set this to True if this is the first log entry in the operation.
+    #[prost(bool, tag="3")]
+    pub first: bool,
+    /// Optional. Set this to True if this is the last log entry in the operation.
+    #[prost(bool, tag="4")]
+    pub last: bool,
+}
+/// Additional information about the source code location that produced the log
+/// entry.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct LogEntrySourceLocation {
+    /// Optional. Source file name. Depending on the runtime environment, this
+    /// might be a simple name or a fully-qualified name.
+    #[prost(string, tag="1")]
+    pub file: ::prost::alloc::string::String,
+    /// Optional. Line within the source file. 1-based; 0 indicates no line number
+    /// available.
+    #[prost(int64, tag="2")]
+    pub line: i64,
+    /// Optional. Human-readable name of the function or method being invoked, with
+    /// optional context such as the class or package name. This information may be
+    /// used in contexts such as the logs viewer, where a file and line number are
+    /// less meaningful. The format can vary by language. For example:
+    /// `qual.if.ied.Class.method` (Java), `dir/package.func` (Go), `function`
+    /// (Python).
+    #[prost(string, tag="3")]
+    pub function: ::prost::alloc::string::String,
+}
+/// Additional information used to correlate multiple log entries. Used when a
+/// single LogEntry would exceed the Google Cloud Logging size limit and is
+/// split across multiple log entries.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct LogSplit {
+    /// A globally unique identifier for all log entries in a sequence of split log
+    /// entries. All log entries with the same |LogSplit.uid| are assumed to be
+    /// part of the same sequence of split log entries.
+    #[prost(string, tag="1")]
+    pub uid: ::prost::alloc::string::String,
+    /// The index of this LogEntry in the sequence of split log entries. Log
+    /// entries are given |index| values 0, 1, ..., n-1 for a sequence of n log
+    /// entries.
+    #[prost(int32, tag="2")]
+    pub index: i32,
+    /// The total number of log entries that the original LogEntry was split into.
+    #[prost(int32, tag="3")]
+    pub total_splits: i32,
+}
+/// The parameters to DeleteLog.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct DeleteLogRequest {
+    /// Required. The resource name of the log to delete:
+    ///
+    /// * `projects/\[PROJECT_ID]/logs/[LOG_ID\]`
+    /// * `organizations/\[ORGANIZATION_ID]/logs/[LOG_ID\]`
+    /// * `billingAccounts/\[BILLING_ACCOUNT_ID]/logs/[LOG_ID\]`
+    /// * `folders/\[FOLDER_ID]/logs/[LOG_ID\]`
+    ///
+    /// `\[LOG_ID\]` must be URL-encoded. For example,
+    /// `"projects/my-project-id/logs/syslog"`,
+    /// `"organizations/123/logs/cloudaudit.googleapis.com%2Factivity"`.
+    ///
+    /// For more information about log names, see
+    /// \[LogEntry][google.logging.v2.LogEntry\].
+    #[prost(string, tag="1")]
+    pub log_name: ::prost::alloc::string::String,
+}
+/// The parameters to WriteLogEntries.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct WriteLogEntriesRequest {
+    /// Optional. A default log resource name that is assigned to all log entries
+    /// in `entries` that do not specify a value for `log_name`:
+    ///
+    /// * `projects/\[PROJECT_ID]/logs/[LOG_ID\]`
+    /// * `organizations/\[ORGANIZATION_ID]/logs/[LOG_ID\]`
+    /// * `billingAccounts/\[BILLING_ACCOUNT_ID]/logs/[LOG_ID\]`
+    /// * `folders/\[FOLDER_ID]/logs/[LOG_ID\]`
+    ///
+    /// `\[LOG_ID\]` must be URL-encoded. For example:
+    ///
+    ///      "projects/my-project-id/logs/syslog"
+    ///      "organizations/123/logs/cloudaudit.googleapis.com%2Factivity"
+    ///
+    /// The permission `logging.logEntries.create` is needed on each project,
+    /// organization, billing account, or folder that is receiving new log
+    /// entries, whether the resource is specified in `logName` or in an
+    /// individual log entry.
+    #[prost(string, tag="1")]
+    pub log_name: ::prost::alloc::string::String,
+    /// Optional. A default monitored resource object that is assigned to all log
+    /// entries in `entries` that do not specify a value for `resource`. Example:
+    ///
+    ///      { "type": "gce_instance",
+    ///        "labels": {
+    ///          "zone": "us-central1-a", "instance_id": "00000000000000000000" }}
+    ///
+    /// See \[LogEntry][google.logging.v2.LogEntry\].
+    #[prost(message, optional, tag="2")]
+    pub resource: ::core::option::Option<super::super::api::MonitoredResource>,
+    /// Optional. Default labels that are added to the `labels` field of all log
+    /// entries in `entries`. If a log entry already has a label with the same key
+    /// as a label in this parameter, then the log entry's label is not changed.
+    /// See \[LogEntry][google.logging.v2.LogEntry\].
+    #[prost(btree_map="string, string", tag="3")]
+    pub labels: ::prost::alloc::collections::BTreeMap<::prost::alloc::string::String, ::prost::alloc::string::String>,
+    /// Required. The log entries to send to Logging. The order of log
+    /// entries in this list does not matter. Values supplied in this method's
+    /// `log_name`, `resource`, and `labels` fields are copied into those log
+    /// entries in this list that do not include values for their corresponding
+    /// fields. For more information, see the
+    /// \[LogEntry][google.logging.v2.LogEntry\] type.
+    ///
+    /// If the `timestamp` or `insert_id` fields are missing in log entries, then
+    /// this method supplies the current time or a unique identifier, respectively.
+    /// The supplied values are chosen so that, among the log entries that did not
+    /// supply their own values, the entries earlier in the list will sort before
+    /// the entries later in the list. See the `entries.list` method.
+    ///
+    /// Log entries with timestamps that are more than the
+    /// [logs retention period](<https://cloud.google.com/logging/quotas>) in
+    /// the past or more than 24 hours in the future will not be available when
+    /// calling `entries.list`. However, those log entries can still be [exported
+    /// with
+    /// LogSinks](<https://cloud.google.com/logging/docs/api/tasks/exporting-logs>).
+    ///
+    /// To improve throughput and to avoid exceeding the
+    /// [quota limit](<https://cloud.google.com/logging/quotas>) for calls to
+    /// `entries.write`, you should try to include several log entries in this
+    /// list, rather than calling this method for each individual log entry.
+    #[prost(message, repeated, tag="4")]
+    pub entries: ::prost::alloc::vec::Vec<LogEntry>,
+    /// Optional. Whether valid entries should be written even if some other
+    /// entries fail due to INVALID_ARGUMENT or PERMISSION_DENIED errors. If any
+    /// entry is not written, then the response status is the error associated
+    /// with one of the failed entries and the response includes error details
+    /// keyed by the entries' zero-based index in the `entries.write` method.
+    #[prost(bool, tag="5")]
+    pub partial_success: bool,
+    /// Optional. If true, the request should expect normal response, but the
+    /// entries won't be persisted nor exported. Useful for checking whether the
+    /// logging API endpoints are working properly before sending valuable data.
+    #[prost(bool, tag="6")]
+    pub dry_run: bool,
+}
+/// Result returned from WriteLogEntries.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct WriteLogEntriesResponse {
+}
+/// Error details for WriteLogEntries with partial success.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct WriteLogEntriesPartialErrors {
+    /// When `WriteLogEntriesRequest.partial_success` is true, records the error
+    /// status for entries that were not written due to a permanent error, keyed
+    /// by the entry's zero-based index in `WriteLogEntriesRequest.entries`.
+    ///
+    /// Failed requests for which no entries are written will not include
+    /// per-entry errors.
+    #[prost(btree_map="int32, message", tag="1")]
+    pub log_entry_errors: ::prost::alloc::collections::BTreeMap<i32, super::super::rpc::Status>,
+}
+/// The parameters to `ListLogEntries`.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ListLogEntriesRequest {
+    /// Required. Names of one or more parent resources from which to
+    /// retrieve log entries:
+    ///
+    /// *  `projects/\[PROJECT_ID\]`
+    /// *  `organizations/\[ORGANIZATION_ID\]`
+    /// *  `billingAccounts/\[BILLING_ACCOUNT_ID\]`
+    /// *  `folders/\[FOLDER_ID\]`
+    ///
+    /// May alternatively be one or more views:
+    ///
+    ///   * `projects/\[PROJECT_ID]/locations/[LOCATION_ID]/buckets/[BUCKET_ID]/views/[VIEW_ID\]`
+    ///   * `organizations/\[ORGANIZATION_ID]/locations/[LOCATION_ID]/buckets/[BUCKET_ID]/views/[VIEW_ID\]`
+    ///   * `billingAccounts/\[BILLING_ACCOUNT_ID]/locations/[LOCATION_ID]/buckets/[BUCKET_ID]/views/[VIEW_ID\]`
+    ///   * `folders/\[FOLDER_ID]/locations/[LOCATION_ID]/buckets/[BUCKET_ID]/views/[VIEW_ID\]`
+    ///
+    /// Projects listed in the `project_ids` field are added to this list.
+    #[prost(string, repeated, tag="8")]
+    pub resource_names: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
+    /// Optional. A filter that chooses which log entries to return.  See [Advanced
+    /// Logs Queries](<https://cloud.google.com/logging/docs/view/advanced-queries>).
+    /// Only log entries that match the filter are returned.  An empty filter
+    /// matches all log entries in the resources listed in `resource_names`.
+    /// Referencing a parent resource that is not listed in `resource_names` will
+    /// cause the filter to return no results. The maximum length of the filter is
+    /// 20000 characters.
+    #[prost(string, tag="2")]
+    pub filter: ::prost::alloc::string::String,
+    /// Optional. How the results should be sorted.  Presently, the only permitted
+    /// values are `"timestamp asc"` (default) and `"timestamp desc"`. The first
+    /// option returns entries in order of increasing values of
+    /// `LogEntry.timestamp` (oldest first), and the second option returns entries
+    /// in order of decreasing timestamps (newest first).  Entries with equal
+    /// timestamps are returned in order of their `insert_id` values.
+    #[prost(string, tag="3")]
+    pub order_by: ::prost::alloc::string::String,
+    /// Optional. The maximum number of results to return from this request. Default is 50.
+    /// If the value is negative or exceeds 1000, the request is rejected. The
+    /// presence of `next_page_token` in the response indicates that more results
+    /// might be available.
+    #[prost(int32, tag="4")]
+    pub page_size: i32,
     /// Optional. If present, then retrieve the next batch of results from the
-    /// preceding call to this method. `pageToken` must be the value of
-    /// `nextPageToken` from the previous response. The values of other method
+    /// preceding call to this method.  `page_token` must be the value of
+    /// `next_page_token` from the previous response.  The values of other method
+    /// parameters should be identical to those in the previous call.
+    #[prost(string, tag="5")]
+    pub page_token: ::prost::alloc::string::String,
+}
+/// Result returned from `ListLogEntries`.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ListLogEntriesResponse {
+    /// A list of log entries.  If `entries` is empty, `nextPageToken` may still be
+    /// returned, indicating that more entries may exist.  See `nextPageToken` for
+    /// more information.
+    #[prost(message, repeated, tag="1")]
+    pub entries: ::prost::alloc::vec::Vec<LogEntry>,
+    /// If there might be more results than those appearing in this response, then
+    /// `nextPageToken` is included.  To get the next set of results, call this
+    /// method again using the value of `nextPageToken` as `pageToken`.
+    ///
+    /// If a value for `next_page_token` appears and the `entries` field is empty,
+    /// it means that the search found no log entries so far but it did not have
+    /// time to search all the possible log entries.  Retry the method with this
+    /// value for `page_token` to continue the search.  Alternatively, consider
+    /// speeding up the search by changing your filter to specify a single log name
+    /// or resource type, or to narrow the time range of the search.
+    #[prost(string, tag="2")]
+    pub next_page_token: ::prost::alloc::string::String,
+}
+/// The parameters to ListMonitoredResourceDescriptors
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ListMonitoredResourceDescriptorsRequest {
+    /// Optional. The maximum number of results to return from this request.
+    /// Non-positive values are ignored.  The presence of `nextPageToken` in the
+    /// response indicates that more results might be available.
+    #[prost(int32, tag="1")]
+    pub page_size: i32,
+    /// Optional. If present, then retrieve the next batch of results from the
+    /// preceding call to this method.  `pageToken` must be the value of
+    /// `nextPageToken` from the previous response.  The values of other method
     /// parameters should be identical to those in the previous call.
     #[prost(string, tag="2")]
     pub page_token: ::prost::alloc::string::String,
-    /// Optional. The maximum number of results to return from this request.
-    /// Non-positive values are ignored. The presence of `nextPageToken` in the
-    /// response indicates that more results might be available.
-    #[prost(int32, tag="3")]
-    pub page_size: i32,
 }
-/// Result returned from ListLogMetrics.
+/// Result returned from ListMonitoredResourceDescriptors.
 #[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ListLogMetricsResponse {
-    /// A list of logs-based metrics.
+pub struct ListMonitoredResourceDescriptorsResponse {
+    /// A list of resource descriptors.
     #[prost(message, repeated, tag="1")]
-    pub metrics: ::prost::alloc::vec::Vec<LogMetric>,
-    /// If there might be more results than appear in this response, then
-    /// `nextPageToken` is included. To get the next set of results, call this
+    pub resource_descriptors: ::prost::alloc::vec::Vec<super::super::api::MonitoredResourceDescriptor>,
+    /// If there might be more results than those appearing in this response, then
+    /// `nextPageToken` is included.  To get the next set of results, call this
     /// method again using the value of `nextPageToken` as `pageToken`.
     #[prost(string, tag="2")]
     pub next_page_token: ::prost::alloc::string::String,
 }
-/// The parameters to GetLogMetric.
+/// The parameters to ListLogs.
 #[derive(Clone, PartialEq, ::prost::Message)]
-pub struct GetLogMetricRequest {
-    /// Required. The resource name of the desired metric:
+pub struct ListLogsRequest {
+    /// Required. The resource name that owns the logs:
     ///
-    ///     "projects/\[PROJECT_ID]/metrics/[METRIC_ID\]"
-    #[prost(string, tag="1")]
-    pub metric_name: ::prost::alloc::string::String,
-}
-/// The parameters to CreateLogMetric.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct CreateLogMetricRequest {
-    /// Required. The resource name of the project in which to create the metric:
-    ///
-    ///     "projects/\[PROJECT_ID\]"
-    ///
-    /// The new metric must be provided in the request.
+    /// *  `projects/\[PROJECT_ID\]`
+    /// *  `organizations/\[ORGANIZATION_ID\]`
+    /// *  `billingAccounts/\[BILLING_ACCOUNT_ID\]`
+    /// *  `folders/\[FOLDER_ID\]`
     #[prost(string, tag="1")]
     pub parent: ::prost::alloc::string::String,
-    /// Required. The new logs-based metric, which must not have an identifier that
-    /// already exists.
-    #[prost(message, optional, tag="2")]
-    pub metric: ::core::option::Option<LogMetric>,
+    /// Optional. The maximum number of results to return from this request.
+    /// Non-positive values are ignored.  The presence of `nextPageToken` in the
+    /// response indicates that more results might be available.
+    #[prost(int32, tag="2")]
+    pub page_size: i32,
+    /// Optional. If present, then retrieve the next batch of results from the
+    /// preceding call to this method.  `pageToken` must be the value of
+    /// `nextPageToken` from the previous response.  The values of other method
+    /// parameters should be identical to those in the previous call.
+    #[prost(string, tag="3")]
+    pub page_token: ::prost::alloc::string::String,
+    /// Optional. The resource name that owns the logs:
+    ///
+    ///   * `projects/\[PROJECT_ID]/locations/[LOCATION_ID]/buckets/[BUCKET_ID]/views/[VIEW_ID\]`
+    ///   * `organizations/\[ORGANIZATION_ID]/locations/[LOCATION_ID]/buckets/[BUCKET_ID]/views/[VIEW_ID\]`
+    ///   * `billingAccounts/\[BILLING_ACCOUNT_ID]/locations/[LOCATION_ID]/buckets/[BUCKET_ID]/views/[VIEW_ID\]`
+    ///   * `folders/\[FOLDER_ID]/locations/[LOCATION_ID]/buckets/[BUCKET_ID]/views/[VIEW_ID\]`
+    ///
+    /// To support legacy queries, it could also be:
+    ///
+    /// *  `projects/\[PROJECT_ID\]`
+    /// *  `organizations/\[ORGANIZATION_ID\]`
+    /// *  `billingAccounts/\[BILLING_ACCOUNT_ID\]`
+    /// *  `folders/\[FOLDER_ID\]`
+    #[prost(string, repeated, tag="8")]
+    pub resource_names: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
 }
-/// The parameters to UpdateLogMetric.
+/// Result returned from ListLogs.
 #[derive(Clone, PartialEq, ::prost::Message)]
-pub struct UpdateLogMetricRequest {
-    /// Required. The resource name of the metric to update:
-    ///
-    ///     "projects/\[PROJECT_ID]/metrics/[METRIC_ID\]"
-    ///
-    /// The updated metric must be provided in the request and it's
-    /// `name` field must be the same as `\[METRIC_ID\]` If the metric
-    /// does not exist in `\[PROJECT_ID\]`, then a new metric is created.
-    #[prost(string, tag="1")]
-    pub metric_name: ::prost::alloc::string::String,
-    /// Required. The updated metric.
-    #[prost(message, optional, tag="2")]
-    pub metric: ::core::option::Option<LogMetric>,
+pub struct ListLogsResponse {
+    /// A list of log names. For example,
+    /// `"projects/my-project/logs/syslog"` or
+    /// `"organizations/123/logs/cloudresourcemanager.googleapis.com%2Factivity"`.
+    #[prost(string, repeated, tag="3")]
+    pub log_names: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
+    /// If there might be more results than those appearing in this response, then
+    /// `nextPageToken` is included.  To get the next set of results, call this
+    /// method again using the value of `nextPageToken` as `pageToken`.
+    #[prost(string, tag="2")]
+    pub next_page_token: ::prost::alloc::string::String,
 }
-/// The parameters to DeleteLogMetric.
+/// The parameters to `TailLogEntries`.
 #[derive(Clone, PartialEq, ::prost::Message)]
-pub struct DeleteLogMetricRequest {
-    /// Required. The resource name of the metric to delete:
+pub struct TailLogEntriesRequest {
+    /// Required. Name of a parent resource from which to retrieve log entries:
     ///
-    ///     "projects/\[PROJECT_ID]/metrics/[METRIC_ID\]"
-    #[prost(string, tag="1")]
-    pub metric_name: ::prost::alloc::string::String,
+    /// *  `projects/\[PROJECT_ID\]`
+    /// *  `organizations/\[ORGANIZATION_ID\]`
+    /// *  `billingAccounts/\[BILLING_ACCOUNT_ID\]`
+    /// *  `folders/\[FOLDER_ID\]`
+    ///
+    /// May alternatively be one or more views:
+    ///
+    ///   * `projects/\[PROJECT_ID]/locations/[LOCATION_ID]/buckets/[BUCKET_ID]/views/[VIEW_ID\]`
+    ///   * `organizations/\[ORGANIZATION_ID]/locations/[LOCATION_ID]/buckets/[BUCKET_ID]/views/[VIEW_ID\]`
+    ///   * `billingAccounts/\[BILLING_ACCOUNT_ID]/locations/[LOCATION_ID]/buckets/[BUCKET_ID]/views/[VIEW_ID\]`
+    ///   * `folders/\[FOLDER_ID]/locations/[LOCATION_ID]/buckets/[BUCKET_ID]/views/[VIEW_ID\]`
+    #[prost(string, repeated, tag="1")]
+    pub resource_names: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
+    /// Optional. A filter that chooses which log entries to return.  See [Advanced
+    /// Logs Filters](<https://cloud.google.com/logging/docs/view/advanced_filters>).
+    /// Only log entries that match the filter are returned.  An empty filter
+    /// matches all log entries in the resources listed in `resource_names`.
+    /// Referencing a parent resource that is not in `resource_names` will cause
+    /// the filter to return no results. The maximum length of the filter is 20000
+    /// characters.
+    #[prost(string, tag="2")]
+    pub filter: ::prost::alloc::string::String,
+    /// Optional. The amount of time to buffer log entries at the server before
+    /// being returned to prevent out of order results due to late arriving log
+    /// entries. Valid values are between 0-60000 milliseconds. Defaults to 2000
+    /// milliseconds.
+    #[prost(message, optional, tag="3")]
+    pub buffer_window: ::core::option::Option<::prost_types::Duration>,
+}
+/// Result returned from `TailLogEntries`.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct TailLogEntriesResponse {
+    /// A list of log entries. Each response in the stream will order entries with
+    /// increasing values of `LogEntry.timestamp`. Ordering is not guaranteed
+    /// between separate responses.
+    #[prost(message, repeated, tag="1")]
+    pub entries: ::prost::alloc::vec::Vec<LogEntry>,
+    /// If entries that otherwise would have been included in the session were not
+    /// sent back to the client, counts of relevant entries omitted from the
+    /// session with the reason that they were not included. There will be at most
+    /// one of each reason per response. The counts represent the number of
+    /// suppressed entries since the last streamed response.
+    #[prost(message, repeated, tag="2")]
+    pub suppression_info: ::prost::alloc::vec::Vec<tail_log_entries_response::SuppressionInfo>,
+}
+/// Nested message and enum types in `TailLogEntriesResponse`.
+pub mod tail_log_entries_response {
+    /// Information about entries that were omitted from the session.
+    #[derive(Clone, PartialEq, ::prost::Message)]
+    pub struct SuppressionInfo {
+        /// The reason that entries were omitted from the session.
+        #[prost(enumeration="suppression_info::Reason", tag="1")]
+        pub reason: i32,
+        /// A lower bound on the count of entries omitted due to `reason`.
+        #[prost(int32, tag="2")]
+        pub suppressed_count: i32,
+    }
+    /// Nested message and enum types in `SuppressionInfo`.
+    pub mod suppression_info {
+        /// An indicator of why entries were omitted.
+        #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+        #[repr(i32)]
+        pub enum Reason {
+            /// Unexpected default.
+            Unspecified = 0,
+            /// Indicates suppression occurred due to relevant entries being
+            /// received in excess of rate limits. For quotas and limits, see
+            /// [Logging API quotas and
+            /// limits](<https://cloud.google.com/logging/quotas#api-limits>).
+            RateLimit = 1,
+            /// Indicates suppression occurred due to the client not consuming
+            /// responses quickly enough.
+            NotConsumed = 2,
+        }
+        impl Reason {
+            /// String value of the enum field names used in the ProtoBuf definition.
+            ///
+            /// The values are not transformed in any way and thus are considered stable
+            /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+            pub fn as_str_name(&self) -> &'static str {
+                match self {
+                    Reason::Unspecified => "REASON_UNSPECIFIED",
+                    Reason::RateLimit => "RATE_LIMIT",
+                    Reason::NotConsumed => "NOT_CONSUMED",
+                }
+            }
+        }
+    }
 }
 /// Generated client implementations.
-pub mod metrics_service_v2_client {
+pub mod logging_service_v2_client {
     #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
     use tonic::codegen::*;
-    /// Service for configuring logs-based metrics.
+    use tonic::codegen::http::Uri;
+    /// Service for ingesting and querying logs.
     #[derive(Debug, Clone)]
-    pub struct MetricsServiceV2Client<T> {
+    pub struct LoggingServiceV2Client<T> {
         inner: tonic::client::Grpc<T>,
     }
-    impl<T> MetricsServiceV2Client<T>
+    impl<T> LoggingServiceV2Client<T>
     where
         T: tonic::client::GrpcService<tonic::body::BoxBody>,
         T::Error: Into<StdError>,
@@ -2798,10 +2833,14 @@ pub mod metrics_service_v2_client {
             let inner = tonic::client::Grpc::new(inner);
             Self { inner }
         }
+        pub fn with_origin(inner: T, origin: Uri) -> Self {
+            let inner = tonic::client::Grpc::with_origin(inner, origin);
+            Self { inner }
+        }
         pub fn with_interceptor<F>(
             inner: T,
             interceptor: F,
-        ) -> MetricsServiceV2Client<InterceptedService<T, F>>
+        ) -> LoggingServiceV2Client<InterceptedService<T, F>>
         where
             F: tonic::service::Interceptor,
             T::ResponseBody: Default,
@@ -2815,107 +2854,30 @@ pub mod metrics_service_v2_client {
                 http::Request<tonic::body::BoxBody>,
             >>::Error: Into<StdError> + Send + Sync,
         {
-            MetricsServiceV2Client::new(InterceptedService::new(inner, interceptor))
+            LoggingServiceV2Client::new(InterceptedService::new(inner, interceptor))
         }
-        /// Compress requests with `gzip`.
+        /// Compress requests with the given encoding.
         ///
         /// This requires the server to support it otherwise it might respond with an
         /// error.
         #[must_use]
-        pub fn send_gzip(mut self) -> Self {
-            self.inner = self.inner.send_gzip();
+        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.send_compressed(encoding);
             self
         }
-        /// Enable decompressing responses with `gzip`.
+        /// Enable decompressing responses.
         #[must_use]
-        pub fn accept_gzip(mut self) -> Self {
-            self.inner = self.inner.accept_gzip();
+        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.accept_compressed(encoding);
             self
         }
-        /// Lists logs-based metrics.
-        pub async fn list_log_metrics(
+        /// Deletes all the log entries in a log for the _Default Log Bucket. The log
+        /// reappears if it receives new entries. Log entries written shortly before
+        /// the delete operation might not be deleted. Entries received after the
+        /// delete operation with a timestamp before the operation will be deleted.
+        pub async fn delete_log(
             &mut self,
-            request: impl tonic::IntoRequest<super::ListLogMetricsRequest>,
-        ) -> Result<tonic::Response<super::ListLogMetricsResponse>, tonic::Status> {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/google.logging.v2.MetricsServiceV2/ListLogMetrics",
-            );
-            self.inner.unary(request.into_request(), path, codec).await
-        }
-        /// Gets a logs-based metric.
-        pub async fn get_log_metric(
-            &mut self,
-            request: impl tonic::IntoRequest<super::GetLogMetricRequest>,
-        ) -> Result<tonic::Response<super::LogMetric>, tonic::Status> {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/google.logging.v2.MetricsServiceV2/GetLogMetric",
-            );
-            self.inner.unary(request.into_request(), path, codec).await
-        }
-        /// Creates a logs-based metric.
-        pub async fn create_log_metric(
-            &mut self,
-            request: impl tonic::IntoRequest<super::CreateLogMetricRequest>,
-        ) -> Result<tonic::Response<super::LogMetric>, tonic::Status> {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/google.logging.v2.MetricsServiceV2/CreateLogMetric",
-            );
-            self.inner.unary(request.into_request(), path, codec).await
-        }
-        /// Creates or updates a logs-based metric.
-        pub async fn update_log_metric(
-            &mut self,
-            request: impl tonic::IntoRequest<super::UpdateLogMetricRequest>,
-        ) -> Result<tonic::Response<super::LogMetric>, tonic::Status> {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/google.logging.v2.MetricsServiceV2/UpdateLogMetric",
-            );
-            self.inner.unary(request.into_request(), path, codec).await
-        }
-        /// Deletes a logs-based metric.
-        pub async fn delete_log_metric(
-            &mut self,
-            request: impl tonic::IntoRequest<super::DeleteLogMetricRequest>,
+            request: impl tonic::IntoRequest<super::DeleteLogRequest>,
         ) -> Result<tonic::Response<()>, tonic::Status> {
             self.inner
                 .ready()
@@ -2928,9 +2890,130 @@ pub mod metrics_service_v2_client {
                 })?;
             let codec = tonic::codec::ProstCodec::default();
             let path = http::uri::PathAndQuery::from_static(
-                "/google.logging.v2.MetricsServiceV2/DeleteLogMetric",
+                "/google.logging.v2.LoggingServiceV2/DeleteLog",
             );
             self.inner.unary(request.into_request(), path, codec).await
+        }
+        /// Writes log entries to Logging. This API method is the
+        /// only way to send log entries to Logging. This method
+        /// is used, directly or indirectly, by the Logging agent
+        /// (fluentd) and all logging libraries configured to use Logging.
+        /// A single request may contain log entries for a maximum of 1000
+        /// different resources (projects, organizations, billing accounts or
+        /// folders)
+        pub async fn write_log_entries(
+            &mut self,
+            request: impl tonic::IntoRequest<super::WriteLogEntriesRequest>,
+        ) -> Result<tonic::Response<super::WriteLogEntriesResponse>, tonic::Status> {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/google.logging.v2.LoggingServiceV2/WriteLogEntries",
+            );
+            self.inner.unary(request.into_request(), path, codec).await
+        }
+        /// Lists log entries.  Use this method to retrieve log entries that originated
+        /// from a project/folder/organization/billing account.  For ways to export log
+        /// entries, see [Exporting
+        /// Logs](https://cloud.google.com/logging/docs/export).
+        pub async fn list_log_entries(
+            &mut self,
+            request: impl tonic::IntoRequest<super::ListLogEntriesRequest>,
+        ) -> Result<tonic::Response<super::ListLogEntriesResponse>, tonic::Status> {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/google.logging.v2.LoggingServiceV2/ListLogEntries",
+            );
+            self.inner.unary(request.into_request(), path, codec).await
+        }
+        /// Lists the descriptors for monitored resource types used by Logging.
+        pub async fn list_monitored_resource_descriptors(
+            &mut self,
+            request: impl tonic::IntoRequest<
+                super::ListMonitoredResourceDescriptorsRequest,
+            >,
+        ) -> Result<
+            tonic::Response<super::ListMonitoredResourceDescriptorsResponse>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/google.logging.v2.LoggingServiceV2/ListMonitoredResourceDescriptors",
+            );
+            self.inner.unary(request.into_request(), path, codec).await
+        }
+        /// Lists the logs in projects, organizations, folders, or billing accounts.
+        /// Only logs that have entries are listed.
+        pub async fn list_logs(
+            &mut self,
+            request: impl tonic::IntoRequest<super::ListLogsRequest>,
+        ) -> Result<tonic::Response<super::ListLogsResponse>, tonic::Status> {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/google.logging.v2.LoggingServiceV2/ListLogs",
+            );
+            self.inner.unary(request.into_request(), path, codec).await
+        }
+        /// Streaming read of log entries as they are ingested. Until the stream is
+        /// terminated, it will continue reading logs.
+        pub async fn tail_log_entries(
+            &mut self,
+            request: impl tonic::IntoStreamingRequest<
+                Message = super::TailLogEntriesRequest,
+            >,
+        ) -> Result<
+            tonic::Response<tonic::codec::Streaming<super::TailLogEntriesResponse>>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/google.logging.v2.LoggingServiceV2/TailLogEntries",
+            );
+            self.inner.streaming(request.into_streaming_request(), path, codec).await
         }
     }
 }

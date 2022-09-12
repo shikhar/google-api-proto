@@ -32,6 +32,20 @@ pub mod notification_stage {
         /// Notification was dropped.
         Dropped = 3,
     }
+    impl Stage {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                Stage::Unspecified => "STAGE_UNSPECIFIED",
+                Stage::Sent => "SENT",
+                Stage::SendFailure => "SEND_FAILURE",
+                Stage::Dropped => "DROPPED",
+            }
+        }
+    }
     /// Event that triggered the notification.
     #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
     #[repr(i32)]
@@ -40,6 +54,18 @@ pub mod notification_stage {
         Unspecified = 0,
         /// When a health status has been changed.
         HealthStatusChange = 1,
+    }
+    impl Event {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                Event::Unspecified => "EVENT_UNSPECIFIED",
+                Event::HealthStatusChange => "HEALTH_STATUS_CHANGE",
+            }
+        }
     }
 }
 #[derive(Clone, PartialEq, ::prost::Message)]

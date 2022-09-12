@@ -51,6 +51,21 @@ pub mod calendar_add_on_manifest {
         /// perform all actions.
         ReadWrite = 5,
     }
+    impl EventAccess {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                EventAccess::Unspecified => "UNSPECIFIED",
+                EventAccess::Metadata => "METADATA",
+                EventAccess::Read => "READ",
+                EventAccess::Write => "WRITE",
+                EventAccess::ReadWrite => "READ_WRITE",
+            }
+        }
+    }
 }
 /// Defines conference related values.
 #[derive(Clone, PartialEq, ::prost::Message)]

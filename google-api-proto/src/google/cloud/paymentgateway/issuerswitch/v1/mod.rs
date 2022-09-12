@@ -60,6 +60,19 @@ pub mod participant {
         /// Participant is a person.
         Person = 2,
     }
+    impl Persona {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                Persona::Unspecified => "PERSONA_UNSPECIFIED",
+                Persona::Entity => "ENTITY",
+                Persona::Person => "PERSON",
+            }
+        }
+    }
 }
 /// A merchant entity participating in a payment settlement transaction.
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -130,6 +143,19 @@ pub mod merchant_additional_info {
         /// Small merchant.
         Small = 2,
     }
+    impl Type {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                Type::Unspecified => "TYPE_UNSPECIFIED",
+                Type::Large => "LARGE",
+                Type::Small => "SMALL",
+            }
+        }
+    }
     /// Indicates whether the merchant is an online or offline merchant.
     #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
     #[repr(i32)]
@@ -140,6 +166,19 @@ pub mod merchant_additional_info {
         Offline = 1,
         /// Online merchant.
         Online = 2,
+    }
+    impl Genre {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                Genre::Unspecified => "GENRE_UNSPECIFIED",
+                Genre::Offline => "OFFLINE",
+                Genre::Online => "ONLINE",
+            }
+        }
     }
     /// Indicates whether the merchant has been onboarded by a bank or an
     /// aggregator.
@@ -157,6 +196,21 @@ pub mod merchant_additional_info {
         /// Onboarded by the TPAP.
         Tpap = 4,
     }
+    impl OnboardingType {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                OnboardingType::Unspecified => "ONBOARDING_TYPE_UNSPECIFIED",
+                OnboardingType::Aggregator => "AGGREGATOR",
+                OnboardingType::Bank => "BANK",
+                OnboardingType::Network => "NETWORK",
+                OnboardingType::Tpap => "TPAP",
+            }
+        }
+    }
     /// Indicates the ownership type of the merchant.
     #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
     #[repr(i32)]
@@ -173,6 +227,22 @@ pub mod merchant_additional_info {
         Private = 4,
         /// Other ownership model.
         Others = 5,
+    }
+    impl OwnershipType {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                OwnershipType::Unspecified => "OWNERSHIP_TYPE_UNSPECIFIED",
+                OwnershipType::Proprietary => "PROPRIETARY",
+                OwnershipType::Partnership => "PARTNERSHIP",
+                OwnershipType::Public => "PUBLIC",
+                OwnershipType::Private => "PRIVATE",
+                OwnershipType::Others => "OTHERS",
+            }
+        }
     }
 }
 /// The API type for a transaction. Every transaction processed by the issuer
@@ -214,6 +284,28 @@ pub enum ApiType {
     ValidateRegistration = 10,
     /// Voucher confirmation API. Maps to UPI's `VoucherConfirmation` API.
     VoucherConfirmation = 11,
+}
+impl ApiType {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            ApiType::Unspecified => "API_TYPE_UNSPECIFIED",
+            ApiType::Balance => "BALANCE",
+            ApiType::CheckStatus => "CHECK_STATUS",
+            ApiType::Complaint => "COMPLAINT",
+            ApiType::HeartBeat => "HEART_BEAT",
+            ApiType::InitiateRegistration => "INITIATE_REGISTRATION",
+            ApiType::ListAccounts => "LIST_ACCOUNTS",
+            ApiType::Mandate => "MANDATE",
+            ApiType::SettlePayment => "SETTLE_PAYMENT",
+            ApiType::UpdateCredentials => "UPDATE_CREDENTIALS",
+            ApiType::ValidateRegistration => "VALIDATE_REGISTRATION",
+            ApiType::VoucherConfirmation => "VOUCHER_CONFIRMATION",
+        }
+    }
 }
 /// The type of a transaction. Every transaction processed by the issuer switch
 /// will be one of these transaction types. Transaction types are associated with
@@ -287,6 +379,38 @@ pub enum TransactionType {
     /// API type. Maps to UPI's `REDEEM` type.
     Redeem = 22,
 }
+impl TransactionType {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            TransactionType::Unspecified => "TRANSACTION_TYPE_UNSPECIFIED",
+            TransactionType::Autoupdate => "TRANSACTION_TYPE_AUTOUPDATE",
+            TransactionType::BalanceCheck => "TRANSACTION_TYPE_BALANCE_CHECK",
+            TransactionType::BalanceEnquiry => "TRANSACTION_TYPE_BALANCE_ENQUIRY",
+            TransactionType::CheckStatus => "TRANSACTION_TYPE_CHECK_STATUS",
+            TransactionType::CheckTransaction => "TRANSACTION_TYPE_CHECK_TRANSACTION",
+            TransactionType::Complaint => "TRANSACTION_TYPE_COMPLAINT",
+            TransactionType::Create => "TRANSACTION_TYPE_CREATE",
+            TransactionType::Credit => "TRANSACTION_TYPE_CREDIT",
+            TransactionType::Debit => "TRANSACTION_TYPE_DEBIT",
+            TransactionType::Dispute => "TRANSACTION_TYPE_DISPUTE",
+            TransactionType::HeartBeat => "TRANSACTION_TYPE_HEART_BEAT",
+            TransactionType::ListAccounts => "TRANSACTION_TYPE_LIST_ACCOUNTS",
+            TransactionType::Otp => "TRANSACTION_TYPE_OTP",
+            TransactionType::RegisterMobile => "TRANSACTION_TYPE_REGISTER_MOBILE",
+            TransactionType::Refund => "TRANSACTION_TYPE_REFUND",
+            TransactionType::Reversal => "TRANSACTION_TYPE_REVERSAL",
+            TransactionType::Revoke => "TRANSACTION_TYPE_REVOKE",
+            TransactionType::StatusUpdate => "TRANSACTION_TYPE_STATUS_UPDATE",
+            TransactionType::Update => "TRANSACTION_TYPE_UPDATE",
+            TransactionType::UpdateCredentials => "TRANSACTION_TYPE_UPDATE_CREDENTIALS",
+            TransactionType::Redeem => "TRANSACTION_TYPE_REDEEM",
+        }
+    }
+}
 /// A rule that is executed by the issuer switch while processing an
 /// API transaction.
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -335,6 +459,18 @@ pub mod rule_metadata {
         /// List type. Indicates that the metadata contains a list of values which
         /// the rule requires for execution.
         List = 1,
+    }
+    impl Type {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                Type::Unspecified => "TYPE_UNSPECIFIED",
+                Type::List => "LIST",
+            }
+        }
     }
 }
 /// Represent a single value in a rule's metadata.
@@ -543,6 +679,7 @@ pub struct BatchDeleteRuleMetadataValuesRequest {
 pub mod issuer_switch_rules_client {
     #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
     use tonic::codegen::*;
+    use tonic::codegen::http::Uri;
     /// Manages rules used by the issuer switch's rules engine.
     #[derive(Debug, Clone)]
     pub struct IssuerSwitchRulesClient<T> {
@@ -557,6 +694,10 @@ pub mod issuer_switch_rules_client {
     {
         pub fn new(inner: T) -> Self {
             let inner = tonic::client::Grpc::new(inner);
+            Self { inner }
+        }
+        pub fn with_origin(inner: T, origin: Uri) -> Self {
+            let inner = tonic::client::Grpc::with_origin(inner, origin);
             Self { inner }
         }
         pub fn with_interceptor<F>(
@@ -578,19 +719,19 @@ pub mod issuer_switch_rules_client {
         {
             IssuerSwitchRulesClient::new(InterceptedService::new(inner, interceptor))
         }
-        /// Compress requests with `gzip`.
+        /// Compress requests with the given encoding.
         ///
         /// This requires the server to support it otherwise it might respond with an
         /// error.
         #[must_use]
-        pub fn send_gzip(mut self) -> Self {
-            self.inner = self.inner.send_gzip();
+        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.send_compressed(encoding);
             self
         }
-        /// Enable decompressing responses with `gzip`.
+        /// Enable decompressing responses.
         #[must_use]
-        pub fn accept_gzip(mut self) -> Self {
-            self.inner = self.inner.accept_gzip();
+        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.accept_compressed(encoding);
             self
         }
         /// List all rules that are applied on transactions by the issuer switch. Rules
@@ -913,6 +1054,18 @@ pub mod raise_complaint_adjustment {
         /// in NPCI's `UDIR` specification.
         Raise = 1,
     }
+    impl AdjustmentFlag {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                AdjustmentFlag::Unspecified => "ADJUSTMENT_FLAG_UNSPECIFIED",
+                AdjustmentFlag::Raise => "RAISE",
+            }
+        }
+    }
     /// The reason for raising complaint.
     #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
     #[repr(i32)]
@@ -947,6 +1100,24 @@ pub mod raise_complaint_adjustment {
         /// `U023` reason code as defined in NPCI's `UDIR` specification.
         PaidByAlternateMeans = 7,
     }
+    impl ReasonCode {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                ReasonCode::Unspecified => "REASON_CODE_UNSPECIFIED",
+                ReasonCode::CustomerAccountNotReversed => "CUSTOMER_ACCOUNT_NOT_REVERSED",
+                ReasonCode::GoodsServicesNotProvided => "GOODS_SERVICES_NOT_PROVIDED",
+                ReasonCode::CustomerAccountNotCreditedBack => "CUSTOMER_ACCOUNT_NOT_CREDITED_BACK",
+                ReasonCode::BeneficiaryAccountNotCredited => "BENEFICIARY_ACCOUNT_NOT_CREDITED",
+                ReasonCode::GoodsServicesCreditNotProcessed => "GOODS_SERVICES_CREDIT_NOT_PROCESSED",
+                ReasonCode::MerchantNotReceivedConfirmation => "MERCHANT_NOT_RECEIVED_CONFIRMATION",
+                ReasonCode::PaidByAlternateMeans => "PAID_BY_ALTERNATE_MEANS",
+            }
+        }
+    }
 }
 /// The adjusment flag and reason code for resolving the complaint.
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -980,6 +1151,21 @@ pub mod resolve_complaint_adjustment {
         /// Transaction Credit Confirmation. This flag maps to the `TCC` adjustment
         /// flag as defined in NPCI's `UDIR` specification.
         TransactionCreditConfirmation = 4,
+    }
+    impl AdjustmentFlag {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                AdjustmentFlag::Unspecified => "ADJUSTMENT_FLAG_UNSPECIFIED",
+                AdjustmentFlag::DebitReversalConfirmation => "DEBIT_REVERSAL_CONFIRMATION",
+                AdjustmentFlag::Return => "RETURN",
+                AdjustmentFlag::RefundReversalConfirmation => "REFUND_REVERSAL_CONFIRMATION",
+                AdjustmentFlag::TransactionCreditConfirmation => "TRANSACTION_CREDIT_CONFIRMATION",
+            }
+        }
     }
     /// The complaint resolution reason code.
     #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
@@ -1033,6 +1219,30 @@ pub mod resolve_complaint_adjustment {
         /// `UDIR` specification.
         RrcCustomerAccountCredited = 13,
     }
+    impl ReasonCode {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                ReasonCode::Unspecified => "REASON_CODE_UNSPECIFIED",
+                ReasonCode::ComplaintResolvedOnline => "COMPLAINT_RESOLVED_ONLINE",
+                ReasonCode::ComplaintResolvedNowOrManually => "COMPLAINT_RESOLVED_NOW_OR_MANUALLY",
+                ReasonCode::OriginalTransactionNotDone => "ORIGINAL_TRANSACTION_NOT_DONE",
+                ReasonCode::RetAccountClosed => "RET_ACCOUNT_CLOSED",
+                ReasonCode::RetAccountDoesNotExist => "RET_ACCOUNT_DOES_NOT_EXIST",
+                ReasonCode::RetPartyInstructions => "RET_PARTY_INSTRUCTIONS",
+                ReasonCode::RetNriAccount => "RET_NRI_ACCOUNT",
+                ReasonCode::RetCreditFreezed => "RET_CREDIT_FREEZED",
+                ReasonCode::RetInvalidBeneficiaryDetails => "RET_INVALID_BENEFICIARY_DETAILS",
+                ReasonCode::RetAnyOtherReason => "RET_ANY_OTHER_REASON",
+                ReasonCode::RetBeneficiaryCannotCredit => "RET_BENEFICIARY_CANNOT_CREDIT",
+                ReasonCode::RetMerchantNotReceivedConfirmation => "RET_MERCHANT_NOT_RECEIVED_CONFIRMATION",
+                ReasonCode::RrcCustomerAccountCredited => "RRC_CUSTOMER_ACCOUNT_CREDITED",
+            }
+        }
+    }
 }
 /// The adjusment flag and reason code for raising dispute.
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -1078,6 +1288,25 @@ pub mod raise_dispute_adjustment {
         /// Deferred Arbitration Raise. This flag maps to the `FAR` adjustment flag
         /// as defined in NPCI's `UDIR` specification.
         DeferredArbitrationRaise = 8,
+    }
+    impl AdjustmentFlag {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                AdjustmentFlag::Unspecified => "ADJUSTMENT_FLAG_UNSPECIFIED",
+                AdjustmentFlag::ChargebackRaise => "CHARGEBACK_RAISE",
+                AdjustmentFlag::FraudChargebackRaise => "FRAUD_CHARGEBACK_RAISE",
+                AdjustmentFlag::WrongCreditChargebackRaise => "WRONG_CREDIT_CHARGEBACK_RAISE",
+                AdjustmentFlag::DeferredChargebackRaise => "DEFERRED_CHARGEBACK_RAISE",
+                AdjustmentFlag::PreArbitrationRaise => "PRE_ARBITRATION_RAISE",
+                AdjustmentFlag::DeferredPreArbitrationRaise => "DEFERRED_PRE_ARBITRATION_RAISE",
+                AdjustmentFlag::ArbitrationRaise => "ARBITRATION_RAISE",
+                AdjustmentFlag::DeferredArbitrationRaise => "DEFERRED_ARBITRATION_RAISE",
+            }
+        }
     }
     /// The reason for raising dispute.
     #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
@@ -1148,6 +1377,34 @@ pub mod raise_dispute_adjustment {
         /// reason code maps to the `WC1` reason code as defined in NPCI's `UDIR`
         /// specification.
         FundsTransferredToUnintendedBeneficiary = 17,
+    }
+    impl ReasonCode {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                ReasonCode::Unspecified => "REASON_CODE_UNSPECIFIED",
+                ReasonCode::ChargebackRaiseRemitterDebitedBeneficiaryNotCredited => "CHARGEBACK_RAISE_REMITTER_DEBITED_BENEFICIARY_NOT_CREDITED",
+                ReasonCode::PreArbitrationRaiseBeneficiaryNotCredited => "PRE_ARBITRATION_RAISE_BENEFICIARY_NOT_CREDITED",
+                ReasonCode::DeferredChargebackRaiseBeneficiaryNotCredited => "DEFERRED_CHARGEBACK_RAISE_BENEFICIARY_NOT_CREDITED",
+                ReasonCode::DeferredPreArbitrationRaiseBeneficiaryNotCredited => "DEFERRED_PRE_ARBITRATION_RAISE_BENEFICIARY_NOT_CREDITED",
+                ReasonCode::DeferredArbitrationRaiseDeferredChargebackPreArbitrationRejected => "DEFERRED_ARBITRATION_RAISE_DEFERRED_CHARGEBACK_PRE_ARBITRATION_REJECTED",
+                ReasonCode::ChargebackOnFraud => "CHARGEBACK_ON_FRAUD",
+                ReasonCode::GoodsServicesCreditNotProcessed => "GOODS_SERVICES_CREDIT_NOT_PROCESSED",
+                ReasonCode::GoodsServicesDefective => "GOODS_SERVICES_DEFECTIVE",
+                ReasonCode::PaidByAlternateMeans => "PAID_BY_ALTERNATE_MEANS",
+                ReasonCode::GoodsServicesNotReceived => "GOODS_SERVICES_NOT_RECEIVED",
+                ReasonCode::MerchantNotReceivedConfirmation => "MERCHANT_NOT_RECEIVED_CONFIRMATION",
+                ReasonCode::TransactionNotSteeled => "TRANSACTION_NOT_STEELED",
+                ReasonCode::DuplicateTransaction => "DUPLICATE_TRANSACTION",
+                ReasonCode::ChargebackCardHolderChargedMore => "CHARGEBACK_CARD_HOLDER_CHARGED_MORE",
+                ReasonCode::CustomerClaimingGoodsServicesNotDelivered => "CUSTOMER_CLAIMING_GOODS_SERVICES_NOT_DELIVERED",
+                ReasonCode::PartiesDenied => "PARTIES_DENIED",
+                ReasonCode::FundsTransferredToUnintendedBeneficiary => "FUNDS_TRANSFERRED_TO_UNINTENDED_BENEFICIARY",
+            }
+        }
     }
 }
 /// The adjusment flag and reason code for resolving the dispute.
@@ -1224,6 +1481,35 @@ pub mod resolve_dispute_adjustment {
         /// Manual Adjustment. This flag maps to the `MA` adjustment flag as defined
         /// in NPCI's `UDIR` specification.
         ManualAdjustment = 18,
+    }
+    impl AdjustmentFlag {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                AdjustmentFlag::Unspecified => "ADJUSTMENT_FLAG_UNSPECIFIED",
+                AdjustmentFlag::RePresentmentRaise => "RE_PRESENTMENT_RAISE",
+                AdjustmentFlag::DeferredRePresentmentRaise => "DEFERRED_RE_PRESENTMENT_RAISE",
+                AdjustmentFlag::ChargebackAcceptance => "CHARGEBACK_ACCEPTANCE",
+                AdjustmentFlag::DeferredChargebackAcceptance => "DEFERRED_CHARGEBACK_ACCEPTANCE",
+                AdjustmentFlag::PreArbitrationAcceptance => "PRE_ARBITRATION_ACCEPTANCE",
+                AdjustmentFlag::DeferredPreArbitrationAcceptance => "DEFERRED_PRE_ARBITRATION_ACCEPTANCE",
+                AdjustmentFlag::PreArbitrationDeclined => "PRE_ARBITRATION_DECLINED",
+                AdjustmentFlag::DeferredPreArbitrationDeclined => "DEFERRED_PRE_ARBITRATION_DECLINED",
+                AdjustmentFlag::ArbitrationAcceptance => "ARBITRATION_ACCEPTANCE",
+                AdjustmentFlag::ArbitrationContinuation => "ARBITRATION_CONTINUATION",
+                AdjustmentFlag::ArbitrationWithdrawn => "ARBITRATION_WITHDRAWN",
+                AdjustmentFlag::ArbitrationVerdict => "ARBITRATION_VERDICT",
+                AdjustmentFlag::CreditAdjustment => "CREDIT_ADJUSTMENT",
+                AdjustmentFlag::FraudChargebackRepresentment => "FRAUD_CHARGEBACK_REPRESENTMENT",
+                AdjustmentFlag::FraudChargebackAccept => "FRAUD_CHARGEBACK_ACCEPT",
+                AdjustmentFlag::WrongCreditRepresentment => "WRONG_CREDIT_REPRESENTMENT",
+                AdjustmentFlag::WrongCreditChargebackAcceptance => "WRONG_CREDIT_CHARGEBACK_ACCEPTANCE",
+                AdjustmentFlag::ManualAdjustment => "MANUAL_ADJUSTMENT",
+            }
+        }
     }
     /// The dispute resolution reason code.
     #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
@@ -1371,6 +1657,56 @@ pub mod resolve_dispute_adjustment {
         /// `WC5` reason code as defined in NPCI's `UDIR` specification.
         WrongCreditRepresentmentReasonOthers = 40,
     }
+    impl ReasonCode {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                ReasonCode::Unspecified => "REASON_CODE_UNSPECIFIED",
+                ReasonCode::ChargebackBeneficiaryCannotCreditOrPreArbitrationDuplicateProcess => "CHARGEBACK_BENEFICIARY_CANNOT_CREDIT_OR_PRE_ARBITRATION_DUPLICATE_PROCESS",
+                ReasonCode::PreArbitrationDeclinedBeneficiaryCreditedOnline => "PRE_ARBITRATION_DECLINED_BENEFICIARY_CREDITED_ONLINE",
+                ReasonCode::PreArbitrationDeclinedBeneficiaryCreditedManually => "PRE_ARBITRATION_DECLINED_BENEFICIARY_CREDITED_MANUALLY",
+                ReasonCode::DeferredChargebackAcceptanceAccountNotCreditedTccRaised => "DEFERRED_CHARGEBACK_ACCEPTANCE_ACCOUNT_NOT_CREDITED_TCC_RAISED",
+                ReasonCode::DeferredRePresentmentRaiseAccountCreditedTccRaised => "DEFERRED_RE_PRESENTMENT_RAISE_ACCOUNT_CREDITED_TCC_RAISED",
+                ReasonCode::DeferredPreArbitrationAcceptanceAccountNotCredited => "DEFERRED_PRE_ARBITRATION_ACCEPTANCE_ACCOUNT_NOT_CREDITED",
+                ReasonCode::DeferredPreArbitrationDeclinedAccountCredited => "DEFERRED_PRE_ARBITRATION_DECLINED_ACCOUNT_CREDITED",
+                ReasonCode::FraudChargebackAcceptAmountRecoveredFromFraudulentAccount => "FRAUD_CHARGEBACK_ACCEPT_AMOUNT_RECOVERED_FROM_FRAUDULENT_ACCOUNT",
+                ReasonCode::FraudChargebackRepresentmentLienMarkedInsufficientBalance => "FRAUD_CHARGEBACK_REPRESENTMENT_LIEN_MARKED_INSUFFICIENT_BALANCE",
+                ReasonCode::FraudChargebackRepresentmentFirNotProvided => "FRAUD_CHARGEBACK_REPRESENTMENT_FIR_NOT_PROVIDED",
+                ReasonCode::FraudChargebackRepresentmentReasonOthers => "FRAUD_CHARGEBACK_REPRESENTMENT_REASON_OTHERS",
+                ReasonCode::RePresentmentRaiseBeneficiaryCreditedOnline => "RE_PRESENTMENT_RAISE_BENEFICIARY_CREDITED_ONLINE",
+                ReasonCode::RePresentmentRaiseBeneficiaryCreditedManually => "RE_PRESENTMENT_RAISE_BENEFICIARY_CREDITED_MANUALLY",
+                ReasonCode::CreditAdjustmentGoodsServicesCreditNotProcessed => "CREDIT_ADJUSTMENT_GOODS_SERVICES_CREDIT_NOT_PROCESSED",
+                ReasonCode::CreditAdjustmentGoodsServicesDefective => "CREDIT_ADJUSTMENT_GOODS_SERVICES_DEFECTIVE",
+                ReasonCode::CreditAdjustmentPaidByAlternateMeans => "CREDIT_ADJUSTMENT_PAID_BY_ALTERNATE_MEANS",
+                ReasonCode::CreditAdjustmentGoodsServicesNotReceived => "CREDIT_ADJUSTMENT_GOODS_SERVICES_NOT_RECEIVED",
+                ReasonCode::CreditAdjustmentMerchantNotReceivedConfirmation => "CREDIT_ADJUSTMENT_MERCHANT_NOT_RECEIVED_CONFIRMATION",
+                ReasonCode::CreditAdjustmentDuplicateTransaction => "CREDIT_ADJUSTMENT_DUPLICATE_TRANSACTION",
+                ReasonCode::CreditAdjustmentReasonOthers => "CREDIT_ADJUSTMENT_REASON_OTHERS",
+                ReasonCode::CreditAdjustmentNonMatchingAccountNumber => "CREDIT_ADJUSTMENT_NON_MATCHING_ACCOUNT_NUMBER",
+                ReasonCode::CreditAdjustmentCardHolderChargedMore => "CREDIT_ADJUSTMENT_CARD_HOLDER_CHARGED_MORE",
+                ReasonCode::CreditAdjustmentCreditNotProcessed => "CREDIT_ADJUSTMENT_CREDIT_NOT_PROCESSED",
+                ReasonCode::CreditAdjustmentBeneficiaryCannotCredit => "CREDIT_ADJUSTMENT_BENEFICIARY_CANNOT_CREDIT",
+                ReasonCode::ChargebackAcceptanceMerchantCannotProvideService => "CHARGEBACK_ACCEPTANCE_MERCHANT_CANNOT_PROVIDE_SERVICE",
+                ReasonCode::RePresentmentRaiseGoodsServicesProvided => "RE_PRESENTMENT_RAISE_GOODS_SERVICES_PROVIDED",
+                ReasonCode::PreArbitrationDeclinedServicesProvidedLater => "PRE_ARBITRATION_DECLINED_SERVICES_PROVIDED_LATER",
+                ReasonCode::PreArbitrationAcceptanceServicesNotProvidedByMerchant => "PRE_ARBITRATION_ACCEPTANCE_SERVICES_NOT_PROVIDED_BY_MERCHANT",
+                ReasonCode::ArbitrationAcceptanceIllegibleFulfilment => "ARBITRATION_ACCEPTANCE_ILLEGIBLE_FULFILMENT",
+                ReasonCode::ArbitrationContinuationCustomerStillNotReceivedService => "ARBITRATION_CONTINUATION_CUSTOMER_STILL_NOT_RECEIVED_SERVICE",
+                ReasonCode::ArbitrationWithdrawnCustomerReceivedServiceLater => "ARBITRATION_WITHDRAWN_CUSTOMER_RECEIVED_SERVICE_LATER",
+                ReasonCode::ArbitrationVerdictPanelVerdict => "ARBITRATION_VERDICT_PANEL_VERDICT",
+                ReasonCode::ManualAdjustmentReason => "MANUAL_ADJUSTMENT_REASON",
+                ReasonCode::AttributingCustomer => "ATTRIBUTING_CUSTOMER",
+                ReasonCode::AttributingTechnicalIssue => "ATTRIBUTING_TECHNICAL_ISSUE",
+                ReasonCode::WrongCreditChargebackAcceptanceAmountRecovered => "WRONG_CREDIT_CHARGEBACK_ACCEPTANCE_AMOUNT_RECOVERED",
+                ReasonCode::WrongCreditRepresentmentLienMarkedInsufficientBalance => "WRONG_CREDIT_REPRESENTMENT_LIEN_MARKED_INSUFFICIENT_BALANCE",
+                ReasonCode::WrongCreditRepresentmentCustomerInaccessible => "WRONG_CREDIT_REPRESENTMENT_CUSTOMER_INACCESSIBLE",
+                ReasonCode::WrongCreditRepresentmentReasonOthers => "WRONG_CREDIT_REPRESENTMENT_REASON_OTHERS",
+            }
+        }
+    }
 }
 /// Metadata for CreateComplaint.
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -1399,10 +1735,24 @@ pub enum TransactionSubType {
     /// Remitter transaction subtype.
     Remitter = 2,
 }
+impl TransactionSubType {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            TransactionSubType::Unspecified => "TRANSACTION_SUB_TYPE_UNSPECIFIED",
+            TransactionSubType::Beneficiary => "TRANSACTION_SUB_TYPE_BENEFICIARY",
+            TransactionSubType::Remitter => "TRANSACTION_SUB_TYPE_REMITTER",
+        }
+    }
+}
 /// Generated client implementations.
 pub mod issuer_switch_resolutions_client {
     #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
     use tonic::codegen::*;
+    use tonic::codegen::http::Uri;
     /// Creates and resolves UPI complaints and disputes.
     #[derive(Debug, Clone)]
     pub struct IssuerSwitchResolutionsClient<T> {
@@ -1417,6 +1767,10 @@ pub mod issuer_switch_resolutions_client {
     {
         pub fn new(inner: T) -> Self {
             let inner = tonic::client::Grpc::new(inner);
+            Self { inner }
+        }
+        pub fn with_origin(inner: T, origin: Uri) -> Self {
+            let inner = tonic::client::Grpc::with_origin(inner, origin);
             Self { inner }
         }
         pub fn with_interceptor<F>(
@@ -1440,19 +1794,19 @@ pub mod issuer_switch_resolutions_client {
                 InterceptedService::new(inner, interceptor),
             )
         }
-        /// Compress requests with `gzip`.
+        /// Compress requests with the given encoding.
         ///
         /// This requires the server to support it otherwise it might respond with an
         /// error.
         #[must_use]
-        pub fn send_gzip(mut self) -> Self {
-            self.inner = self.inner.send_gzip();
+        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.send_compressed(encoding);
             self
         }
-        /// Enable decompressing responses with `gzip`.
+        /// Enable decompressing responses.
         #[must_use]
-        pub fn accept_gzip(mut self) -> Self {
-            self.inner = self.inner.accept_gzip();
+        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.accept_compressed(encoding);
             self
         }
         /// Create a complaint. The returned `Operation` type has
@@ -1619,6 +1973,19 @@ pub mod transaction_info {
         /// The transaction has failed.
         Failed = 2,
     }
+    impl State {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                State::Unspecified => "STATE_UNSPECIFIED",
+                State::Succeeded => "SUCCEEDED",
+                State::Failed => "FAILED",
+            }
+        }
+    }
     /// The sub-type of a transaction. This value is used only for certain API type
     /// and transaction type combinations.
     #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
@@ -1646,6 +2013,22 @@ pub mod transaction_info {
         /// when the complaint / dispute request is initiated / received by the
         /// remitter bank.
         Remitter = 5,
+    }
+    impl TransactionSubType {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                TransactionSubType::Unspecified => "TRANSACTION_SUB_TYPE_UNSPECIFIED",
+                TransactionSubType::Collect => "COLLECT",
+                TransactionSubType::Debit => "DEBIT",
+                TransactionSubType::Pay => "PAY",
+                TransactionSubType::Beneficiary => "BENEFICIARY",
+                TransactionSubType::Remitter => "REMITTER",
+            }
+        }
     }
 }
 /// A metadata API transaction processed by the issuer switch. This
@@ -1791,6 +2174,27 @@ pub mod mandate_transaction {
         /// Yearly recurrence pattern.
         Yearly = 10,
     }
+    impl RecurrencePatternType {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                RecurrencePatternType::Unspecified => "RECURRENCE_PATTERN_TYPE_UNSPECIFIED",
+                RecurrencePatternType::AsPresented => "AS_PRESENTED",
+                RecurrencePatternType::Bimonthly => "BIMONTHLY",
+                RecurrencePatternType::Daily => "DAILY",
+                RecurrencePatternType::Fortnightly => "FORTNIGHTLY",
+                RecurrencePatternType::HalfYearly => "HALF_YEARLY",
+                RecurrencePatternType::Monthly => "MONTHLY",
+                RecurrencePatternType::OneTime => "ONE_TIME",
+                RecurrencePatternType::Quarterly => "QUARTERLY",
+                RecurrencePatternType::Weekly => "WEEKLY",
+                RecurrencePatternType::Yearly => "YEARLY",
+            }
+        }
+    }
     /// RecurrenceRuleType specifies the recurrence rule type of mandate.
     #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
     #[repr(i32)]
@@ -1803,6 +2207,20 @@ pub mod mandate_transaction {
         Before = 2,
         /// On recurrence rule type.
         On = 3,
+    }
+    impl RecurrenceRuleType {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                RecurrenceRuleType::Unspecified => "RECURRENCE_RULE_TYPE_UNSPECIFIED",
+                RecurrenceRuleType::After => "AFTER",
+                RecurrenceRuleType::Before => "BEFORE",
+                RecurrenceRuleType::On => "ON",
+            }
+        }
     }
     /// AmountRuleType specifies the type of rule associated with the mandate
     /// amount.
@@ -1817,6 +2235,19 @@ pub mod mandate_transaction {
         /// Max amount rule. Amount specified is the maximum amount for which
         /// mandate could be granted.
         Max = 2,
+    }
+    impl AmountRuleType {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                AmountRuleType::Unspecified => "AMOUNT_RULE_TYPE_UNSPECIFIED",
+                AmountRuleType::Exact => "EXACT",
+                AmountRuleType::Max => "MAX",
+            }
+        }
     }
 }
 /// A complaint API transaction processed by the issuer switch. In
@@ -1884,27 +2315,27 @@ pub struct ListMetadataTransactionsRequest {
     /// The following fields in the `MetadataTransaction` are eligible for
     /// filtering:
     ///
-    ///   * `apiType` - The API type of the metadata transaction. Must be one of
-    ///   \[ApiType][google.cloud.paymentgateway.issuerswitch.v1.ApiType\] values. Allowed comparison operators: `=`.
-    ///   * `transactionType` - The transaction type of the metadata transaction.
-    ///   Must be one of \[TransactionType][google.cloud.paymentgateway.issuerswitch.v1.TransactionType\] values. Allowed comparison
-    ///   operators: `=`.
-    ///   * `transactionID` - The UPI transaction ID of the metadata transaction.
-    ///   Allowed comparison operators: `=`.
-    ///   * `originVPA` - The VPA of the orignitator of a metadata transaction.
-    ///   Allowed comparison operators: `=`.
-    ///   * `createTime` - The time at which the transaction was created
-    ///   (received) by the issuer switch. The value should be in
-    ///   the format `YYYY-MM-DDTHH:MM:SSZ`. Allowed comparison operators: `>`,
-    ///   `<`.
-    ///   * `state` - The state of the transaction. Must be one of
-    ///   \[TransactionInfo.State][google.cloud.paymentgateway.issuerswitch.v1.TransactionInfo.State\] values. Allowed comparison operators: `=`.
-    ///   * `errorCode` - Use this filter to list financial transactions which
-    ///   have failed a particular error code. Allowed comparison operators:
-    ///   `=`.
-    ///   * `bankAdapterRequestID` - Request ID used when invoking the Bank
-    ///   Adapter API for fulfilling a transaction request. Allowed comparison
-    ///   operators: `=`.
+    ///    * `apiType` - The API type of the metadata transaction. Must be one of
+    ///    \[ApiType][google.cloud.paymentgateway.issuerswitch.v1.ApiType\] values. Allowed comparison operators: `=`.
+    ///    * `transactionType` - The transaction type of the metadata transaction.
+    ///    Must be one of \[TransactionType][google.cloud.paymentgateway.issuerswitch.v1.TransactionType\] values. Allowed comparison
+    ///    operators: `=`.
+    ///    * `transactionID` - The UPI transaction ID of the metadata transaction.
+    ///    Allowed comparison operators: `=`.
+    ///    * `originVPA` - The VPA of the orignitator of a metadata transaction.
+    ///    Allowed comparison operators: `=`.
+    ///    * `createTime` - The time at which the transaction was created
+    ///    (received) by the issuer switch. The value should be in
+    ///    the format `YYYY-MM-DDTHH:MM:SSZ`. Allowed comparison operators: `>`,
+    ///    `<`.
+    ///    * `state` - The state of the transaction. Must be one of
+    ///    \[TransactionInfo.State][google.cloud.paymentgateway.issuerswitch.v1.TransactionInfo.State\] values. Allowed comparison operators: `=`.
+    ///    * `errorCode` - Use this filter to list financial transactions which
+    ///    have failed a particular error code. Allowed comparison operators:
+    ///    `=`.
+    ///    * `bankAdapterRequestID` - Request ID used when invoking the Bank
+    ///    Adapter API for fulfilling a transaction request. Allowed comparison
+    ///    operators: `=`.
     ///
     /// You can combine multiple expressions by enclosing each expression in
     /// parentheses. Expressions are combined with AND logic. No other logical
@@ -1912,11 +2343,11 @@ pub struct ListMetadataTransactionsRequest {
     ///
     /// Here are a few examples:
     ///
-    ///   * `apiType = LIST_ACCOUNTS` -  - The API type is _LIST_ACCOUNTS_.
-    ///   * `state = SUCCEEDED` - The transaction's state is _SUCCEEDED_.
-    ///   * `(apiType = LIST_ACCOUNTS) AND (create_time <
-    ///   \"2021-08-15T14:50:00Z\")` - The API type is _LIST_ACCOUNTS_ and
-    ///   the transaction was received before _2021-08-15 14:50:00 UTC_.
+    ///    * `apiType = LIST_ACCOUNTS` -  - The API type is _LIST_ACCOUNTS_.
+    ///    * `state = SUCCEEDED` - The transaction's state is _SUCCEEDED_.
+    ///    * `(apiType = LIST_ACCOUNTS) AND (create_time <
+    ///    \"2021-08-15T14:50:00Z\")` - The API type is _LIST_ACCOUNTS_ and
+    ///    the transaction was received before _2021-08-15 14:50:00 UTC_.
     #[prost(string, tag="4")]
     pub filter: ::prost::alloc::string::String,
 }
@@ -1954,36 +2385,36 @@ pub struct ListFinancialTransactionsRequest {
     /// The following fields in the `FinancialTransaction` are eligible for
     /// filtering:
     ///
-    ///   * `transactionType` - The transaction type of the financial
-    ///   transaction. Must be one of \[TransactionType][google.cloud.paymentgateway.issuerswitch.v1.TransactionType\] values. For financial
-    ///   transactions, only valid transaction types are `TRANSACTION_TYPE_CREDIT`,
-    ///   `TRANSACTION_TYPE_DEBIT` and `TRANSACTION_TYPE_REVERSAL`. Allowed
-    ///   comparison operators: `=`.
-    ///   * `transactionID` - The UPI transaction ID of the financial
-    ///   transaction. Allowed comparison operators: `=`.
-    ///   * `RRN` - The retrieval reference number of the transaction. Allowed
-    ///   comparison operators: `=`.
-    ///   * `payerVPA` - The VPA of the payer in a financial transaction. Allowed
-    ///   comparison operators: `=`.
-    ///   * `payeeVPA` - The VPA of the payee in a financial transaction. Allowed
-    ///   comparison operators: `=`.
-    ///   * `payerMobileNumber` - The mobile number of the payer in a financial
-    ///      transaction. Allowed comparison operators: `=`.
-    ///   * `payeeMobileNumber` - The mobile number of the payee in a financial
-    ///      transaction. Allowed comparison operators: `=`.
-    ///   * `payeeMerchantId` - The merchant id of the payee in a financial
-    ///      transaction. Allowed comparison operators: `=`.
-    ///   * `createTime` - The time at which the transaction was created
-    ///   (received) by the issuer switch. The value should be in
-    ///   the format `YYYY-MM-DDTHH:MM:SSZ`. Allowed comparison operators: `>`,
-    ///   `<`.
-    ///   * `state` - The state of the transaction. Must be one of
-    ///   \[TransactionInfo.State][google.cloud.paymentgateway.issuerswitch.v1.TransactionInfo.State\] values. Allowed comparison operators: `=`.
-    ///   * `errorCode` - Use this filter to list financial transactions which
-    ///   have failed a particular error code. Allowed comparison operators: `=`.
-    ///   * `bankAdapterRequestID` - Request ID used when invoking the Bank
-    ///   Adapter API for fulfilling a transaction request. Allowed comparison
-    ///   operators: `=`.
+    ///    * `transactionType` - The transaction type of the financial
+    ///    transaction. Must be one of \[TransactionType][google.cloud.paymentgateway.issuerswitch.v1.TransactionType\] values. For financial
+    ///    transactions, only valid transaction types are `TRANSACTION_TYPE_CREDIT`,
+    ///    `TRANSACTION_TYPE_DEBIT` and `TRANSACTION_TYPE_REVERSAL`. Allowed
+    ///    comparison operators: `=`.
+    ///    * `transactionID` - The UPI transaction ID of the financial
+    ///    transaction. Allowed comparison operators: `=`.
+    ///    * `RRN` - The retrieval reference number of the transaction. Allowed
+    ///    comparison operators: `=`.
+    ///    * `payerVPA` - The VPA of the payer in a financial transaction. Allowed
+    ///    comparison operators: `=`.
+    ///    * `payeeVPA` - The VPA of the payee in a financial transaction. Allowed
+    ///    comparison operators: `=`.
+    ///    * `payerMobileNumber` - The mobile number of the payer in a financial
+    ///       transaction. Allowed comparison operators: `=`.
+    ///    * `payeeMobileNumber` - The mobile number of the payee in a financial
+    ///       transaction. Allowed comparison operators: `=`.
+    ///    * `payeeMerchantId` - The merchant id of the payee in a financial
+    ///       transaction. Allowed comparison operators: `=`.
+    ///    * `createTime` - The time at which the transaction was created
+    ///    (received) by the issuer switch. The value should be in
+    ///    the format `YYYY-MM-DDTHH:MM:SSZ`. Allowed comparison operators: `>`,
+    ///    `<`.
+    ///    * `state` - The state of the transaction. Must be one of
+    ///    \[TransactionInfo.State][google.cloud.paymentgateway.issuerswitch.v1.TransactionInfo.State\] values. Allowed comparison operators: `=`.
+    ///    * `errorCode` - Use this filter to list financial transactions which
+    ///    have failed a particular error code. Allowed comparison operators: `=`.
+    ///    * `bankAdapterRequestID` - Request ID used when invoking the Bank
+    ///    Adapter API for fulfilling a transaction request. Allowed comparison
+    ///    operators: `=`.
     ///
     /// You can combine multiple expressions by enclosing each expression in
     /// parentheses. Expressions are combined with AND logic. No other logical
@@ -1991,16 +2422,16 @@ pub struct ListFinancialTransactionsRequest {
     ///
     /// Here are a few examples:
     ///
-    ///   * `transactionType = CREDIT` - The transaction type is _CREDIT_.
-    ///   * `state = SUCCEEDED` - The transaction's state is _SUCCEEDED_.
-    ///   * `payerVpa = example@okbank` - The VPA of the payer is the string
-    ///   _example@okbank_.
-    ///   * `(transactionType = DEBIT) AND (createTime < "2021-08-15T14:50:00Z")`
-    ///   - The transaction type is _DEBIT_ and the transaction was received
-    ///   before _2021-08-15 14:50:00 UTC_.
-    ///   * `createTime > "2021-08-15T14:50:00Z" AND createTime <
-    ///   "2021-08-16T14:50:00Z"` - The transaction was received between
-    ///   _2021-08-15 14:50:00 UTC_ and _2021-08-16 14:50:00 UTC_.
+    ///    * `transactionType = CREDIT` - The transaction type is _CREDIT_.
+    ///    * `state = SUCCEEDED` - The transaction's state is _SUCCEEDED_.
+    ///    * `payerVpa = example@okbank` - The VPA of the payer is the string
+    ///    _example@okbank_.
+    ///    * `(transactionType = DEBIT) AND (createTime < "2021-08-15T14:50:00Z")`
+    ///    - The transaction type is _DEBIT_ and the transaction was received
+    ///    before _2021-08-15 14:50:00 UTC_.
+    ///    * `createTime > "2021-08-15T14:50:00Z" AND createTime <
+    ///    "2021-08-16T14:50:00Z"` - The transaction was received between
+    ///    _2021-08-15 14:50:00 UTC_ and _2021-08-16 14:50:00 UTC_.
     #[prost(string, tag="4")]
     pub filter: ::prost::alloc::string::String,
 }
@@ -2038,63 +2469,63 @@ pub struct ListMandateTransactionsRequest {
     /// The following fields in the `Mandate` are eligible for
     /// filtering:
     ///
-    ///   * `uniqueMandateNumber` - UPI Unique Mandate Number (UMN). Allowed
-    ///   comparison operators: `=`.
-    ///   * `transactionID` - The transaction ID of the mandate transaction.
-    ///   Allowed comparison operators: `=`.
-    ///   * `transactionType` - The transaction type of the mandate
-    ///   transaction. Must be one of \[TransactionType][google.cloud.paymentgateway.issuerswitch.v1.TransactionType\] values. For mandate
-    ///   transactions, only valid transaction types are
-    ///   `TRANSACTION_TYPE_CREATE`, `TRANSACTION_TYPE_REVOKE` and
-    ///   `TRANSACTION_TYPE_UPDATE`. Allowed comparison operators: `=`.
-    ///   * `payerVPA` - The VPA of the payer in a mandate transaction. Allowed
-    ///   comparison operators: `=`.
-    ///   * `payeeVPA` - The VPA of the payee in a mandate transaction. Allowed
-    ///   comparison operators: `=`.
-    ///   * `payeeMerchantID` - The merchant ID of the payee in a mandate
-    ///   transaction. Allowed comparison operators: `=`.
-    ///   * `payerMobileNumber` - The mobile number of the payer in a mandate
-    ///   transaction. Allowed comparison operators: `=`.
-    ///   * `payeeMobileNumber` - The mobile number of the payee in a mandate
-    ///   transaction. Allowed comparison operators: `=`.
-    ///   * `createTime` - The time at which the transaction was created
-    ///   (received) by the issuer switch. The value should be in
-    ///   the format `YYYY-MM-DDTHH:MM:SSZ`. Allowed comparison
-    ///   operators: `>`, `<`.
-    ///   * `state` - The state of the transaction. Must be one of
-    ///   \[TransactionInfo.State][google.cloud.paymentgateway.issuerswitch.v1.TransactionInfo.State\] values. Allowed comparison operators: `=`.
-    ///   * `recurrencePattern` - The recurrence pattern of the mandate. Must be
-    ///   one of \[MandateTransaction.RecurrencePatternType][google.cloud.paymentgateway.issuerswitch.v1.MandateTransaction.RecurrencePatternType\] values. Allowed
-    ///   comparison operators: `=`.
-    ///   * `startDate` - The start date of the mandate. The value should be in
-    ///   the format `YYYY-MM-DD`. Allowed comparison operators: `<` and `>`.
-    ///   * `endDate` - The end date of the mandate. The value should be in
-    ///   the format `YYYY-MM-DD`. Allowed comparison operators: `<` and `>`.
-    ///   * `errorCode` - Use this filter to list mandate transactions which
-    ///   have failed a particular error code. Allowed comparison
-    ///   operators: `=`.
-    ///   * `bankAdapterRequestID` - Request ID used when invoking the Bank
-    ///   Adapter API for fulfilling a transaction request. Allowed comparison
-    ///   operators: `=`.
+    ///    * `uniqueMandateNumber` - UPI Unique Mandate Number (UMN). Allowed
+    ///    comparison operators: `=`.
+    ///    * `transactionID` - The transaction ID of the mandate transaction.
+    ///    Allowed comparison operators: `=`.
+    ///    * `transactionType` - The transaction type of the mandate
+    ///    transaction. Must be one of \[TransactionType][google.cloud.paymentgateway.issuerswitch.v1.TransactionType\] values. For mandate
+    ///    transactions, only valid transaction types are
+    ///    `TRANSACTION_TYPE_CREATE`, `TRANSACTION_TYPE_REVOKE` and
+    ///    `TRANSACTION_TYPE_UPDATE`. Allowed comparison operators: `=`.
+    ///    * `payerVPA` - The VPA of the payer in a mandate transaction. Allowed
+    ///    comparison operators: `=`.
+    ///    * `payeeVPA` - The VPA of the payee in a mandate transaction. Allowed
+    ///    comparison operators: `=`.
+    ///    * `payeeMerchantID` - The merchant ID of the payee in a mandate
+    ///    transaction. Allowed comparison operators: `=`.
+    ///    * `payerMobileNumber` - The mobile number of the payer in a mandate
+    ///    transaction. Allowed comparison operators: `=`.
+    ///    * `payeeMobileNumber` - The mobile number of the payee in a mandate
+    ///    transaction. Allowed comparison operators: `=`.
+    ///    * `createTime` - The time at which the transaction was created
+    ///    (received) by the issuer switch. The value should be in
+    ///    the format `YYYY-MM-DDTHH:MM:SSZ`. Allowed comparison
+    ///    operators: `>`, `<`.
+    ///    * `state` - The state of the transaction. Must be one of
+    ///    \[TransactionInfo.State][google.cloud.paymentgateway.issuerswitch.v1.TransactionInfo.State\] values. Allowed comparison operators: `=`.
+    ///    * `recurrencePattern` - The recurrence pattern of the mandate. Must be
+    ///    one of \[MandateTransaction.RecurrencePatternType][google.cloud.paymentgateway.issuerswitch.v1.MandateTransaction.RecurrencePatternType\] values. Allowed
+    ///    comparison operators: `=`.
+    ///    * `startDate` - The start date of the mandate. The value should be in
+    ///    the format `YYYY-MM-DD`. Allowed comparison operators: `<` and `>`.
+    ///    * `endDate` - The end date of the mandate. The value should be in
+    ///    the format `YYYY-MM-DD`. Allowed comparison operators: `<` and `>`.
+    ///    * `errorCode` - Use this filter to list mandate transactions which
+    ///    have failed a particular error code. Allowed comparison
+    ///    operators: `=`.
+    ///    * `bankAdapterRequestID` - Request ID used when invoking the Bank
+    ///    Adapter API for fulfilling a transaction request. Allowed comparison
+    ///    operators: `=`.
     /// You can combine multiple expressions by enclosing each expression in
     /// parentheses. Expressions are combined with AND logic. No other logical
     /// operators are supported.
     ///
     /// Here are a few examples:
-    ///   * `recurrencePattern = MONTHLY` - The recurrence pattern type is
-    ///   monthly.
-    ///   * `state = SUCCEEDED` - The transaction's state is _SUCCEEDED_.
-    ///   * `payerVPA = example@okbank` - The VPA of the payer is the string
-    ///   _example@okbank_.
-    ///   * `(payerVPA = example@okbank) AND (createTime <
-    ///   "2021-08-15T14:50:00Z")`
-    ///   - The payer VPA example@okbank and the transaction was received
-    ///   before _2021-08-15 14:50:00 UTC_.
-    ///   * `createTime > "2021-08-15T14:50:00Z" AND createTime <
-    ///   "2021-08-16T14:50:00Z"` - The transaction was received between
-    ///   _2021-08-15 14:50:00 UTC_ and _2021-08-16 14:50:00 UTC_.
-    ///   * `startDate > "2021-08-15" AND startDate < "2021-08-17"` - The start
-    ///   date for mandate is between _2021-08-15_ and _2021-08-17_.
+    ///    * `recurrencePattern = MONTHLY` - The recurrence pattern type is
+    ///    monthly.
+    ///    * `state = SUCCEEDED` - The transaction's state is _SUCCEEDED_.
+    ///    * `payerVPA = example@okbank` - The VPA of the payer is the string
+    ///    _example@okbank_.
+    ///    * `(payerVPA = example@okbank) AND (createTime <
+    ///    "2021-08-15T14:50:00Z")`
+    ///    - The payer VPA example@okbank and the transaction was received
+    ///    before _2021-08-15 14:50:00 UTC_.
+    ///    * `createTime > "2021-08-15T14:50:00Z" AND createTime <
+    ///    "2021-08-16T14:50:00Z"` - The transaction was received between
+    ///    _2021-08-15 14:50:00 UTC_ and _2021-08-16 14:50:00 UTC_.
+    ///    * `startDate > "2021-08-15" AND startDate < "2021-08-17"` - The start
+    ///    date for mandate is between _2021-08-15_ and _2021-08-17_.
     #[prost(string, tag="4")]
     pub filter: ::prost::alloc::string::String,
 }
@@ -2132,39 +2563,39 @@ pub struct ListComplaintTransactionsRequest {
     /// The following fields in the `Complaint` are eligible for
     /// filtering:
     ///
-    ///   * `transactionID` - The transaction ID of the complaint transaction.
-    ///   Allowed comparison operators: `=`.
-    ///   * `transactionType` - The transaction type of the complaint
-    ///   transaction. Must be one of \[TransactionType][google.cloud.paymentgateway.issuerswitch.v1.TransactionType\] values. For complaint
-    ///   transactions, only valid transaction types are
-    ///  `TRANSACTION_TYPE_CHECK_STATUS`, `TRANSACTION_TYPE_COMPLAINT`,
-    ///  `TRANSACTION_TYPE_REVERSAL`, `TRANSACTION_TYPE_DISPUTE`,
-    ///  `TRANSACTION_TYPE_REFUND` or `TRANSACTION_TYPE_STATUS_UPDATE`. Allowed
-    ///   comparison operators: `=`.
-    ///   * `originalRRN` - The retrieval reference number of the original
-    ///   transaction for which complaint / dispute was raised / resolved. Allowed
-    ///   comparison operators: `=`.
-    ///   * `createTime` - The time at which the transaction was created
-    ///   (received) by the issuer switch. The value should be in
-    ///   the format `YYYY-MM-DDTHH:MM:SSZ`. Allowed comparison
-    ///   operators: `>`, `<`.
-    ///   * `state` - The state of the transaction. Must be one of
-    ///   \[TransactionInfo.State][google.cloud.paymentgateway.issuerswitch.v1.TransactionInfo.State\] values. Allowed comparison operators: `=`.
-    ///   * `errorCode` - Use this filter to list complaint transactions which
-    ///   have failed a particular error code. Allowed comparison
-    ///   operators: `=`.
+    ///    * `transactionID` - The transaction ID of the complaint transaction.
+    ///    Allowed comparison operators: `=`.
+    ///    * `transactionType` - The transaction type of the complaint
+    ///    transaction. Must be one of \[TransactionType][google.cloud.paymentgateway.issuerswitch.v1.TransactionType\] values. For complaint
+    ///    transactions, only valid transaction types are
+    ///   `TRANSACTION_TYPE_CHECK_STATUS`, `TRANSACTION_TYPE_COMPLAINT`,
+    ///   `TRANSACTION_TYPE_REVERSAL`, `TRANSACTION_TYPE_DISPUTE`,
+    ///   `TRANSACTION_TYPE_REFUND` or `TRANSACTION_TYPE_STATUS_UPDATE`. Allowed
+    ///    comparison operators: `=`.
+    ///    * `originalRRN` - The retrieval reference number of the original
+    ///    transaction for which complaint / dispute was raised / resolved. Allowed
+    ///    comparison operators: `=`.
+    ///    * `createTime` - The time at which the transaction was created
+    ///    (received) by the issuer switch. The value should be in
+    ///    the format `YYYY-MM-DDTHH:MM:SSZ`. Allowed comparison
+    ///    operators: `>`, `<`.
+    ///    * `state` - The state of the transaction. Must be one of
+    ///    \[TransactionInfo.State][google.cloud.paymentgateway.issuerswitch.v1.TransactionInfo.State\] values. Allowed comparison operators: `=`.
+    ///    * `errorCode` - Use this filter to list complaint transactions which
+    ///    have failed a particular error code. Allowed comparison
+    ///    operators: `=`.
     /// You can combine multiple expressions by enclosing each expression in
     /// parentheses. Expressions are combined with AND logic. No other logical
     /// operators are supported.
     ///
     /// Here are a few examples:
     ///
-    ///   * `state = SUCCEEDED` - The transaction's state is _SUCCEEDED_.
-    ///   * (createTime < "2021-08-15T14:50:00Z")`
-    ///   - The transaction was received before _2021-08-15 14:50:00 UTC_.
-    ///   * `createTime > "2021-08-15T14:50:00Z" AND createTime <
-    ///   "2021-08-16T14:50:00Z"` - The transaction was received between
-    ///   _2021-08-15 14:50:00 UTC_ and _2021-08-16 14:50:00 UTC_.
+    ///    * `state = SUCCEEDED` - The transaction's state is _SUCCEEDED_.
+    ///    * (createTime < "2021-08-15T14:50:00Z")`
+    ///    - The transaction was received before _2021-08-15 14:50:00 UTC_.
+    ///    * `createTime > "2021-08-15T14:50:00Z" AND createTime <
+    ///    "2021-08-16T14:50:00Z"` - The transaction was received between
+    ///    _2021-08-15 14:50:00 UTC_ and _2021-08-16 14:50:00 UTC_.
     #[prost(string, tag="4")]
     pub filter: ::prost::alloc::string::String,
 }
@@ -2372,6 +2803,7 @@ pub struct ExportComplaintTransactionsMetadata {
 pub mod issuer_switch_transactions_client {
     #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
     use tonic::codegen::*;
+    use tonic::codegen::http::Uri;
     /// Lists and exports transactions processed by the issuer switch.
     #[derive(Debug, Clone)]
     pub struct IssuerSwitchTransactionsClient<T> {
@@ -2386,6 +2818,10 @@ pub mod issuer_switch_transactions_client {
     {
         pub fn new(inner: T) -> Self {
             let inner = tonic::client::Grpc::new(inner);
+            Self { inner }
+        }
+        pub fn with_origin(inner: T, origin: Uri) -> Self {
+            let inner = tonic::client::Grpc::with_origin(inner, origin);
             Self { inner }
         }
         pub fn with_interceptor<F>(
@@ -2409,19 +2845,19 @@ pub mod issuer_switch_transactions_client {
                 InterceptedService::new(inner, interceptor),
             )
         }
-        /// Compress requests with `gzip`.
+        /// Compress requests with the given encoding.
         ///
         /// This requires the server to support it otherwise it might respond with an
         /// error.
         #[must_use]
-        pub fn send_gzip(mut self) -> Self {
-            self.inner = self.inner.send_gzip();
+        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.send_compressed(encoding);
             self
         }
-        /// Enable decompressing responses with `gzip`.
+        /// Enable decompressing responses.
         #[must_use]
-        pub fn accept_gzip(mut self) -> Self {
-            self.inner = self.inner.accept_gzip();
+        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.accept_compressed(encoding);
             self
         }
         /// List metadata transactions that satisfy the specified filter criteria.

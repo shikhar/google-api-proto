@@ -59,6 +59,19 @@ pub mod attached_disk {
         /// a disk in read-only mode at a time.
         ReadOnly = 2,
     }
+    impl DiskMode {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                DiskMode::Unspecified => "DISK_MODE_UNSPECIFIED",
+                DiskMode::ReadWrite => "READ_WRITE",
+                DiskMode::ReadOnly => "READ_ONLY",
+            }
+        }
+    }
 }
 /// Sets the scheduling options for this node.
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -236,6 +249,31 @@ pub mod node {
         /// TPU node is currently unhiding.
         Unhiding = 15,
     }
+    impl State {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                State::Unspecified => "STATE_UNSPECIFIED",
+                State::Creating => "CREATING",
+                State::Ready => "READY",
+                State::Restarting => "RESTARTING",
+                State::Reimaging => "REIMAGING",
+                State::Deleting => "DELETING",
+                State::Repairing => "REPAIRING",
+                State::Stopped => "STOPPED",
+                State::Stopping => "STOPPING",
+                State::Starting => "STARTING",
+                State::Preempted => "PREEMPTED",
+                State::Terminated => "TERMINATED",
+                State::Hiding => "HIDING",
+                State::Hidden => "HIDDEN",
+                State::Unhiding => "UNHIDING",
+            }
+        }
+    }
     /// Health defines the status of a TPU node as reported by
     /// Health Monitor.
     #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
@@ -253,6 +291,21 @@ pub mod node {
         /// will resume running once rescheduled.
         UnhealthyMaintenance = 5,
     }
+    impl Health {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                Health::Unspecified => "HEALTH_UNSPECIFIED",
+                Health::Healthy => "HEALTHY",
+                Health::Timeout => "TIMEOUT",
+                Health::UnhealthyTensorflow => "UNHEALTHY_TENSORFLOW",
+                Health::UnhealthyMaintenance => "UNHEALTHY_MAINTENANCE",
+            }
+        }
+    }
     /// TPU API Version.
     #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
     #[repr(i32)]
@@ -265,6 +318,20 @@ pub mod node {
         V1 = 2,
         /// TPU API V2Alpha1 version.
         V2Alpha1 = 3,
+    }
+    impl ApiVersion {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                ApiVersion::Unspecified => "API_VERSION_UNSPECIFIED",
+                ApiVersion::V1Alpha1 => "V1_ALPHA1",
+                ApiVersion::V1 => "V1",
+                ApiVersion::V2Alpha1 => "V2_ALPHA1",
+            }
+        }
     }
 }
 /// Request for \[ListNodes][google.cloud.tpu.v2alpha1.Tpu.ListNodes\].
@@ -542,6 +609,23 @@ pub mod symptom {
         /// Abusive behaviors have been identified on the current project.
         ProjectAbuse = 6,
     }
+    impl SymptomType {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                SymptomType::Unspecified => "SYMPTOM_TYPE_UNSPECIFIED",
+                SymptomType::LowMemory => "LOW_MEMORY",
+                SymptomType::OutOfMemory => "OUT_OF_MEMORY",
+                SymptomType::ExecuteTimedOut => "EXECUTE_TIMED_OUT",
+                SymptomType::MeshBuildFail => "MESH_BUILD_FAIL",
+                SymptomType::HbmOutOfMemory => "HBM_OUT_OF_MEMORY",
+                SymptomType::ProjectAbuse => "PROJECT_ABUSE",
+            }
+        }
+    }
 }
 /// Request for
 /// \[GetGuestAttributes][google.cloud.tpu.v2alpha1.Tpu.GetGuestAttributes\].
@@ -570,6 +654,7 @@ pub struct GetGuestAttributesResponse {
 pub mod tpu_client {
     #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
     use tonic::codegen::*;
+    use tonic::codegen::http::Uri;
     /// Manages TPU nodes and other resources
     ///
     /// TPU API v2alpha1
@@ -586,6 +671,10 @@ pub mod tpu_client {
     {
         pub fn new(inner: T) -> Self {
             let inner = tonic::client::Grpc::new(inner);
+            Self { inner }
+        }
+        pub fn with_origin(inner: T, origin: Uri) -> Self {
+            let inner = tonic::client::Grpc::with_origin(inner, origin);
             Self { inner }
         }
         pub fn with_interceptor<F>(
@@ -607,19 +696,19 @@ pub mod tpu_client {
         {
             TpuClient::new(InterceptedService::new(inner, interceptor))
         }
-        /// Compress requests with `gzip`.
+        /// Compress requests with the given encoding.
         ///
         /// This requires the server to support it otherwise it might respond with an
         /// error.
         #[must_use]
-        pub fn send_gzip(mut self) -> Self {
-            self.inner = self.inner.send_gzip();
+        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.send_compressed(encoding);
             self
         }
-        /// Enable decompressing responses with `gzip`.
+        /// Enable decompressing responses.
         #[must_use]
-        pub fn accept_gzip(mut self) -> Self {
-            self.inner = self.inner.accept_gzip();
+        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.accept_compressed(encoding);
             self
         }
         /// Lists nodes.

@@ -121,6 +121,22 @@ pub mod task_status {
         /// The Task has succeeded.
         Succeeded = 5,
     }
+    impl State {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                State::Unspecified => "STATE_UNSPECIFIED",
+                State::Pending => "PENDING",
+                State::Assigned => "ASSIGNED",
+                State::Running => "RUNNING",
+                State::Failed => "FAILED",
+                State::Succeeded => "SUCCEEDED",
+            }
+        }
+    }
 }
 /// Runnable describes instructions for executing a specific script or container
 /// as part of a Task.
@@ -320,6 +336,19 @@ pub mod lifecycle_policy {
         /// Action that tasks in the group will be stopped immediately.
         FailTask = 2,
     }
+    impl Action {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                Action::Unspecified => "ACTION_UNSPECIFIED",
+                Action::RetryTask => "RETRY_TASK",
+                Action::FailTask => "FAIL_TASK",
+            }
+        }
+    }
 }
 /// A Cloud Batch task.
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -367,9 +396,9 @@ pub struct Job {
     /// Labels for the Job. Labels could be user provided or system generated.
     /// For example,
     /// "labels": {
-    ///    "department": "finance",
-    ///    "environment": "test"
-    ///  }
+    ///     "department": "finance",
+    ///     "environment": "test"
+    ///   }
     /// You can assign up to 64 labels.  [Google Compute Engine label
     /// restrictions](<https://cloud.google.com/compute/docs/labeling-resources#restrictions>)
     /// apply.
@@ -417,6 +446,19 @@ pub mod logs_policy {
         CloudLogging = 1,
         /// Logs are saved to a file path.
         Path = 2,
+    }
+    impl Destination {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                Destination::Unspecified => "DESTINATION_UNSPECIFIED",
+                Destination::CloudLogging => "CLOUD_LOGGING",
+                Destination::Path => "PATH",
+            }
+        }
     }
 }
 /// Job status.
@@ -484,6 +526,23 @@ pub mod job_status {
         /// because resources used by the Job are still being cleaned up.
         DeletionInProgress = 6,
     }
+    impl State {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                State::Unspecified => "STATE_UNSPECIFIED",
+                State::Queued => "QUEUED",
+                State::Scheduled => "SCHEDULED",
+                State::Running => "RUNNING",
+                State::Succeeded => "SUCCEEDED",
+                State::Failed => "FAILED",
+                State::DeletionInProgress => "DELETION_IN_PROGRESS",
+            }
+        }
+    }
 }
 /// Notification configurations.
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -527,6 +586,19 @@ pub mod job_notification {
         JobStateChanged = 1,
         /// Notify users that the task state has changed.
         TaskStateChanged = 2,
+    }
+    impl Type {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                Type::Unspecified => "TYPE_UNSPECIFIED",
+                Type::JobStateChanged => "JOB_STATE_CHANGED",
+                Type::TaskStateChanged => "TASK_STATE_CHANGED",
+            }
+        }
     }
 }
 /// A Job's resource allocation policy describes when, where, and how compute
@@ -734,6 +806,20 @@ pub mod allocation_policy {
         /// and has been migrated to use the SPOT model as the underlying technology.
         /// This old model will still be supported.
         Preemptible = 3,
+    }
+    impl ProvisioningModel {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                ProvisioningModel::Unspecified => "PROVISIONING_MODEL_UNSPECIFIED",
+                ProvisioningModel::Standard => "STANDARD",
+                ProvisioningModel::Spot => "SPOT",
+                ProvisioningModel::Preemptible => "PREEMPTIBLE",
+            }
+        }
     }
 }
 /// A TaskGroup contains one or multiple Tasks that share the same
@@ -954,6 +1040,7 @@ pub struct OperationMetadata {
 pub mod batch_service_client {
     #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
     use tonic::codegen::*;
+    use tonic::codegen::http::Uri;
     /// Google Batch Service.
     /// The service manages user submitted batch jobs and allocates Google Compute
     /// Engine VM instances to run the jobs.
@@ -970,6 +1057,10 @@ pub mod batch_service_client {
     {
         pub fn new(inner: T) -> Self {
             let inner = tonic::client::Grpc::new(inner);
+            Self { inner }
+        }
+        pub fn with_origin(inner: T, origin: Uri) -> Self {
+            let inner = tonic::client::Grpc::with_origin(inner, origin);
             Self { inner }
         }
         pub fn with_interceptor<F>(
@@ -991,19 +1082,19 @@ pub mod batch_service_client {
         {
             BatchServiceClient::new(InterceptedService::new(inner, interceptor))
         }
-        /// Compress requests with `gzip`.
+        /// Compress requests with the given encoding.
         ///
         /// This requires the server to support it otherwise it might respond with an
         /// error.
         #[must_use]
-        pub fn send_gzip(mut self) -> Self {
-            self.inner = self.inner.send_gzip();
+        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.send_compressed(encoding);
             self
         }
-        /// Enable decompressing responses with `gzip`.
+        /// Enable decompressing responses.
         #[must_use]
-        pub fn accept_gzip(mut self) -> Self {
-            self.inner = self.inner.accept_gzip();
+        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.accept_compressed(encoding);
             self
         }
         /// Create a Job.

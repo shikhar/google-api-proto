@@ -127,6 +127,19 @@ pub mod threshold_rule {
         /// \[Filter.custom_period][google.cloud.billing.budgets.v1beta1.Filter.custom_period\].
         ForecastedSpend = 2,
     }
+    impl Basis {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                Basis::Unspecified => "BASIS_UNSPECIFIED",
+                Basis::CurrentSpend => "CURRENT_SPEND",
+                Basis::ForecastedSpend => "FORECASTED_SPEND",
+            }
+        }
+    }
 }
 /// AllUpdatesRule defines notifications that are sent based on budget spend
 /// and thresholds.
@@ -213,8 +226,8 @@ pub struct Filter {
     /// An object containing a single `"key": value` pair. Example: `{ "name":
     /// "wrench" }`.
     ///
-    ///  _Currently, multiple entries or multiple values per entry are not
-    ///  allowed._
+    ///   _Currently, multiple entries or multiple values per entry are not
+    ///   allowed._
     #[prost(btree_map="string, message", tag="6")]
     pub labels: ::prost::alloc::collections::BTreeMap<::prost::alloc::string::String, ::prost_types::ListValue>,
     /// Multiple options to choose the budget's time period, specifying that only
@@ -245,6 +258,20 @@ pub mod filter {
         /// specified in the credit_types field are subtracted from the
         /// gross cost to determine the spend for threshold calculations.
         IncludeSpecifiedCredits = 3,
+    }
+    impl CreditTypesTreatment {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                CreditTypesTreatment::Unspecified => "CREDIT_TYPES_TREATMENT_UNSPECIFIED",
+                CreditTypesTreatment::IncludeAllCredits => "INCLUDE_ALL_CREDITS",
+                CreditTypesTreatment::ExcludeAllCredits => "EXCLUDE_ALL_CREDITS",
+                CreditTypesTreatment::IncludeSpecifiedCredits => "INCLUDE_SPECIFIED_CREDITS",
+            }
+        }
     }
     /// Multiple options to choose the budget's time period, specifying that only
     /// usage that occurs during this time period should be included in the budget.
@@ -295,6 +322,20 @@ pub enum CalendarPeriod {
     Quarter = 2,
     /// A year. Year starts on January 1.
     Year = 3,
+}
+impl CalendarPeriod {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            CalendarPeriod::Unspecified => "CALENDAR_PERIOD_UNSPECIFIED",
+            CalendarPeriod::Month => "MONTH",
+            CalendarPeriod::Quarter => "QUARTER",
+            CalendarPeriod::Year => "YEAR",
+        }
+    }
 }
 /// Request for CreateBudget
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -371,6 +412,7 @@ pub struct DeleteBudgetRequest {
 pub mod budget_service_client {
     #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
     use tonic::codegen::*;
+    use tonic::codegen::http::Uri;
     /// BudgetService stores Cloud Billing budgets, which define a
     /// budget plan and rules to execute as we track spend against that plan.
     #[derive(Debug, Clone)]
@@ -386,6 +428,10 @@ pub mod budget_service_client {
     {
         pub fn new(inner: T) -> Self {
             let inner = tonic::client::Grpc::new(inner);
+            Self { inner }
+        }
+        pub fn with_origin(inner: T, origin: Uri) -> Self {
+            let inner = tonic::client::Grpc::with_origin(inner, origin);
             Self { inner }
         }
         pub fn with_interceptor<F>(
@@ -407,19 +453,19 @@ pub mod budget_service_client {
         {
             BudgetServiceClient::new(InterceptedService::new(inner, interceptor))
         }
-        /// Compress requests with `gzip`.
+        /// Compress requests with the given encoding.
         ///
         /// This requires the server to support it otherwise it might respond with an
         /// error.
         #[must_use]
-        pub fn send_gzip(mut self) -> Self {
-            self.inner = self.inner.send_gzip();
+        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.send_compressed(encoding);
             self
         }
-        /// Enable decompressing responses with `gzip`.
+        /// Enable decompressing responses.
         #[must_use]
-        pub fn accept_gzip(mut self) -> Self {
-            self.inner = self.inner.accept_gzip();
+        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.accept_compressed(encoding);
             self
         }
         /// Creates a new budget. See

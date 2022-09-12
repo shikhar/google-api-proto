@@ -86,6 +86,23 @@ pub mod config_variable_template {
         /// Value type is authorization code.
         AuthorizationCode = 6,
     }
+    impl ValueType {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                ValueType::Unspecified => "VALUE_TYPE_UNSPECIFIED",
+                ValueType::String => "STRING",
+                ValueType::Int => "INT",
+                ValueType::Bool => "BOOL",
+                ValueType::Secret => "SECRET",
+                ValueType::Enum => "ENUM",
+                ValueType::AuthorizationCode => "AUTHORIZATION_CODE",
+            }
+        }
+    }
     /// Indicates the state of the config variable.
     #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
     #[repr(i32)]
@@ -96,6 +113,19 @@ pub mod config_variable_template {
         Active = 1,
         /// Config variable is deprecated.
         Deprecated = 2,
+    }
+    impl State {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                State::Unspecified => "STATE_UNSPECIFIED",
+                State::Active => "ACTIVE",
+                State::Deprecated => "DEPRECATED",
+            }
+        }
     }
 }
 /// Secret provides a reference to entries in Secret Manager.
@@ -197,6 +227,21 @@ pub mod role_grant {
             /// GCP Secret Version Resource.
             GcpSecretmanagerSecretVersion = 4,
         }
+        impl Type {
+            /// String value of the enum field names used in the ProtoBuf definition.
+            ///
+            /// The values are not transformed in any way and thus are considered stable
+            /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+            pub fn as_str_name(&self) -> &'static str {
+                match self {
+                    Type::Unspecified => "TYPE_UNSPECIFIED",
+                    Type::GcpProject => "GCP_PROJECT",
+                    Type::GcpResource => "GCP_RESOURCE",
+                    Type::GcpSecretmanagerSecret => "GCP_SECRETMANAGER_SECRET",
+                    Type::GcpSecretmanagerSecretVersion => "GCP_SECRETMANAGER_SECRET_VERSION",
+                }
+            }
+        }
     }
     /// Supported Principal values.
     #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
@@ -208,6 +253,18 @@ pub mod role_grant {
         /// This is either the default service account if unspecified or Service
         /// Account provided by Customers through BYOSA.
         ConnectorSa = 1,
+    }
+    impl Principal {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                Principal::Unspecified => "PRINCIPAL_UNSPECIFIED",
+                Principal::ConnectorSa => "CONNECTOR_SA",
+            }
+        }
     }
 }
 /// This configuration captures the details required to render an authorization
@@ -243,6 +300,20 @@ pub enum LaunchStage {
     Ga = 2,
     /// DEPRECATED.
     Deprecated = 3,
+}
+impl LaunchStage {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            LaunchStage::Unspecified => "LAUNCH_STAGE_UNSPECIFIED",
+            LaunchStage::Preview => "PREVIEW",
+            LaunchStage::Ga => "GA",
+            LaunchStage::Deprecated => "DEPRECATED",
+        }
+    }
 }
 /// AuthConfig defines details of a authentication type.
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -373,6 +444,309 @@ pub enum AuthType {
     Oauth2ClientCredentials = 3,
     /// SSH Public Key Authentication
     SshPublicKey = 4,
+}
+impl AuthType {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            AuthType::Unspecified => "AUTH_TYPE_UNSPECIFIED",
+            AuthType::UserPassword => "USER_PASSWORD",
+            AuthType::Oauth2JwtBearer => "OAUTH2_JWT_BEARER",
+            AuthType::Oauth2ClientCredentials => "OAUTH2_CLIENT_CREDENTIALS",
+            AuthType::SshPublicKey => "SSH_PUBLIC_KEY",
+        }
+    }
+}
+/// ConnectorVersion indicates a specific version of a connector.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ConnectorVersion {
+    /// Output only. Resource name of the Version.
+    /// Format:
+    /// projects/{project}/locations/{location}/providers/{provider}/connectors/{connector}/versions/{version}
+    /// Only global location is supported for Connector resource.
+    #[prost(string, tag="1")]
+    pub name: ::prost::alloc::string::String,
+    /// Output only. Created time.
+    #[prost(message, optional, tag="2")]
+    pub create_time: ::core::option::Option<::prost_types::Timestamp>,
+    /// Output only. Updated time.
+    #[prost(message, optional, tag="3")]
+    pub update_time: ::core::option::Option<::prost_types::Timestamp>,
+    /// Output only. Resource labels to represent user-provided metadata.
+    /// Refer to cloud documentation on labels for more details.
+    /// <https://cloud.google.com/compute/docs/labeling-resources>
+    #[prost(btree_map="string, string", tag="4")]
+    pub labels: ::prost::alloc::collections::BTreeMap<::prost::alloc::string::String, ::prost::alloc::string::String>,
+    /// Output only. Flag to mark the version indicating the launch stage.
+    #[prost(enumeration="LaunchStage", tag="6")]
+    pub launch_stage: i32,
+    /// Output only. ReleaseVersion of the connector, for example: "1.0.1-alpha".
+    #[prost(string, tag="7")]
+    pub release_version: ::prost::alloc::string::String,
+    /// Output only. List of auth configs supported by the Connector Version.
+    #[prost(message, repeated, tag="8")]
+    pub auth_config_templates: ::prost::alloc::vec::Vec<AuthConfigTemplate>,
+    /// Output only. List of config variables needed to create a connection.
+    #[prost(message, repeated, tag="9")]
+    pub config_variable_templates: ::prost::alloc::vec::Vec<ConfigVariableTemplate>,
+    /// Output only. Information about the runtime features supported by the Connector.
+    #[prost(message, optional, tag="10")]
+    pub supported_runtime_features: ::core::option::Option<SupportedRuntimeFeatures>,
+    /// Output only. Display name.
+    #[prost(string, tag="11")]
+    pub display_name: ::prost::alloc::string::String,
+    /// Output only. Configuration for Egress Control.
+    #[prost(message, optional, tag="12")]
+    pub egress_control_config: ::core::option::Option<EgressControlConfig>,
+    /// Output only. Role grant configurations for this connector version.
+    #[prost(message, repeated, tag="14")]
+    pub role_grants: ::prost::alloc::vec::Vec<RoleGrant>,
+    /// Output only. Role grant configuration for this config variable. It will be DEPRECATED
+    /// soon.
+    #[prost(message, optional, tag="15")]
+    pub role_grant: ::core::option::Option<RoleGrant>,
+}
+/// Request message for Connectors.GetConnectorVersion.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct GetConnectorVersionRequest {
+    /// Required. Resource name of the form:
+    /// `projects/*/locations/*/providers/*/connectors/*/versions/*`
+    /// Only global location is supported for ConnectorVersion resource.
+    #[prost(string, tag="1")]
+    pub name: ::prost::alloc::string::String,
+    /// Specifies which fields of the ConnectorVersion are returned in the
+    /// response. Defaults to `CUSTOMER` view.
+    #[prost(enumeration="ConnectorVersionView", tag="2")]
+    pub view: i32,
+}
+/// Request message for Connectors.ListConnectorVersions.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ListConnectorVersionsRequest {
+    /// Required. Parent resource of the connectors, of the form:
+    /// `projects/*/locations/*/providers/*/connectors/*`
+    /// Only global location is supported for ConnectorVersion resource.
+    #[prost(string, tag="1")]
+    pub parent: ::prost::alloc::string::String,
+    /// Page size.
+    #[prost(int32, tag="2")]
+    pub page_size: i32,
+    /// Page token.
+    #[prost(string, tag="3")]
+    pub page_token: ::prost::alloc::string::String,
+    /// Specifies which fields of the ConnectorVersion are returned in the
+    /// response. Defaults to `BASIC` view.
+    #[prost(enumeration="ConnectorVersionView", tag="4")]
+    pub view: i32,
+}
+/// Response message for Connectors.ListConnectorVersions.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ListConnectorVersionsResponse {
+    /// A list of connector versions.
+    #[prost(message, repeated, tag="1")]
+    pub connector_versions: ::prost::alloc::vec::Vec<ConnectorVersion>,
+    /// Next page token.
+    #[prost(string, tag="2")]
+    pub next_page_token: ::prost::alloc::string::String,
+    /// Locations that could not be reached.
+    #[prost(string, repeated, tag="3")]
+    pub unreachable: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
+}
+/// Supported runtime features of a connector version. This is passed to the
+/// management layer to add a new connector version by the connector developer.
+/// Details about how this proto is passed to the management layer is covered in
+/// this doc - go/runtime-manifest.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct SupportedRuntimeFeatures {
+    /// Specifies if the connector supports entity apis like 'createEntity'.
+    #[prost(bool, tag="1")]
+    pub entity_apis: bool,
+    /// Specifies if the connector supports action apis like 'executeAction'.
+    #[prost(bool, tag="2")]
+    pub action_apis: bool,
+    /// Specifies if the connector supports 'ExecuteSqlQuery' operation.
+    #[prost(bool, tag="3")]
+    pub sql_query: bool,
+}
+/// Egress control config for connector runtime. These configurations define the
+/// rules to identify which outbound domains/hosts needs to be whitelisted. It
+/// may be a static information for a particular connector version or it is
+/// derived from the configurations provided by the customer in Connection
+/// resource.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct EgressControlConfig {
+    #[prost(oneof="egress_control_config::OneofBackends", tags="1, 2")]
+    pub oneof_backends: ::core::option::Option<egress_control_config::OneofBackends>,
+}
+/// Nested message and enum types in `EgressControlConfig`.
+pub mod egress_control_config {
+    #[derive(Clone, PartialEq, ::prost::Oneof)]
+    pub enum OneofBackends {
+        /// Static Comma separated backends which are common for all Connection
+        /// resources. Supported formats for each backend are host:port or just
+        /// host (host can be ip address or domain name).
+        #[prost(string, tag="1")]
+        Backends(::prost::alloc::string::String),
+        /// Extractions Rules to extract the backends from customer provided
+        /// configuration.
+        #[prost(message, tag="2")]
+        ExtractionRules(super::ExtractionRules),
+    }
+}
+/// Extraction Rules to identity the backends from customer provided
+/// configuration in Connection resource.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ExtractionRules {
+    /// Collection of Extraction Rule.
+    #[prost(message, repeated, tag="1")]
+    pub extraction_rule: ::prost::alloc::vec::Vec<ExtractionRule>,
+}
+/// Extraction Rule.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ExtractionRule {
+    /// Source on which the rule is applied.
+    #[prost(message, optional, tag="1")]
+    pub source: ::core::option::Option<extraction_rule::Source>,
+    /// Regex used to extract backend details from source. If empty, whole source
+    /// value will be used.
+    #[prost(string, tag="2")]
+    pub extraction_regex: ::prost::alloc::string::String,
+}
+/// Nested message and enum types in `ExtractionRule`.
+pub mod extraction_rule {
+    /// Source to extract the backend from.
+    #[derive(Clone, PartialEq, ::prost::Message)]
+    pub struct Source {
+        /// Type of the source.
+        #[prost(enumeration="SourceType", tag="1")]
+        pub source_type: i32,
+        /// Field identifier. For example config vaiable name.
+        #[prost(string, tag="2")]
+        pub field_id: ::prost::alloc::string::String,
+    }
+    /// Supported Source types for extraction.
+    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+    #[repr(i32)]
+    pub enum SourceType {
+        /// Default SOURCE.
+        Unspecified = 0,
+        /// Config Variable source type.
+        ConfigVariable = 1,
+    }
+    impl SourceType {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                SourceType::Unspecified => "SOURCE_TYPE_UNSPECIFIED",
+                SourceType::ConfigVariable => "CONFIG_VARIABLE",
+            }
+        }
+    }
+}
+/// Enum to control which fields should be included in the response.
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+#[repr(i32)]
+pub enum ConnectorVersionView {
+    /// CONNECTOR_VERSION_VIEW_UNSPECIFIED.
+    Unspecified = 0,
+    /// Do not include role grant configs.
+    Basic = 1,
+    /// Include role grant configs.
+    Full = 2,
+}
+impl ConnectorVersionView {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            ConnectorVersionView::Unspecified => "CONNECTOR_VERSION_VIEW_UNSPECIFIED",
+            ConnectorVersionView::Basic => "CONNECTOR_VERSION_VIEW_BASIC",
+            ConnectorVersionView::Full => "CONNECTOR_VERSION_VIEW_FULL",
+        }
+    }
+}
+/// Connectors indicates a specific connector type, e.x. Salesforce, SAP etc.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct Connector {
+    /// Output only. Resource name of the Connector.
+    /// Format:
+    /// projects/{project}/locations/{location}/providers/{provider}/connectors/{connector}
+    /// Only global location is supported for Connector resource.
+    #[prost(string, tag="1")]
+    pub name: ::prost::alloc::string::String,
+    /// Output only. Created time.
+    #[prost(message, optional, tag="2")]
+    pub create_time: ::core::option::Option<::prost_types::Timestamp>,
+    /// Output only. Updated time.
+    #[prost(message, optional, tag="3")]
+    pub update_time: ::core::option::Option<::prost_types::Timestamp>,
+    /// Output only. Resource labels to represent user-provided metadata.
+    /// Refer to cloud documentation on labels for more details.
+    /// <https://cloud.google.com/compute/docs/labeling-resources>
+    #[prost(btree_map="string, string", tag="4")]
+    pub labels: ::prost::alloc::collections::BTreeMap<::prost::alloc::string::String, ::prost::alloc::string::String>,
+    /// Output only. Link to documentation page.
+    #[prost(string, tag="6")]
+    pub documentation_uri: ::prost::alloc::string::String,
+    /// Output only. Link to external page.
+    #[prost(string, tag="7")]
+    pub external_uri: ::prost::alloc::string::String,
+    /// Output only. Description of the resource.
+    #[prost(string, tag="8")]
+    pub description: ::prost::alloc::string::String,
+    /// Output only. Cloud storage location of icons etc consumed by UI.
+    #[prost(string, tag="9")]
+    pub web_assets_location: ::prost::alloc::string::String,
+    /// Output only. Display name.
+    #[prost(string, tag="10")]
+    pub display_name: ::prost::alloc::string::String,
+    /// Output only. Flag to mark the version indicating the launch stage.
+    #[prost(enumeration="LaunchStage", tag="11")]
+    pub launch_stage: i32,
+}
+/// Request message for Connectors.GetConnector.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct GetConnectorRequest {
+    /// Required. Resource name of the form:
+    /// `projects/*/locations/*/providers/*/connectors/*`
+    /// Only global location is supported for Connector resource.
+    #[prost(string, tag="1")]
+    pub name: ::prost::alloc::string::String,
+}
+/// Request message for Connectors.ListConnectors.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ListConnectorsRequest {
+    /// Required. Parent resource of the connectors, of the form:
+    /// `projects/*/locations/*/providers/*`
+    /// Only global location is supported for Connector resource.
+    #[prost(string, tag="1")]
+    pub parent: ::prost::alloc::string::String,
+    /// Page size.
+    #[prost(int32, tag="2")]
+    pub page_size: i32,
+    /// Page token.
+    #[prost(string, tag="3")]
+    pub page_token: ::prost::alloc::string::String,
+}
+/// Response message for Connectors.ListConnectors.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ListConnectorsResponse {
+    /// A list of connectors.
+    #[prost(message, repeated, tag="1")]
+    pub connectors: ::prost::alloc::vec::Vec<Connector>,
+    /// Next page token.
+    #[prost(string, tag="2")]
+    pub next_page_token: ::prost::alloc::string::String,
+    /// Locations that could not be reached.
+    #[prost(string, repeated, tag="3")]
+    pub unreachable: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
 }
 /// Define the Connectors target endpoint.
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -799,6 +1173,23 @@ pub mod connection_status {
         /// Connection is not running due to an error.
         Error = 6,
     }
+    impl State {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                State::Unspecified => "STATE_UNSPECIFIED",
+                State::Creating => "CREATING",
+                State::Active => "ACTIVE",
+                State::Inactive => "INACTIVE",
+                State::Deleting => "DELETING",
+                State::Updating => "UPDATING",
+                State::Error => "ERROR",
+            }
+        }
+    }
 }
 /// All possible data types of a entity or action field.
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
@@ -895,6 +1286,61 @@ pub enum DataType {
     /// UNSUPPORTED! Use TIMESTAMP instead.
     TimestampWithTimezone = 44,
 }
+impl DataType {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            DataType::Unspecified => "DATA_TYPE_UNSPECIFIED",
+            DataType::Int => "DATA_TYPE_INT",
+            DataType::Smallint => "DATA_TYPE_SMALLINT",
+            DataType::Double => "DATA_TYPE_DOUBLE",
+            DataType::Date => "DATA_TYPE_DATE",
+            DataType::Datetime => "DATA_TYPE_DATETIME",
+            DataType::Time => "DATA_TYPE_TIME",
+            DataType::String => "DATA_TYPE_STRING",
+            DataType::Long => "DATA_TYPE_LONG",
+            DataType::Boolean => "DATA_TYPE_BOOLEAN",
+            DataType::Decimal => "DATA_TYPE_DECIMAL",
+            DataType::Uuid => "DATA_TYPE_UUID",
+            DataType::Blob => "DATA_TYPE_BLOB",
+            DataType::Bit => "DATA_TYPE_BIT",
+            DataType::Tinyint => "DATA_TYPE_TINYINT",
+            DataType::Integer => "DATA_TYPE_INTEGER",
+            DataType::Bigint => "DATA_TYPE_BIGINT",
+            DataType::Float => "DATA_TYPE_FLOAT",
+            DataType::Real => "DATA_TYPE_REAL",
+            DataType::Numeric => "DATA_TYPE_NUMERIC",
+            DataType::Char => "DATA_TYPE_CHAR",
+            DataType::Varchar => "DATA_TYPE_VARCHAR",
+            DataType::Longvarchar => "DATA_TYPE_LONGVARCHAR",
+            DataType::Timestamp => "DATA_TYPE_TIMESTAMP",
+            DataType::Nchar => "DATA_TYPE_NCHAR",
+            DataType::Nvarchar => "DATA_TYPE_NVARCHAR",
+            DataType::Longnvarchar => "DATA_TYPE_LONGNVARCHAR",
+            DataType::Null => "DATA_TYPE_NULL",
+            DataType::Other => "DATA_TYPE_OTHER",
+            DataType::JavaObject => "DATA_TYPE_JAVA_OBJECT",
+            DataType::Distinct => "DATA_TYPE_DISTINCT",
+            DataType::Struct => "DATA_TYPE_STRUCT",
+            DataType::Array => "DATA_TYPE_ARRAY",
+            DataType::Clob => "DATA_TYPE_CLOB",
+            DataType::Ref => "DATA_TYPE_REF",
+            DataType::Datalink => "DATA_TYPE_DATALINK",
+            DataType::Rowid => "DATA_TYPE_ROWID",
+            DataType::Binary => "DATA_TYPE_BINARY",
+            DataType::Varbinary => "DATA_TYPE_VARBINARY",
+            DataType::Longvarbinary => "DATA_TYPE_LONGVARBINARY",
+            DataType::Nclob => "DATA_TYPE_NCLOB",
+            DataType::Sqlxml => "DATA_TYPE_SQLXML",
+            DataType::RefCursor => "DATA_TYPE_REF_CURSOR",
+            DataType::TimeWithTimezone => "DATA_TYPE_TIME_WITH_TIMEZONE",
+            DataType::TimestampWithTimezone => "DATA_TYPE_TIMESTAMP_WITH_TIMEZONE",
+        }
+    }
+}
 /// Enum to control which fields should be included in the response.
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
 #[repr(i32)]
@@ -906,268 +1352,18 @@ pub enum ConnectionView {
     /// Include runtime required configs.
     Full = 2,
 }
-/// Connectors indicates a specific connector type, e.x. Salesforce, SAP etc.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct Connector {
-    /// Output only. Resource name of the Connector.
-    /// Format:
-    /// projects/{project}/locations/{location}/providers/{provider}/connectors/{connector}
-    /// Only global location is supported for Connector resource.
-    #[prost(string, tag="1")]
-    pub name: ::prost::alloc::string::String,
-    /// Output only. Created time.
-    #[prost(message, optional, tag="2")]
-    pub create_time: ::core::option::Option<::prost_types::Timestamp>,
-    /// Output only. Updated time.
-    #[prost(message, optional, tag="3")]
-    pub update_time: ::core::option::Option<::prost_types::Timestamp>,
-    /// Output only. Resource labels to represent user-provided metadata.
-    /// Refer to cloud documentation on labels for more details.
-    /// <https://cloud.google.com/compute/docs/labeling-resources>
-    #[prost(btree_map="string, string", tag="4")]
-    pub labels: ::prost::alloc::collections::BTreeMap<::prost::alloc::string::String, ::prost::alloc::string::String>,
-    /// Output only. Link to documentation page.
-    #[prost(string, tag="6")]
-    pub documentation_uri: ::prost::alloc::string::String,
-    /// Output only. Link to external page.
-    #[prost(string, tag="7")]
-    pub external_uri: ::prost::alloc::string::String,
-    /// Output only. Description of the resource.
-    #[prost(string, tag="8")]
-    pub description: ::prost::alloc::string::String,
-    /// Output only. Cloud storage location of icons etc consumed by UI.
-    #[prost(string, tag="9")]
-    pub web_assets_location: ::prost::alloc::string::String,
-    /// Output only. Display name.
-    #[prost(string, tag="10")]
-    pub display_name: ::prost::alloc::string::String,
-    /// Output only. Flag to mark the version indicating the launch stage.
-    #[prost(enumeration="LaunchStage", tag="11")]
-    pub launch_stage: i32,
-}
-/// Request message for Connectors.GetConnector.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct GetConnectorRequest {
-    /// Required. Resource name of the form:
-    /// `projects/*/locations/*/providers/*/connectors/*`
-    /// Only global location is supported for Connector resource.
-    #[prost(string, tag="1")]
-    pub name: ::prost::alloc::string::String,
-}
-/// Request message for Connectors.ListConnectors.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ListConnectorsRequest {
-    /// Required. Parent resource of the connectors, of the form:
-    /// `projects/*/locations/*/providers/*`
-    /// Only global location is supported for Connector resource.
-    #[prost(string, tag="1")]
-    pub parent: ::prost::alloc::string::String,
-    /// Page size.
-    #[prost(int32, tag="2")]
-    pub page_size: i32,
-    /// Page token.
-    #[prost(string, tag="3")]
-    pub page_token: ::prost::alloc::string::String,
-}
-/// Response message for Connectors.ListConnectors.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ListConnectorsResponse {
-    /// A list of connectors.
-    #[prost(message, repeated, tag="1")]
-    pub connectors: ::prost::alloc::vec::Vec<Connector>,
-    /// Next page token.
-    #[prost(string, tag="2")]
-    pub next_page_token: ::prost::alloc::string::String,
-    /// Locations that could not be reached.
-    #[prost(string, repeated, tag="3")]
-    pub unreachable: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
-}
-/// ConnectorVersion indicates a specific version of a connector.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ConnectorVersion {
-    /// Output only. Resource name of the Version.
-    /// Format:
-    /// projects/{project}/locations/{location}/providers/{provider}/connectors/{connector}/versions/{version}
-    /// Only global location is supported for Connector resource.
-    #[prost(string, tag="1")]
-    pub name: ::prost::alloc::string::String,
-    /// Output only. Created time.
-    #[prost(message, optional, tag="2")]
-    pub create_time: ::core::option::Option<::prost_types::Timestamp>,
-    /// Output only. Updated time.
-    #[prost(message, optional, tag="3")]
-    pub update_time: ::core::option::Option<::prost_types::Timestamp>,
-    /// Output only. Resource labels to represent user-provided metadata.
-    /// Refer to cloud documentation on labels for more details.
-    /// <https://cloud.google.com/compute/docs/labeling-resources>
-    #[prost(btree_map="string, string", tag="4")]
-    pub labels: ::prost::alloc::collections::BTreeMap<::prost::alloc::string::String, ::prost::alloc::string::String>,
-    /// Output only. Flag to mark the version indicating the launch stage.
-    #[prost(enumeration="LaunchStage", tag="6")]
-    pub launch_stage: i32,
-    /// Output only. ReleaseVersion of the connector, for example: "1.0.1-alpha".
-    #[prost(string, tag="7")]
-    pub release_version: ::prost::alloc::string::String,
-    /// Output only. List of auth configs supported by the Connector Version.
-    #[prost(message, repeated, tag="8")]
-    pub auth_config_templates: ::prost::alloc::vec::Vec<AuthConfigTemplate>,
-    /// Output only. List of config variables needed to create a connection.
-    #[prost(message, repeated, tag="9")]
-    pub config_variable_templates: ::prost::alloc::vec::Vec<ConfigVariableTemplate>,
-    /// Output only. Information about the runtime features supported by the Connector.
-    #[prost(message, optional, tag="10")]
-    pub supported_runtime_features: ::core::option::Option<SupportedRuntimeFeatures>,
-    /// Output only. Display name.
-    #[prost(string, tag="11")]
-    pub display_name: ::prost::alloc::string::String,
-    /// Output only. Configuration for Egress Control.
-    #[prost(message, optional, tag="12")]
-    pub egress_control_config: ::core::option::Option<EgressControlConfig>,
-    /// Output only. Role grant configurations for this connector version.
-    #[prost(message, repeated, tag="14")]
-    pub role_grants: ::prost::alloc::vec::Vec<RoleGrant>,
-    /// Output only. Role grant configuration for this config variable. It will be DEPRECATED
-    /// soon.
-    #[prost(message, optional, tag="15")]
-    pub role_grant: ::core::option::Option<RoleGrant>,
-}
-/// Request message for Connectors.GetConnectorVersion.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct GetConnectorVersionRequest {
-    /// Required. Resource name of the form:
-    /// `projects/*/locations/*/providers/*/connectors/*/versions/*`
-    /// Only global location is supported for ConnectorVersion resource.
-    #[prost(string, tag="1")]
-    pub name: ::prost::alloc::string::String,
-    /// Specifies which fields of the ConnectorVersion are returned in the
-    /// response. Defaults to `CUSTOMER` view.
-    #[prost(enumeration="ConnectorVersionView", tag="2")]
-    pub view: i32,
-}
-/// Request message for Connectors.ListConnectorVersions.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ListConnectorVersionsRequest {
-    /// Required. Parent resource of the connectors, of the form:
-    /// `projects/*/locations/*/providers/*/connectors/*`
-    /// Only global location is supported for ConnectorVersion resource.
-    #[prost(string, tag="1")]
-    pub parent: ::prost::alloc::string::String,
-    /// Page size.
-    #[prost(int32, tag="2")]
-    pub page_size: i32,
-    /// Page token.
-    #[prost(string, tag="3")]
-    pub page_token: ::prost::alloc::string::String,
-    /// Specifies which fields of the ConnectorVersion are returned in the
-    /// response. Defaults to `BASIC` view.
-    #[prost(enumeration="ConnectorVersionView", tag="4")]
-    pub view: i32,
-}
-/// Response message for Connectors.ListConnectorVersions.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ListConnectorVersionsResponse {
-    /// A list of connector versions.
-    #[prost(message, repeated, tag="1")]
-    pub connector_versions: ::prost::alloc::vec::Vec<ConnectorVersion>,
-    /// Next page token.
-    #[prost(string, tag="2")]
-    pub next_page_token: ::prost::alloc::string::String,
-    /// Locations that could not be reached.
-    #[prost(string, repeated, tag="3")]
-    pub unreachable: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
-}
-/// Supported runtime features of a connector version. This is passed to the
-/// management layer to add a new connector version by the connector developer.
-/// Details about how this proto is passed to the management layer is covered in
-/// this doc - go/runtime-manifest.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct SupportedRuntimeFeatures {
-    /// Specifies if the connector supports entity apis like 'createEntity'.
-    #[prost(bool, tag="1")]
-    pub entity_apis: bool,
-    /// Specifies if the connector supports action apis like 'executeAction'.
-    #[prost(bool, tag="2")]
-    pub action_apis: bool,
-    /// Specifies if the connector supports 'ExecuteSqlQuery' operation.
-    #[prost(bool, tag="3")]
-    pub sql_query: bool,
-}
-/// Egress control config for connector runtime. These configurations define the
-/// rules to identify which outbound domains/hosts needs to be whitelisted. It
-/// may be a static information for a particular connector version or it is
-/// derived from the configurations provided by the customer in Connection
-/// resource.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct EgressControlConfig {
-    #[prost(oneof="egress_control_config::OneofBackends", tags="1, 2")]
-    pub oneof_backends: ::core::option::Option<egress_control_config::OneofBackends>,
-}
-/// Nested message and enum types in `EgressControlConfig`.
-pub mod egress_control_config {
-    #[derive(Clone, PartialEq, ::prost::Oneof)]
-    pub enum OneofBackends {
-        /// Static Comma separated backends which are common for all Connection
-        /// resources. Supported formats for each backend are host:port or just
-        /// host (host can be ip address or domain name).
-        #[prost(string, tag="1")]
-        Backends(::prost::alloc::string::String),
-        /// Extractions Rules to extract the backends from customer provided
-        /// configuration.
-        #[prost(message, tag="2")]
-        ExtractionRules(super::ExtractionRules),
+impl ConnectionView {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            ConnectionView::Unspecified => "CONNECTION_VIEW_UNSPECIFIED",
+            ConnectionView::Basic => "BASIC",
+            ConnectionView::Full => "FULL",
+        }
     }
-}
-/// Extraction Rules to identity the backends from customer provided
-/// configuration in Connection resource.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ExtractionRules {
-    /// Collection of Extraction Rule.
-    #[prost(message, repeated, tag="1")]
-    pub extraction_rule: ::prost::alloc::vec::Vec<ExtractionRule>,
-}
-/// Extraction Rule.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ExtractionRule {
-    /// Source on which the rule is applied.
-    #[prost(message, optional, tag="1")]
-    pub source: ::core::option::Option<extraction_rule::Source>,
-    /// Regex used to extract backend details from source. If empty, whole source
-    /// value will be used.
-    #[prost(string, tag="2")]
-    pub extraction_regex: ::prost::alloc::string::String,
-}
-/// Nested message and enum types in `ExtractionRule`.
-pub mod extraction_rule {
-    /// Source to extract the backend from.
-    #[derive(Clone, PartialEq, ::prost::Message)]
-    pub struct Source {
-        /// Type of the source.
-        #[prost(enumeration="SourceType", tag="1")]
-        pub source_type: i32,
-        /// Field identifier. For example config vaiable name.
-        #[prost(string, tag="2")]
-        pub field_id: ::prost::alloc::string::String,
-    }
-    /// Supported Source types for extraction.
-    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
-    #[repr(i32)]
-    pub enum SourceType {
-        /// Default SOURCE.
-        Unspecified = 0,
-        /// Config Variable source type.
-        ConfigVariable = 1,
-    }
-}
-/// Enum to control which fields should be included in the response.
-#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
-#[repr(i32)]
-pub enum ConnectorVersionView {
-    /// CONNECTOR_VERSION_VIEW_UNSPECIFIED.
-    Unspecified = 0,
-    /// Do not include role grant configs.
-    Basic = 1,
-    /// Include role grant configs.
-    Full = 2,
 }
 /// Provider indicates the owner who provides the connectors.
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -1316,11 +1512,29 @@ pub mod runtime_config {
         /// UPDATING.
         Updating = 6,
     }
+    impl State {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                State::Unspecified => "STATE_UNSPECIFIED",
+                State::Inactive => "INACTIVE",
+                State::Activating => "ACTIVATING",
+                State::Active => "ACTIVE",
+                State::Creating => "CREATING",
+                State::Deleting => "DELETING",
+                State::Updating => "UPDATING",
+            }
+        }
+    }
 }
 /// Generated client implementations.
 pub mod connectors_client {
     #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
     use tonic::codegen::*;
+    use tonic::codegen::http::Uri;
     /// Connectors is the interface for managing Connectors.
     #[derive(Debug, Clone)]
     pub struct ConnectorsClient<T> {
@@ -1335,6 +1549,10 @@ pub mod connectors_client {
     {
         pub fn new(inner: T) -> Self {
             let inner = tonic::client::Grpc::new(inner);
+            Self { inner }
+        }
+        pub fn with_origin(inner: T, origin: Uri) -> Self {
+            let inner = tonic::client::Grpc::with_origin(inner, origin);
             Self { inner }
         }
         pub fn with_interceptor<F>(
@@ -1356,19 +1574,19 @@ pub mod connectors_client {
         {
             ConnectorsClient::new(InterceptedService::new(inner, interceptor))
         }
-        /// Compress requests with `gzip`.
+        /// Compress requests with the given encoding.
         ///
         /// This requires the server to support it otherwise it might respond with an
         /// error.
         #[must_use]
-        pub fn send_gzip(mut self) -> Self {
-            self.inner = self.inner.send_gzip();
+        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.send_compressed(encoding);
             self
         }
-        /// Enable decompressing responses with `gzip`.
+        /// Enable decompressing responses.
         #[must_use]
-        pub fn accept_gzip(mut self) -> Self {
-            self.inner = self.inner.accept_gzip();
+        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.accept_compressed(encoding);
             self
         }
         /// Lists Connections in a given project and location.

@@ -166,6 +166,19 @@ pub mod conversation {
         /// The format for conversations that took place over chat.
         Chat = 2,
     }
+    impl Medium {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                Medium::Unspecified => "MEDIUM_UNSPECIFIED",
+                Medium::PhoneCall => "PHONE_CALL",
+                Medium::Chat => "CHAT",
+            }
+        }
+    }
     /// Metadata that applies to the conversation.
     #[derive(Clone, PartialEq, ::prost::Oneof)]
     pub enum Metadata {
@@ -499,6 +512,29 @@ pub mod entity {
         /// The metadata identifies the `value` and `currency`.
         Price = 13,
     }
+    impl Type {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                Type::Unspecified => "TYPE_UNSPECIFIED",
+                Type::Person => "PERSON",
+                Type::Location => "LOCATION",
+                Type::Organization => "ORGANIZATION",
+                Type::Event => "EVENT",
+                Type::WorkOfArt => "WORK_OF_ART",
+                Type::ConsumerGood => "CONSUMER_GOOD",
+                Type::Other => "OTHER",
+                Type::PhoneNumber => "PHONE_NUMBER",
+                Type::Address => "ADDRESS",
+                Type::Date => "DATE",
+                Type::Number => "NUMBER",
+                Type::Price => "PRICE",
+            }
+        }
+    }
 }
 /// The data for an intent.
 /// Represents a detected intent in the conversation, for example MAKES_PROMISE.
@@ -569,6 +605,19 @@ pub mod entity_mention_data {
         Proper = 1,
         /// Common noun (or noun compound).
         Common = 2,
+    }
+    impl MentionType {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                MentionType::Unspecified => "MENTION_TYPE_UNSPECIFIED",
+                MentionType::Proper => "PROPER",
+                MentionType::Common => "COMMON",
+            }
+        }
     }
 }
 /// The data for an intent match.
@@ -656,6 +705,22 @@ pub mod issue_model {
         Undeploying = 4,
         /// Model is being deleted.
         Deleting = 5,
+    }
+    impl State {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                State::Unspecified => "STATE_UNSPECIFIED",
+                State::Undeployed => "UNDEPLOYED",
+                State::Deploying => "DEPLOYING",
+                State::Deployed => "DEPLOYED",
+                State::Undeploying => "UNDEPLOYING",
+                State::Deleting => "DELETING",
+            }
+        }
     }
 }
 /// The issue resource.
@@ -768,6 +833,19 @@ pub mod phrase_matcher {
         /// If any of the phrase match rule groups are met, there is a match.
         AnyOf = 2,
     }
+    impl PhraseMatcherType {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                PhraseMatcherType::Unspecified => "PHRASE_MATCHER_TYPE_UNSPECIFIED",
+                PhraseMatcherType::AllOf => "ALL_OF",
+                PhraseMatcherType::AnyOf => "ANY_OF",
+            }
+        }
+    }
 }
 /// A message representing a rule in the phrase matcher.
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -792,6 +870,19 @@ pub mod phrase_match_rule_group {
         AllOf = 1,
         /// If any of the phrase match rules are met, there is a match.
         AnyOf = 2,
+    }
+    impl PhraseMatchRuleGroupType {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                PhraseMatchRuleGroupType::Unspecified => "PHRASE_MATCH_RULE_GROUP_TYPE_UNSPECIFIED",
+                PhraseMatchRuleGroupType::AllOf => "ALL_OF",
+                PhraseMatchRuleGroupType::AnyOf => "ANY_OF",
+            }
+        }
     }
 }
 /// The data for a phrase match rule.
@@ -966,6 +1057,20 @@ pub mod answer_feedback {
         /// Answer is fully correct.
         FullyCorrect = 3,
     }
+    impl CorrectnessLevel {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                CorrectnessLevel::Unspecified => "CORRECTNESS_LEVEL_UNSPECIFIED",
+                CorrectnessLevel::NotCorrect => "NOT_CORRECT",
+                CorrectnessLevel::PartiallyCorrect => "PARTIALLY_CORRECT",
+                CorrectnessLevel::FullyCorrect => "FULLY_CORRECT",
+            }
+        }
+    }
 }
 /// Agent Assist Article Suggestion data.
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -1113,6 +1218,21 @@ pub mod conversation_participant {
         EndUser = 3,
         /// Participant is either a human or automated agent.
         AnyAgent = 4,
+    }
+    impl Role {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                Role::Unspecified => "ROLE_UNSPECIFIED",
+                Role::HumanAgent => "HUMAN_AGENT",
+                Role::AutomatedAgent => "AUTOMATED_AGENT",
+                Role::EndUser => "END_USER",
+                Role::AnyAgent => "ANY_AGENT",
+            }
+        }
     }
     #[derive(Clone, PartialEq, ::prost::Oneof)]
     pub enum Participant {
@@ -1433,6 +1553,19 @@ pub mod export_insights_data_request {
         WriteTruncate = 1,
         /// If the table already exists, BigQuery will append data to the table.
         WriteAppend = 2,
+    }
+    impl WriteDisposition {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                WriteDisposition::Unspecified => "WRITE_DISPOSITION_UNSPECIFIED",
+                WriteDisposition::WriteTruncate => "WRITE_TRUNCATE",
+                WriteDisposition::WriteAppend => "WRITE_APPEND",
+            }
+        }
     }
     /// Exporter destination.
     #[derive(Clone, PartialEq, ::prost::Oneof)]
@@ -1798,10 +1931,24 @@ pub enum ConversationView {
     /// Populates all fields in the conversation except the transcript.
     Basic = 1,
 }
+impl ConversationView {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            ConversationView::Unspecified => "CONVERSATION_VIEW_UNSPECIFIED",
+            ConversationView::Full => "FULL",
+            ConversationView::Basic => "BASIC",
+        }
+    }
+}
 /// Generated client implementations.
 pub mod contact_center_insights_client {
     #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
     use tonic::codegen::*;
+    use tonic::codegen::http::Uri;
     /// An API that lets users analyze and explore their business conversation data.
     #[derive(Debug, Clone)]
     pub struct ContactCenterInsightsClient<T> {
@@ -1816,6 +1963,10 @@ pub mod contact_center_insights_client {
     {
         pub fn new(inner: T) -> Self {
             let inner = tonic::client::Grpc::new(inner);
+            Self { inner }
+        }
+        pub fn with_origin(inner: T, origin: Uri) -> Self {
+            let inner = tonic::client::Grpc::with_origin(inner, origin);
             Self { inner }
         }
         pub fn with_interceptor<F>(
@@ -1837,19 +1988,19 @@ pub mod contact_center_insights_client {
         {
             ContactCenterInsightsClient::new(InterceptedService::new(inner, interceptor))
         }
-        /// Compress requests with `gzip`.
+        /// Compress requests with the given encoding.
         ///
         /// This requires the server to support it otherwise it might respond with an
         /// error.
         #[must_use]
-        pub fn send_gzip(mut self) -> Self {
-            self.inner = self.inner.send_gzip();
+        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.send_compressed(encoding);
             self
         }
-        /// Enable decompressing responses with `gzip`.
+        /// Enable decompressing responses.
         #[must_use]
-        pub fn accept_gzip(mut self) -> Self {
-            self.inner = self.inner.accept_gzip();
+        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.accept_compressed(encoding);
             self
         }
         /// Creates a conversation.

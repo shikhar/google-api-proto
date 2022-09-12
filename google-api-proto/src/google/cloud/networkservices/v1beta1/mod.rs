@@ -53,9 +53,9 @@ pub mod endpoint_matcher {
         ///
         /// Supported values are:
         /// MATCH_ANY: At least one of the Labels specified in the
-        ///   matcher should match the metadata presented by xDS client.
+        ///    matcher should match the metadata presented by xDS client.
         /// MATCH_ALL: The metadata presented by the xDS client should
-        ///   contain all of the labels specified here.
+        ///    contain all of the labels specified here.
         ///
         /// The selection is determined based on the best match. For
         /// example, suppose there are three EndpointPolicy
@@ -110,6 +110,19 @@ pub mod endpoint_matcher {
             /// The metadata presented by the xDS client should contain all of the
             /// labels specified here.
             MatchAll = 2,
+        }
+        impl MetadataLabelMatchCriteria {
+            /// String value of the enum field names used in the ProtoBuf definition.
+            ///
+            /// The values are not transformed in any way and thus are considered stable
+            /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+            pub fn as_str_name(&self) -> &'static str {
+                match self {
+                    MetadataLabelMatchCriteria::Unspecified => "METADATA_LABEL_MATCH_CRITERIA_UNSPECIFIED",
+                    MetadataLabelMatchCriteria::MatchAny => "MATCH_ANY",
+                    MetadataLabelMatchCriteria::MatchAll => "MATCH_ALL",
+                }
+            }
         }
     }
     /// Specifies type of the matcher used for this endpoint matcher.
@@ -191,6 +204,19 @@ pub mod endpoint_policy {
         /// Represents a proxyless gRPC backend.
         GrpcServer = 2,
     }
+    impl EndpointPolicyType {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                EndpointPolicyType::Unspecified => "ENDPOINT_POLICY_TYPE_UNSPECIFIED",
+                EndpointPolicyType::SidecarProxy => "SIDECAR_PROXY",
+                EndpointPolicyType::GrpcServer => "GRPC_SERVER",
+            }
+        }
+    }
 }
 /// Request used with the ListEndpointPolicies method.
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -270,6 +296,7 @@ pub struct DeleteEndpointPolicyRequest {
 pub mod network_services_client {
     #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
     use tonic::codegen::*;
+    use tonic::codegen::http::Uri;
     #[derive(Debug, Clone)]
     pub struct NetworkServicesClient<T> {
         inner: tonic::client::Grpc<T>,
@@ -283,6 +310,10 @@ pub mod network_services_client {
     {
         pub fn new(inner: T) -> Self {
             let inner = tonic::client::Grpc::new(inner);
+            Self { inner }
+        }
+        pub fn with_origin(inner: T, origin: Uri) -> Self {
+            let inner = tonic::client::Grpc::with_origin(inner, origin);
             Self { inner }
         }
         pub fn with_interceptor<F>(
@@ -304,19 +335,19 @@ pub mod network_services_client {
         {
             NetworkServicesClient::new(InterceptedService::new(inner, interceptor))
         }
-        /// Compress requests with `gzip`.
+        /// Compress requests with the given encoding.
         ///
         /// This requires the server to support it otherwise it might respond with an
         /// error.
         #[must_use]
-        pub fn send_gzip(mut self) -> Self {
-            self.inner = self.inner.send_gzip();
+        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.send_compressed(encoding);
             self
         }
-        /// Enable decompressing responses with `gzip`.
+        /// Enable decompressing responses.
         #[must_use]
-        pub fn accept_gzip(mut self) -> Self {
-            self.inner = self.inner.accept_gzip();
+        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.accept_compressed(encoding);
             self
         }
         /// Lists EndpointPolicies in a given project and location.

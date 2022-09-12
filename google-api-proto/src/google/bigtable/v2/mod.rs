@@ -275,23 +275,23 @@ pub mod row_filter {
         /// they will all appear in the output row in an unspecified mutual order.
         /// Consider the following example, with three filters:
         ///
-        ///                                  input row
-        ///                                      |
-        ///            -----------------------------------------------------
-        ///            |                         |                         |
-        ///           f(0)                      f(1)                      f(2)
-        ///            |                         |                         |
-        ///     1: foo,bar,10,x             foo,bar,10,z              far,bar,7,a
-        ///     2: foo,blah,11,z            far,blah,5,x              far,blah,5,x
-        ///            |                         |                         |
-        ///            -----------------------------------------------------
-        ///                                      |
-        ///     1:                      foo,bar,10,z   // could have switched with #2
-        ///     2:                      foo,bar,10,x   // could have switched with #1
-        ///     3:                      foo,blah,11,z
-        ///     4:                      far,bar,7,a
-        ///     5:                      far,blah,5,x   // identical to #6
-        ///     6:                      far,blah,5,x   // identical to #5
+        ///                                   input row
+        ///                                       |
+        ///             -----------------------------------------------------
+        ///             |                         |                         |
+        ///            f(0)                      f(1)                      f(2)
+        ///             |                         |                         |
+        ///      1: foo,bar,10,x             foo,bar,10,z              far,bar,7,a
+        ///      2: foo,blah,11,z            far,blah,5,x              far,blah,5,x
+        ///             |                         |                         |
+        ///             -----------------------------------------------------
+        ///                                       |
+        ///      1:                      foo,bar,10,z   // could have switched with #2
+        ///      2:                      foo,bar,10,x   // could have switched with #1
+        ///      3:                      foo,blah,11,z
+        ///      4:                      far,bar,7,a
+        ///      5:                      far,blah,5,x   // identical to #6
+        ///      6:                      far,blah,5,x   // identical to #5
         ///
         /// All interleaved filters are executed atomically.
         #[prost(message, repeated, tag="1")]
@@ -341,47 +341,47 @@ pub mod row_filter {
         /// the output of the read rather than to any parent filter. Consider the
         /// following example:
         ///
-        ///     Chain(
-        ///       FamilyRegex("A"),
-        ///       Interleave(
-        ///         All(),
-        ///         Chain(Label("foo"), Sink())
-        ///       ),
-        ///       QualifierRegex("B")
-        ///     )
+        ///      Chain(
+        ///        FamilyRegex("A"),
+        ///        Interleave(
+        ///          All(),
+        ///          Chain(Label("foo"), Sink())
+        ///        ),
+        ///        QualifierRegex("B")
+        ///      )
         ///
-        ///                         A,A,1,w
-        ///                         A,B,2,x
-        ///                         B,B,4,z
-        ///                            |
-        ///                     FamilyRegex("A")
-        ///                            |
-        ///                         A,A,1,w
-        ///                         A,B,2,x
-        ///                            |
-        ///               +------------+-------------+
-        ///               |                          |
-        ///             All()                    Label(foo)
-        ///               |                          |
-        ///            A,A,1,w              A,A,1,w,labels:\[foo\]
-        ///            A,B,2,x              A,B,2,x,labels:\[foo\]
-        ///               |                          |
-        ///               |                        Sink() --------------+
-        ///               |                          |                  |
-        ///               +------------+      x------+          A,A,1,w,labels:\[foo\]
-        ///                            |                        A,B,2,x,labels:\[foo\]
-        ///                         A,A,1,w                             |
-        ///                         A,B,2,x                             |
-        ///                            |                                |
-        ///                    QualifierRegex("B")                      |
-        ///                            |                                |
-        ///                         A,B,2,x                             |
-        ///                            |                                |
-        ///                            +--------------------------------+
-        ///                            |
-        ///                         A,A,1,w,labels:\[foo\]
-        ///                         A,B,2,x,labels:\[foo\]  // could be switched
-        ///                         A,B,2,x               // could be switched
+        ///                          A,A,1,w
+        ///                          A,B,2,x
+        ///                          B,B,4,z
+        ///                             |
+        ///                      FamilyRegex("A")
+        ///                             |
+        ///                          A,A,1,w
+        ///                          A,B,2,x
+        ///                             |
+        ///                +------------+-------------+
+        ///                |                          |
+        ///              All()                    Label(foo)
+        ///                |                          |
+        ///             A,A,1,w              A,A,1,w,labels:\[foo\]
+        ///             A,B,2,x              A,B,2,x,labels:\[foo\]
+        ///                |                          |
+        ///                |                        Sink() --------------+
+        ///                |                          |                  |
+        ///                +------------+      x------+          A,A,1,w,labels:\[foo\]
+        ///                             |                        A,B,2,x,labels:\[foo\]
+        ///                          A,A,1,w                             |
+        ///                          A,B,2,x                             |
+        ///                             |                                |
+        ///                     QualifierRegex("B")                      |
+        ///                             |                                |
+        ///                          A,B,2,x                             |
+        ///                             |                                |
+        ///                             +--------------------------------+
+        ///                             |
+        ///                          A,A,1,w,labels:\[foo\]
+        ///                          A,B,2,x,labels:\[foo\]  // could be switched
+        ///                          A,B,2,x               // could be switched
         ///
         /// Despite being excluded by the qualifier filter, a copy of every cell
         /// that reaches the sink is present in the final result.
@@ -926,6 +926,7 @@ pub struct ReadModifyWriteRowResponse {
 pub mod bigtable_client {
     #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
     use tonic::codegen::*;
+    use tonic::codegen::http::Uri;
     /// Service for reading from and writing to existing Bigtable tables.
     #[derive(Debug, Clone)]
     pub struct BigtableClient<T> {
@@ -940,6 +941,10 @@ pub mod bigtable_client {
     {
         pub fn new(inner: T) -> Self {
             let inner = tonic::client::Grpc::new(inner);
+            Self { inner }
+        }
+        pub fn with_origin(inner: T, origin: Uri) -> Self {
+            let inner = tonic::client::Grpc::with_origin(inner, origin);
             Self { inner }
         }
         pub fn with_interceptor<F>(
@@ -961,19 +966,19 @@ pub mod bigtable_client {
         {
             BigtableClient::new(InterceptedService::new(inner, interceptor))
         }
-        /// Compress requests with `gzip`.
+        /// Compress requests with the given encoding.
         ///
         /// This requires the server to support it otherwise it might respond with an
         /// error.
         #[must_use]
-        pub fn send_gzip(mut self) -> Self {
-            self.inner = self.inner.send_gzip();
+        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.send_compressed(encoding);
             self
         }
-        /// Enable decompressing responses with `gzip`.
+        /// Enable decompressing responses.
         #[must_use]
-        pub fn accept_gzip(mut self) -> Self {
-            self.inner = self.inner.accept_gzip();
+        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.accept_compressed(encoding);
             self
         }
         /// Streams back the contents of all requested rows in key order, optionally

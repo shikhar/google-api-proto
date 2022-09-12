@@ -1,44 +1,3 @@
-/// Type indicates the type of the log entry and can be used as a filter.
-#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
-#[repr(i32)]
-pub enum Type {
-    /// Type is unspecified.
-    Unspecified = 0,
-    /// A Pub/Sub notification failed to be sent.
-    PubsubNotificationFailure = 1,
-    /// Release render status changed notification.
-    RenderStatuesChange = 2,
-}
-/// Payload proto for "clouddeploy.googleapis.com/deliverypipeline_notification"
-/// Platform Log event that describes the failure to send delivery pipeline
-/// status change Pub/Sub notification.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct DeliveryPipelineNotificationEvent {
-    /// Debug message for when a notification fails to send.
-    #[prost(string, tag="1")]
-    pub message: ::prost::alloc::string::String,
-    /// The name of the `Delivery Pipeline`.
-    #[prost(string, tag="2")]
-    pub delivery_pipeline: ::prost::alloc::string::String,
-    /// Type of this notification, e.g. for a Pub/Sub failure.
-    #[prost(enumeration="Type", tag="3")]
-    pub r#type: i32,
-}
-/// Payload proto for "clouddeploy.googleapis.com/release_notification"
-/// Platform Log event that describes the failure to send release status change
-/// Pub/Sub notification.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ReleaseNotificationEvent {
-    /// Debug message for when a notification fails to send.
-    #[prost(string, tag="1")]
-    pub message: ::prost::alloc::string::String,
-    /// The name of the `Release`.
-    #[prost(string, tag="2")]
-    pub release: ::prost::alloc::string::String,
-    /// Type of this notification, e.g. for a Pub/Sub failure.
-    #[prost(enumeration="Type", tag="3")]
-    pub r#type: i32,
-}
 /// Payload proto for "clouddeploy.googleapis.com/release_render"
 /// Platform Log event that describes the render status change.
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -50,6 +9,30 @@ pub struct ReleaseRenderEvent {
     /// The name of the `Release`.
     #[prost(string, tag="2")]
     pub release: ::prost::alloc::string::String,
+}
+/// Type indicates the type of the log entry and can be used as a filter.
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+#[repr(i32)]
+pub enum Type {
+    /// Type is unspecified.
+    Unspecified = 0,
+    /// A Pub/Sub notification failed to be sent.
+    PubsubNotificationFailure = 1,
+    /// Release render status changed notification.
+    RenderStatuesChange = 2,
+}
+impl Type {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            Type::Unspecified => "TYPE_UNSPECIFIED",
+            Type::PubsubNotificationFailure => "TYPE_PUBSUB_NOTIFICATION_FAILURE",
+            Type::RenderStatuesChange => "TYPE_RENDER_STATUES_CHANGE",
+        }
+    }
 }
 /// Payload proto for "clouddeploy.googleapis.com/target_notification"
 /// Platform Log event that describes the failure to send target status change
@@ -89,6 +72,36 @@ pub struct RolloutNotificationEvent {
     /// ID of the `Target` that the rollout is deployed to.
     #[prost(string, tag="6")]
     pub target_id: ::prost::alloc::string::String,
+}
+/// Payload proto for "clouddeploy.googleapis.com/release_notification"
+/// Platform Log event that describes the failure to send release status change
+/// Pub/Sub notification.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ReleaseNotificationEvent {
+    /// Debug message for when a notification fails to send.
+    #[prost(string, tag="1")]
+    pub message: ::prost::alloc::string::String,
+    /// The name of the `Release`.
+    #[prost(string, tag="2")]
+    pub release: ::prost::alloc::string::String,
+    /// Type of this notification, e.g. for a Pub/Sub failure.
+    #[prost(enumeration="Type", tag="3")]
+    pub r#type: i32,
+}
+/// Payload proto for "clouddeploy.googleapis.com/deliverypipeline_notification"
+/// Platform Log event that describes the failure to send delivery pipeline
+/// status change Pub/Sub notification.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct DeliveryPipelineNotificationEvent {
+    /// Debug message for when a notification fails to send.
+    #[prost(string, tag="1")]
+    pub message: ::prost::alloc::string::String,
+    /// The name of the `Delivery Pipeline`.
+    #[prost(string, tag="2")]
+    pub delivery_pipeline: ::prost::alloc::string::String,
+    /// Type of this notification, e.g. for a Pub/Sub failure.
+    #[prost(enumeration="Type", tag="3")]
+    pub r#type: i32,
 }
 /// A `DeliveryPipeline` resource in the Google Cloud Deploy API.
 ///
@@ -500,6 +513,19 @@ pub mod execution_config {
         /// Use for deploying and deployment hooks.
         Deploy = 2,
     }
+    impl ExecutionEnvironmentUsage {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                ExecutionEnvironmentUsage::Unspecified => "EXECUTION_ENVIRONMENT_USAGE_UNSPECIFIED",
+                ExecutionEnvironmentUsage::Render => "RENDER",
+                ExecutionEnvironmentUsage::Deploy => "DEPLOY",
+            }
+        }
+    }
     /// Details of the environment.
     #[derive(Clone, PartialEq, ::prost::Oneof)]
     pub enum ExecutionEnvironment {
@@ -845,6 +871,20 @@ pub mod release {
             /// The render operation is in progress.
             InProgress = 3,
         }
+        impl TargetRenderState {
+            /// String value of the enum field names used in the ProtoBuf definition.
+            ///
+            /// The values are not transformed in any way and thus are considered stable
+            /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+            pub fn as_str_name(&self) -> &'static str {
+                match self {
+                    TargetRenderState::Unspecified => "TARGET_RENDER_STATE_UNSPECIFIED",
+                    TargetRenderState::Succeeded => "SUCCEEDED",
+                    TargetRenderState::Failed => "FAILED",
+                    TargetRenderState::InProgress => "IN_PROGRESS",
+                }
+            }
+        }
         /// Well-known rendering failures.
         #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
         #[repr(i32)]
@@ -859,6 +899,19 @@ pub mod release {
             /// logs.
             ExecutionFailed = 2,
         }
+        impl FailureCause {
+            /// String value of the enum field names used in the ProtoBuf definition.
+            ///
+            /// The values are not transformed in any way and thus are considered stable
+            /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+            pub fn as_str_name(&self) -> &'static str {
+                match self {
+                    FailureCause::Unspecified => "FAILURE_CAUSE_UNSPECIFIED",
+                    FailureCause::CloudBuildUnavailable => "CLOUD_BUILD_UNAVAILABLE",
+                    FailureCause::ExecutionFailed => "EXECUTION_FAILED",
+                }
+            }
+        }
     }
     /// Valid states of the render operation.
     #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
@@ -872,6 +925,20 @@ pub mod release {
         Failed = 2,
         /// Rendering has started and is not complete.
         InProgress = 3,
+    }
+    impl RenderState {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                RenderState::Unspecified => "RENDER_STATE_UNSPECIFIED",
+                RenderState::Succeeded => "SUCCEEDED",
+                RenderState::Failed => "FAILED",
+                RenderState::InProgress => "IN_PROGRESS",
+            }
+        }
     }
 }
 /// Description of an a image to use during Skaffold rendering.
@@ -1087,6 +1154,21 @@ pub mod rollout {
         /// The `Rollout` has been rejected.
         Rejected = 4,
     }
+    impl ApprovalState {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                ApprovalState::Unspecified => "APPROVAL_STATE_UNSPECIFIED",
+                ApprovalState::NeedsApproval => "NEEDS_APPROVAL",
+                ApprovalState::DoesNotNeedApproval => "DOES_NOT_NEED_APPROVAL",
+                ApprovalState::Approved => "APPROVED",
+                ApprovalState::Rejected => "REJECTED",
+            }
+        }
+    }
     /// Valid states of a `Rollout`.
     #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
     #[repr(i32)]
@@ -1109,6 +1191,24 @@ pub mod rollout {
         /// The `Rollout` is waiting for the `Release` to be fully rendered.
         PendingRelease = 7,
     }
+    impl State {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                State::Unspecified => "STATE_UNSPECIFIED",
+                State::Succeeded => "SUCCEEDED",
+                State::Failed => "FAILED",
+                State::InProgress => "IN_PROGRESS",
+                State::PendingApproval => "PENDING_APPROVAL",
+                State::ApprovalRejected => "APPROVAL_REJECTED",
+                State::Pending => "PENDING",
+                State::PendingRelease => "PENDING_RELEASE",
+            }
+        }
+    }
     /// Well-known deployment failures.
     #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
     #[repr(i32)]
@@ -1126,6 +1226,21 @@ pub mod rollout {
         DeadlineExceeded = 3,
         /// Release is in a failed state.
         ReleaseFailed = 4,
+    }
+    impl FailureCause {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                FailureCause::Unspecified => "FAILURE_CAUSE_UNSPECIFIED",
+                FailureCause::CloudBuildUnavailable => "CLOUD_BUILD_UNAVAILABLE",
+                FailureCause::ExecutionFailed => "EXECUTION_FAILED",
+                FailureCause::DeadlineExceeded => "DEADLINE_EXCEEDED",
+                FailureCause::ReleaseFailed => "RELEASE_FAILED",
+            }
+        }
     }
 }
 /// ListRolloutsRequest is the request object used by `ListRollouts`.
@@ -1289,6 +1404,7 @@ pub struct GetConfigRequest {
 pub mod cloud_deploy_client {
     #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
     use tonic::codegen::*;
+    use tonic::codegen::http::Uri;
     /// CloudDeploy service creates and manages Continuous Delivery operations
     /// on Google Cloud Platform via Skaffold (https://skaffold.dev).
     #[derive(Debug, Clone)]
@@ -1304,6 +1420,10 @@ pub mod cloud_deploy_client {
     {
         pub fn new(inner: T) -> Self {
             let inner = tonic::client::Grpc::new(inner);
+            Self { inner }
+        }
+        pub fn with_origin(inner: T, origin: Uri) -> Self {
+            let inner = tonic::client::Grpc::with_origin(inner, origin);
             Self { inner }
         }
         pub fn with_interceptor<F>(
@@ -1325,19 +1445,19 @@ pub mod cloud_deploy_client {
         {
             CloudDeployClient::new(InterceptedService::new(inner, interceptor))
         }
-        /// Compress requests with `gzip`.
+        /// Compress requests with the given encoding.
         ///
         /// This requires the server to support it otherwise it might respond with an
         /// error.
         #[must_use]
-        pub fn send_gzip(mut self) -> Self {
-            self.inner = self.inner.send_gzip();
+        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.send_compressed(encoding);
             self
         }
-        /// Enable decompressing responses with `gzip`.
+        /// Enable decompressing responses.
         #[must_use]
-        pub fn accept_gzip(mut self) -> Self {
-            self.inner = self.inner.accept_gzip();
+        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.accept_compressed(encoding);
             self
         }
         /// Lists DeliveryPipelines in a given project and location.

@@ -1,3 +1,435 @@
+/// Holds a single traffic routing entry for the Service. Allocations can be done
+/// to a specific Revision name, or pointing to the latest Ready Revision.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct TrafficTarget {
+    /// The allocation type for this traffic target.
+    #[prost(enumeration="TrafficTargetAllocationType", tag="1")]
+    pub r#type: i32,
+    /// Revision to which to send this portion of traffic, if traffic allocation is
+    /// by revision.
+    #[prost(string, tag="2")]
+    pub revision: ::prost::alloc::string::String,
+    /// Specifies percent of the traffic to this Revision.
+    /// This defaults to zero if unspecified.
+    #[prost(int32, tag="3")]
+    pub percent: i32,
+    /// Indicates a string to be part of the URI to exclusively reference this
+    /// target.
+    #[prost(string, tag="4")]
+    pub tag: ::prost::alloc::string::String,
+}
+/// Represents the observed state of a single `TrafficTarget` entry.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct TrafficTargetStatus {
+    /// The allocation type for this traffic target.
+    #[prost(enumeration="TrafficTargetAllocationType", tag="1")]
+    pub r#type: i32,
+    /// Revision to which this traffic is sent.
+    #[prost(string, tag="2")]
+    pub revision: ::prost::alloc::string::String,
+    /// Specifies percent of the traffic to this Revision.
+    #[prost(int32, tag="3")]
+    pub percent: i32,
+    /// Indicates the string used in the URI to exclusively reference this target.
+    #[prost(string, tag="4")]
+    pub tag: ::prost::alloc::string::String,
+    /// Displays the target URI.
+    #[prost(string, tag="5")]
+    pub uri: ::prost::alloc::string::String,
+}
+/// The type of instance allocation.
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+#[repr(i32)]
+pub enum TrafficTargetAllocationType {
+    /// Unspecified instance allocation type.
+    Unspecified = 0,
+    /// Allocates instances to the Service's latest ready Revision.
+    Latest = 1,
+    /// Allocates instances to a Revision by name.
+    Revision = 2,
+}
+impl TrafficTargetAllocationType {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            TrafficTargetAllocationType::Unspecified => "TRAFFIC_TARGET_ALLOCATION_TYPE_UNSPECIFIED",
+            TrafficTargetAllocationType::Latest => "TRAFFIC_TARGET_ALLOCATION_TYPE_LATEST",
+            TrafficTargetAllocationType::Revision => "TRAFFIC_TARGET_ALLOCATION_TYPE_REVISION",
+        }
+    }
+}
+/// VPC Access settings. For more information on creating a VPC Connector, visit
+/// <https://cloud.google.com/vpc/docs/configure-serverless-vpc-access> For
+/// information on how to configure Cloud Run with an existing VPC Connector,
+/// visit <https://cloud.google.com/run/docs/configuring/connecting-vpc>
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct VpcAccess {
+    /// VPC Access connector name.
+    /// Format: projects/{project}/locations/{location}/connectors/{connector}
+    #[prost(string, tag="1")]
+    pub connector: ::prost::alloc::string::String,
+    /// Traffic VPC egress settings.
+    #[prost(enumeration="vpc_access::VpcEgress", tag="2")]
+    pub egress: i32,
+}
+/// Nested message and enum types in `VpcAccess`.
+pub mod vpc_access {
+    /// Egress options for VPC access.
+    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+    #[repr(i32)]
+    pub enum VpcEgress {
+        /// Unspecified
+        Unspecified = 0,
+        /// All outbound traffic is routed through the VPC connector.
+        AllTraffic = 1,
+        /// Only private IP ranges are routed through the VPC connector.
+        PrivateRangesOnly = 2,
+    }
+    impl VpcEgress {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                VpcEgress::Unspecified => "VPC_EGRESS_UNSPECIFIED",
+                VpcEgress::AllTraffic => "ALL_TRAFFIC",
+                VpcEgress::PrivateRangesOnly => "PRIVATE_RANGES_ONLY",
+            }
+        }
+    }
+}
+/// Settings for Binary Authorization feature.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct BinaryAuthorization {
+    /// If present, indicates to use Breakglass using this justification.
+    /// If use_default is False, then it must be empty.
+    /// For more information on breakglass, see
+    /// <https://cloud.google.com/binary-authorization/docs/using-breakglass>
+    #[prost(string, tag="2")]
+    pub breakglass_justification: ::prost::alloc::string::String,
+    #[prost(oneof="binary_authorization::BinauthzMethod", tags="1")]
+    pub binauthz_method: ::core::option::Option<binary_authorization::BinauthzMethod>,
+}
+/// Nested message and enum types in `BinaryAuthorization`.
+pub mod binary_authorization {
+    #[derive(Clone, PartialEq, ::prost::Oneof)]
+    pub enum BinauthzMethod {
+        /// If True, indicates to use the default project's binary authorization
+        /// policy. If False, binary authorization will be disabled.
+        #[prost(bool, tag="1")]
+        UseDefault(bool),
+    }
+}
+/// Settings for revision-level scaling settings.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct RevisionScaling {
+    /// Minimum number of serving instances that this resource should have.
+    #[prost(int32, tag="1")]
+    pub min_instance_count: i32,
+    /// Maximum number of serving instances that this resource should have.
+    #[prost(int32, tag="2")]
+    pub max_instance_count: i32,
+}
+/// Allowed ingress traffic for the Container.
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+#[repr(i32)]
+pub enum IngressTraffic {
+    /// Unspecified
+    Unspecified = 0,
+    /// All inbound traffic is allowed.
+    All = 1,
+    /// Only internal traffic is allowed.
+    InternalOnly = 2,
+    /// Both internal and Google Cloud Load Balancer traffic is allowed.
+    InternalLoadBalancer = 3,
+}
+impl IngressTraffic {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            IngressTraffic::Unspecified => "INGRESS_TRAFFIC_UNSPECIFIED",
+            IngressTraffic::All => "INGRESS_TRAFFIC_ALL",
+            IngressTraffic::InternalOnly => "INGRESS_TRAFFIC_INTERNAL_ONLY",
+            IngressTraffic::InternalLoadBalancer => "INGRESS_TRAFFIC_INTERNAL_LOAD_BALANCER",
+        }
+    }
+}
+/// Alternatives for execution environments.
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+#[repr(i32)]
+pub enum ExecutionEnvironment {
+    /// Unspecified
+    Unspecified = 0,
+    /// Uses the First Generation environment.
+    Gen1 = 1,
+    /// Uses Second Generation environment.
+    Gen2 = 2,
+}
+impl ExecutionEnvironment {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            ExecutionEnvironment::Unspecified => "EXECUTION_ENVIRONMENT_UNSPECIFIED",
+            ExecutionEnvironment::Gen1 => "EXECUTION_ENVIRONMENT_GEN1",
+            ExecutionEnvironment::Gen2 => "EXECUTION_ENVIRONMENT_GEN2",
+        }
+    }
+}
+/// Defines a status condition for a resource.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct Condition {
+    /// type is used to communicate the status of the reconciliation process.
+    /// See also:
+    /// <https://github.com/knative/serving/blob/main/docs/spec/errors.md#error-conditions-and-reporting>
+    /// Types common to all resources include:
+    /// * "Ready": True when the Resource is ready.
+    #[prost(string, tag="1")]
+    pub r#type: ::prost::alloc::string::String,
+    /// State of the condition.
+    #[prost(enumeration="condition::State", tag="2")]
+    pub state: i32,
+    /// Human readable message indicating details about the current status.
+    #[prost(string, tag="3")]
+    pub message: ::prost::alloc::string::String,
+    /// Last time the condition transitioned from one status to another.
+    #[prost(message, optional, tag="4")]
+    pub last_transition_time: ::core::option::Option<::prost_types::Timestamp>,
+    /// How to interpret failures of this condition, one of Error, Warning, Info
+    #[prost(enumeration="condition::Severity", tag="5")]
+    pub severity: i32,
+    /// The reason for this condition. Depending on the condition type,
+    /// it will populate one of these fields.
+    /// Successful conditions may not have a reason.
+    #[prost(oneof="condition::Reasons", tags="6, 9, 11")]
+    pub reasons: ::core::option::Option<condition::Reasons>,
+}
+/// Nested message and enum types in `Condition`.
+pub mod condition {
+    /// Represents the possible Condition states.
+    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+    #[repr(i32)]
+    pub enum State {
+        /// The default value. This value is used if the state is omitted.
+        Unspecified = 0,
+        /// Transient state: Reconciliation has not started yet.
+        ConditionPending = 1,
+        /// Transient state: reconciliation is still in progress.
+        ConditionReconciling = 2,
+        /// Terminal state: Reconciliation did not succeed.
+        ConditionFailed = 3,
+        /// Terminal state: Reconciliation completed successfully.
+        ConditionSucceeded = 4,
+    }
+    impl State {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                State::Unspecified => "STATE_UNSPECIFIED",
+                State::ConditionPending => "CONDITION_PENDING",
+                State::ConditionReconciling => "CONDITION_RECONCILING",
+                State::ConditionFailed => "CONDITION_FAILED",
+                State::ConditionSucceeded => "CONDITION_SUCCEEDED",
+            }
+        }
+    }
+    /// Represents the severity of the condition failures.
+    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+    #[repr(i32)]
+    pub enum Severity {
+        /// Unspecified severity
+        Unspecified = 0,
+        /// Error severity.
+        Error = 1,
+        /// Warning severity.
+        Warning = 2,
+        /// Info severity.
+        Info = 3,
+    }
+    impl Severity {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                Severity::Unspecified => "SEVERITY_UNSPECIFIED",
+                Severity::Error => "ERROR",
+                Severity::Warning => "WARNING",
+                Severity::Info => "INFO",
+            }
+        }
+    }
+    /// Reasons common to all types of conditions.
+    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+    #[repr(i32)]
+    pub enum CommonReason {
+        /// Default value.
+        Undefined = 0,
+        /// Reason unknown. Further details will be in message.
+        Unknown = 1,
+        /// Revision creation process failed.
+        RevisionFailed = 3,
+        /// Timed out waiting for completion.
+        ProgressDeadlineExceeded = 4,
+        /// The container image path is incorrect.
+        ContainerMissing = 6,
+        /// Insufficient permissions on the container image.
+        ContainerPermissionDenied = 7,
+        /// Container image is not authorized by policy.
+        ContainerImageUnauthorized = 8,
+        /// Container image policy authorization check failed.
+        ContainerImageAuthorizationCheckFailed = 9,
+        /// Insufficient permissions on encryption key.
+        EncryptionKeyPermissionDenied = 10,
+        /// Permission check on encryption key failed.
+        EncryptionKeyCheckFailed = 11,
+        /// At least one Access check on secrets failed.
+        SecretsAccessCheckFailed = 12,
+        /// Waiting for operation to complete.
+        WaitingForOperation = 13,
+        /// System will retry immediately.
+        ImmediateRetry = 14,
+        /// System will retry later; current attempt failed.
+        PostponedRetry = 15,
+        /// An internal error occurred. Further information may be in the message.
+        Internal = 16,
+    }
+    impl CommonReason {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                CommonReason::Undefined => "COMMON_REASON_UNDEFINED",
+                CommonReason::Unknown => "UNKNOWN",
+                CommonReason::RevisionFailed => "REVISION_FAILED",
+                CommonReason::ProgressDeadlineExceeded => "PROGRESS_DEADLINE_EXCEEDED",
+                CommonReason::ContainerMissing => "CONTAINER_MISSING",
+                CommonReason::ContainerPermissionDenied => "CONTAINER_PERMISSION_DENIED",
+                CommonReason::ContainerImageUnauthorized => "CONTAINER_IMAGE_UNAUTHORIZED",
+                CommonReason::ContainerImageAuthorizationCheckFailed => "CONTAINER_IMAGE_AUTHORIZATION_CHECK_FAILED",
+                CommonReason::EncryptionKeyPermissionDenied => "ENCRYPTION_KEY_PERMISSION_DENIED",
+                CommonReason::EncryptionKeyCheckFailed => "ENCRYPTION_KEY_CHECK_FAILED",
+                CommonReason::SecretsAccessCheckFailed => "SECRETS_ACCESS_CHECK_FAILED",
+                CommonReason::WaitingForOperation => "WAITING_FOR_OPERATION",
+                CommonReason::ImmediateRetry => "IMMEDIATE_RETRY",
+                CommonReason::PostponedRetry => "POSTPONED_RETRY",
+                CommonReason::Internal => "INTERNAL",
+            }
+        }
+    }
+    /// Reasons specific to Revision resource.
+    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+    #[repr(i32)]
+    pub enum RevisionReason {
+        /// Default value.
+        Undefined = 0,
+        /// Revision in Pending state.
+        Pending = 1,
+        /// Revision is in Reserve state.
+        Reserve = 2,
+        /// Revision is Retired.
+        Retired = 3,
+        /// Revision is being retired.
+        Retiring = 4,
+        /// Revision is being recreated.
+        Recreating = 5,
+        /// There was a health check error.
+        HealthCheckContainerError = 6,
+        /// Health check failed due to user error from customized path of the
+        /// container. System will retry.
+        CustomizedPathResponsePending = 7,
+        /// A revision with min_instance_count > 0 was created and is reserved, but
+        /// it was not configured to serve traffic, so it's not live. This can also
+        /// happen momentarily during traffic migration.
+        MinInstancesNotProvisioned = 8,
+        /// The maximum allowed number of active revisions has been reached.
+        ActiveRevisionLimitReached = 9,
+        /// There was no deployment defined.
+        /// This value is no longer used, but Services created in older versions of
+        /// the API might contain this value.
+        NoDeployment = 10,
+        /// A revision's container has no port specified since the revision is of a
+        /// manually scaled service with 0 instance count
+        HealthCheckSkipped = 11,
+    }
+    impl RevisionReason {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                RevisionReason::Undefined => "REVISION_REASON_UNDEFINED",
+                RevisionReason::Pending => "PENDING",
+                RevisionReason::Reserve => "RESERVE",
+                RevisionReason::Retired => "RETIRED",
+                RevisionReason::Retiring => "RETIRING",
+                RevisionReason::Recreating => "RECREATING",
+                RevisionReason::HealthCheckContainerError => "HEALTH_CHECK_CONTAINER_ERROR",
+                RevisionReason::CustomizedPathResponsePending => "CUSTOMIZED_PATH_RESPONSE_PENDING",
+                RevisionReason::MinInstancesNotProvisioned => "MIN_INSTANCES_NOT_PROVISIONED",
+                RevisionReason::ActiveRevisionLimitReached => "ACTIVE_REVISION_LIMIT_REACHED",
+                RevisionReason::NoDeployment => "NO_DEPLOYMENT",
+                RevisionReason::HealthCheckSkipped => "HEALTH_CHECK_SKIPPED",
+            }
+        }
+    }
+    /// Reasons specific to Execution resource.
+    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+    #[repr(i32)]
+    pub enum ExecutionReason {
+        /// Default value.
+        Undefined = 0,
+        /// Internal system error getting execution status. System will retry.
+        JobStatusServicePollingError = 1,
+        /// A task reached its retry limit and the last attempt failed due to the
+        /// user container exiting with a non-zero exit code.
+        NonZeroExitCode = 2,
+    }
+    impl ExecutionReason {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                ExecutionReason::Undefined => "EXECUTION_REASON_UNDEFINED",
+                ExecutionReason::JobStatusServicePollingError => "JOB_STATUS_SERVICE_POLLING_ERROR",
+                ExecutionReason::NonZeroExitCode => "NON_ZERO_EXIT_CODE",
+            }
+        }
+    }
+    /// The reason for this condition. Depending on the condition type,
+    /// it will populate one of these fields.
+    /// Successful conditions may not have a reason.
+    #[derive(Clone, PartialEq, ::prost::Oneof)]
+    pub enum Reasons {
+        /// A common (service-level) reason for this condition.
+        #[prost(enumeration="CommonReason", tag="6")]
+        Reason(i32),
+        /// A reason for the revision condition.
+        #[prost(enumeration="RevisionReason", tag="9")]
+        RevisionReason(i32),
+        /// A reason for the execution condition.
+        #[prost(enumeration="ExecutionReason", tag="11")]
+        ExecutionReason(i32),
+    }
+}
 /// A single application container.
 /// This specifies both the container to run, the command to run in the container
 /// and the arguments to supply to it.
@@ -247,345 +679,6 @@ pub struct CloudSqlInstance {
     #[prost(string, repeated, tag="1")]
     pub instances: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
 }
-/// Holds a single traffic routing entry for the Service. Allocations can be done
-/// to a specific Revision name, or pointing to the latest Ready Revision.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct TrafficTarget {
-    /// The allocation type for this traffic target.
-    #[prost(enumeration="TrafficTargetAllocationType", tag="1")]
-    pub r#type: i32,
-    /// Revision to which to send this portion of traffic, if traffic allocation is
-    /// by revision.
-    #[prost(string, tag="2")]
-    pub revision: ::prost::alloc::string::String,
-    /// Specifies percent of the traffic to this Revision.
-    /// This defaults to zero if unspecified.
-    #[prost(int32, tag="3")]
-    pub percent: i32,
-    /// Indicates a string to be part of the URI to exclusively reference this
-    /// target.
-    #[prost(string, tag="4")]
-    pub tag: ::prost::alloc::string::String,
-}
-/// Represents the observed state of a single `TrafficTarget` entry.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct TrafficTargetStatus {
-    /// The allocation type for this traffic target.
-    #[prost(enumeration="TrafficTargetAllocationType", tag="1")]
-    pub r#type: i32,
-    /// Revision to which this traffic is sent.
-    #[prost(string, tag="2")]
-    pub revision: ::prost::alloc::string::String,
-    /// Specifies percent of the traffic to this Revision.
-    #[prost(int32, tag="3")]
-    pub percent: i32,
-    /// Indicates the string used in the URI to exclusively reference this target.
-    #[prost(string, tag="4")]
-    pub tag: ::prost::alloc::string::String,
-    /// Displays the target URI.
-    #[prost(string, tag="5")]
-    pub uri: ::prost::alloc::string::String,
-}
-/// The type of instance allocation.
-#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
-#[repr(i32)]
-pub enum TrafficTargetAllocationType {
-    /// Unspecified instance allocation type.
-    Unspecified = 0,
-    /// Allocates instances to the Service's latest ready Revision.
-    Latest = 1,
-    /// Allocates instances to a Revision by name.
-    Revision = 2,
-}
-/// VPC Access settings. For more information on creating a VPC Connector, visit
-/// <https://cloud.google.com/vpc/docs/configure-serverless-vpc-access> For
-/// information on how to configure Cloud Run with an existing VPC Connector,
-/// visit <https://cloud.google.com/run/docs/configuring/connecting-vpc>
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct VpcAccess {
-    /// VPC Access connector name.
-    /// Format: projects/{project}/locations/{location}/connectors/{connector}
-    #[prost(string, tag="1")]
-    pub connector: ::prost::alloc::string::String,
-    /// Traffic VPC egress settings.
-    #[prost(enumeration="vpc_access::VpcEgress", tag="2")]
-    pub egress: i32,
-}
-/// Nested message and enum types in `VpcAccess`.
-pub mod vpc_access {
-    /// Egress options for VPC access.
-    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
-    #[repr(i32)]
-    pub enum VpcEgress {
-        /// Unspecified
-        Unspecified = 0,
-        /// All outbound traffic is routed through the VPC connector.
-        AllTraffic = 1,
-        /// Only private IP ranges are routed through the VPC connector.
-        PrivateRangesOnly = 2,
-    }
-}
-/// Settings for Binary Authorization feature.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct BinaryAuthorization {
-    /// If present, indicates to use Breakglass using this justification.
-    /// If use_default is False, then it must be empty.
-    /// For more information on breakglass, see
-    /// <https://cloud.google.com/binary-authorization/docs/using-breakglass>
-    #[prost(string, tag="2")]
-    pub breakglass_justification: ::prost::alloc::string::String,
-    #[prost(oneof="binary_authorization::BinauthzMethod", tags="1")]
-    pub binauthz_method: ::core::option::Option<binary_authorization::BinauthzMethod>,
-}
-/// Nested message and enum types in `BinaryAuthorization`.
-pub mod binary_authorization {
-    #[derive(Clone, PartialEq, ::prost::Oneof)]
-    pub enum BinauthzMethod {
-        /// If True, indicates to use the default project's binary authorization
-        /// policy. If False, binary authorization will be disabled.
-        #[prost(bool, tag="1")]
-        UseDefault(bool),
-    }
-}
-/// Settings for revision-level scaling settings.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct RevisionScaling {
-    /// Minimum number of serving instances that this resource should have.
-    #[prost(int32, tag="1")]
-    pub min_instance_count: i32,
-    /// Maximum number of serving instances that this resource should have.
-    #[prost(int32, tag="2")]
-    pub max_instance_count: i32,
-}
-/// Allowed ingress traffic for the Container.
-#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
-#[repr(i32)]
-pub enum IngressTraffic {
-    /// Unspecified
-    Unspecified = 0,
-    /// All inbound traffic is allowed.
-    All = 1,
-    /// Only internal traffic is allowed.
-    InternalOnly = 2,
-    /// Both internal and Google Cloud Load Balancer traffic is allowed.
-    InternalLoadBalancer = 3,
-}
-/// Alternatives for execution environments.
-#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
-#[repr(i32)]
-pub enum ExecutionEnvironment {
-    /// Unspecified
-    Unspecified = 0,
-    /// Uses the First Generation environment.
-    Gen1 = 1,
-    /// Uses Second Generation environment.
-    Gen2 = 2,
-}
-/// RevisionTemplate describes the data a revision should have when created from
-/// a template.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct RevisionTemplate {
-    /// The unique name for the revision. If this field is omitted, it will be
-    /// automatically generated based on the Service name.
-    #[prost(string, tag="1")]
-    pub revision: ::prost::alloc::string::String,
-    /// KRM-style labels for the resource.
-    #[prost(btree_map="string, string", tag="2")]
-    pub labels: ::prost::alloc::collections::BTreeMap<::prost::alloc::string::String, ::prost::alloc::string::String>,
-    /// KRM-style annotations for the resource.
-    #[prost(btree_map="string, string", tag="3")]
-    pub annotations: ::prost::alloc::collections::BTreeMap<::prost::alloc::string::String, ::prost::alloc::string::String>,
-    /// Scaling settings for this Revision.
-    #[prost(message, optional, tag="4")]
-    pub scaling: ::core::option::Option<RevisionScaling>,
-    /// VPC Access configuration to use for this Revision. For more information,
-    /// visit <https://cloud.google.com/run/docs/configuring/connecting-vpc.>
-    #[prost(message, optional, tag="6")]
-    pub vpc_access: ::core::option::Option<VpcAccess>,
-    /// Max allowed time for an instance to respond to a request.
-    #[prost(message, optional, tag="8")]
-    pub timeout: ::core::option::Option<::prost_types::Duration>,
-    /// Email address of the IAM service account associated with the revision of
-    /// the service. The service account represents the identity of the running
-    /// revision, and determines what permissions the revision has. If not
-    /// provided, the revision will use the project's default service account.
-    #[prost(string, tag="9")]
-    pub service_account: ::prost::alloc::string::String,
-    /// Holds the single container that defines the unit of execution for this
-    /// Revision.
-    #[prost(message, repeated, tag="10")]
-    pub containers: ::prost::alloc::vec::Vec<Container>,
-    /// A list of Volumes to make available to containers.
-    #[prost(message, repeated, tag="11")]
-    pub volumes: ::prost::alloc::vec::Vec<Volume>,
-    /// The sandbox environment to host this Revision.
-    #[prost(enumeration="ExecutionEnvironment", tag="13")]
-    pub execution_environment: i32,
-    /// A reference to a customer managed encryption key (CMEK) to use to encrypt
-    /// this container image. For more information, go to
-    /// <https://cloud.google.com/run/docs/securing/using-cmek>
-    #[prost(string, tag="14")]
-    pub encryption_key: ::prost::alloc::string::String,
-    /// Sets the maximum number of requests that each serving instance can receive.
-    #[prost(int32, tag="15")]
-    pub max_instance_request_concurrency: i32,
-}
-/// Defines a status condition for a resource.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct Condition {
-    /// type is used to communicate the status of the reconciliation process.
-    /// See also:
-    /// <https://github.com/knative/serving/blob/main/docs/spec/errors.md#error-conditions-and-reporting>
-    /// Types common to all resources include:
-    /// * "Ready": True when the Resource is ready.
-    #[prost(string, tag="1")]
-    pub r#type: ::prost::alloc::string::String,
-    /// State of the condition.
-    #[prost(enumeration="condition::State", tag="2")]
-    pub state: i32,
-    /// Human readable message indicating details about the current status.
-    #[prost(string, tag="3")]
-    pub message: ::prost::alloc::string::String,
-    /// Last time the condition transitioned from one status to another.
-    #[prost(message, optional, tag="4")]
-    pub last_transition_time: ::core::option::Option<::prost_types::Timestamp>,
-    /// How to interpret failures of this condition, one of Error, Warning, Info
-    #[prost(enumeration="condition::Severity", tag="5")]
-    pub severity: i32,
-    /// The reason for this condition. Depending on the condition type,
-    /// it will populate one of these fields.
-    /// Successful conditions may not have a reason.
-    #[prost(oneof="condition::Reasons", tags="6, 9, 11")]
-    pub reasons: ::core::option::Option<condition::Reasons>,
-}
-/// Nested message and enum types in `Condition`.
-pub mod condition {
-    /// Represents the possible Condition states.
-    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
-    #[repr(i32)]
-    pub enum State {
-        /// The default value. This value is used if the state is omitted.
-        Unspecified = 0,
-        /// Transient state: Reconciliation has not started yet.
-        ConditionPending = 1,
-        /// Transient state: reconciliation is still in progress.
-        ConditionReconciling = 2,
-        /// Terminal state: Reconciliation did not succeed.
-        ConditionFailed = 3,
-        /// Terminal state: Reconciliation completed successfully.
-        ConditionSucceeded = 4,
-    }
-    /// Represents the severity of the condition failures.
-    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
-    #[repr(i32)]
-    pub enum Severity {
-        /// Unspecified severity
-        Unspecified = 0,
-        /// Error severity.
-        Error = 1,
-        /// Warning severity.
-        Warning = 2,
-        /// Info severity.
-        Info = 3,
-    }
-    /// Reasons common to all types of conditions.
-    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
-    #[repr(i32)]
-    pub enum CommonReason {
-        /// Default value.
-        Undefined = 0,
-        /// Reason unknown. Further details will be in message.
-        Unknown = 1,
-        /// Revision creation process failed.
-        RevisionFailed = 3,
-        /// Timed out waiting for completion.
-        ProgressDeadlineExceeded = 4,
-        /// The container image path is incorrect.
-        ContainerMissing = 6,
-        /// Insufficient permissions on the container image.
-        ContainerPermissionDenied = 7,
-        /// Container image is not authorized by policy.
-        ContainerImageUnauthorized = 8,
-        /// Container image policy authorization check failed.
-        ContainerImageAuthorizationCheckFailed = 9,
-        /// Insufficient permissions on encryption key.
-        EncryptionKeyPermissionDenied = 10,
-        /// Permission check on encryption key failed.
-        EncryptionKeyCheckFailed = 11,
-        /// At least one Access check on secrets failed.
-        SecretsAccessCheckFailed = 12,
-        /// Waiting for operation to complete.
-        WaitingForOperation = 13,
-        /// System will retry immediately.
-        ImmediateRetry = 14,
-        /// System will retry later; current attempt failed.
-        PostponedRetry = 15,
-        /// An internal error occurred. Further information may be in the message.
-        Internal = 16,
-    }
-    /// Reasons specific to Revision resource.
-    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
-    #[repr(i32)]
-    pub enum RevisionReason {
-        /// Default value.
-        Undefined = 0,
-        /// Revision in Pending state.
-        Pending = 1,
-        /// Revision is in Reserve state.
-        Reserve = 2,
-        /// Revision is Retired.
-        Retired = 3,
-        /// Revision is being retired.
-        Retiring = 4,
-        /// Revision is being recreated.
-        Recreating = 5,
-        /// There was a health check error.
-        HealthCheckContainerError = 6,
-        /// Health check failed due to user error from customized path of the
-        /// container. System will retry.
-        CustomizedPathResponsePending = 7,
-        /// A revision with min_instance_count > 0 was created and is reserved, but
-        /// it was not configured to serve traffic, so it's not live. This can also
-        /// happen momentarily during traffic migration.
-        MinInstancesNotProvisioned = 8,
-        /// The maximum allowed number of active revisions has been reached.
-        ActiveRevisionLimitReached = 9,
-        /// There was no deployment defined.
-        /// This value is no longer used, but Services created in older versions of
-        /// the API might contain this value.
-        NoDeployment = 10,
-        /// A revision's container has no port specified since the revision is of a
-        /// manually scaled service with 0 instance count
-        HealthCheckSkipped = 11,
-    }
-    /// Reasons specific to Execution resource.
-    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
-    #[repr(i32)]
-    pub enum ExecutionReason {
-        /// Default value.
-        Undefined = 0,
-        /// Internal system error getting execution status. System will retry.
-        JobStatusServicePollingError = 1,
-        /// A task reached its retry limit and the last attempt failed due to the
-        /// user container exiting with a non-zero exit code.
-        NonZeroExitCode = 2,
-    }
-    /// The reason for this condition. Depending on the condition type,
-    /// it will populate one of these fields.
-    /// Successful conditions may not have a reason.
-    #[derive(Clone, PartialEq, ::prost::Oneof)]
-    pub enum Reasons {
-        /// A common (service-level) reason for this condition.
-        #[prost(enumeration="CommonReason", tag="6")]
-        Reason(i32),
-        /// A reason for the revision condition.
-        #[prost(enumeration="RevisionReason", tag="9")]
-        RevisionReason(i32),
-        /// A reason for the execution condition.
-        #[prost(enumeration="ExecutionReason", tag="11")]
-        ExecutionReason(i32),
-    }
-}
 /// Request message for obtaining a Revision by its full name.
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct GetRevisionRequest {
@@ -758,6 +851,7 @@ pub struct Revision {
 pub mod revisions_client {
     #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
     use tonic::codegen::*;
+    use tonic::codegen::http::Uri;
     /// Cloud Run Revision Control Plane API.
     #[derive(Debug, Clone)]
     pub struct RevisionsClient<T> {
@@ -772,6 +866,10 @@ pub mod revisions_client {
     {
         pub fn new(inner: T) -> Self {
             let inner = tonic::client::Grpc::new(inner);
+            Self { inner }
+        }
+        pub fn with_origin(inner: T, origin: Uri) -> Self {
+            let inner = tonic::client::Grpc::with_origin(inner, origin);
             Self { inner }
         }
         pub fn with_interceptor<F>(
@@ -793,19 +891,19 @@ pub mod revisions_client {
         {
             RevisionsClient::new(InterceptedService::new(inner, interceptor))
         }
-        /// Compress requests with `gzip`.
+        /// Compress requests with the given encoding.
         ///
         /// This requires the server to support it otherwise it might respond with an
         /// error.
         #[must_use]
-        pub fn send_gzip(mut self) -> Self {
-            self.inner = self.inner.send_gzip();
+        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.send_compressed(encoding);
             self
         }
-        /// Enable decompressing responses with `gzip`.
+        /// Enable decompressing responses.
         #[must_use]
-        pub fn accept_gzip(mut self) -> Self {
-            self.inner = self.inner.accept_gzip();
+        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.accept_compressed(encoding);
             self
         }
         /// Gets information about a Revision.
@@ -872,6 +970,55 @@ pub mod revisions_client {
             self.inner.unary(request.into_request(), path, codec).await
         }
     }
+}
+/// RevisionTemplate describes the data a revision should have when created from
+/// a template.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct RevisionTemplate {
+    /// The unique name for the revision. If this field is omitted, it will be
+    /// automatically generated based on the Service name.
+    #[prost(string, tag="1")]
+    pub revision: ::prost::alloc::string::String,
+    /// KRM-style labels for the resource.
+    #[prost(btree_map="string, string", tag="2")]
+    pub labels: ::prost::alloc::collections::BTreeMap<::prost::alloc::string::String, ::prost::alloc::string::String>,
+    /// KRM-style annotations for the resource.
+    #[prost(btree_map="string, string", tag="3")]
+    pub annotations: ::prost::alloc::collections::BTreeMap<::prost::alloc::string::String, ::prost::alloc::string::String>,
+    /// Scaling settings for this Revision.
+    #[prost(message, optional, tag="4")]
+    pub scaling: ::core::option::Option<RevisionScaling>,
+    /// VPC Access configuration to use for this Revision. For more information,
+    /// visit <https://cloud.google.com/run/docs/configuring/connecting-vpc.>
+    #[prost(message, optional, tag="6")]
+    pub vpc_access: ::core::option::Option<VpcAccess>,
+    /// Max allowed time for an instance to respond to a request.
+    #[prost(message, optional, tag="8")]
+    pub timeout: ::core::option::Option<::prost_types::Duration>,
+    /// Email address of the IAM service account associated with the revision of
+    /// the service. The service account represents the identity of the running
+    /// revision, and determines what permissions the revision has. If not
+    /// provided, the revision will use the project's default service account.
+    #[prost(string, tag="9")]
+    pub service_account: ::prost::alloc::string::String,
+    /// Holds the single container that defines the unit of execution for this
+    /// Revision.
+    #[prost(message, repeated, tag="10")]
+    pub containers: ::prost::alloc::vec::Vec<Container>,
+    /// A list of Volumes to make available to containers.
+    #[prost(message, repeated, tag="11")]
+    pub volumes: ::prost::alloc::vec::Vec<Volume>,
+    /// The sandbox environment to host this Revision.
+    #[prost(enumeration="ExecutionEnvironment", tag="13")]
+    pub execution_environment: i32,
+    /// A reference to a customer managed encryption key (CMEK) to use to encrypt
+    /// this container image. For more information, go to
+    /// <https://cloud.google.com/run/docs/securing/using-cmek>
+    #[prost(string, tag="14")]
+    pub encryption_key: ::prost::alloc::string::String,
+    /// Sets the maximum number of requests that each serving instance can receive.
+    #[prost(int32, tag="15")]
+    pub max_instance_request_concurrency: i32,
 }
 /// Request message for creating a Service.
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -1127,6 +1274,7 @@ pub struct Service {
 pub mod services_client {
     #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
     use tonic::codegen::*;
+    use tonic::codegen::http::Uri;
     /// Cloud Run Service Control Plane API
     #[derive(Debug, Clone)]
     pub struct ServicesClient<T> {
@@ -1141,6 +1289,10 @@ pub mod services_client {
     {
         pub fn new(inner: T) -> Self {
             let inner = tonic::client::Grpc::new(inner);
+            Self { inner }
+        }
+        pub fn with_origin(inner: T, origin: Uri) -> Self {
+            let inner = tonic::client::Grpc::with_origin(inner, origin);
             Self { inner }
         }
         pub fn with_interceptor<F>(
@@ -1162,19 +1314,19 @@ pub mod services_client {
         {
             ServicesClient::new(InterceptedService::new(inner, interceptor))
         }
-        /// Compress requests with `gzip`.
+        /// Compress requests with the given encoding.
         ///
         /// This requires the server to support it otherwise it might respond with an
         /// error.
         #[must_use]
-        pub fn send_gzip(mut self) -> Self {
-            self.inner = self.inner.send_gzip();
+        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.send_compressed(encoding);
             self
         }
-        /// Enable decompressing responses with `gzip`.
+        /// Enable decompressing responses.
         #[must_use]
-        pub fn accept_gzip(mut self) -> Self {
-            self.inner = self.inner.accept_gzip();
+        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.accept_compressed(encoding);
             self
         }
         /// Creates a new Service in a given project and location.

@@ -29,7 +29,7 @@ pub struct Policy {
     #[prost(btree_map="string, message", tag="3")]
     pub cluster_admission_rules: ::prost::alloc::collections::BTreeMap<::prost::alloc::string::String, AdmissionRule>,
     /// Optional. Per-kubernetes-namespace admission rules. K8s namespace spec format:
-    ///   `\[a-z.-\]+`, e.g. `some-namespace`
+    ///    `\[a-z.-\]+`, e.g. `some-namespace`
     #[prost(btree_map="string, message", tag="10")]
     pub kubernetes_namespace_admission_rules: ::prost::alloc::collections::BTreeMap<::prost::alloc::string::String, AdmissionRule>,
     /// Optional. Per-kubernetes-service-account admission rules. Service account
@@ -62,6 +62,19 @@ pub mod policy {
         Enable = 1,
         /// Disables system policy evaluation.
         Disable = 2,
+    }
+    impl GlobalPolicyEvaluationMode {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                GlobalPolicyEvaluationMode::Unspecified => "GLOBAL_POLICY_EVALUATION_MODE_UNSPECIFIED",
+                GlobalPolicyEvaluationMode::Enable => "ENABLE",
+                GlobalPolicyEvaluationMode::Disable => "DISABLE",
+            }
+        }
     }
 }
 /// An [admission allowlist pattern]\[google.cloud.binaryauthorization.v1beta1.AdmissionWhitelistPattern\] exempts images
@@ -120,6 +133,20 @@ pub mod admission_rule {
         /// This rule denies all pod creations.
         AlwaysDeny = 3,
     }
+    impl EvaluationMode {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                EvaluationMode::Unspecified => "EVALUATION_MODE_UNSPECIFIED",
+                EvaluationMode::AlwaysAllow => "ALWAYS_ALLOW",
+                EvaluationMode::RequireAttestation => "REQUIRE_ATTESTATION",
+                EvaluationMode::AlwaysDeny => "ALWAYS_DENY",
+            }
+        }
+    }
     /// Defines the possible actions when a pod creation is denied by an admission
     /// rule.
     #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
@@ -132,6 +159,19 @@ pub mod admission_rule {
         /// Dryrun mode: Audit logging only.  This will allow the pod creation as if
         /// the admission request had specified break-glass.
         DryrunAuditLogOnly = 2,
+    }
+    impl EnforcementMode {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                EnforcementMode::Unspecified => "ENFORCEMENT_MODE_UNSPECIFIED",
+                EnforcementMode::EnforcedBlockAndAuditLog => "ENFORCED_BLOCK_AND_AUDIT_LOG",
+                EnforcementMode::DryrunAuditLogOnly => "DRYRUN_AUDIT_LOG_ONLY",
+            }
+        }
     }
 }
 /// An \[attestor][google.cloud.binaryauthorization.v1beta1.Attestor\] that attests to container image
@@ -262,6 +302,28 @@ pub mod pkix_public_key {
         /// ECDSA on the NIST P-521 curve with a SHA512 digest.
         EcdsaP521Sha512 = 11,
     }
+    impl SignatureAlgorithm {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                SignatureAlgorithm::Unspecified => "SIGNATURE_ALGORITHM_UNSPECIFIED",
+                SignatureAlgorithm::RsaPss2048Sha256 => "RSA_PSS_2048_SHA256",
+                SignatureAlgorithm::RsaPss3072Sha256 => "RSA_PSS_3072_SHA256",
+                SignatureAlgorithm::RsaPss4096Sha256 => "RSA_PSS_4096_SHA256",
+                SignatureAlgorithm::RsaPss4096Sha512 => "RSA_PSS_4096_SHA512",
+                SignatureAlgorithm::RsaSignPkcs12048Sha256 => "RSA_SIGN_PKCS1_2048_SHA256",
+                SignatureAlgorithm::RsaSignPkcs13072Sha256 => "RSA_SIGN_PKCS1_3072_SHA256",
+                SignatureAlgorithm::RsaSignPkcs14096Sha256 => "RSA_SIGN_PKCS1_4096_SHA256",
+                SignatureAlgorithm::RsaSignPkcs14096Sha512 => "RSA_SIGN_PKCS1_4096_SHA512",
+                SignatureAlgorithm::EcdsaP256Sha256 => "ECDSA_P256_SHA256",
+                SignatureAlgorithm::EcdsaP384Sha384 => "ECDSA_P384_SHA384",
+                SignatureAlgorithm::EcdsaP521Sha512 => "ECDSA_P521_SHA512",
+            }
+        }
+    }
 }
 /// An [attestor public key]\[google.cloud.binaryauthorization.v1beta1.AttestorPublicKey\] that will be used to verify
 /// attestations signed by this attestor.
@@ -308,94 +370,6 @@ pub mod attestor_public_key {
         /// encoding of the public key.
         #[prost(message, tag="5")]
         PkixPublicKey(super::PkixPublicKey),
-    }
-}
-/// Represents an auditing event from Continuous Validation.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ContinuousValidationEvent {
-    /// Type of CV event.
-    #[prost(oneof="continuous_validation_event::EventType", tags="1, 2")]
-    pub event_type: ::core::option::Option<continuous_validation_event::EventType>,
-}
-/// Nested message and enum types in `ContinuousValidationEvent`.
-pub mod continuous_validation_event {
-    /// An auditing event for one Pod.
-    #[derive(Clone, PartialEq, ::prost::Message)]
-    pub struct ContinuousValidationPodEvent {
-        /// The k8s namespace of the Pod.
-        #[prost(string, tag="7")]
-        pub pod_namespace: ::prost::alloc::string::String,
-        /// The name of the Pod.
-        #[prost(string, tag="1")]
-        pub pod: ::prost::alloc::string::String,
-        /// Deploy time of the Pod from k8s.
-        #[prost(message, optional, tag="2")]
-        pub deploy_time: ::core::option::Option<::prost_types::Timestamp>,
-        /// Termination time of the Pod from k8s, or nothing if still running.
-        #[prost(message, optional, tag="3")]
-        pub end_time: ::core::option::Option<::prost_types::Timestamp>,
-        /// Auditing verdict for this Pod.
-        #[prost(enumeration="continuous_validation_pod_event::PolicyConformanceVerdict", tag="4")]
-        pub verdict: i32,
-        /// List of images with auditing details.
-        #[prost(message, repeated, tag="5")]
-        pub images: ::prost::alloc::vec::Vec<continuous_validation_pod_event::ImageDetails>,
-    }
-    /// Nested message and enum types in `ContinuousValidationPodEvent`.
-    pub mod continuous_validation_pod_event {
-        /// Container image with auditing details.
-        #[derive(Clone, PartialEq, ::prost::Message)]
-        pub struct ImageDetails {
-            /// The name of the image.
-            #[prost(string, tag="1")]
-            pub image: ::prost::alloc::string::String,
-            /// The result of the audit for this image.
-            #[prost(enumeration="image_details::AuditResult", tag="2")]
-            pub result: i32,
-            /// Description of the above result.
-            #[prost(string, tag="3")]
-            pub description: ::prost::alloc::string::String,
-        }
-        /// Nested message and enum types in `ImageDetails`.
-        pub mod image_details {
-            /// Result of the audit.
-            #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
-            #[repr(i32)]
-            pub enum AuditResult {
-                /// Unspecified result. This is an error.
-                Unspecified = 0,
-                /// Image is allowed.
-                Allow = 1,
-                /// Image is denied.
-                Deny = 2,
-            }
-        }
-        /// Audit time policy conformance verdict.
-        #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
-        #[repr(i32)]
-        pub enum PolicyConformanceVerdict {
-            /// We should always have a verdict. This is an error.
-            Unspecified = 0,
-            /// The pod violates the policy.
-            ViolatesPolicy = 1,
-        }
-    }
-    /// An event describing that the project policy is unsupported by CV.
-    #[derive(Clone, PartialEq, ::prost::Message)]
-    pub struct UnsupportedPolicyEvent {
-        /// A description of the unsupported policy.
-        #[prost(string, tag="1")]
-        pub description: ::prost::alloc::string::String,
-    }
-    /// Type of CV event.
-    #[derive(Clone, PartialEq, ::prost::Oneof)]
-    pub enum EventType {
-        /// Pod event.
-        #[prost(message, tag="1")]
-        PodEvent(ContinuousValidationPodEvent),
-        /// Unsupported policy event.
-        #[prost(message, tag="2")]
-        UnsupportedPolicyEvent(UnsupportedPolicyEvent),
     }
 }
 /// Request message for \[BinauthzManagementService.GetPolicy][\].
@@ -496,6 +470,7 @@ pub struct GetSystemPolicyRequest {
 pub mod binauthz_management_service_v1_beta1_client {
     #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
     use tonic::codegen::*;
+    use tonic::codegen::http::Uri;
     /// Google Cloud Management Service for Binary Authorization admission policies
     /// and attestation authorities.
     ///
@@ -516,6 +491,10 @@ pub mod binauthz_management_service_v1_beta1_client {
     {
         pub fn new(inner: T) -> Self {
             let inner = tonic::client::Grpc::new(inner);
+            Self { inner }
+        }
+        pub fn with_origin(inner: T, origin: Uri) -> Self {
+            let inner = tonic::client::Grpc::with_origin(inner, origin);
             Self { inner }
         }
         pub fn with_interceptor<F>(
@@ -539,19 +518,19 @@ pub mod binauthz_management_service_v1_beta1_client {
                 InterceptedService::new(inner, interceptor),
             )
         }
-        /// Compress requests with `gzip`.
+        /// Compress requests with the given encoding.
         ///
         /// This requires the server to support it otherwise it might respond with an
         /// error.
         #[must_use]
-        pub fn send_gzip(mut self) -> Self {
-            self.inner = self.inner.send_gzip();
+        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.send_compressed(encoding);
             self
         }
-        /// Enable decompressing responses with `gzip`.
+        /// Enable decompressing responses.
         #[must_use]
-        pub fn accept_gzip(mut self) -> Self {
-            self.inner = self.inner.accept_gzip();
+        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.accept_compressed(encoding);
             self
         }
         /// A [policy][google.cloud.binaryauthorization.v1beta1.Policy] specifies the [attestors][google.cloud.binaryauthorization.v1beta1.Attestor] that must attest to
@@ -717,6 +696,7 @@ pub mod binauthz_management_service_v1_beta1_client {
 pub mod system_policy_v1_beta1_client {
     #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
     use tonic::codegen::*;
+    use tonic::codegen::http::Uri;
     /// API for working with the system policy.
     #[derive(Debug, Clone)]
     pub struct SystemPolicyV1Beta1Client<T> {
@@ -731,6 +711,10 @@ pub mod system_policy_v1_beta1_client {
     {
         pub fn new(inner: T) -> Self {
             let inner = tonic::client::Grpc::new(inner);
+            Self { inner }
+        }
+        pub fn with_origin(inner: T, origin: Uri) -> Self {
+            let inner = tonic::client::Grpc::with_origin(inner, origin);
             Self { inner }
         }
         pub fn with_interceptor<F>(
@@ -752,19 +736,19 @@ pub mod system_policy_v1_beta1_client {
         {
             SystemPolicyV1Beta1Client::new(InterceptedService::new(inner, interceptor))
         }
-        /// Compress requests with `gzip`.
+        /// Compress requests with the given encoding.
         ///
         /// This requires the server to support it otherwise it might respond with an
         /// error.
         #[must_use]
-        pub fn send_gzip(mut self) -> Self {
-            self.inner = self.inner.send_gzip();
+        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.send_compressed(encoding);
             self
         }
-        /// Enable decompressing responses with `gzip`.
+        /// Enable decompressing responses.
         #[must_use]
-        pub fn accept_gzip(mut self) -> Self {
-            self.inner = self.inner.accept_gzip();
+        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.accept_compressed(encoding);
             self
         }
         /// Gets the current system policy in the specified location.
@@ -787,5 +771,118 @@ pub mod system_policy_v1_beta1_client {
             );
             self.inner.unary(request.into_request(), path, codec).await
         }
+    }
+}
+/// Represents an auditing event from Continuous Validation.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ContinuousValidationEvent {
+    /// Type of CV event.
+    #[prost(oneof="continuous_validation_event::EventType", tags="1, 2")]
+    pub event_type: ::core::option::Option<continuous_validation_event::EventType>,
+}
+/// Nested message and enum types in `ContinuousValidationEvent`.
+pub mod continuous_validation_event {
+    /// An auditing event for one Pod.
+    #[derive(Clone, PartialEq, ::prost::Message)]
+    pub struct ContinuousValidationPodEvent {
+        /// The k8s namespace of the Pod.
+        #[prost(string, tag="7")]
+        pub pod_namespace: ::prost::alloc::string::String,
+        /// The name of the Pod.
+        #[prost(string, tag="1")]
+        pub pod: ::prost::alloc::string::String,
+        /// Deploy time of the Pod from k8s.
+        #[prost(message, optional, tag="2")]
+        pub deploy_time: ::core::option::Option<::prost_types::Timestamp>,
+        /// Termination time of the Pod from k8s, or nothing if still running.
+        #[prost(message, optional, tag="3")]
+        pub end_time: ::core::option::Option<::prost_types::Timestamp>,
+        /// Auditing verdict for this Pod.
+        #[prost(enumeration="continuous_validation_pod_event::PolicyConformanceVerdict", tag="4")]
+        pub verdict: i32,
+        /// List of images with auditing details.
+        #[prost(message, repeated, tag="5")]
+        pub images: ::prost::alloc::vec::Vec<continuous_validation_pod_event::ImageDetails>,
+    }
+    /// Nested message and enum types in `ContinuousValidationPodEvent`.
+    pub mod continuous_validation_pod_event {
+        /// Container image with auditing details.
+        #[derive(Clone, PartialEq, ::prost::Message)]
+        pub struct ImageDetails {
+            /// The name of the image.
+            #[prost(string, tag="1")]
+            pub image: ::prost::alloc::string::String,
+            /// The result of the audit for this image.
+            #[prost(enumeration="image_details::AuditResult", tag="2")]
+            pub result: i32,
+            /// Description of the above result.
+            #[prost(string, tag="3")]
+            pub description: ::prost::alloc::string::String,
+        }
+        /// Nested message and enum types in `ImageDetails`.
+        pub mod image_details {
+            /// Result of the audit.
+            #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+            #[repr(i32)]
+            pub enum AuditResult {
+                /// Unspecified result. This is an error.
+                Unspecified = 0,
+                /// Image is allowed.
+                Allow = 1,
+                /// Image is denied.
+                Deny = 2,
+            }
+            impl AuditResult {
+                /// String value of the enum field names used in the ProtoBuf definition.
+                ///
+                /// The values are not transformed in any way and thus are considered stable
+                /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+                pub fn as_str_name(&self) -> &'static str {
+                    match self {
+                        AuditResult::Unspecified => "AUDIT_RESULT_UNSPECIFIED",
+                        AuditResult::Allow => "ALLOW",
+                        AuditResult::Deny => "DENY",
+                    }
+                }
+            }
+        }
+        /// Audit time policy conformance verdict.
+        #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+        #[repr(i32)]
+        pub enum PolicyConformanceVerdict {
+            /// We should always have a verdict. This is an error.
+            Unspecified = 0,
+            /// The pod violates the policy.
+            ViolatesPolicy = 1,
+        }
+        impl PolicyConformanceVerdict {
+            /// String value of the enum field names used in the ProtoBuf definition.
+            ///
+            /// The values are not transformed in any way and thus are considered stable
+            /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+            pub fn as_str_name(&self) -> &'static str {
+                match self {
+                    PolicyConformanceVerdict::Unspecified => "POLICY_CONFORMANCE_VERDICT_UNSPECIFIED",
+                    PolicyConformanceVerdict::ViolatesPolicy => "VIOLATES_POLICY",
+                }
+            }
+        }
+    }
+    /// An event describing that the project policy is unsupported by CV.
+    #[derive(Clone, PartialEq, ::prost::Message)]
+    pub struct UnsupportedPolicyEvent {
+        /// A description of the unsupported policy.
+        #[prost(string, tag="1")]
+        pub description: ::prost::alloc::string::String,
+    }
+    /// Type of CV event.
+    #[derive(Clone, PartialEq, ::prost::Oneof)]
+    pub enum EventType {
+        /// Pod event.
+        #[prost(message, tag="1")]
+        PodEvent(ContinuousValidationPodEvent),
+        /// Unsupported policy event.
+        #[prost(message, tag="2")]
+        UnsupportedPolicyEvent(UnsupportedPolicyEvent),
     }
 }

@@ -258,6 +258,19 @@ pub mod certificate_authority {
         /// or an unmanaged CA.
         Subordinate = 2,
     }
+    impl Type {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                Type::Unspecified => "TYPE_UNSPECIFIED",
+                Type::SelfSigned => "SELF_SIGNED",
+                Type::Subordinate => "SUBORDINATE",
+            }
+        }
+    }
     /// The tier of a \[CertificateAuthority][google.cloud.security.privateca.v1beta1.CertificateAuthority\], indicating its supported
     /// functionality and/or billing SKU.
     #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
@@ -269,6 +282,19 @@ pub mod certificate_authority {
         Enterprise = 1,
         /// DevOps tier.
         Devops = 2,
+    }
+    impl Tier {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                Tier::Unspecified => "TIER_UNSPECIFIED",
+                Tier::Enterprise => "ENTERPRISE",
+                Tier::Devops => "DEVOPS",
+            }
+        }
     }
     /// The state of a \[CertificateAuthority][google.cloud.security.privateca.v1beta1.CertificateAuthority\], indicating if it can be used.
     #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
@@ -285,6 +311,21 @@ pub mod certificate_authority {
         PendingActivation = 3,
         /// Certificates cannot be issued from this CA. CRLs will not be generated.
         PendingDeletion = 4,
+    }
+    impl State {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                State::Unspecified => "STATE_UNSPECIFIED",
+                State::Enabled => "ENABLED",
+                State::Disabled => "DISABLED",
+                State::PendingActivation => "PENDING_ACTIVATION",
+                State::PendingDeletion => "PENDING_DELETION",
+            }
+        }
     }
     /// The algorithm of a Cloud KMS CryptoKeyVersion of a
     /// \[CryptoKey][google.cloud.kms.v1.CryptoKey\] with the
@@ -317,6 +358,25 @@ pub mod certificate_authority {
         /// maps to CryptoKeyVersionAlgorithm.EC_SIGN_P384_SHA384
         EcP384Sha384 = 5,
     }
+    impl SignHashAlgorithm {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                SignHashAlgorithm::Unspecified => "SIGN_HASH_ALGORITHM_UNSPECIFIED",
+                SignHashAlgorithm::RsaPss2048Sha256 => "RSA_PSS_2048_SHA256",
+                SignHashAlgorithm::RsaPss3072Sha256 => "RSA_PSS_3072_SHA256",
+                SignHashAlgorithm::RsaPss4096Sha256 => "RSA_PSS_4096_SHA256",
+                SignHashAlgorithm::RsaPkcs12048Sha256 => "RSA_PKCS1_2048_SHA256",
+                SignHashAlgorithm::RsaPkcs13072Sha256 => "RSA_PKCS1_3072_SHA256",
+                SignHashAlgorithm::RsaPkcs14096Sha256 => "RSA_PKCS1_4096_SHA256",
+                SignHashAlgorithm::EcP256Sha256 => "EC_P256_SHA256",
+                SignHashAlgorithm::EcP384Sha384 => "EC_P384_SHA384",
+            }
+        }
+    }
 }
 /// A \[CertificateRevocationList][google.cloud.security.privateca.v1beta1.CertificateRevocationList\] corresponds to a signed X.509 certificate
 /// Revocation List (CRL). A CRL contains the serial numbers of certificates that
@@ -326,7 +386,7 @@ pub struct CertificateRevocationList {
     /// Output only. The resource path for this \[CertificateRevocationList][google.cloud.security.privateca.v1beta1.CertificateRevocationList\] in
     /// the format
     /// `projects/*/locations/*/certificateAuthorities/*/
-    ///    certificateRevocationLists/*`.
+    ///     certificateRevocationLists/*`.
     #[prost(string, tag="1")]
     pub name: ::prost::alloc::string::String,
     /// Output only. The CRL sequence number that appears in pem_crl.
@@ -380,6 +440,19 @@ pub mod certificate_revocation_list {
         Active = 1,
         /// The \[CertificateRevocationList][google.cloud.security.privateca.v1beta1.CertificateRevocationList\] is no longer current.
         Superseded = 2,
+    }
+    impl State {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                State::Unspecified => "STATE_UNSPECIFIED",
+                State::Active => "ACTIVE",
+                State::Superseded => "SUPERSEDED",
+            }
+        }
     }
 }
 /// A \[Certificate][google.cloud.security.privateca.v1beta1.Certificate\] corresponds to a signed X.509 certificate issued by a
@@ -596,6 +669,19 @@ pub mod public_key {
         PemRsaKey = 1,
         /// A PEM-encoded compressed NIST P-256/secp256r1/prime256v1 or P-384 key.
         PemEcKey = 2,
+    }
+    impl KeyType {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                KeyType::Unspecified => "KEY_TYPE_UNSPECIFIED",
+                KeyType::PemRsaKey => "PEM_RSA_KEY",
+                KeyType::PemEcKey => "PEM_EC_KEY",
+            }
+        }
     }
 }
 /// A \[CertificateConfig][google.cloud.security.privateca.v1beta1.CertificateConfig\] describes an X.509 certificate or CSR that is to be
@@ -898,6 +984,25 @@ pub enum RevocationReason {
     /// The authority which determines appropriate attributes for a \[Certificate][google.cloud.security.privateca.v1beta1.Certificate\]
     /// may have been compromised.
     AttributeAuthorityCompromise = 8,
+}
+impl RevocationReason {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            RevocationReason::Unspecified => "REVOCATION_REASON_UNSPECIFIED",
+            RevocationReason::KeyCompromise => "KEY_COMPROMISE",
+            RevocationReason::CertificateAuthorityCompromise => "CERTIFICATE_AUTHORITY_COMPROMISE",
+            RevocationReason::AffiliationChanged => "AFFILIATION_CHANGED",
+            RevocationReason::Superseded => "SUPERSEDED",
+            RevocationReason::CessationOfOperation => "CESSATION_OF_OPERATION",
+            RevocationReason::CertificateHold => "CERTIFICATE_HOLD",
+            RevocationReason::PrivilegeWithdrawn => "PRIVILEGE_WITHDRAWN",
+            RevocationReason::AttributeAuthorityCompromise => "ATTRIBUTE_AUTHORITY_COMPROMISE",
+        }
+    }
 }
 /// Request message for \[CertificateAuthorityService.CreateCertificate][google.cloud.security.privateca.v1beta1.CertificateAuthorityService.CreateCertificate\].
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -1456,6 +1561,7 @@ pub struct OperationMetadata {
 pub mod certificate_authority_service_client {
     #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
     use tonic::codegen::*;
+    use tonic::codegen::http::Uri;
     /// [Certificate Authority Service][google.cloud.security.privateca.v1beta1.CertificateAuthorityService] manages private
     /// certificate authorities and issued certificates.
     #[derive(Debug, Clone)]
@@ -1471,6 +1577,10 @@ pub mod certificate_authority_service_client {
     {
         pub fn new(inner: T) -> Self {
             let inner = tonic::client::Grpc::new(inner);
+            Self { inner }
+        }
+        pub fn with_origin(inner: T, origin: Uri) -> Self {
+            let inner = tonic::client::Grpc::with_origin(inner, origin);
             Self { inner }
         }
         pub fn with_interceptor<F>(
@@ -1494,19 +1604,19 @@ pub mod certificate_authority_service_client {
                 InterceptedService::new(inner, interceptor),
             )
         }
-        /// Compress requests with `gzip`.
+        /// Compress requests with the given encoding.
         ///
         /// This requires the server to support it otherwise it might respond with an
         /// error.
         #[must_use]
-        pub fn send_gzip(mut self) -> Self {
-            self.inner = self.inner.send_gzip();
+        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.send_compressed(encoding);
             self
         }
-        /// Enable decompressing responses with `gzip`.
+        /// Enable decompressing responses.
         #[must_use]
-        pub fn accept_gzip(mut self) -> Self {
-            self.inner = self.inner.accept_gzip();
+        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.accept_compressed(encoding);
             self
         }
         /// Create a new [Certificate][google.cloud.security.privateca.v1beta1.Certificate] in a given Project, Location from a particular

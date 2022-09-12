@@ -161,6 +161,20 @@ pub mod binding_explanation {
         /// The sender of the request is not allowed to access the binding.
         UnknownInfoDenied = 3,
     }
+    impl RolePermission {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                RolePermission::Unspecified => "ROLE_PERMISSION_UNSPECIFIED",
+                RolePermission::Included => "ROLE_PERMISSION_INCLUDED",
+                RolePermission::NotIncluded => "ROLE_PERMISSION_NOT_INCLUDED",
+                RolePermission::UnknownInfoDenied => "ROLE_PERMISSION_UNKNOWN_INFO_DENIED",
+            }
+        }
+    }
     /// Whether the binding includes the member.
     #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
     #[repr(i32)]
@@ -172,7 +186,7 @@ pub mod binding_explanation {
         ///
         /// * A member is included directly if that member is listed in the binding.
         /// * A member is included indirectly if that member is in a Google group or
-        ///   G Suite domain that is listed in the binding.
+        ///    G Suite domain that is listed in the binding.
         Included = 1,
         /// The binding does not include the member.
         NotIncluded = 2,
@@ -181,6 +195,21 @@ pub mod binding_explanation {
         /// The member is an unsupported type. Only Google Accounts and service
         /// accounts are supported.
         UnknownUnsupported = 4,
+    }
+    impl Membership {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                Membership::Unspecified => "MEMBERSHIP_UNSPECIFIED",
+                Membership::Included => "MEMBERSHIP_INCLUDED",
+                Membership::NotIncluded => "MEMBERSHIP_NOT_INCLUDED",
+                Membership::UnknownInfoDenied => "MEMBERSHIP_UNKNOWN_INFO_DENIED",
+                Membership::UnknownUnsupported => "MEMBERSHIP_UNKNOWN_UNSUPPORTED",
+            }
+        }
     }
 }
 /// Whether a member has a permission for a resource.
@@ -200,6 +229,21 @@ pub enum AccessState {
     /// Policy Troubleshooter needs to evaluate.
     UnknownInfoDenied = 4,
 }
+impl AccessState {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            AccessState::Unspecified => "ACCESS_STATE_UNSPECIFIED",
+            AccessState::Granted => "GRANTED",
+            AccessState::NotGranted => "NOT_GRANTED",
+            AccessState::UnknownConditional => "UNKNOWN_CONDITIONAL",
+            AccessState::UnknownInfoDenied => "UNKNOWN_INFO_DENIED",
+        }
+    }
+}
 /// The extent to which a single data point contributes to an overall
 /// determination.
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
@@ -213,6 +257,19 @@ pub enum HeuristicRelevance {
     /// The data point has a strong effect on the result. Changing the data point
     /// is likely to affect the overall determination.
     High = 2,
+}
+impl HeuristicRelevance {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            HeuristicRelevance::Unspecified => "HEURISTIC_RELEVANCE_UNSPECIFIED",
+            HeuristicRelevance::Normal => "NORMAL",
+            HeuristicRelevance::High => "HIGH",
+        }
+    }
 }
 /// Request for \[TroubleshootIamPolicy][google.cloud.policytroubleshooter.v1.IamChecker.TroubleshootIamPolicy\].
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -246,6 +303,7 @@ pub struct TroubleshootIamPolicyResponse {
 pub mod iam_checker_client {
     #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
     use tonic::codegen::*;
+    use tonic::codegen::http::Uri;
     /// IAM Policy Troubleshooter service.
     ///
     /// This service helps you troubleshoot access issues for Google Cloud resources.
@@ -262,6 +320,10 @@ pub mod iam_checker_client {
     {
         pub fn new(inner: T) -> Self {
             let inner = tonic::client::Grpc::new(inner);
+            Self { inner }
+        }
+        pub fn with_origin(inner: T, origin: Uri) -> Self {
+            let inner = tonic::client::Grpc::with_origin(inner, origin);
             Self { inner }
         }
         pub fn with_interceptor<F>(
@@ -283,19 +345,19 @@ pub mod iam_checker_client {
         {
             IamCheckerClient::new(InterceptedService::new(inner, interceptor))
         }
-        /// Compress requests with `gzip`.
+        /// Compress requests with the given encoding.
         ///
         /// This requires the server to support it otherwise it might respond with an
         /// error.
         #[must_use]
-        pub fn send_gzip(mut self) -> Self {
-            self.inner = self.inner.send_gzip();
+        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.send_compressed(encoding);
             self
         }
-        /// Enable decompressing responses with `gzip`.
+        /// Enable decompressing responses.
         #[must_use]
-        pub fn accept_gzip(mut self) -> Self {
-            self.inner = self.inner.accept_gzip();
+        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.accept_compressed(encoding);
             self
         }
         /// Checks whether a member has a specific permission for a specific resource,

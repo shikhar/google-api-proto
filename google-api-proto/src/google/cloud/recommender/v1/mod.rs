@@ -69,6 +69,21 @@ pub mod insight {
         /// This insight is related to manageability.
         Manageability = 4,
     }
+    impl Category {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                Category::Unspecified => "CATEGORY_UNSPECIFIED",
+                Category::Cost => "COST",
+                Category::Security => "SECURITY",
+                Category::Performance => "PERFORMANCE",
+                Category::Manageability => "MANAGEABILITY",
+            }
+        }
+    }
     /// Insight severity levels.
     #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
     #[repr(i32)]
@@ -83,6 +98,21 @@ pub mod insight {
         High = 3,
         /// Insight has critical severity.
         Critical = 4,
+    }
+    impl Severity {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                Severity::Unspecified => "SEVERITY_UNSPECIFIED",
+                Severity::Low => "LOW",
+                Severity::Medium => "MEDIUM",
+                Severity::High => "HIGH",
+                Severity::Critical => "CRITICAL",
+            }
+        }
     }
 }
 /// Information related to insight state.
@@ -116,6 +146,69 @@ pub mod insight_state_info {
         /// Google. DISMISSED insights can be marked as ACTIVE.
         Dismissed = 3,
     }
+    impl State {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                State::Unspecified => "STATE_UNSPECIFIED",
+                State::Active => "ACTIVE",
+                State::Accepted => "ACCEPTED",
+                State::Dismissed => "DISMISSED",
+            }
+        }
+    }
+}
+/// Configuration for an InsightType.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct InsightTypeConfig {
+    /// Name of insight type config.
+    /// Eg,
+    /// projects/\[PROJECT_NUMBER]/locations/[LOCATION]/insightTypes/[INSIGHT_TYPE_ID\]/config
+    #[prost(string, tag="1")]
+    pub name: ::prost::alloc::string::String,
+    /// InsightTypeGenerationConfig which configures the generation of
+    /// insights for this insight type.
+    #[prost(message, optional, tag="2")]
+    pub insight_type_generation_config: ::core::option::Option<InsightTypeGenerationConfig>,
+    /// Fingerprint of the InsightTypeConfig. Provides optimistic locking when
+    /// updating.
+    #[prost(string, tag="3")]
+    pub etag: ::prost::alloc::string::String,
+    /// Last time when the config was updated.
+    #[prost(message, optional, tag="4")]
+    pub update_time: ::core::option::Option<::prost_types::Timestamp>,
+    /// Output only. Immutable. The revision ID of the config.
+    /// A new revision is committed whenever the config is changed in any way.
+    /// The format is an 8-character hexadecimal string.
+    #[prost(string, tag="5")]
+    pub revision_id: ::prost::alloc::string::String,
+    /// Allows clients to store small amounts of arbitrary data. Annotations must
+    /// follow the Kubernetes syntax.
+    /// The total size of all keys and values combined is limited to 256k.
+    /// Key can have 2 segments: prefix (optional) and name (required),
+    /// separated by a slash (/).
+    /// Prefix must be a DNS subdomain.
+    /// Name must be 63 characters or less, begin and end with alphanumerics,
+    /// with dashes (-), underscores (_), dots (.), and alphanumerics between.
+    #[prost(btree_map="string, string", tag="6")]
+    pub annotations: ::prost::alloc::collections::BTreeMap<::prost::alloc::string::String, ::prost::alloc::string::String>,
+    /// A user-settable field to provide a human-readable name to be used in user
+    /// interfaces.
+    #[prost(string, tag="7")]
+    pub display_name: ::prost::alloc::string::String,
+}
+/// A configuration to customize the generation of insights.
+/// Eg, customizing the lookback period considered when generating a
+/// insight.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct InsightTypeGenerationConfig {
+    /// Parameters for this InsightTypeGenerationConfig. These configs can be used
+    /// by or are applied to all subtypes.
+    #[prost(message, optional, tag="1")]
+    pub params: ::core::option::Option<::prost_types::Struct>,
 }
 /// A recommendation along with a suggested action. E.g., a rightsizing
 /// recommendation for an underutilized VM, IAM role recommendations, etc
@@ -135,8 +228,8 @@ pub struct Recommendation {
     /// to see a list of subtypes for a given Recommender.
     ///
     /// Examples:
-    ///   For recommender = "google.iam.policy.Recommender",
-    ///   recommender_subtype can be one of "REMOVE_ROLE"/"REPLACE_ROLE"
+    ///    For recommender = "google.iam.policy.Recommender",
+    ///    recommender_subtype can be one of "REMOVE_ROLE"/"REPLACE_ROLE"
     #[prost(string, tag="12")]
     pub recommender_subtype: ::prost::alloc::string::String,
     /// Last time this recommendation was refreshed by the system that created it
@@ -200,6 +293,21 @@ pub mod recommendation {
         /// Recommendation has P1 priority (highest priority).
         P1 = 4,
     }
+    impl Priority {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                Priority::Unspecified => "PRIORITY_UNSPECIFIED",
+                Priority::P4 => "P4",
+                Priority::P3 => "P3",
+                Priority::P2 => "P2",
+                Priority::P1 => "P1",
+            }
+        }
+    }
 }
 /// Contains what resources are changing and how they are changing.
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -227,7 +335,7 @@ pub struct OperationGroup {
 /// * Custom filters for describing partial array patch.
 /// * Extended path values for describing nested arrays.
 /// * Custom fields for describing the resource for which the operation is being
-///   described.
+///    described.
 /// * Allows extension to custom operations not natively supported by RFC6902.
 /// See <https://tools.ietf.org/html/rfc6902> for details on the original RFC.
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -270,22 +378,22 @@ pub struct Operation {
     /// * Example:
     /// ```
     /// {
-    ///   "/versions/*/name" : "it-123"
-    ///   "/versions/*/targetSize/percent": 20
+    ///    "/versions/*/name" : "it-123"
+    ///    "/versions/*/targetSize/percent": 20
     /// }
     /// ```
     /// * Example:
     /// ```
     /// {
-    ///   "/bindings/*/role": "roles/owner"
-    ///   "/bindings/*/condition" : null
+    ///    "/bindings/*/role": "roles/owner"
+    ///    "/bindings/*/condition" : null
     /// }
     /// ```
     /// * Example:
     /// ```
     /// {
-    ///   "/bindings/*/role": "roles/owner"
-    ///   "/bindings/*/members/*" : ["x@example.com", "y@example.com"]
+    ///    "/bindings/*/role": "roles/owner"
+    ///    "/bindings/*/members/*" : ["x@example.com", "y@example.com"]
     /// }
     /// ```
     /// When both path_filters and path_value_matchers are set, an implicit AND
@@ -387,6 +495,21 @@ pub mod impact {
         /// Indicates a potential increase or decrease in manageability.
         Manageability = 4,
     }
+    impl Category {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                Category::Unspecified => "CATEGORY_UNSPECIFIED",
+                Category::Cost => "COST",
+                Category::Security => "SECURITY",
+                Category::Performance => "PERFORMANCE",
+                Category::Manageability => "MANAGEABILITY",
+            }
+        }
+    }
     /// Contains projections (if any) for this category.
     #[derive(Clone, PartialEq, ::prost::Oneof)]
     pub enum Projection {
@@ -442,6 +565,22 @@ pub mod recommendation_state_info {
         /// DISMISSED recommendations can be marked as ACTIVE.
         Dismissed = 5,
     }
+    impl State {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                State::Unspecified => "STATE_UNSPECIFIED",
+                State::Active => "ACTIVE",
+                State::Claimed => "CLAIMED",
+                State::Succeeded => "SUCCEEDED",
+                State::Failed => "FAILED",
+                State::Dismissed => "DISMISSED",
+            }
+        }
+    }
 }
 /// Configuration for a Recommender.
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -488,55 +627,6 @@ pub struct RecommenderConfig {
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct RecommenderGenerationConfig {
     /// Parameters for this RecommenderGenerationConfig. These configs can be used
-    /// by or are applied to all subtypes.
-    #[prost(message, optional, tag="1")]
-    pub params: ::core::option::Option<::prost_types::Struct>,
-}
-/// Configuration for an InsightType.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct InsightTypeConfig {
-    /// Name of insight type config.
-    /// Eg,
-    /// projects/\[PROJECT_NUMBER]/locations/[LOCATION]/insightTypes/[INSIGHT_TYPE_ID\]/config
-    #[prost(string, tag="1")]
-    pub name: ::prost::alloc::string::String,
-    /// InsightTypeGenerationConfig which configures the generation of
-    /// insights for this insight type.
-    #[prost(message, optional, tag="2")]
-    pub insight_type_generation_config: ::core::option::Option<InsightTypeGenerationConfig>,
-    /// Fingerprint of the InsightTypeConfig. Provides optimistic locking when
-    /// updating.
-    #[prost(string, tag="3")]
-    pub etag: ::prost::alloc::string::String,
-    /// Last time when the config was updated.
-    #[prost(message, optional, tag="4")]
-    pub update_time: ::core::option::Option<::prost_types::Timestamp>,
-    /// Output only. Immutable. The revision ID of the config.
-    /// A new revision is committed whenever the config is changed in any way.
-    /// The format is an 8-character hexadecimal string.
-    #[prost(string, tag="5")]
-    pub revision_id: ::prost::alloc::string::String,
-    /// Allows clients to store small amounts of arbitrary data. Annotations must
-    /// follow the Kubernetes syntax.
-    /// The total size of all keys and values combined is limited to 256k.
-    /// Key can have 2 segments: prefix (optional) and name (required),
-    /// separated by a slash (/).
-    /// Prefix must be a DNS subdomain.
-    /// Name must be 63 characters or less, begin and end with alphanumerics,
-    /// with dashes (-), underscores (_), dots (.), and alphanumerics between.
-    #[prost(btree_map="string, string", tag="6")]
-    pub annotations: ::prost::alloc::collections::BTreeMap<::prost::alloc::string::String, ::prost::alloc::string::String>,
-    /// A user-settable field to provide a human-readable name to be used in user
-    /// interfaces.
-    #[prost(string, tag="7")]
-    pub display_name: ::prost::alloc::string::String,
-}
-/// A configuration to customize the generation of insights.
-/// Eg, customizing the lookback period considered when generating a
-/// insight.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct InsightTypeGenerationConfig {
-    /// Parameters for this InsightTypeGenerationConfig. These configs can be used
     /// by or are applied to all subtypes.
     #[prost(message, optional, tag="1")]
     pub params: ::core::option::Option<::prost_types::Struct>,
@@ -815,6 +905,7 @@ pub struct UpdateInsightTypeConfigRequest {
 pub mod recommender_client {
     #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
     use tonic::codegen::*;
+    use tonic::codegen::http::Uri;
     /// Provides insights and recommendations for cloud customers for various
     /// categories like performance optimization, cost savings, reliability, feature
     /// discovery, etc. Insights and recommendations are generated automatically
@@ -832,6 +923,10 @@ pub mod recommender_client {
     {
         pub fn new(inner: T) -> Self {
             let inner = tonic::client::Grpc::new(inner);
+            Self { inner }
+        }
+        pub fn with_origin(inner: T, origin: Uri) -> Self {
+            let inner = tonic::client::Grpc::with_origin(inner, origin);
             Self { inner }
         }
         pub fn with_interceptor<F>(
@@ -853,19 +948,19 @@ pub mod recommender_client {
         {
             RecommenderClient::new(InterceptedService::new(inner, interceptor))
         }
-        /// Compress requests with `gzip`.
+        /// Compress requests with the given encoding.
         ///
         /// This requires the server to support it otherwise it might respond with an
         /// error.
         #[must_use]
-        pub fn send_gzip(mut self) -> Self {
-            self.inner = self.inner.send_gzip();
+        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.send_compressed(encoding);
             self
         }
-        /// Enable decompressing responses with `gzip`.
+        /// Enable decompressing responses.
         #[must_use]
-        pub fn accept_gzip(mut self) -> Self {
-            self.inner = self.inner.accept_gzip();
+        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.accept_compressed(encoding);
             self
         }
         /// Lists insights for the specified Cloud Resource. Requires the

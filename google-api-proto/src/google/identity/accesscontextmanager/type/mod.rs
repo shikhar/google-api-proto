@@ -11,6 +11,20 @@ pub enum DeviceEncryptionStatus {
     /// The device is encrypted.
     Encrypted = 3,
 }
+impl DeviceEncryptionStatus {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            DeviceEncryptionStatus::EncryptionUnspecified => "ENCRYPTION_UNSPECIFIED",
+            DeviceEncryptionStatus::EncryptionUnsupported => "ENCRYPTION_UNSUPPORTED",
+            DeviceEncryptionStatus::Unencrypted => "UNENCRYPTED",
+            DeviceEncryptionStatus::Encrypted => "ENCRYPTED",
+        }
+    }
+}
 /// The operating system type of the device.
 /// Next id: 7
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
@@ -31,6 +45,23 @@ pub enum OsType {
     /// An iOS operating system.
     Ios = 5,
 }
+impl OsType {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            OsType::OsUnspecified => "OS_UNSPECIFIED",
+            OsType::DesktopMac => "DESKTOP_MAC",
+            OsType::DesktopWindows => "DESKTOP_WINDOWS",
+            OsType::DesktopLinux => "DESKTOP_LINUX",
+            OsType::DesktopChromeOs => "DESKTOP_CHROME_OS",
+            OsType::Android => "ANDROID",
+            OsType::Ios => "IOS",
+        }
+    }
+}
 /// The degree to which the device is managed by the Cloud organization.
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
 #[repr(i32)]
@@ -46,4 +77,18 @@ pub enum DeviceManagementLevel {
     /// ability to directly manage the device (such as remote wiping). This can be
     /// enabled through the Android Enterprise Platform.
     Complete = 3,
+}
+impl DeviceManagementLevel {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            DeviceManagementLevel::ManagementUnspecified => "MANAGEMENT_UNSPECIFIED",
+            DeviceManagementLevel::None => "NONE",
+            DeviceManagementLevel::Basic => "BASIC",
+            DeviceManagementLevel::Complete => "COMPLETE",
+        }
+    }
 }

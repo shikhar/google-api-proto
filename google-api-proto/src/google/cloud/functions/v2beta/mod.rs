@@ -57,6 +57,22 @@ pub mod function {
         /// The function should be updated or deleted to move it out of this state.
         Unknown = 5,
     }
+    impl State {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                State::Unspecified => "STATE_UNSPECIFIED",
+                State::Active => "ACTIVE",
+                State::Failed => "FAILED",
+                State::Deploying => "DEPLOYING",
+                State::Deleting => "DELETING",
+                State::Unknown => "UNKNOWN",
+            }
+        }
+    }
 }
 /// Informational messages about the state of the Cloud Function or Operation.
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -85,6 +101,20 @@ pub mod state_message {
         Warning = 2,
         /// INFO-level severity.
         Info = 3,
+    }
+    impl Severity {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                Severity::Unspecified => "SEVERITY_UNSPECIFIED",
+                Severity::Error => "ERROR",
+                Severity::Warning => "WARNING",
+                Severity::Info => "INFO",
+            }
+        }
     }
 }
 /// Location of the source in an archive file in Google Cloud Storage.
@@ -355,6 +385,19 @@ pub mod service_config {
         /// function.
         AllTraffic = 2,
     }
+    impl VpcConnectorEgressSettings {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                VpcConnectorEgressSettings::Unspecified => "VPC_CONNECTOR_EGRESS_SETTINGS_UNSPECIFIED",
+                VpcConnectorEgressSettings::PrivateRangesOnly => "PRIVATE_RANGES_ONLY",
+                VpcConnectorEgressSettings::AllTraffic => "ALL_TRAFFIC",
+            }
+        }
+    }
     /// Available ingress settings.
     ///
     /// This controls what traffic can reach the function.
@@ -371,6 +414,20 @@ pub mod service_config {
         AllowInternalOnly = 2,
         /// Allow HTTP traffic from private VPC sources and through GCLB.
         AllowInternalAndGclb = 3,
+    }
+    impl IngressSettings {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                IngressSettings::Unspecified => "INGRESS_SETTINGS_UNSPECIFIED",
+                IngressSettings::AllowAll => "ALLOW_ALL",
+                IngressSettings::AllowInternalOnly => "ALLOW_INTERNAL_ONLY",
+                IngressSettings::AllowInternalAndGclb => "ALLOW_INTERNAL_AND_GCLB",
+            }
+        }
     }
 }
 /// Configuration for a secret environment variable. It has the information
@@ -501,6 +558,19 @@ pub mod event_trigger {
         /// Retry on any failure, retry up to 7 days with an exponential backoff
         /// (capped at 10 seconds).
         Retry = 2,
+    }
+    impl RetryPolicy {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                RetryPolicy::Unspecified => "RETRY_POLICY_UNSPECIFIED",
+                RetryPolicy::DoNotRetry => "RETRY_POLICY_DO_NOT_RETRY",
+                RetryPolicy::Retry => "RETRY_POLICY_RETRY",
+            }
+        }
     }
 }
 /// Filters events based on exact matches on the CloudEvents attributes.
@@ -711,6 +781,23 @@ pub mod list_runtimes_response {
         /// The runtime is no longer supported.
         Decommissioned = 6,
     }
+    impl RuntimeStage {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                RuntimeStage::Unspecified => "RUNTIME_STAGE_UNSPECIFIED",
+                RuntimeStage::Development => "DEVELOPMENT",
+                RuntimeStage::Alpha => "ALPHA",
+                RuntimeStage::Beta => "BETA",
+                RuntimeStage::Ga => "GA",
+                RuntimeStage::Deprecated => "DEPRECATED",
+                RuntimeStage::Decommissioned => "DECOMMISSIONED",
+            }
+        }
+    }
 }
 /// Represents the metadata of the long-running operation.
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -789,6 +876,23 @@ pub mod stage {
         /// Trigger Rollback Stage
         TriggerRollback = 6,
     }
+    impl Name {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                Name::Unspecified => "NAME_UNSPECIFIED",
+                Name::ArtifactRegistry => "ARTIFACT_REGISTRY",
+                Name::Build => "BUILD",
+                Name::Service => "SERVICE",
+                Name::Trigger => "TRIGGER",
+                Name::ServiceRollback => "SERVICE_ROLLBACK",
+                Name::TriggerRollback => "TRIGGER_ROLLBACK",
+            }
+        }
+    }
     /// Possible states for a Stage
     #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
     #[repr(i32)]
@@ -802,6 +906,20 @@ pub mod stage {
         /// Stage has completed.
         Complete = 3,
     }
+    impl State {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                State::Unspecified => "STATE_UNSPECIFIED",
+                State::NotStarted => "NOT_STARTED",
+                State::InProgress => "IN_PROGRESS",
+                State::Complete => "COMPLETE",
+            }
+        }
+    }
 }
 /// The environment the function is hosted on.
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
@@ -814,10 +932,24 @@ pub enum Environment {
     /// Gen 2
     Gen2 = 2,
 }
+impl Environment {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            Environment::Unspecified => "ENVIRONMENT_UNSPECIFIED",
+            Environment::Gen1 => "GEN_1",
+            Environment::Gen2 => "GEN_2",
+        }
+    }
+}
 /// Generated client implementations.
 pub mod function_service_client {
     #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
     use tonic::codegen::*;
+    use tonic::codegen::http::Uri;
     /// Google Cloud Functions is used to deploy functions that are executed by
     /// Google in response to various events. Data connected with that event is
     /// passed to a function as the input data.
@@ -839,6 +971,10 @@ pub mod function_service_client {
             let inner = tonic::client::Grpc::new(inner);
             Self { inner }
         }
+        pub fn with_origin(inner: T, origin: Uri) -> Self {
+            let inner = tonic::client::Grpc::with_origin(inner, origin);
+            Self { inner }
+        }
         pub fn with_interceptor<F>(
             inner: T,
             interceptor: F,
@@ -858,19 +994,19 @@ pub mod function_service_client {
         {
             FunctionServiceClient::new(InterceptedService::new(inner, interceptor))
         }
-        /// Compress requests with `gzip`.
+        /// Compress requests with the given encoding.
         ///
         /// This requires the server to support it otherwise it might respond with an
         /// error.
         #[must_use]
-        pub fn send_gzip(mut self) -> Self {
-            self.inner = self.inner.send_gzip();
+        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.send_compressed(encoding);
             self
         }
-        /// Enable decompressing responses with `gzip`.
+        /// Enable decompressing responses.
         #[must_use]
-        pub fn accept_gzip(mut self) -> Self {
-            self.inner = self.inner.accept_gzip();
+        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.accept_compressed(encoding);
             self
         }
         /// Returns a function with the given name from the requested project.

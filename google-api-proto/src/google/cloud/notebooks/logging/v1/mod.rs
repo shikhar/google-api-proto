@@ -21,4 +21,16 @@ pub mod runtime_event {
         /// Runtime state has been updated.
         RuntimeStateChangeEvent = 1,
     }
+    impl EventType {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                EventType::Unspecified => "EVENT_TYPE_UNSPECIFIED",
+                EventType::RuntimeStateChangeEvent => "RUNTIME_STATE_CHANGE_EVENT",
+            }
+        }
+    }
 }

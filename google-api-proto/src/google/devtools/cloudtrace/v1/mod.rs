@@ -64,9 +64,9 @@ pub struct TraceSpan {
     /// your own, we recommend the following formats:
     ///
     /// * `/category/product/key` for agents of well-known products (e.g.
-    ///   `/db/mongodb/read_size`).
+    ///    `/db/mongodb/read_size`).
     /// * `short_host/path/key` for domain-specific keys (e.g.
-    ///   `foo.com/myproduct/bar`)
+    ///    `foo.com/myproduct/bar`)
     ///
     /// Predefined labels include:
     ///
@@ -110,6 +110,19 @@ pub mod trace_span {
         /// other remote request.
         RpcClient = 2,
     }
+    impl SpanKind {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                SpanKind::Unspecified => "SPAN_KIND_UNSPECIFIED",
+                SpanKind::RpcServer => "RPC_SERVER",
+                SpanKind::RpcClient => "RPC_CLIENT",
+            }
+        }
+    }
 }
 /// The request message for the `ListTraces` method. All fields are required
 /// unless specified.
@@ -146,27 +159,27 @@ pub struct ListTracesRequest {
     /// Multiple terms are ANDed. Syntax:
     ///
     /// *   `root:NAME_PREFIX` or `NAME_PREFIX`: Return traces where any root
-    ///     span starts with `NAME_PREFIX`.
+    ///      span starts with `NAME_PREFIX`.
     /// *   `+root:NAME` or `+NAME`: Return traces where any root span's name is
-    ///     exactly `NAME`.
+    ///      exactly `NAME`.
     /// *   `span:NAME_PREFIX`: Return traces where any span starts with
-    ///     `NAME_PREFIX`.
+    ///      `NAME_PREFIX`.
     /// *   `+span:NAME`: Return traces where any span's name is exactly
-    ///     `NAME`.
+    ///      `NAME`.
     /// *   `latency:DURATION`: Return traces whose overall latency is
-    ///     greater or equal to than `DURATION`. Accepted units are nanoseconds
-    ///     (`ns`), milliseconds (`ms`), and seconds (`s`). Default is `ms`. For
-    ///     example, `latency:24ms` returns traces whose overall latency
-    ///     is greater than or equal to 24 milliseconds.
+    ///      greater or equal to than `DURATION`. Accepted units are nanoseconds
+    ///      (`ns`), milliseconds (`ms`), and seconds (`s`). Default is `ms`. For
+    ///      example, `latency:24ms` returns traces whose overall latency
+    ///      is greater than or equal to 24 milliseconds.
     /// *   `label:LABEL_KEY`: Return all traces containing the specified
-    ///     label key (exact match, case-sensitive) regardless of the key:value
-    ///     pair's value (including empty values).
+    ///      label key (exact match, case-sensitive) regardless of the key:value
+    ///      pair's value (including empty values).
     /// *   `LABEL_KEY:VALUE_PREFIX`: Return all traces containing the specified
-    ///     label key (exact match, case-sensitive) whose value starts with
-    ///     `VALUE_PREFIX`. Both a key and a value must be specified.
+    ///      label key (exact match, case-sensitive) whose value starts with
+    ///      `VALUE_PREFIX`. Both a key and a value must be specified.
     /// *   `+LABEL_KEY:VALUE`: Return all traces containing a key:value pair
-    ///     exactly matching the specified text. Both a key and a value must be
-    ///     specified.
+    ///      exactly matching the specified text. Both a key and a value must be
+    ///      specified.
     /// *   `method:VALUE`: Equivalent to `/http/method:VALUE`.
     /// *   `url:VALUE`: Equivalent to `/http/url:VALUE`.
     #[prost(string, tag="7")]
@@ -177,7 +190,7 @@ pub struct ListTracesRequest {
     /// *   `trace_id`
     /// *   `name` (`name` field of root span in the trace)
     /// *   `duration` (difference between `end_time` and `start_time` fields of
-    ///      the root span)
+    ///       the root span)
     /// *   `start` (`start_time` field of the root span)
     ///
     /// Descending order can be specified by appending `desc` to the sort field
@@ -205,6 +218,20 @@ pub mod list_traces_request {
         /// This is equivalent to calling the REST `get` or RPC `GetTrace` method
         /// using the ID of each listed trace.
         Complete = 3,
+    }
+    impl ViewType {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                ViewType::Unspecified => "VIEW_TYPE_UNSPECIFIED",
+                ViewType::Minimal => "MINIMAL",
+                ViewType::Rootspan => "ROOTSPAN",
+                ViewType::Complete => "COMPLETE",
+            }
+        }
     }
 }
 /// The response message for the `ListTraces` method.
@@ -243,6 +270,7 @@ pub struct PatchTracesRequest {
 pub mod trace_service_client {
     #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
     use tonic::codegen::*;
+    use tonic::codegen::http::Uri;
     /// This file describes an API for collecting and viewing traces and spans
     /// within a trace.  A Trace is a collection of spans corresponding to a single
     /// operation or set of operations for an application. A span is an individual
@@ -261,6 +289,10 @@ pub mod trace_service_client {
     {
         pub fn new(inner: T) -> Self {
             let inner = tonic::client::Grpc::new(inner);
+            Self { inner }
+        }
+        pub fn with_origin(inner: T, origin: Uri) -> Self {
+            let inner = tonic::client::Grpc::with_origin(inner, origin);
             Self { inner }
         }
         pub fn with_interceptor<F>(
@@ -282,19 +314,19 @@ pub mod trace_service_client {
         {
             TraceServiceClient::new(InterceptedService::new(inner, interceptor))
         }
-        /// Compress requests with `gzip`.
+        /// Compress requests with the given encoding.
         ///
         /// This requires the server to support it otherwise it might respond with an
         /// error.
         #[must_use]
-        pub fn send_gzip(mut self) -> Self {
-            self.inner = self.inner.send_gzip();
+        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.send_compressed(encoding);
             self
         }
-        /// Enable decompressing responses with `gzip`.
+        /// Enable decompressing responses.
         #[must_use]
-        pub fn accept_gzip(mut self) -> Self {
-            self.inner = self.inner.accept_gzip();
+        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.accept_compressed(encoding);
             self
         }
         /// Returns of a list of traces that match the specified filter conditions.

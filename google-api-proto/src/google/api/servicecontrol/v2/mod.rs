@@ -39,9 +39,9 @@ pub struct ResourceInfo {
     pub permission: ::prost::alloc::string::String,
     /// Optional. The identifier of the container of this resource. For Google
     /// Cloud APIs, the resource container must be one of the following formats:
-    ///     - `projects/<project-id or project-number>`
-    ///     - `folders/<folder-id>`
-    ///     - `organizations/<organization-id>`
+    ///      - `projects/<project-id or project-number>`
+    ///      - `folders/<folder-id>`
+    ///      - `organizations/<organization-id>`
     /// For the policy enforcement on the container level (VPCSC and Location
     /// Policy check), this field takes precedence on the container extracted from
     /// name when presents.
@@ -96,6 +96,7 @@ pub struct ReportResponse {
 pub mod service_controller_client {
     #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
     use tonic::codegen::*;
+    use tonic::codegen::http::Uri;
     /// [Service Control API
     /// v2](https://cloud.google.com/service-infrastructure/docs/service-control/access-control)
     ///
@@ -119,6 +120,10 @@ pub mod service_controller_client {
             let inner = tonic::client::Grpc::new(inner);
             Self { inner }
         }
+        pub fn with_origin(inner: T, origin: Uri) -> Self {
+            let inner = tonic::client::Grpc::with_origin(inner, origin);
+            Self { inner }
+        }
         pub fn with_interceptor<F>(
             inner: T,
             interceptor: F,
@@ -138,19 +143,19 @@ pub mod service_controller_client {
         {
             ServiceControllerClient::new(InterceptedService::new(inner, interceptor))
         }
-        /// Compress requests with `gzip`.
+        /// Compress requests with the given encoding.
         ///
         /// This requires the server to support it otherwise it might respond with an
         /// error.
         #[must_use]
-        pub fn send_gzip(mut self) -> Self {
-            self.inner = self.inner.send_gzip();
+        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.send_compressed(encoding);
             self
         }
-        /// Enable decompressing responses with `gzip`.
+        /// Enable decompressing responses.
         #[must_use]
-        pub fn accept_gzip(mut self) -> Self {
-            self.inner = self.inner.accept_gzip();
+        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.accept_compressed(encoding);
             self
         }
         /// Private Preview. This feature is only available for approved services.

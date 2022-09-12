@@ -51,6 +51,20 @@ pub mod alias_context {
         /// ref named "refs/foo/bar".
         Other = 4,
     }
+    impl Kind {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                Kind::Unspecified => "KIND_UNSPECIFIED",
+                Kind::Fixed => "FIXED",
+                Kind::Movable => "MOVABLE",
+                Kind::Other => "OTHER",
+            }
+        }
+    }
 }
 /// A CloudRepoSourceContext denotes a particular revision in a Google Cloud
 /// Source Repo.

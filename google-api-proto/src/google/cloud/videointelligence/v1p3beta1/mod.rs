@@ -694,15 +694,15 @@ pub struct NormalizedVertex {
 /// Contains list of the corner points in clockwise order starting from
 /// top-left corner. For example, for a rectangular bounding box:
 /// When the text is horizontal it might look like:
-///         0----1
-///         |    |
-///         3----2
+///          0----1
+///          |    |
+///          3----2
 ///
 /// When it's clockwise rotated 180 degrees around the top-left corner it
 /// becomes:
-///         2----3
-///         |    |
-///         1----0
+///          2----3
+///          |    |
+///          1----0
 ///
 /// and the vertex order will still be (0, 1, 2, 3). Note that values can be less
 /// than 0, or greater than 1 due to trignometric calculations for location of
@@ -1007,6 +1007,20 @@ pub enum LabelDetectionMode {
     /// Detect both shot-level and frame-level labels.
     ShotAndFrameMode = 3,
 }
+impl LabelDetectionMode {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            LabelDetectionMode::Unspecified => "LABEL_DETECTION_MODE_UNSPECIFIED",
+            LabelDetectionMode::ShotMode => "SHOT_MODE",
+            LabelDetectionMode::FrameMode => "FRAME_MODE",
+            LabelDetectionMode::ShotAndFrameMode => "SHOT_AND_FRAME_MODE",
+        }
+    }
+}
 /// Bucketized representation of likelihood.
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
 #[repr(i32)]
@@ -1023,6 +1037,22 @@ pub enum Likelihood {
     Likely = 4,
     /// Very likely.
     VeryLikely = 5,
+}
+impl Likelihood {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            Likelihood::Unspecified => "LIKELIHOOD_UNSPECIFIED",
+            Likelihood::VeryUnlikely => "VERY_UNLIKELY",
+            Likelihood::Unlikely => "UNLIKELY",
+            Likelihood::Possible => "POSSIBLE",
+            Likelihood::Likely => "LIKELY",
+            Likelihood::VeryLikely => "VERY_LIKELY",
+        }
+    }
 }
 /// Streaming video annotation feature.
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
@@ -1044,6 +1074,24 @@ pub enum StreamingFeature {
     StreamingAutomlClassification = 21,
     /// Object detection and tracking based on AutoML model.
     StreamingAutomlObjectTracking = 22,
+}
+impl StreamingFeature {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            StreamingFeature::Unspecified => "STREAMING_FEATURE_UNSPECIFIED",
+            StreamingFeature::StreamingLabelDetection => "STREAMING_LABEL_DETECTION",
+            StreamingFeature::StreamingShotChangeDetection => "STREAMING_SHOT_CHANGE_DETECTION",
+            StreamingFeature::StreamingExplicitContentDetection => "STREAMING_EXPLICIT_CONTENT_DETECTION",
+            StreamingFeature::StreamingObjectTracking => "STREAMING_OBJECT_TRACKING",
+            StreamingFeature::StreamingAutomlActionRecognition => "STREAMING_AUTOML_ACTION_RECOGNITION",
+            StreamingFeature::StreamingAutomlClassification => "STREAMING_AUTOML_CLASSIFICATION",
+            StreamingFeature::StreamingAutomlObjectTracking => "STREAMING_AUTOML_OBJECT_TRACKING",
+        }
+    }
 }
 /// Video annotation feature.
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
@@ -1072,10 +1120,32 @@ pub enum Feature {
     /// Person detection.
     PersonDetection = 14,
 }
+impl Feature {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            Feature::Unspecified => "FEATURE_UNSPECIFIED",
+            Feature::LabelDetection => "LABEL_DETECTION",
+            Feature::ShotChangeDetection => "SHOT_CHANGE_DETECTION",
+            Feature::ExplicitContentDetection => "EXPLICIT_CONTENT_DETECTION",
+            Feature::FaceDetection => "FACE_DETECTION",
+            Feature::SpeechTranscription => "SPEECH_TRANSCRIPTION",
+            Feature::TextDetection => "TEXT_DETECTION",
+            Feature::ObjectTracking => "OBJECT_TRACKING",
+            Feature::LogoRecognition => "LOGO_RECOGNITION",
+            Feature::CelebrityRecognition => "CELEBRITY_RECOGNITION",
+            Feature::PersonDetection => "PERSON_DETECTION",
+        }
+    }
+}
 /// Generated client implementations.
 pub mod video_intelligence_service_client {
     #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
     use tonic::codegen::*;
+    use tonic::codegen::http::Uri;
     /// Service that implements the Video Intelligence API.
     #[derive(Debug, Clone)]
     pub struct VideoIntelligenceServiceClient<T> {
@@ -1090,6 +1160,10 @@ pub mod video_intelligence_service_client {
     {
         pub fn new(inner: T) -> Self {
             let inner = tonic::client::Grpc::new(inner);
+            Self { inner }
+        }
+        pub fn with_origin(inner: T, origin: Uri) -> Self {
+            let inner = tonic::client::Grpc::with_origin(inner, origin);
             Self { inner }
         }
         pub fn with_interceptor<F>(
@@ -1113,19 +1187,19 @@ pub mod video_intelligence_service_client {
                 InterceptedService::new(inner, interceptor),
             )
         }
-        /// Compress requests with `gzip`.
+        /// Compress requests with the given encoding.
         ///
         /// This requires the server to support it otherwise it might respond with an
         /// error.
         #[must_use]
-        pub fn send_gzip(mut self) -> Self {
-            self.inner = self.inner.send_gzip();
+        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.send_compressed(encoding);
             self
         }
-        /// Enable decompressing responses with `gzip`.
+        /// Enable decompressing responses.
         #[must_use]
-        pub fn accept_gzip(mut self) -> Self {
-            self.inner = self.inner.accept_gzip();
+        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.accept_compressed(encoding);
             self
         }
         /// Performs asynchronous video annotation. Progress and results can be
@@ -1160,6 +1234,7 @@ pub mod video_intelligence_service_client {
 pub mod streaming_video_intelligence_service_client {
     #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
     use tonic::codegen::*;
+    use tonic::codegen::http::Uri;
     /// Service that implements streaming Video Intelligence API.
     #[derive(Debug, Clone)]
     pub struct StreamingVideoIntelligenceServiceClient<T> {
@@ -1174,6 +1249,10 @@ pub mod streaming_video_intelligence_service_client {
     {
         pub fn new(inner: T) -> Self {
             let inner = tonic::client::Grpc::new(inner);
+            Self { inner }
+        }
+        pub fn with_origin(inner: T, origin: Uri) -> Self {
+            let inner = tonic::client::Grpc::with_origin(inner, origin);
             Self { inner }
         }
         pub fn with_interceptor<F>(
@@ -1197,19 +1276,19 @@ pub mod streaming_video_intelligence_service_client {
                 InterceptedService::new(inner, interceptor),
             )
         }
-        /// Compress requests with `gzip`.
+        /// Compress requests with the given encoding.
         ///
         /// This requires the server to support it otherwise it might respond with an
         /// error.
         #[must_use]
-        pub fn send_gzip(mut self) -> Self {
-            self.inner = self.inner.send_gzip();
+        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.send_compressed(encoding);
             self
         }
-        /// Enable decompressing responses with `gzip`.
+        /// Enable decompressing responses.
         #[must_use]
-        pub fn accept_gzip(mut self) -> Self {
-            self.inner = self.inner.accept_gzip();
+        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.accept_compressed(encoding);
             self
         }
         /// Performs video annotation with bidirectional streaming: emitting results

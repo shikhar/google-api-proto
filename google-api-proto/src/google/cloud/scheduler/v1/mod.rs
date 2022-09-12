@@ -109,22 +109,22 @@ pub struct AppEngineHttpTarget {
     /// Cloud Scheduler sets some headers to default values:
     ///
     /// * `User-Agent`: By default, this header is
-    ///   `"AppEngine-Google; (+<http://code.google.com/appengine>)"`.
-    ///   This header can be modified, but Cloud Scheduler will append
-    ///   `"AppEngine-Google; (+<http://code.google.com/appengine>)"` to the
-    ///   modified `User-Agent`.
+    ///    `"AppEngine-Google; (+<http://code.google.com/appengine>)"`.
+    ///    This header can be modified, but Cloud Scheduler will append
+    ///    `"AppEngine-Google; (+<http://code.google.com/appengine>)"` to the
+    ///    modified `User-Agent`.
     /// * `X-CloudScheduler`: This header will be set to true.
     ///
     /// If the job has an \[body][google.cloud.scheduler.v1.AppEngineHttpTarget.body\], Cloud Scheduler sets
     /// the following headers:
     ///
     /// * `Content-Type`: By default, the `Content-Type` header is set to
-    ///   `"application/octet-stream"`. The default can be overridden by explictly
-    ///   setting `Content-Type` to a particular media type when the job is
-    ///   created.
-    ///   For example, `Content-Type` can be set to `"application/json"`.
+    ///    `"application/octet-stream"`. The default can be overridden by explictly
+    ///    setting `Content-Type` to a particular media type when the job is
+    ///    created.
+    ///    For example, `Content-Type` can be set to `"application/json"`.
     /// * `Content-Length`: This is computed by Cloud Scheduler. This value is
-    ///   output only. It cannot be changed.
+    ///    output only. It cannot be changed.
     ///
     /// The headers below are output only. They cannot be set or overridden:
     ///
@@ -218,40 +218,40 @@ pub struct AppEngineRouting {
     ///
     ///
     /// * `host = \[application_domain_name\]`</br>
-    ///   `| \[service\] + '.' + \[application_domain_name\]`</br>
-    ///   `| \[version\] + '.' + \[application_domain_name\]`</br>
-    ///   `| \[version_dot_service\]+ '.' + \[application_domain_name\]`</br>
-    ///   `| \[instance\] + '.' + \[application_domain_name\]`</br>
-    ///   `| \[instance_dot_service\] + '.' + \[application_domain_name\]`</br>
-    ///   `| \[instance_dot_version\] + '.' + \[application_domain_name\]`</br>
-    ///   `| \[instance_dot_version_dot_service\] + '.' + \[application_domain_name\]`
+    ///    `| \[service\] + '.' + \[application_domain_name\]`</br>
+    ///    `| \[version\] + '.' + \[application_domain_name\]`</br>
+    ///    `| \[version_dot_service\]+ '.' + \[application_domain_name\]`</br>
+    ///    `| \[instance\] + '.' + \[application_domain_name\]`</br>
+    ///    `| \[instance_dot_service\] + '.' + \[application_domain_name\]`</br>
+    ///    `| \[instance_dot_version\] + '.' + \[application_domain_name\]`</br>
+    ///    `| \[instance_dot_version_dot_service\] + '.' + \[application_domain_name\]`
     ///
     /// * `application_domain_name` = The domain name of the app, for
-    ///   example <app-id>.appspot.com, which is associated with the
-    ///   job's project ID.
+    ///    example <app-id>.appspot.com, which is associated with the
+    ///    job's project ID.
     ///
     /// * `service =` \[service][google.cloud.scheduler.v1.AppEngineRouting.service\]
     ///
     /// * `version =` \[version][google.cloud.scheduler.v1.AppEngineRouting.version\]
     ///
     /// * `version_dot_service =`
-    ///   \[version][google.cloud.scheduler.v1.AppEngineRouting.version\] `+ '.' +`
-    ///   \[service][google.cloud.scheduler.v1.AppEngineRouting.service\]
+    ///    \[version][google.cloud.scheduler.v1.AppEngineRouting.version\] `+ '.' +`
+    ///    \[service][google.cloud.scheduler.v1.AppEngineRouting.service\]
     ///
     /// * `instance =` \[instance][google.cloud.scheduler.v1.AppEngineRouting.instance\]
     ///
     /// * `instance_dot_service =`
-    ///   \[instance][google.cloud.scheduler.v1.AppEngineRouting.instance\] `+ '.' +`
-    ///   \[service][google.cloud.scheduler.v1.AppEngineRouting.service\]
+    ///    \[instance][google.cloud.scheduler.v1.AppEngineRouting.instance\] `+ '.' +`
+    ///    \[service][google.cloud.scheduler.v1.AppEngineRouting.service\]
     ///
     /// * `instance_dot_version =`
-    ///   \[instance][google.cloud.scheduler.v1.AppEngineRouting.instance\] `+ '.' +`
-    ///   \[version][google.cloud.scheduler.v1.AppEngineRouting.version\]
+    ///    \[instance][google.cloud.scheduler.v1.AppEngineRouting.instance\] `+ '.' +`
+    ///    \[version][google.cloud.scheduler.v1.AppEngineRouting.version\]
     ///
     /// * `instance_dot_version_dot_service =`
-    ///   \[instance][google.cloud.scheduler.v1.AppEngineRouting.instance\] `+ '.' +`
-    ///   \[version][google.cloud.scheduler.v1.AppEngineRouting.version\] `+ '.' +`
-    ///   \[service][google.cloud.scheduler.v1.AppEngineRouting.service\]
+    ///    \[instance][google.cloud.scheduler.v1.AppEngineRouting.instance\] `+ '.' +`
+    ///    \[version][google.cloud.scheduler.v1.AppEngineRouting.version\] `+ '.' +`
+    ///    \[service][google.cloud.scheduler.v1.AppEngineRouting.service\]
     ///
     ///
     /// If \[service][google.cloud.scheduler.v1.AppEngineRouting.service\] is empty, then the job will be sent
@@ -328,6 +328,24 @@ pub enum HttpMethod {
     /// HTTP OPTIONS
     Options = 7,
 }
+impl HttpMethod {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            HttpMethod::Unspecified => "HTTP_METHOD_UNSPECIFIED",
+            HttpMethod::Post => "POST",
+            HttpMethod::Get => "GET",
+            HttpMethod::Head => "HEAD",
+            HttpMethod::Put => "PUT",
+            HttpMethod::Delete => "DELETE",
+            HttpMethod::Patch => "PATCH",
+            HttpMethod::Options => "OPTIONS",
+        }
+    }
+}
 /// Configuration for a job.
 /// The maximum allowed size for a job is 100KB.
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -339,16 +357,16 @@ pub struct Job {
     /// `projects/PROJECT_ID/locations/LOCATION_ID/jobs/JOB_ID`.
     ///
     /// * `PROJECT_ID` can contain letters (\[A-Za-z\]), numbers (\[0-9\]),
-    ///    hyphens (-), colons (:), or periods (.).
-    ///    For more information, see
-    ///    [Identifying
-    ///    projects](<https://cloud.google.com/resource-manager/docs/creating-managing-projects#identifying_projects>)
+    ///     hyphens (-), colons (:), or periods (.).
+    ///     For more information, see
+    ///     [Identifying
+    ///     projects](<https://cloud.google.com/resource-manager/docs/creating-managing-projects#identifying_projects>)
     /// * `LOCATION_ID` is the canonical ID for the job's location.
-    ///    The list of available locations can be obtained by calling
-    ///    \[ListLocations][google.cloud.location.Locations.ListLocations\].
-    ///    For more information, see <https://cloud.google.com/about/locations/.>
+    ///     The list of available locations can be obtained by calling
+    ///     \[ListLocations][google.cloud.location.Locations.ListLocations\].
+    ///     For more information, see <https://cloud.google.com/about/locations/.>
     /// * `JOB_ID` can contain only letters (\[A-Za-z\]), numbers (\[0-9\]),
-    ///    hyphens (-), or underscores (_). The maximum length is 500 characters.
+    ///     hyphens (-), or underscores (_). The maximum length is 500 characters.
     #[prost(string, tag="1")]
     pub name: ::prost::alloc::string::String,
     /// Optionally caller-specified in \[CreateJob][google.cloud.scheduler.v1.CloudScheduler.CreateJob\] or
@@ -423,7 +441,7 @@ pub struct Job {
     /// The allowed duration for this deadline is:
     /// * For [HTTP targets]\[google.cloud.scheduler.v1.Job.http_target\], between 15 seconds and 30 minutes.
     /// * For [App Engine HTTP targets]\[google.cloud.scheduler.v1.Job.app_engine_http_target\], between 15
-    ///   seconds and 24 hours.
+    ///    seconds and 24 hours.
     #[prost(message, optional, tag="22")]
     pub attempt_deadline: ::core::option::Option<::prost_types::Duration>,
     /// Required.
@@ -453,6 +471,21 @@ pub mod job {
         /// operation. To recover a job from this state, retry
         /// \[CloudScheduler.UpdateJob][google.cloud.scheduler.v1.CloudScheduler.UpdateJob\] until a successful response is received.
         UpdateFailed = 4,
+    }
+    impl State {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                State::Unspecified => "STATE_UNSPECIFIED",
+                State::Enabled => "ENABLED",
+                State::Paused => "PAUSED",
+                State::Disabled => "DISABLED",
+                State::UpdateFailed => "UPDATE_FAILED",
+            }
+        }
     }
     /// Required.
     ///
@@ -653,6 +686,7 @@ pub struct RunJobRequest {
 pub mod cloud_scheduler_client {
     #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
     use tonic::codegen::*;
+    use tonic::codegen::http::Uri;
     /// The Cloud Scheduler API allows external entities to reliably
     /// schedule asynchronous jobs.
     #[derive(Debug, Clone)]
@@ -668,6 +702,10 @@ pub mod cloud_scheduler_client {
     {
         pub fn new(inner: T) -> Self {
             let inner = tonic::client::Grpc::new(inner);
+            Self { inner }
+        }
+        pub fn with_origin(inner: T, origin: Uri) -> Self {
+            let inner = tonic::client::Grpc::with_origin(inner, origin);
             Self { inner }
         }
         pub fn with_interceptor<F>(
@@ -689,19 +727,19 @@ pub mod cloud_scheduler_client {
         {
             CloudSchedulerClient::new(InterceptedService::new(inner, interceptor))
         }
-        /// Compress requests with `gzip`.
+        /// Compress requests with the given encoding.
         ///
         /// This requires the server to support it otherwise it might respond with an
         /// error.
         #[must_use]
-        pub fn send_gzip(mut self) -> Self {
-            self.inner = self.inner.send_gzip();
+        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.send_compressed(encoding);
             self
         }
-        /// Enable decompressing responses with `gzip`.
+        /// Enable decompressing responses.
         #[must_use]
-        pub fn accept_gzip(mut self) -> Self {
-            self.inner = self.inner.accept_gzip();
+        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.accept_compressed(encoding);
             self
         }
         /// Lists jobs.

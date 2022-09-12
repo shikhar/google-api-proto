@@ -18,7 +18,7 @@ pub struct ClientGateway {
     pub id: ::prost::alloc::string::String,
     /// Output only. The client connector service name that the client gateway is
     /// associated to. Client Connector Services, named as follows:
-    ///   `projects/{project_id}/locations/{location_id}/client_connector_services/{client_connector_service_id}`.
+    ///    `projects/{project_id}/locations/{location_id}/client_connector_services/{client_connector_service_id}`.
     #[prost(string, tag="6")]
     pub client_connector_service: ::prost::alloc::string::String,
 }
@@ -43,6 +43,23 @@ pub mod client_gateway {
         Down = 5,
         /// ClientGateway encountered an error and is in indeterministic state.
         Error = 6,
+    }
+    impl State {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                State::Unspecified => "STATE_UNSPECIFIED",
+                State::Creating => "CREATING",
+                State::Updating => "UPDATING",
+                State::Deleting => "DELETING",
+                State::Running => "RUNNING",
+                State::Down => "DOWN",
+                State::Error => "ERROR",
+            }
+        }
     }
 }
 /// Message for requesting list of ClientGateways.
@@ -92,9 +109,9 @@ pub struct CreateClientGatewayRequest {
     #[prost(string, tag="1")]
     pub parent: ::prost::alloc::string::String,
     /// Optional. User-settable client gateway resource ID.
-    ///  * Must start with a letter.
-    ///  * Must contain between 4-63 characters from `/\[a-z][0-9\]-/`.
-    ///  * Must end with a number or a letter.
+    ///   * Must start with a letter.
+    ///   * Must contain between 4-63 characters from `/\[a-z][0-9\]-/`.
+    ///   * Must end with a number or a letter.
     #[prost(string, tag="2")]
     pub client_gateway_id: ::prost::alloc::string::String,
     /// Required. The resource being created.
@@ -179,6 +196,7 @@ pub struct ClientGatewayOperationMetadata {
 pub mod client_gateways_service_client {
     #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
     use tonic::codegen::*;
+    use tonic::codegen::http::Uri;
     /// ## API Overview
     ///
     /// The `beyondcorp.googleapis.com` service implements the Google Cloud
@@ -205,6 +223,10 @@ pub mod client_gateways_service_client {
             let inner = tonic::client::Grpc::new(inner);
             Self { inner }
         }
+        pub fn with_origin(inner: T, origin: Uri) -> Self {
+            let inner = tonic::client::Grpc::with_origin(inner, origin);
+            Self { inner }
+        }
         pub fn with_interceptor<F>(
             inner: T,
             interceptor: F,
@@ -224,19 +246,19 @@ pub mod client_gateways_service_client {
         {
             ClientGatewaysServiceClient::new(InterceptedService::new(inner, interceptor))
         }
-        /// Compress requests with `gzip`.
+        /// Compress requests with the given encoding.
         ///
         /// This requires the server to support it otherwise it might respond with an
         /// error.
         #[must_use]
-        pub fn send_gzip(mut self) -> Self {
-            self.inner = self.inner.send_gzip();
+        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.send_compressed(encoding);
             self
         }
-        /// Enable decompressing responses with `gzip`.
+        /// Enable decompressing responses.
         #[must_use]
-        pub fn accept_gzip(mut self) -> Self {
-            self.inner = self.inner.accept_gzip();
+        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.accept_compressed(encoding);
             self
         }
         /// Lists ClientGateways in a given project and location.

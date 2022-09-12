@@ -64,6 +64,20 @@ pub mod analysis_message_base {
         /// INFO represents an informational finding.
         Info = 12,
     }
+    impl Level {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                Level::Unspecified => "LEVEL_UNSPECIFIED",
+                Level::Error => "ERROR",
+                Level::Warning => "WARNING",
+                Level::Info => "INFO",
+            }
+        }
+    }
 }
 /// AnalysisMessage is a single message produced by an analyzer, and
 /// it used to communicate to the end user about the state of their Service

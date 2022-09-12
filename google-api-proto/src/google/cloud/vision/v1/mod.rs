@@ -497,7 +497,7 @@ pub struct ImportProductSetsGcsSource {
     /// The `labels` column (optional) is a line containing a list of
     /// comma-separated key-value pairs, in the following format:
     ///
-    ///     "key_1=value_1,key_2=value_2,...,key_n=value_n"
+    ///      "key_1=value_1,key_2=value_2,...,key_n=value_n"
     ///
     /// The `bounding-poly` column (optional) identifies one region of
     /// interest from the image in the same manner as `CreateReferenceImage`. If
@@ -605,6 +605,21 @@ pub mod batch_operation_metadata {
         /// cancel command are output as specified in the request.
         Cancelled = 4,
     }
+    impl State {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                State::Unspecified => "STATE_UNSPECIFIED",
+                State::Processing => "PROCESSING",
+                State::Successful => "SUCCESSFUL",
+                State::Failed => "FAILED",
+                State::Cancelled => "CANCELLED",
+            }
+        }
+    }
 }
 /// Config to control which ProductSet contains the Products to be deleted.
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -649,6 +664,7 @@ pub mod purge_products_request {
 pub mod product_search_client {
     #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
     use tonic::codegen::*;
+    use tonic::codegen::http::Uri;
     /// Manages Products and ProductSets of reference images for use in product
     /// search. It uses the following resource model:
     ///
@@ -678,6 +694,10 @@ pub mod product_search_client {
             let inner = tonic::client::Grpc::new(inner);
             Self { inner }
         }
+        pub fn with_origin(inner: T, origin: Uri) -> Self {
+            let inner = tonic::client::Grpc::with_origin(inner, origin);
+            Self { inner }
+        }
         pub fn with_interceptor<F>(
             inner: T,
             interceptor: F,
@@ -697,19 +717,19 @@ pub mod product_search_client {
         {
             ProductSearchClient::new(InterceptedService::new(inner, interceptor))
         }
-        /// Compress requests with `gzip`.
+        /// Compress requests with the given encoding.
         ///
         /// This requires the server to support it otherwise it might respond with an
         /// error.
         #[must_use]
-        pub fn send_gzip(mut self) -> Self {
-            self.inner = self.inner.send_gzip();
+        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.send_compressed(encoding);
             self
         }
-        /// Enable decompressing responses with `gzip`.
+        /// Enable decompressing responses.
         #[must_use]
-        pub fn accept_gzip(mut self) -> Self {
-            self.inner = self.inner.accept_gzip();
+        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.accept_compressed(encoding);
             self
         }
         /// Creates and returns a new ProductSet resource.
@@ -1341,6 +1361,280 @@ pub mod product_search_results {
         pub object_annotations: ::prost::alloc::vec::Vec<ObjectAnnotation>,
     }
 }
+/// TextAnnotation contains a structured representation of OCR extracted text.
+/// The hierarchy of an OCR extracted text structure is like this:
+///      TextAnnotation -> Page -> Block -> Paragraph -> Word -> Symbol
+/// Each structural component, starting from Page, may further have their own
+/// properties. Properties describe detected languages, breaks etc.. Please refer
+/// to the \[TextAnnotation.TextProperty][google.cloud.vision.v1.TextAnnotation.TextProperty\] message definition below for more
+/// detail.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct TextAnnotation {
+    /// List of pages detected by OCR.
+    #[prost(message, repeated, tag="1")]
+    pub pages: ::prost::alloc::vec::Vec<Page>,
+    /// UTF-8 text detected on the pages.
+    #[prost(string, tag="2")]
+    pub text: ::prost::alloc::string::String,
+}
+/// Nested message and enum types in `TextAnnotation`.
+pub mod text_annotation {
+    /// Detected language for a structural component.
+    #[derive(Clone, PartialEq, ::prost::Message)]
+    pub struct DetectedLanguage {
+        /// The BCP-47 language code, such as "en-US" or "sr-Latn". For more
+        /// information, see
+        /// <http://www.unicode.org/reports/tr35/#Unicode_locale_identifier.>
+        #[prost(string, tag="1")]
+        pub language_code: ::prost::alloc::string::String,
+        /// Confidence of detected language. Range [0, 1].
+        #[prost(float, tag="2")]
+        pub confidence: f32,
+    }
+    /// Detected start or end of a structural component.
+    #[derive(Clone, PartialEq, ::prost::Message)]
+    pub struct DetectedBreak {
+        /// Detected break type.
+        #[prost(enumeration="detected_break::BreakType", tag="1")]
+        pub r#type: i32,
+        /// True if break prepends the element.
+        #[prost(bool, tag="2")]
+        pub is_prefix: bool,
+    }
+    /// Nested message and enum types in `DetectedBreak`.
+    pub mod detected_break {
+        /// Enum to denote the type of break found. New line, space etc.
+        #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+        #[repr(i32)]
+        pub enum BreakType {
+            /// Unknown break label type.
+            Unknown = 0,
+            /// Regular space.
+            Space = 1,
+            /// Sure space (very wide).
+            SureSpace = 2,
+            /// Line-wrapping break.
+            EolSureSpace = 3,
+            /// End-line hyphen that is not present in text; does not co-occur with
+            /// `SPACE`, `LEADER_SPACE`, or `LINE_BREAK`.
+            Hyphen = 4,
+            /// Line break that ends a paragraph.
+            LineBreak = 5,
+        }
+        impl BreakType {
+            /// String value of the enum field names used in the ProtoBuf definition.
+            ///
+            /// The values are not transformed in any way and thus are considered stable
+            /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+            pub fn as_str_name(&self) -> &'static str {
+                match self {
+                    BreakType::Unknown => "UNKNOWN",
+                    BreakType::Space => "SPACE",
+                    BreakType::SureSpace => "SURE_SPACE",
+                    BreakType::EolSureSpace => "EOL_SURE_SPACE",
+                    BreakType::Hyphen => "HYPHEN",
+                    BreakType::LineBreak => "LINE_BREAK",
+                }
+            }
+        }
+    }
+    /// Additional information detected on the structural component.
+    #[derive(Clone, PartialEq, ::prost::Message)]
+    pub struct TextProperty {
+        /// A list of detected languages together with confidence.
+        #[prost(message, repeated, tag="1")]
+        pub detected_languages: ::prost::alloc::vec::Vec<DetectedLanguage>,
+        /// Detected start or end of a text segment.
+        #[prost(message, optional, tag="2")]
+        pub detected_break: ::core::option::Option<DetectedBreak>,
+    }
+}
+/// Detected page from OCR.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct Page {
+    /// Additional information detected on the page.
+    #[prost(message, optional, tag="1")]
+    pub property: ::core::option::Option<text_annotation::TextProperty>,
+    /// Page width. For PDFs the unit is points. For images (including
+    /// TIFFs) the unit is pixels.
+    #[prost(int32, tag="2")]
+    pub width: i32,
+    /// Page height. For PDFs the unit is points. For images (including
+    /// TIFFs) the unit is pixels.
+    #[prost(int32, tag="3")]
+    pub height: i32,
+    /// List of blocks of text, images etc on this page.
+    #[prost(message, repeated, tag="4")]
+    pub blocks: ::prost::alloc::vec::Vec<Block>,
+    /// Confidence of the OCR results on the page. Range [0, 1].
+    #[prost(float, tag="5")]
+    pub confidence: f32,
+}
+/// Logical element on the page.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct Block {
+    /// Additional information detected for the block.
+    #[prost(message, optional, tag="1")]
+    pub property: ::core::option::Option<text_annotation::TextProperty>,
+    /// The bounding box for the block.
+    /// The vertices are in the order of top-left, top-right, bottom-right,
+    /// bottom-left. When a rotation of the bounding box is detected the rotation
+    /// is represented as around the top-left corner as defined when the text is
+    /// read in the 'natural' orientation.
+    /// For example:
+    ///
+    /// * when the text is horizontal it might look like:
+    ///
+    ///          0----1
+    ///          |    |
+    ///          3----2
+    ///
+    /// * when it's rotated 180 degrees around the top-left corner it becomes:
+    ///
+    ///          2----3
+    ///          |    |
+    ///          1----0
+    ///
+    ///    and the vertex order will still be (0, 1, 2, 3).
+    #[prost(message, optional, tag="2")]
+    pub bounding_box: ::core::option::Option<BoundingPoly>,
+    /// List of paragraphs in this block (if this blocks is of type text).
+    #[prost(message, repeated, tag="3")]
+    pub paragraphs: ::prost::alloc::vec::Vec<Paragraph>,
+    /// Detected block type (text, image etc) for this block.
+    #[prost(enumeration="block::BlockType", tag="4")]
+    pub block_type: i32,
+    /// Confidence of the OCR results on the block. Range [0, 1].
+    #[prost(float, tag="5")]
+    pub confidence: f32,
+}
+/// Nested message and enum types in `Block`.
+pub mod block {
+    /// Type of a block (text, image etc) as identified by OCR.
+    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+    #[repr(i32)]
+    pub enum BlockType {
+        /// Unknown block type.
+        Unknown = 0,
+        /// Regular text block.
+        Text = 1,
+        /// Table block.
+        Table = 2,
+        /// Image block.
+        Picture = 3,
+        /// Horizontal/vertical line box.
+        Ruler = 4,
+        /// Barcode block.
+        Barcode = 5,
+    }
+    impl BlockType {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                BlockType::Unknown => "UNKNOWN",
+                BlockType::Text => "TEXT",
+                BlockType::Table => "TABLE",
+                BlockType::Picture => "PICTURE",
+                BlockType::Ruler => "RULER",
+                BlockType::Barcode => "BARCODE",
+            }
+        }
+    }
+}
+/// Structural unit of text representing a number of words in certain order.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct Paragraph {
+    /// Additional information detected for the paragraph.
+    #[prost(message, optional, tag="1")]
+    pub property: ::core::option::Option<text_annotation::TextProperty>,
+    /// The bounding box for the paragraph.
+    /// The vertices are in the order of top-left, top-right, bottom-right,
+    /// bottom-left. When a rotation of the bounding box is detected the rotation
+    /// is represented as around the top-left corner as defined when the text is
+    /// read in the 'natural' orientation.
+    /// For example:
+    ///    * when the text is horizontal it might look like:
+    ///       0----1
+    ///       |    |
+    ///       3----2
+    ///    * when it's rotated 180 degrees around the top-left corner it becomes:
+    ///       2----3
+    ///       |    |
+    ///       1----0
+    ///    and the vertex order will still be (0, 1, 2, 3).
+    #[prost(message, optional, tag="2")]
+    pub bounding_box: ::core::option::Option<BoundingPoly>,
+    /// List of all words in this paragraph.
+    #[prost(message, repeated, tag="3")]
+    pub words: ::prost::alloc::vec::Vec<Word>,
+    /// Confidence of the OCR results for the paragraph. Range [0, 1].
+    #[prost(float, tag="4")]
+    pub confidence: f32,
+}
+/// A word representation.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct Word {
+    /// Additional information detected for the word.
+    #[prost(message, optional, tag="1")]
+    pub property: ::core::option::Option<text_annotation::TextProperty>,
+    /// The bounding box for the word.
+    /// The vertices are in the order of top-left, top-right, bottom-right,
+    /// bottom-left. When a rotation of the bounding box is detected the rotation
+    /// is represented as around the top-left corner as defined when the text is
+    /// read in the 'natural' orientation.
+    /// For example:
+    ///    * when the text is horizontal it might look like:
+    ///       0----1
+    ///       |    |
+    ///       3----2
+    ///    * when it's rotated 180 degrees around the top-left corner it becomes:
+    ///       2----3
+    ///       |    |
+    ///       1----0
+    ///    and the vertex order will still be (0, 1, 2, 3).
+    #[prost(message, optional, tag="2")]
+    pub bounding_box: ::core::option::Option<BoundingPoly>,
+    /// List of symbols in the word.
+    /// The order of the symbols follows the natural reading order.
+    #[prost(message, repeated, tag="3")]
+    pub symbols: ::prost::alloc::vec::Vec<Symbol>,
+    /// Confidence of the OCR results for the word. Range [0, 1].
+    #[prost(float, tag="4")]
+    pub confidence: f32,
+}
+/// A single symbol representation.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct Symbol {
+    /// Additional information detected for the symbol.
+    #[prost(message, optional, tag="1")]
+    pub property: ::core::option::Option<text_annotation::TextProperty>,
+    /// The bounding box for the symbol.
+    /// The vertices are in the order of top-left, top-right, bottom-right,
+    /// bottom-left. When a rotation of the bounding box is detected the rotation
+    /// is represented as around the top-left corner as defined when the text is
+    /// read in the 'natural' orientation.
+    /// For example:
+    ///    * when the text is horizontal it might look like:
+    ///       0----1
+    ///       |    |
+    ///       3----2
+    ///    * when it's rotated 180 degrees around the top-left corner it becomes:
+    ///       2----3
+    ///       |    |
+    ///       1----0
+    ///    and the vertex order will still be (0, 1, 2, 3).
+    #[prost(message, optional, tag="2")]
+    pub bounding_box: ::core::option::Option<BoundingPoly>,
+    /// The actual UTF-8 representation of the symbol.
+    #[prost(string, tag="3")]
+    pub text: ::prost::alloc::string::String,
+    /// Confidence of the OCR results for the symbol. Range [0, 1].
+    #[prost(float, tag="4")]
+    pub confidence: f32,
+}
 /// Relevant information for the image from the Internet.
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct WebDetection {
@@ -1429,248 +1723,6 @@ pub mod web_detection {
         pub language_code: ::prost::alloc::string::String,
     }
 }
-/// TextAnnotation contains a structured representation of OCR extracted text.
-/// The hierarchy of an OCR extracted text structure is like this:
-///     TextAnnotation -> Page -> Block -> Paragraph -> Word -> Symbol
-/// Each structural component, starting from Page, may further have their own
-/// properties. Properties describe detected languages, breaks etc.. Please refer
-/// to the \[TextAnnotation.TextProperty][google.cloud.vision.v1.TextAnnotation.TextProperty\] message definition below for more
-/// detail.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct TextAnnotation {
-    /// List of pages detected by OCR.
-    #[prost(message, repeated, tag="1")]
-    pub pages: ::prost::alloc::vec::Vec<Page>,
-    /// UTF-8 text detected on the pages.
-    #[prost(string, tag="2")]
-    pub text: ::prost::alloc::string::String,
-}
-/// Nested message and enum types in `TextAnnotation`.
-pub mod text_annotation {
-    /// Detected language for a structural component.
-    #[derive(Clone, PartialEq, ::prost::Message)]
-    pub struct DetectedLanguage {
-        /// The BCP-47 language code, such as "en-US" or "sr-Latn". For more
-        /// information, see
-        /// <http://www.unicode.org/reports/tr35/#Unicode_locale_identifier.>
-        #[prost(string, tag="1")]
-        pub language_code: ::prost::alloc::string::String,
-        /// Confidence of detected language. Range [0, 1].
-        #[prost(float, tag="2")]
-        pub confidence: f32,
-    }
-    /// Detected start or end of a structural component.
-    #[derive(Clone, PartialEq, ::prost::Message)]
-    pub struct DetectedBreak {
-        /// Detected break type.
-        #[prost(enumeration="detected_break::BreakType", tag="1")]
-        pub r#type: i32,
-        /// True if break prepends the element.
-        #[prost(bool, tag="2")]
-        pub is_prefix: bool,
-    }
-    /// Nested message and enum types in `DetectedBreak`.
-    pub mod detected_break {
-        /// Enum to denote the type of break found. New line, space etc.
-        #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
-        #[repr(i32)]
-        pub enum BreakType {
-            /// Unknown break label type.
-            Unknown = 0,
-            /// Regular space.
-            Space = 1,
-            /// Sure space (very wide).
-            SureSpace = 2,
-            /// Line-wrapping break.
-            EolSureSpace = 3,
-            /// End-line hyphen that is not present in text; does not co-occur with
-            /// `SPACE`, `LEADER_SPACE`, or `LINE_BREAK`.
-            Hyphen = 4,
-            /// Line break that ends a paragraph.
-            LineBreak = 5,
-        }
-    }
-    /// Additional information detected on the structural component.
-    #[derive(Clone, PartialEq, ::prost::Message)]
-    pub struct TextProperty {
-        /// A list of detected languages together with confidence.
-        #[prost(message, repeated, tag="1")]
-        pub detected_languages: ::prost::alloc::vec::Vec<DetectedLanguage>,
-        /// Detected start or end of a text segment.
-        #[prost(message, optional, tag="2")]
-        pub detected_break: ::core::option::Option<DetectedBreak>,
-    }
-}
-/// Detected page from OCR.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct Page {
-    /// Additional information detected on the page.
-    #[prost(message, optional, tag="1")]
-    pub property: ::core::option::Option<text_annotation::TextProperty>,
-    /// Page width. For PDFs the unit is points. For images (including
-    /// TIFFs) the unit is pixels.
-    #[prost(int32, tag="2")]
-    pub width: i32,
-    /// Page height. For PDFs the unit is points. For images (including
-    /// TIFFs) the unit is pixels.
-    #[prost(int32, tag="3")]
-    pub height: i32,
-    /// List of blocks of text, images etc on this page.
-    #[prost(message, repeated, tag="4")]
-    pub blocks: ::prost::alloc::vec::Vec<Block>,
-    /// Confidence of the OCR results on the page. Range [0, 1].
-    #[prost(float, tag="5")]
-    pub confidence: f32,
-}
-/// Logical element on the page.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct Block {
-    /// Additional information detected for the block.
-    #[prost(message, optional, tag="1")]
-    pub property: ::core::option::Option<text_annotation::TextProperty>,
-    /// The bounding box for the block.
-    /// The vertices are in the order of top-left, top-right, bottom-right,
-    /// bottom-left. When a rotation of the bounding box is detected the rotation
-    /// is represented as around the top-left corner as defined when the text is
-    /// read in the 'natural' orientation.
-    /// For example:
-    ///
-    /// * when the text is horizontal it might look like:
-    ///
-    ///         0----1
-    ///         |    |
-    ///         3----2
-    ///
-    /// * when it's rotated 180 degrees around the top-left corner it becomes:
-    ///
-    ///         2----3
-    ///         |    |
-    ///         1----0
-    ///
-    ///   and the vertex order will still be (0, 1, 2, 3).
-    #[prost(message, optional, tag="2")]
-    pub bounding_box: ::core::option::Option<BoundingPoly>,
-    /// List of paragraphs in this block (if this blocks is of type text).
-    #[prost(message, repeated, tag="3")]
-    pub paragraphs: ::prost::alloc::vec::Vec<Paragraph>,
-    /// Detected block type (text, image etc) for this block.
-    #[prost(enumeration="block::BlockType", tag="4")]
-    pub block_type: i32,
-    /// Confidence of the OCR results on the block. Range [0, 1].
-    #[prost(float, tag="5")]
-    pub confidence: f32,
-}
-/// Nested message and enum types in `Block`.
-pub mod block {
-    /// Type of a block (text, image etc) as identified by OCR.
-    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
-    #[repr(i32)]
-    pub enum BlockType {
-        /// Unknown block type.
-        Unknown = 0,
-        /// Regular text block.
-        Text = 1,
-        /// Table block.
-        Table = 2,
-        /// Image block.
-        Picture = 3,
-        /// Horizontal/vertical line box.
-        Ruler = 4,
-        /// Barcode block.
-        Barcode = 5,
-    }
-}
-/// Structural unit of text representing a number of words in certain order.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct Paragraph {
-    /// Additional information detected for the paragraph.
-    #[prost(message, optional, tag="1")]
-    pub property: ::core::option::Option<text_annotation::TextProperty>,
-    /// The bounding box for the paragraph.
-    /// The vertices are in the order of top-left, top-right, bottom-right,
-    /// bottom-left. When a rotation of the bounding box is detected the rotation
-    /// is represented as around the top-left corner as defined when the text is
-    /// read in the 'natural' orientation.
-    /// For example:
-    ///   * when the text is horizontal it might look like:
-    ///      0----1
-    ///      |    |
-    ///      3----2
-    ///   * when it's rotated 180 degrees around the top-left corner it becomes:
-    ///      2----3
-    ///      |    |
-    ///      1----0
-    ///   and the vertex order will still be (0, 1, 2, 3).
-    #[prost(message, optional, tag="2")]
-    pub bounding_box: ::core::option::Option<BoundingPoly>,
-    /// List of all words in this paragraph.
-    #[prost(message, repeated, tag="3")]
-    pub words: ::prost::alloc::vec::Vec<Word>,
-    /// Confidence of the OCR results for the paragraph. Range [0, 1].
-    #[prost(float, tag="4")]
-    pub confidence: f32,
-}
-/// A word representation.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct Word {
-    /// Additional information detected for the word.
-    #[prost(message, optional, tag="1")]
-    pub property: ::core::option::Option<text_annotation::TextProperty>,
-    /// The bounding box for the word.
-    /// The vertices are in the order of top-left, top-right, bottom-right,
-    /// bottom-left. When a rotation of the bounding box is detected the rotation
-    /// is represented as around the top-left corner as defined when the text is
-    /// read in the 'natural' orientation.
-    /// For example:
-    ///   * when the text is horizontal it might look like:
-    ///      0----1
-    ///      |    |
-    ///      3----2
-    ///   * when it's rotated 180 degrees around the top-left corner it becomes:
-    ///      2----3
-    ///      |    |
-    ///      1----0
-    ///   and the vertex order will still be (0, 1, 2, 3).
-    #[prost(message, optional, tag="2")]
-    pub bounding_box: ::core::option::Option<BoundingPoly>,
-    /// List of symbols in the word.
-    /// The order of the symbols follows the natural reading order.
-    #[prost(message, repeated, tag="3")]
-    pub symbols: ::prost::alloc::vec::Vec<Symbol>,
-    /// Confidence of the OCR results for the word. Range [0, 1].
-    #[prost(float, tag="4")]
-    pub confidence: f32,
-}
-/// A single symbol representation.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct Symbol {
-    /// Additional information detected for the symbol.
-    #[prost(message, optional, tag="1")]
-    pub property: ::core::option::Option<text_annotation::TextProperty>,
-    /// The bounding box for the symbol.
-    /// The vertices are in the order of top-left, top-right, bottom-right,
-    /// bottom-left. When a rotation of the bounding box is detected the rotation
-    /// is represented as around the top-left corner as defined when the text is
-    /// read in the 'natural' orientation.
-    /// For example:
-    ///   * when the text is horizontal it might look like:
-    ///      0----1
-    ///      |    |
-    ///      3----2
-    ///   * when it's rotated 180 degrees around the top-left corner it becomes:
-    ///      2----3
-    ///      |    |
-    ///      1----0
-    ///   and the vertex order will still be (0, 1, 2, 3).
-    #[prost(message, optional, tag="2")]
-    pub bounding_box: ::core::option::Option<BoundingPoly>,
-    /// The actual UTF-8 representation of the symbol.
-    #[prost(string, tag="3")]
-    pub text: ::prost::alloc::string::String,
-    /// Confidence of the OCR results for the symbol. Range [0, 1].
-    #[prost(float, tag="4")]
-    pub confidence: f32,
-}
 /// The type of Google Cloud Vision API detection to perform, and the maximum
 /// number of results to return for that type. Multiple `Feature` objects can
 /// be specified in the `features` list.
@@ -1727,6 +1779,29 @@ pub mod feature {
         /// Run localizer for object detection.
         ObjectLocalization = 19,
     }
+    impl Type {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                Type::Unspecified => "TYPE_UNSPECIFIED",
+                Type::FaceDetection => "FACE_DETECTION",
+                Type::LandmarkDetection => "LANDMARK_DETECTION",
+                Type::LogoDetection => "LOGO_DETECTION",
+                Type::LabelDetection => "LABEL_DETECTION",
+                Type::TextDetection => "TEXT_DETECTION",
+                Type::DocumentTextDetection => "DOCUMENT_TEXT_DETECTION",
+                Type::SafeSearchDetection => "SAFE_SEARCH_DETECTION",
+                Type::ImageProperties => "IMAGE_PROPERTIES",
+                Type::CropHints => "CROP_HINTS",
+                Type::WebDetection => "WEB_DETECTION",
+                Type::ProductSearch => "PRODUCT_SEARCH",
+                Type::ObjectLocalization => "OBJECT_LOCALIZATION",
+            }
+        }
+    }
 }
 /// External image source (Google Cloud Storage or web URL image location).
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -1742,17 +1817,17 @@ pub struct ImageSource {
     /// The URI of the source image. Can be either:
     ///
     /// 1. A Google Cloud Storage URI of the form
-    ///    `gs://bucket_name/object_name`. Object versioning is not supported. See
-    ///    [Google Cloud Storage Request
-    ///    URIs](<https://cloud.google.com/storage/docs/reference-uris>) for more
-    ///    info.
+    ///     `gs://bucket_name/object_name`. Object versioning is not supported. See
+    ///     [Google Cloud Storage Request
+    ///     URIs](<https://cloud.google.com/storage/docs/reference-uris>) for more
+    ///     info.
     ///
     /// 2. A publicly-accessible image HTTP/HTTPS URL. When fetching images from
-    ///    HTTP/HTTPS URLs, Google cannot guarantee that the request will be
-    ///    completed. Your request may fail if the specified host denies the
-    ///    request (e.g. due to request throttling or DOS prevention), or if Google
-    ///    throttles requests to the site for abuse prevention. You should not
-    ///    depend on externally-hosted images for production applications.
+    ///     HTTP/HTTPS URLs, Google cannot guarantee that the request will be
+    ///     completed. Your request may fail if the specified host denies the
+    ///     request (e.g. due to request throttling or DOS prevention), or if Google
+    ///     throttles requests to the site for abuse prevention. You should not
+    ///     depend on externally-hosted images for production applications.
     ///
     /// When both `gcs_image_uri` and `image_uri` are specified, `image_uri` takes
     /// precedence.
@@ -1936,6 +2011,53 @@ pub mod face_annotation {
             LeftCheekCenter = 35,
             /// Right cheek center.
             RightCheekCenter = 36,
+        }
+        impl Type {
+            /// String value of the enum field names used in the ProtoBuf definition.
+            ///
+            /// The values are not transformed in any way and thus are considered stable
+            /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+            pub fn as_str_name(&self) -> &'static str {
+                match self {
+                    Type::UnknownLandmark => "UNKNOWN_LANDMARK",
+                    Type::LeftEye => "LEFT_EYE",
+                    Type::RightEye => "RIGHT_EYE",
+                    Type::LeftOfLeftEyebrow => "LEFT_OF_LEFT_EYEBROW",
+                    Type::RightOfLeftEyebrow => "RIGHT_OF_LEFT_EYEBROW",
+                    Type::LeftOfRightEyebrow => "LEFT_OF_RIGHT_EYEBROW",
+                    Type::RightOfRightEyebrow => "RIGHT_OF_RIGHT_EYEBROW",
+                    Type::MidpointBetweenEyes => "MIDPOINT_BETWEEN_EYES",
+                    Type::NoseTip => "NOSE_TIP",
+                    Type::UpperLip => "UPPER_LIP",
+                    Type::LowerLip => "LOWER_LIP",
+                    Type::MouthLeft => "MOUTH_LEFT",
+                    Type::MouthRight => "MOUTH_RIGHT",
+                    Type::MouthCenter => "MOUTH_CENTER",
+                    Type::NoseBottomRight => "NOSE_BOTTOM_RIGHT",
+                    Type::NoseBottomLeft => "NOSE_BOTTOM_LEFT",
+                    Type::NoseBottomCenter => "NOSE_BOTTOM_CENTER",
+                    Type::LeftEyeTopBoundary => "LEFT_EYE_TOP_BOUNDARY",
+                    Type::LeftEyeRightCorner => "LEFT_EYE_RIGHT_CORNER",
+                    Type::LeftEyeBottomBoundary => "LEFT_EYE_BOTTOM_BOUNDARY",
+                    Type::LeftEyeLeftCorner => "LEFT_EYE_LEFT_CORNER",
+                    Type::RightEyeTopBoundary => "RIGHT_EYE_TOP_BOUNDARY",
+                    Type::RightEyeRightCorner => "RIGHT_EYE_RIGHT_CORNER",
+                    Type::RightEyeBottomBoundary => "RIGHT_EYE_BOTTOM_BOUNDARY",
+                    Type::RightEyeLeftCorner => "RIGHT_EYE_LEFT_CORNER",
+                    Type::LeftEyebrowUpperMidpoint => "LEFT_EYEBROW_UPPER_MIDPOINT",
+                    Type::RightEyebrowUpperMidpoint => "RIGHT_EYEBROW_UPPER_MIDPOINT",
+                    Type::LeftEarTragion => "LEFT_EAR_TRAGION",
+                    Type::RightEarTragion => "RIGHT_EAR_TRAGION",
+                    Type::LeftEyePupil => "LEFT_EYE_PUPIL",
+                    Type::RightEyePupil => "RIGHT_EYE_PUPIL",
+                    Type::ForeheadGlabella => "FOREHEAD_GLABELLA",
+                    Type::ChinGnathion => "CHIN_GNATHION",
+                    Type::ChinLeftGonion => "CHIN_LEFT_GONION",
+                    Type::ChinRightGonion => "CHIN_RIGHT_GONION",
+                    Type::LeftCheekCenter => "LEFT_CHEEK_CENTER",
+                    Type::RightCheekCenter => "RIGHT_CHEEK_CENTER",
+                }
+            }
         }
     }
 }
@@ -2271,9 +2393,9 @@ pub struct BatchAnnotateImagesRequest {
     /// If no parent is specified, a region will be chosen automatically.
     ///
     /// Supported location-ids:
-    ///     `us`: USA country only,
-    ///     `asia`: East asia areas, like Japan, Taiwan,
-    ///     `eu`: The European Union.
+    ///      `us`: USA country only,
+    ///      `asia`: East asia areas, like Japan, Taiwan,
+    ///      `eu`: The European Union.
     ///
     /// Example: `projects/project-A/locations/eu`.
     #[prost(string, tag="4")]
@@ -2348,9 +2470,9 @@ pub struct BatchAnnotateFilesRequest {
     /// If no parent is specified, a region will be chosen automatically.
     ///
     /// Supported location-ids:
-    ///     `us`: USA country only,
-    ///     `asia`: East asia areas, like Japan, Taiwan,
-    ///     `eu`: The European Union.
+    ///      `us`: USA country only,
+    ///      `asia`: East asia areas, like Japan, Taiwan,
+    ///      `eu`: The European Union.
     ///
     /// Example: `projects/project-A/locations/eu`.
     #[prost(string, tag="3")]
@@ -2403,9 +2525,9 @@ pub struct AsyncBatchAnnotateImagesRequest {
     /// If no parent is specified, a region will be chosen automatically.
     ///
     /// Supported location-ids:
-    ///     `us`: USA country only,
-    ///     `asia`: East asia areas, like Japan, Taiwan,
-    ///     `eu`: The European Union.
+    ///      `us`: USA country only,
+    ///      `asia`: East asia areas, like Japan, Taiwan,
+    ///      `eu`: The European Union.
     ///
     /// Example: `projects/project-A/locations/eu`.
     #[prost(string, tag="4")]
@@ -2432,9 +2554,9 @@ pub struct AsyncBatchAnnotateFilesRequest {
     /// If no parent is specified, a region will be chosen automatically.
     ///
     /// Supported location-ids:
-    ///     `us`: USA country only,
-    ///     `asia`: East asia areas, like Japan, Taiwan,
-    ///     `eu`: The European Union.
+    ///      `us`: USA country only,
+    ///      `asia`: East asia areas, like Japan, Taiwan,
+    ///      `eu`: The European Union.
     ///
     /// Example: `projects/project-A/locations/eu`.
     #[prost(string, tag="4")]
@@ -2553,6 +2675,21 @@ pub mod operation_metadata {
         /// The batch processing was cancelled.
         Cancelled = 4,
     }
+    impl State {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                State::Unspecified => "STATE_UNSPECIFIED",
+                State::Created => "CREATED",
+                State::Running => "RUNNING",
+                State::Done => "DONE",
+                State::Cancelled => "CANCELLED",
+            }
+        }
+    }
 }
 /// A bucketized representation of likelihood, which is intended to give clients
 /// highly stable results across model upgrades.
@@ -2572,10 +2709,27 @@ pub enum Likelihood {
     /// It is very likely.
     VeryLikely = 5,
 }
+impl Likelihood {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            Likelihood::Unknown => "UNKNOWN",
+            Likelihood::VeryUnlikely => "VERY_UNLIKELY",
+            Likelihood::Unlikely => "UNLIKELY",
+            Likelihood::Possible => "POSSIBLE",
+            Likelihood::Likely => "LIKELY",
+            Likelihood::VeryLikely => "VERY_LIKELY",
+        }
+    }
+}
 /// Generated client implementations.
 pub mod image_annotator_client {
     #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
     use tonic::codegen::*;
+    use tonic::codegen::http::Uri;
     /// Service that performs Google Cloud Vision API detection tasks over client
     /// images, such as face, landmark, logo, label, and text detection. The
     /// ImageAnnotator service returns detected entities from the images.
@@ -2592,6 +2746,10 @@ pub mod image_annotator_client {
     {
         pub fn new(inner: T) -> Self {
             let inner = tonic::client::Grpc::new(inner);
+            Self { inner }
+        }
+        pub fn with_origin(inner: T, origin: Uri) -> Self {
+            let inner = tonic::client::Grpc::with_origin(inner, origin);
             Self { inner }
         }
         pub fn with_interceptor<F>(
@@ -2613,19 +2771,19 @@ pub mod image_annotator_client {
         {
             ImageAnnotatorClient::new(InterceptedService::new(inner, interceptor))
         }
-        /// Compress requests with `gzip`.
+        /// Compress requests with the given encoding.
         ///
         /// This requires the server to support it otherwise it might respond with an
         /// error.
         #[must_use]
-        pub fn send_gzip(mut self) -> Self {
-            self.inner = self.inner.send_gzip();
+        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.send_compressed(encoding);
             self
         }
-        /// Enable decompressing responses with `gzip`.
+        /// Enable decompressing responses.
         #[must_use]
-        pub fn accept_gzip(mut self) -> Self {
-            self.inner = self.inner.accept_gzip();
+        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.accept_compressed(encoding);
             self
         }
         /// Run image detection and annotation for a batch of images.

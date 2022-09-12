@@ -1,33 +1,3 @@
-/// Detailed information related to the interstitial of a VOD session.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct VodStitchDetail {
-    /// The name of the stitch detail in the specified VOD session, in the form of
-    /// `projects/{project}/locations/{location}/vodSessions/{vod_session_id}/vodStitchDetails/{id}`.
-    #[prost(string, tag="1")]
-    pub name: ::prost::alloc::string::String,
-    /// A list of ad processing details for the fetched ad playlist.
-    #[prost(message, repeated, tag="3")]
-    pub ad_stitch_details: ::prost::alloc::vec::Vec<AdStitchDetail>,
-}
-/// Metadata for a stitched ad.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct AdStitchDetail {
-    /// Required. The ad break ID of the processed ad.
-    #[prost(string, tag="1")]
-    pub ad_break_id: ::prost::alloc::string::String,
-    /// Required. The ad ID of the processed ad.
-    #[prost(string, tag="2")]
-    pub ad_id: ::prost::alloc::string::String,
-    /// Required. The time offset of the processed ad.
-    #[prost(message, optional, tag="3")]
-    pub ad_time_offset: ::core::option::Option<::prost_types::Duration>,
-    /// Optional. Indicates the reason why the ad has been skipped.
-    #[prost(string, tag="4")]
-    pub skip_reason: ::prost::alloc::string::String,
-    /// Optional. The metadata of the chosen media file for the ad.
-    #[prost(btree_map="string, message", tag="5")]
-    pub media: ::prost::alloc::collections::BTreeMap<::prost::alloc::string::String, ::prost_types::Value>,
-}
 /// Describes an event and a trigger URI.
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct Event {
@@ -101,6 +71,41 @@ pub mod event {
         /// Accept invitation event.
         AcceptInvitation = 27,
     }
+    impl EventType {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                EventType::Unspecified => "EVENT_TYPE_UNSPECIFIED",
+                EventType::CreativeView => "CREATIVE_VIEW",
+                EventType::Start => "START",
+                EventType::BreakStart => "BREAK_START",
+                EventType::BreakEnd => "BREAK_END",
+                EventType::Impression => "IMPRESSION",
+                EventType::FirstQuartile => "FIRST_QUARTILE",
+                EventType::Midpoint => "MIDPOINT",
+                EventType::ThirdQuartile => "THIRD_QUARTILE",
+                EventType::Complete => "COMPLETE",
+                EventType::Progress => "PROGRESS",
+                EventType::Mute => "MUTE",
+                EventType::Unmute => "UNMUTE",
+                EventType::Pause => "PAUSE",
+                EventType::Click => "CLICK",
+                EventType::ClickThrough => "CLICK_THROUGH",
+                EventType::Rewind => "REWIND",
+                EventType::Resume => "RESUME",
+                EventType::Error => "ERROR",
+                EventType::Expand => "EXPAND",
+                EventType::Collapse => "COLLAPSE",
+                EventType::Close => "CLOSE",
+                EventType::CloseLinear => "CLOSE_LINEAR",
+                EventType::Skip => "SKIP",
+                EventType::AcceptInvitation => "ACCEPT_INVITATION",
+            }
+        }
+    }
 }
 /// Indicates a time in which a list of events should be triggered
 /// during media playback.
@@ -116,6 +121,129 @@ pub struct ProgressEvent {
     /// `COMPLETE`, `PROGRESS`.
     #[prost(message, repeated, tag="2")]
     pub events: ::prost::alloc::vec::Vec<Event>,
+}
+/// Slate object
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct Slate {
+    /// Output only. The name of the slate, in the form of
+    /// `projects/{project_number}/locations/{location}/slates/{id}`.
+    #[prost(string, tag="1")]
+    pub name: ::prost::alloc::string::String,
+    /// The URI to fetch the source content for the slate. This URI must return an
+    /// MP4 video with at least one audio track.
+    #[prost(string, tag="2")]
+    pub uri: ::prost::alloc::string::String,
+}
+/// Container for a live session's ad tag detail.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct LiveAdTagDetail {
+    /// The resource name in the form of
+    /// `projects/{project}/locations/{location}/liveSessions/{live_session}/liveAdTagDetails/{id}`.
+    #[prost(string, tag="1")]
+    pub name: ::prost::alloc::string::String,
+    /// A list of ad requests.
+    #[prost(message, repeated, tag="2")]
+    pub ad_requests: ::prost::alloc::vec::Vec<AdRequest>,
+}
+/// Information related to the details for one ad tag.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct VodAdTagDetail {
+    /// The name of the ad tag detail for the specified VOD session, in the form of
+    /// `projects/{project}/locations/{location}/vodSessions/{vod_session_id}/vodAdTagDetails/{id}`.
+    #[prost(string, tag="1")]
+    pub name: ::prost::alloc::string::String,
+    /// A list of ad requests for one ad tag.
+    #[prost(message, repeated, tag="2")]
+    pub ad_requests: ::prost::alloc::vec::Vec<AdRequest>,
+}
+/// Details of an ad request to an ad server.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct AdRequest {
+    /// The ad tag URI processed with integrated macros.
+    #[prost(string, tag="1")]
+    pub uri: ::prost::alloc::string::String,
+    /// The request metadata used to make the ad request.
+    #[prost(message, optional, tag="2")]
+    pub request_metadata: ::core::option::Option<RequestMetadata>,
+    /// The response metadata received from the ad request.
+    #[prost(message, optional, tag="3")]
+    pub response_metadata: ::core::option::Option<ResponseMetadata>,
+}
+/// Metadata for an ad request.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct RequestMetadata {
+    /// The HTTP headers of the ad request.
+    #[prost(message, optional, tag="1")]
+    pub headers: ::core::option::Option<::prost_types::Struct>,
+}
+/// Metadata for the response of an ad request.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ResponseMetadata {
+    /// Error message received when making the ad request.
+    #[prost(string, tag="1")]
+    pub error: ::prost::alloc::string::String,
+    /// Headers from the response.
+    #[prost(message, optional, tag="2")]
+    pub headers: ::core::option::Option<::prost_types::Struct>,
+    /// Status code for the response.
+    #[prost(string, tag="3")]
+    pub status_code: ::prost::alloc::string::String,
+    /// Size in bytes of the response.
+    #[prost(int32, tag="4")]
+    pub size_bytes: i32,
+    /// Total time elapsed for the response.
+    #[prost(message, optional, tag="5")]
+    pub duration: ::core::option::Option<::prost_types::Duration>,
+    /// The body of the response.
+    #[prost(string, tag="6")]
+    pub body: ::prost::alloc::string::String,
+}
+/// Configuration for a CDN key. Used by the Video Stitcher
+/// to sign URIs for fetching video manifests and signing
+/// media segments for playback.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct CdnKey {
+    /// The resource name of the CDN key, in the form of
+    /// `projects/{project}/locations/{location}/cdnKeys/{id}`.
+    /// The name is ignored when creating a CDN key.
+    #[prost(string, tag="1")]
+    pub name: ::prost::alloc::string::String,
+    /// The hostname this key applies to.
+    #[prost(string, tag="4")]
+    pub hostname: ::prost::alloc::string::String,
+    /// Configuration associated with the CDN key.
+    #[prost(oneof="cdn_key::CdnKeyConfig", tags="5, 6")]
+    pub cdn_key_config: ::core::option::Option<cdn_key::CdnKeyConfig>,
+}
+/// Nested message and enum types in `CdnKey`.
+pub mod cdn_key {
+    /// Configuration associated with the CDN key.
+    #[derive(Clone, PartialEq, ::prost::Oneof)]
+    pub enum CdnKeyConfig {
+        /// The configuration for a Google Cloud CDN key.
+        #[prost(message, tag="5")]
+        GoogleCdnKey(super::GoogleCdnKey),
+        /// The configuration for an Akamai CDN key.
+        #[prost(message, tag="6")]
+        AkamaiCdnKey(super::AkamaiCdnKey),
+    }
+}
+/// Configuration for a Google Cloud CDN key.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct GoogleCdnKey {
+    /// Input only. Secret for this Google Cloud CDN key.
+    #[prost(bytes="bytes", tag="1")]
+    pub private_key: ::prost::bytes::Bytes,
+    /// The public name of the Google Cloud CDN key.
+    #[prost(string, tag="2")]
+    pub key_name: ::prost::alloc::string::String,
+}
+/// Configuration for an Akamai CDN key.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct AkamaiCdnKey {
+    /// Input only. Token key for the Akamai CDN edge configuration.
+    #[prost(bytes="bytes", tag="1")]
+    pub token_key: ::prost::bytes::Bytes,
 }
 /// Metadata for companion ads.
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -141,6 +269,20 @@ pub mod companion_ads {
         Any = 2,
         /// All companions are optional for display.
         None = 3,
+    }
+    impl DisplayRequirement {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                DisplayRequirement::Unspecified => "DISPLAY_REQUIREMENT_UNSPECIFIED",
+                DisplayRequirement::All => "ALL",
+                DisplayRequirement::Any => "ANY",
+                DisplayRequirement::None => "NONE",
+            }
+        }
     }
 }
 /// Metadata for a companion.
@@ -219,53 +361,6 @@ pub struct StaticAdResource {
     #[prost(string, tag="2")]
     pub creative_type: ::prost::alloc::string::String,
 }
-/// Configuration for a CDN key. Used by the Video Stitcher
-/// to sign URIs for fetching video manifests and signing
-/// media segments for playback.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct CdnKey {
-    /// The resource name of the CDN key, in the form of
-    /// `projects/{project}/locations/{location}/cdnKeys/{id}`.
-    /// The name is ignored when creating a CDN key.
-    #[prost(string, tag="1")]
-    pub name: ::prost::alloc::string::String,
-    /// The hostname this key applies to.
-    #[prost(string, tag="4")]
-    pub hostname: ::prost::alloc::string::String,
-    /// Configuration associated with the CDN key.
-    #[prost(oneof="cdn_key::CdnKeyConfig", tags="5, 6")]
-    pub cdn_key_config: ::core::option::Option<cdn_key::CdnKeyConfig>,
-}
-/// Nested message and enum types in `CdnKey`.
-pub mod cdn_key {
-    /// Configuration associated with the CDN key.
-    #[derive(Clone, PartialEq, ::prost::Oneof)]
-    pub enum CdnKeyConfig {
-        /// The configuration for a Google Cloud CDN key.
-        #[prost(message, tag="5")]
-        GoogleCdnKey(super::GoogleCdnKey),
-        /// The configuration for an Akamai CDN key.
-        #[prost(message, tag="6")]
-        AkamaiCdnKey(super::AkamaiCdnKey),
-    }
-}
-/// Configuration for a Google Cloud CDN key.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct GoogleCdnKey {
-    /// Input only. Secret for this Google Cloud CDN key.
-    #[prost(bytes="bytes", tag="1")]
-    pub private_key: ::prost::bytes::Bytes,
-    /// The public name of the Google Cloud CDN key.
-    #[prost(string, tag="2")]
-    pub key_name: ::prost::alloc::string::String,
-}
-/// Configuration for an Akamai CDN key.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct AkamaiCdnKey {
-    /// Input only. Token key for the Akamai CDN edge configuration.
-    #[prost(bytes="bytes", tag="1")]
-    pub token_key: ::prost::bytes::Bytes,
-}
 /// Metadata for a VOD session.
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct VodSession {
@@ -291,12 +386,12 @@ pub struct VodSession {
     /// Macros are designated by square brackets.
     /// For example:
     ///
-    ///   Ad tag URI: `"<https://doubleclick.google.com/ad/1?geo_id=\[geoId\]"`>
+    ///    Ad tag URI: `"<https://doubleclick.google.com/ad/1?geo_id=\[geoId\]"`>
     ///
-    ///   Ad tag macro map: `{"geoId": "123"}`
+    ///    Ad tag macro map: `{"geoId": "123"}`
     ///
-    ///   Fully qualified ad tag:
-    ///   `"`<https://doubleclick.google.com/ad/1?geo_id=123"`>
+    ///    Fully qualified ad tag:
+    ///    `"`<https://doubleclick.google.com/ad/1?geo_id=123"`>
     #[prost(btree_map="string, string", tag="7")]
     pub ad_tag_macro_map: ::prost::alloc::collections::BTreeMap<::prost::alloc::string::String, ::prost::alloc::string::String>,
     /// Indicates whether client side ad tracking is enabled. If client
@@ -396,12 +491,12 @@ pub struct LiveSession {
     ///
     /// For example:
     ///
-    ///   Ad tag URI: "<https://doubleclick.google.com/ad/1?geo_id=\[geoId\]">
+    ///    Ad tag URI: "<https://doubleclick.google.com/ad/1?geo_id=\[geoId\]">
     ///
-    ///   Ad tag macros: `{"geoId": "123"}`
+    ///    Ad tag macros: `{"geoId": "123"}`
     ///
-    ///   Fully qualified ad tag:
-    ///   `"<https://doubleclick.google.com/ad/1?geo_id=123"`>
+    ///    Fully qualified ad tag:
+    ///    `"<https://doubleclick.google.com/ad/1?geo_id=123"`>
     #[prost(btree_map="string, string", tag="6")]
     pub ad_tag_macros: ::prost::alloc::collections::BTreeMap<::prost::alloc::string::String, ::prost::alloc::string::String>,
     /// Whether client side ad tracking is enabled. If enabled, the client player
@@ -441,6 +536,19 @@ pub mod live_session {
         /// Cuts an ad short and returns to content in the middle of the ad.
         CutCurrent = 3,
     }
+    impl StitchingPolicy {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                StitchingPolicy::Unspecified => "STITCHING_POLICY_UNSPECIFIED",
+                StitchingPolicy::CompleteAd => "COMPLETE_AD",
+                StitchingPolicy::CutCurrent => "CUT_CURRENT",
+            }
+        }
+    }
 }
 /// Metadata of an ad tag.
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -474,6 +582,19 @@ pub mod manifest_options {
         /// Order by descending.
         Descending = 2,
     }
+    impl OrderPolicy {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                OrderPolicy::Unspecified => "ORDER_POLICY_UNSPECIFIED",
+                OrderPolicy::Ascending => "ASCENDING",
+                OrderPolicy::Descending => "DESCENDING",
+            }
+        }
+    }
 }
 /// Filters for a video or muxed redition.
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -487,81 +608,35 @@ pub struct RenditionFilter {
     #[prost(string, tag="2")]
     pub codecs: ::prost::alloc::string::String,
 }
-/// Container for a live session's ad tag detail.
+/// Detailed information related to the interstitial of a VOD session.
 #[derive(Clone, PartialEq, ::prost::Message)]
-pub struct LiveAdTagDetail {
-    /// The resource name in the form of
-    /// `projects/{project}/locations/{location}/liveSessions/{live_session}/liveAdTagDetails/{id}`.
+pub struct VodStitchDetail {
+    /// The name of the stitch detail in the specified VOD session, in the form of
+    /// `projects/{project}/locations/{location}/vodSessions/{vod_session_id}/vodStitchDetails/{id}`.
     #[prost(string, tag="1")]
     pub name: ::prost::alloc::string::String,
-    /// A list of ad requests.
-    #[prost(message, repeated, tag="2")]
-    pub ad_requests: ::prost::alloc::vec::Vec<AdRequest>,
+    /// A list of ad processing details for the fetched ad playlist.
+    #[prost(message, repeated, tag="3")]
+    pub ad_stitch_details: ::prost::alloc::vec::Vec<AdStitchDetail>,
 }
-/// Information related to the details for one ad tag.
+/// Metadata for a stitched ad.
 #[derive(Clone, PartialEq, ::prost::Message)]
-pub struct VodAdTagDetail {
-    /// The name of the ad tag detail for the specified VOD session, in the form of
-    /// `projects/{project}/locations/{location}/vodSessions/{vod_session_id}/vodAdTagDetails/{id}`.
+pub struct AdStitchDetail {
+    /// Required. The ad break ID of the processed ad.
     #[prost(string, tag="1")]
-    pub name: ::prost::alloc::string::String,
-    /// A list of ad requests for one ad tag.
-    #[prost(message, repeated, tag="2")]
-    pub ad_requests: ::prost::alloc::vec::Vec<AdRequest>,
-}
-/// Details of an ad request to an ad server.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct AdRequest {
-    /// The ad tag URI processed with integrated macros.
-    #[prost(string, tag="1")]
-    pub uri: ::prost::alloc::string::String,
-    /// The request metadata used to make the ad request.
-    #[prost(message, optional, tag="2")]
-    pub request_metadata: ::core::option::Option<RequestMetadata>,
-    /// The response metadata received from the ad request.
-    #[prost(message, optional, tag="3")]
-    pub response_metadata: ::core::option::Option<ResponseMetadata>,
-}
-/// Metadata for an ad request.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct RequestMetadata {
-    /// The HTTP headers of the ad request.
-    #[prost(message, optional, tag="1")]
-    pub headers: ::core::option::Option<::prost_types::Struct>,
-}
-/// Metadata for the response of an ad request.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ResponseMetadata {
-    /// Error message received when making the ad request.
-    #[prost(string, tag="1")]
-    pub error: ::prost::alloc::string::String,
-    /// Headers from the response.
-    #[prost(message, optional, tag="2")]
-    pub headers: ::core::option::Option<::prost_types::Struct>,
-    /// Status code for the response.
-    #[prost(string, tag="3")]
-    pub status_code: ::prost::alloc::string::String,
-    /// Size in bytes of the response.
-    #[prost(int32, tag="4")]
-    pub size_bytes: i32,
-    /// Total time elapsed for the response.
-    #[prost(message, optional, tag="5")]
-    pub duration: ::core::option::Option<::prost_types::Duration>,
-    /// The body of the response.
-    #[prost(string, tag="6")]
-    pub body: ::prost::alloc::string::String,
-}
-/// Slate object
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct Slate {
-    /// Output only. The name of the slate, in the form of
-    /// `projects/{project_number}/locations/{location}/slates/{id}`.
-    #[prost(string, tag="1")]
-    pub name: ::prost::alloc::string::String,
-    /// The URI to fetch the source content for the slate. This URI must return an
-    /// MP4 video with at least one audio track.
+    pub ad_break_id: ::prost::alloc::string::String,
+    /// Required. The ad ID of the processed ad.
     #[prost(string, tag="2")]
-    pub uri: ::prost::alloc::string::String,
+    pub ad_id: ::prost::alloc::string::String,
+    /// Required. The time offset of the processed ad.
+    #[prost(message, optional, tag="3")]
+    pub ad_time_offset: ::core::option::Option<::prost_types::Duration>,
+    /// Optional. Indicates the reason why the ad has been skipped.
+    #[prost(string, tag="4")]
+    pub skip_reason: ::prost::alloc::string::String,
+    /// Optional. The metadata of the chosen media file for the ad.
+    #[prost(btree_map="string, message", tag="5")]
+    pub media: ::prost::alloc::collections::BTreeMap<::prost::alloc::string::String, ::prost_types::Value>,
 }
 /// Request message for VideoStitcherService.createCdnKey.
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -858,6 +933,7 @@ pub struct GetLiveSessionRequest {
 pub mod video_stitcher_service_client {
     #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
     use tonic::codegen::*;
+    use tonic::codegen::http::Uri;
     /// Video-On-Demand content stitching API allows you to insert ads
     /// into (VoD) video on demand files. You will be able to render custom
     /// scrubber bars with highlighted ads, enforce ad policies, allow
@@ -876,6 +952,10 @@ pub mod video_stitcher_service_client {
     {
         pub fn new(inner: T) -> Self {
             let inner = tonic::client::Grpc::new(inner);
+            Self { inner }
+        }
+        pub fn with_origin(inner: T, origin: Uri) -> Self {
+            let inner = tonic::client::Grpc::with_origin(inner, origin);
             Self { inner }
         }
         pub fn with_interceptor<F>(
@@ -897,19 +977,19 @@ pub mod video_stitcher_service_client {
         {
             VideoStitcherServiceClient::new(InterceptedService::new(inner, interceptor))
         }
-        /// Compress requests with `gzip`.
+        /// Compress requests with the given encoding.
         ///
         /// This requires the server to support it otherwise it might respond with an
         /// error.
         #[must_use]
-        pub fn send_gzip(mut self) -> Self {
-            self.inner = self.inner.send_gzip();
+        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.send_compressed(encoding);
             self
         }
-        /// Enable decompressing responses with `gzip`.
+        /// Enable decompressing responses.
         #[must_use]
-        pub fn accept_gzip(mut self) -> Self {
-            self.inner = self.inner.accept_gzip();
+        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.accept_compressed(encoding);
             self
         }
         /// Creates a new CDN key.

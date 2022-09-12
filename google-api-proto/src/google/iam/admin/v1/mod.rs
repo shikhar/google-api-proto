@@ -1,3 +1,26 @@
+/// Audit log information specific to Cloud IAM admin APIs. This message is
+/// serialized as an `Any` type in the `ServiceData` message of an
+/// `AuditLog` message.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct AuditData {
+    /// The permission_delta when when creating or updating a Role.
+    #[prost(message, optional, tag="1")]
+    pub permission_delta: ::core::option::Option<audit_data::PermissionDelta>,
+}
+/// Nested message and enum types in `AuditData`.
+pub mod audit_data {
+    /// A PermissionDelta message to record the added_permissions and
+    /// removed_permissions inside a role.
+    #[derive(Clone, PartialEq, ::prost::Message)]
+    pub struct PermissionDelta {
+        /// Added permissions.
+        #[prost(string, repeated, tag="1")]
+        pub added_permissions: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
+        /// Removed permissions.
+        #[prost(string, repeated, tag="2")]
+        pub removed_permissions: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
+    }
+}
 /// An IAM service account.
 ///
 /// A service account is an account for an application or a virtual machine (VM)
@@ -222,6 +245,19 @@ pub mod list_service_account_keys_request {
         UserManaged = 1,
         /// System-managed keys (managed and rotated by Google).
         SystemManaged = 2,
+    }
+    impl KeyType {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                KeyType::Unspecified => "KEY_TYPE_UNSPECIFIED",
+                KeyType::UserManaged => "USER_MANAGED",
+                KeyType::SystemManaged => "SYSTEM_MANAGED",
+            }
+        }
     }
 }
 /// The service account keys list response.
@@ -523,6 +559,22 @@ pub mod role {
         /// The user has indicated this role is currently in an EAP phase.
         Eap = 6,
     }
+    impl RoleLaunchStage {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                RoleLaunchStage::Alpha => "ALPHA",
+                RoleLaunchStage::Beta => "BETA",
+                RoleLaunchStage::Ga => "GA",
+                RoleLaunchStage::Deprecated => "DEPRECATED",
+                RoleLaunchStage::Disabled => "DISABLED",
+                RoleLaunchStage::Eap => "EAP",
+            }
+        }
+    }
 }
 /// The grantable role query request.
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -568,22 +620,22 @@ pub struct ListRolesRequest {
     /// resource type's `parent` value format is described below:
     ///
     /// * \[`roles.list()`\](/iam/reference/rest/v1/roles/list): An empty string.
-    ///   This method doesn't require a resource; it simply returns all
-    ///   [predefined roles](/iam/docs/understanding-roles#predefined_roles) in
-    ///   Cloud IAM. Example request URL:
-    ///   `<https://iam.googleapis.com/v1/roles`>
+    ///    This method doesn't require a resource; it simply returns all
+    ///    [predefined roles](/iam/docs/understanding-roles#predefined_roles) in
+    ///    Cloud IAM. Example request URL:
+    ///    `<https://iam.googleapis.com/v1/roles`>
     ///
     /// * \[`projects.roles.list()`\](/iam/reference/rest/v1/projects.roles/list):
-    ///   `projects/{PROJECT_ID}`. This method lists all project-level
-    ///   [custom roles](/iam/docs/understanding-custom-roles).
-    ///   Example request URL:
-    ///   `<https://iam.googleapis.com/v1/projects/{PROJECT_ID}/roles`>
+    ///    `projects/{PROJECT_ID}`. This method lists all project-level
+    ///    [custom roles](/iam/docs/understanding-custom-roles).
+    ///    Example request URL:
+    ///    `<https://iam.googleapis.com/v1/projects/{PROJECT_ID}/roles`>
     ///
     /// * \[`organizations.roles.list()`\](/iam/reference/rest/v1/organizations.roles/list):
-    ///   `organizations/{ORGANIZATION_ID}`. This method lists all
-    ///   organization-level [custom roles](/iam/docs/understanding-custom-roles).
-    ///   Example request URL:
-    ///   `<https://iam.googleapis.com/v1/organizations/{ORGANIZATION_ID}/roles`>
+    ///    `organizations/{ORGANIZATION_ID}`. This method lists all
+    ///    organization-level [custom roles](/iam/docs/understanding-custom-roles).
+    ///    Example request URL:
+    ///    `<https://iam.googleapis.com/v1/organizations/{ORGANIZATION_ID}/roles`>
     ///
     /// Note: Wildcard (*) values are invalid; you must specify a complete project
     /// ID or organization ID.
@@ -629,22 +681,22 @@ pub struct GetRoleRequest {
     /// resource type's `name` value format is described below:
     ///
     /// * \[`roles.get()`\](/iam/reference/rest/v1/roles/get): `roles/{ROLE_NAME}`.
-    ///   This method returns results from all
-    ///   [predefined roles](/iam/docs/understanding-roles#predefined_roles) in
-    ///   Cloud IAM. Example request URL:
-    ///   `<https://iam.googleapis.com/v1/roles/{ROLE_NAME}`>
+    ///    This method returns results from all
+    ///    [predefined roles](/iam/docs/understanding-roles#predefined_roles) in
+    ///    Cloud IAM. Example request URL:
+    ///    `<https://iam.googleapis.com/v1/roles/{ROLE_NAME}`>
     ///
     /// * \[`projects.roles.get()`\](/iam/reference/rest/v1/projects.roles/get):
-    ///   `projects/{PROJECT_ID}/roles/{CUSTOM_ROLE_ID}`. This method returns only
-    ///   [custom roles](/iam/docs/understanding-custom-roles) that have been
-    ///   created at the project level. Example request URL:
-    ///   `<https://iam.googleapis.com/v1/projects/{PROJECT_ID}/roles/{CUSTOM_ROLE_ID}`>
+    ///    `projects/{PROJECT_ID}/roles/{CUSTOM_ROLE_ID}`. This method returns only
+    ///    [custom roles](/iam/docs/understanding-custom-roles) that have been
+    ///    created at the project level. Example request URL:
+    ///    `<https://iam.googleapis.com/v1/projects/{PROJECT_ID}/roles/{CUSTOM_ROLE_ID}`>
     ///
     /// * \[`organizations.roles.get()`\](/iam/reference/rest/v1/organizations.roles/get):
-    ///   `organizations/{ORGANIZATION_ID}/roles/{CUSTOM_ROLE_ID}`. This method
-    ///   returns only [custom roles](/iam/docs/understanding-custom-roles) that
-    ///   have been created at the organization level. Example request URL:
-    ///   `<https://iam.googleapis.com/v1/organizations/{ORGANIZATION_ID}/roles/{CUSTOM_ROLE_ID}`>
+    ///    `organizations/{ORGANIZATION_ID}/roles/{CUSTOM_ROLE_ID}`. This method
+    ///    returns only [custom roles](/iam/docs/understanding-custom-roles) that
+    ///    have been created at the organization level. Example request URL:
+    ///    `<https://iam.googleapis.com/v1/organizations/{ORGANIZATION_ID}/roles/{CUSTOM_ROLE_ID}`>
     ///
     /// Note: Wildcard (*) values are invalid; you must specify a complete project
     /// ID or organization ID.
@@ -661,16 +713,16 @@ pub struct CreateRoleRequest {
     /// resource type's `parent` value format is described below:
     ///
     /// * \[`projects.roles.create()`\](/iam/reference/rest/v1/projects.roles/create):
-    ///   `projects/{PROJECT_ID}`. This method creates project-level
-    ///   [custom roles](/iam/docs/understanding-custom-roles).
-    ///   Example request URL:
-    ///   `<https://iam.googleapis.com/v1/projects/{PROJECT_ID}/roles`>
+    ///    `projects/{PROJECT_ID}`. This method creates project-level
+    ///    [custom roles](/iam/docs/understanding-custom-roles).
+    ///    Example request URL:
+    ///    `<https://iam.googleapis.com/v1/projects/{PROJECT_ID}/roles`>
     ///
     /// * \[`organizations.roles.create()`\](/iam/reference/rest/v1/organizations.roles/create):
-    ///   `organizations/{ORGANIZATION_ID}`. This method creates organization-level
-    ///   [custom roles](/iam/docs/understanding-custom-roles). Example request
-    ///   URL:
-    ///   `<https://iam.googleapis.com/v1/organizations/{ORGANIZATION_ID}/roles`>
+    ///    `organizations/{ORGANIZATION_ID}`. This method creates organization-level
+    ///    [custom roles](/iam/docs/understanding-custom-roles). Example request
+    ///    URL:
+    ///    `<https://iam.googleapis.com/v1/organizations/{ORGANIZATION_ID}/roles`>
     ///
     /// Note: Wildcard (*) values are invalid; you must specify a complete project
     /// ID or organization ID.
@@ -697,16 +749,16 @@ pub struct UpdateRoleRequest {
     /// resource type's `name` value format is described below:
     ///
     /// * \[`projects.roles.patch()`\](/iam/reference/rest/v1/projects.roles/patch):
-    ///   `projects/{PROJECT_ID}/roles/{CUSTOM_ROLE_ID}`. This method updates only
-    ///   [custom roles](/iam/docs/understanding-custom-roles) that have been
-    ///   created at the project level. Example request URL:
-    ///   `<https://iam.googleapis.com/v1/projects/{PROJECT_ID}/roles/{CUSTOM_ROLE_ID}`>
+    ///    `projects/{PROJECT_ID}/roles/{CUSTOM_ROLE_ID}`. This method updates only
+    ///    [custom roles](/iam/docs/understanding-custom-roles) that have been
+    ///    created at the project level. Example request URL:
+    ///    `<https://iam.googleapis.com/v1/projects/{PROJECT_ID}/roles/{CUSTOM_ROLE_ID}`>
     ///
     /// * \[`organizations.roles.patch()`\](/iam/reference/rest/v1/organizations.roles/patch):
-    ///   `organizations/{ORGANIZATION_ID}/roles/{CUSTOM_ROLE_ID}`. This method
-    ///   updates only [custom roles](/iam/docs/understanding-custom-roles) that
-    ///   have been created at the organization level. Example request URL:
-    ///   `<https://iam.googleapis.com/v1/organizations/{ORGANIZATION_ID}/roles/{CUSTOM_ROLE_ID}`>
+    ///    `organizations/{ORGANIZATION_ID}/roles/{CUSTOM_ROLE_ID}`. This method
+    ///    updates only [custom roles](/iam/docs/understanding-custom-roles) that
+    ///    have been created at the organization level. Example request URL:
+    ///    `<https://iam.googleapis.com/v1/organizations/{ORGANIZATION_ID}/roles/{CUSTOM_ROLE_ID}`>
     ///
     /// Note: Wildcard (*) values are invalid; you must specify a complete project
     /// ID or organization ID.
@@ -729,16 +781,16 @@ pub struct DeleteRoleRequest {
     /// resource type's `name` value format is described below:
     ///
     /// * \[`projects.roles.delete()`\](/iam/reference/rest/v1/projects.roles/delete):
-    ///   `projects/{PROJECT_ID}/roles/{CUSTOM_ROLE_ID}`. This method deletes only
-    ///   [custom roles](/iam/docs/understanding-custom-roles) that have been
-    ///   created at the project level. Example request URL:
-    ///   `<https://iam.googleapis.com/v1/projects/{PROJECT_ID}/roles/{CUSTOM_ROLE_ID}`>
+    ///    `projects/{PROJECT_ID}/roles/{CUSTOM_ROLE_ID}`. This method deletes only
+    ///    [custom roles](/iam/docs/understanding-custom-roles) that have been
+    ///    created at the project level. Example request URL:
+    ///    `<https://iam.googleapis.com/v1/projects/{PROJECT_ID}/roles/{CUSTOM_ROLE_ID}`>
     ///
     /// * \[`organizations.roles.delete()`\](/iam/reference/rest/v1/organizations.roles/delete):
-    ///   `organizations/{ORGANIZATION_ID}/roles/{CUSTOM_ROLE_ID}`. This method
-    ///   deletes only [custom roles](/iam/docs/understanding-custom-roles) that
-    ///   have been created at the organization level. Example request URL:
-    ///   `<https://iam.googleapis.com/v1/organizations/{ORGANIZATION_ID}/roles/{CUSTOM_ROLE_ID}`>
+    ///    `organizations/{ORGANIZATION_ID}/roles/{CUSTOM_ROLE_ID}`. This method
+    ///    deletes only [custom roles](/iam/docs/understanding-custom-roles) that
+    ///    have been created at the organization level. Example request URL:
+    ///    `<https://iam.googleapis.com/v1/organizations/{ORGANIZATION_ID}/roles/{CUSTOM_ROLE_ID}`>
     ///
     /// Note: Wildcard (*) values are invalid; you must specify a complete project
     /// ID or organization ID.
@@ -758,16 +810,16 @@ pub struct UndeleteRoleRequest {
     /// resource type's `name` value format is described below:
     ///
     /// * \[`projects.roles.undelete()`\](/iam/reference/rest/v1/projects.roles/undelete):
-    ///   `projects/{PROJECT_ID}/roles/{CUSTOM_ROLE_ID}`. This method undeletes
-    ///   only [custom roles](/iam/docs/understanding-custom-roles) that have been
-    ///   created at the project level. Example request URL:
-    ///   `<https://iam.googleapis.com/v1/projects/{PROJECT_ID}/roles/{CUSTOM_ROLE_ID}`>
+    ///    `projects/{PROJECT_ID}/roles/{CUSTOM_ROLE_ID}`. This method undeletes
+    ///    only [custom roles](/iam/docs/understanding-custom-roles) that have been
+    ///    created at the project level. Example request URL:
+    ///    `<https://iam.googleapis.com/v1/projects/{PROJECT_ID}/roles/{CUSTOM_ROLE_ID}`>
     ///
     /// * \[`organizations.roles.undelete()`\](/iam/reference/rest/v1/organizations.roles/undelete):
-    ///   `organizations/{ORGANIZATION_ID}/roles/{CUSTOM_ROLE_ID}`. This method
-    ///   undeletes only [custom roles](/iam/docs/understanding-custom-roles) that
-    ///   have been created at the organization level. Example request URL:
-    ///   `<https://iam.googleapis.com/v1/organizations/{ORGANIZATION_ID}/roles/{CUSTOM_ROLE_ID}`>
+    ///    `organizations/{ORGANIZATION_ID}/roles/{CUSTOM_ROLE_ID}`. This method
+    ///    undeletes only [custom roles](/iam/docs/understanding-custom-roles) that
+    ///    have been created at the organization level. Example request URL:
+    ///    `<https://iam.googleapis.com/v1/organizations/{ORGANIZATION_ID}/roles/{CUSTOM_ROLE_ID}`>
     ///
     /// Note: Wildcard (*) values are invalid; you must specify a complete project
     /// ID or organization ID.
@@ -822,6 +874,20 @@ pub mod permission {
         /// The permission is being deprecated.
         Deprecated = 3,
     }
+    impl PermissionLaunchStage {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                PermissionLaunchStage::Alpha => "ALPHA",
+                PermissionLaunchStage::Beta => "BETA",
+                PermissionLaunchStage::Ga => "GA",
+                PermissionLaunchStage::Deprecated => "DEPRECATED",
+            }
+        }
+    }
     /// The state of the permission with regards to custom roles.
     #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
     #[repr(i32)]
@@ -832,6 +898,19 @@ pub mod permission {
         Testing = 1,
         /// Permission is not supported for custom role use.
         NotSupported = 2,
+    }
+    impl CustomRolesSupportLevel {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                CustomRolesSupportLevel::Supported => "SUPPORTED",
+                CustomRolesSupportLevel::Testing => "TESTING",
+                CustomRolesSupportLevel::NotSupported => "NOT_SUPPORTED",
+            }
+        }
     }
 }
 /// A request to get permissions which can be tested on a resource.
@@ -968,6 +1047,18 @@ pub mod lint_result {
         /// binding.
         Condition = 3,
     }
+    impl Level {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                Level::Unspecified => "LEVEL_UNSPECIFIED",
+                Level::Condition => "CONDITION",
+            }
+        }
+    }
     /// Possible Severity values of an issued result.
     #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
     #[repr(i32)]
@@ -986,7 +1077,7 @@ pub mod lint_result {
         ///
         /// - Unsatisfiable condition: Expired timestamp in date/time condition.
         /// - Ineffective condition: Condition on a <member, role> pair which is
-        ///   granted unconditionally in another binding of the same policy.
+        ///    granted unconditionally in another binding of the same policy.
         Warning = 2,
         /// Reserved for the issues that are not severe as `ERROR`/`WARNING`, but
         /// need special handling. For instance, messages about skipped validation
@@ -999,6 +1090,22 @@ pub mod lint_result {
         Info = 4,
         /// Deprecated severity level.
         Deprecated = 5,
+    }
+    impl Severity {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                Severity::Unspecified => "SEVERITY_UNSPECIFIED",
+                Severity::Error => "ERROR",
+                Severity::Warning => "WARNING",
+                Severity::Notice => "NOTICE",
+                Severity::Info => "INFO",
+                Severity::Deprecated => "DEPRECATED",
+            }
+        }
     }
 }
 /// The response of a lint operation. An empty response indicates
@@ -1020,6 +1127,19 @@ pub enum ServiceAccountKeyAlgorithm {
     /// 2k RSA Key.
     KeyAlgRsa2048 = 2,
 }
+impl ServiceAccountKeyAlgorithm {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            ServiceAccountKeyAlgorithm::KeyAlgUnspecified => "KEY_ALG_UNSPECIFIED",
+            ServiceAccountKeyAlgorithm::KeyAlgRsa1024 => "KEY_ALG_RSA_1024",
+            ServiceAccountKeyAlgorithm::KeyAlgRsa2048 => "KEY_ALG_RSA_2048",
+        }
+    }
+}
 /// Supported private key output formats.
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
 #[repr(i32)]
@@ -1033,6 +1153,19 @@ pub enum ServiceAccountPrivateKeyType {
     /// Google Credentials File format.
     TypeGoogleCredentialsFile = 2,
 }
+impl ServiceAccountPrivateKeyType {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            ServiceAccountPrivateKeyType::TypeUnspecified => "TYPE_UNSPECIFIED",
+            ServiceAccountPrivateKeyType::TypePkcs12File => "TYPE_PKCS12_FILE",
+            ServiceAccountPrivateKeyType::TypeGoogleCredentialsFile => "TYPE_GOOGLE_CREDENTIALS_FILE",
+        }
+    }
+}
 /// Supported public key output formats.
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
 #[repr(i32)]
@@ -1043,6 +1176,19 @@ pub enum ServiceAccountPublicKeyType {
     TypeX509PemFile = 1,
     /// Raw public key.
     TypeRawPublicKey = 2,
+}
+impl ServiceAccountPublicKeyType {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            ServiceAccountPublicKeyType::TypeNone => "TYPE_NONE",
+            ServiceAccountPublicKeyType::TypeX509PemFile => "TYPE_X509_PEM_FILE",
+            ServiceAccountPublicKeyType::TypeRawPublicKey => "TYPE_RAW_PUBLIC_KEY",
+        }
+    }
 }
 /// Service Account Key Origin.
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
@@ -1055,6 +1201,19 @@ pub enum ServiceAccountKeyOrigin {
     /// Key is provided by Google.
     GoogleProvided = 2,
 }
+impl ServiceAccountKeyOrigin {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            ServiceAccountKeyOrigin::OriginUnspecified => "ORIGIN_UNSPECIFIED",
+            ServiceAccountKeyOrigin::UserProvided => "USER_PROVIDED",
+            ServiceAccountKeyOrigin::GoogleProvided => "GOOGLE_PROVIDED",
+        }
+    }
+}
 /// A view for Role objects.
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
 #[repr(i32)]
@@ -1065,10 +1224,23 @@ pub enum RoleView {
     /// Returns all fields.
     Full = 1,
 }
+impl RoleView {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            RoleView::Basic => "BASIC",
+            RoleView::Full => "FULL",
+        }
+    }
+}
 /// Generated client implementations.
 pub mod iam_client {
     #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
     use tonic::codegen::*;
+    use tonic::codegen::http::Uri;
     /// Creates and manages Identity and Access Management (IAM) resources.
     ///
     /// You can use this service to work with all of the following resources:
@@ -1103,6 +1275,10 @@ pub mod iam_client {
             let inner = tonic::client::Grpc::new(inner);
             Self { inner }
         }
+        pub fn with_origin(inner: T, origin: Uri) -> Self {
+            let inner = tonic::client::Grpc::with_origin(inner, origin);
+            Self { inner }
+        }
         pub fn with_interceptor<F>(
             inner: T,
             interceptor: F,
@@ -1122,19 +1298,19 @@ pub mod iam_client {
         {
             IamClient::new(InterceptedService::new(inner, interceptor))
         }
-        /// Compress requests with `gzip`.
+        /// Compress requests with the given encoding.
         ///
         /// This requires the server to support it otherwise it might respond with an
         /// error.
         #[must_use]
-        pub fn send_gzip(mut self) -> Self {
-            self.inner = self.inner.send_gzip();
+        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.send_compressed(encoding);
             self
         }
-        /// Enable decompressing responses with `gzip`.
+        /// Enable decompressing responses.
         #[must_use]
-        pub fn accept_gzip(mut self) -> Self {
-            self.inner = self.inner.accept_gzip();
+        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.accept_compressed(encoding);
             self
         }
         /// Lists every [ServiceAccount][google.iam.admin.v1.ServiceAccount] that belongs to a specific project.
@@ -1859,28 +2035,5 @@ pub mod iam_client {
             );
             self.inner.unary(request.into_request(), path, codec).await
         }
-    }
-}
-/// Audit log information specific to Cloud IAM admin APIs. This message is
-/// serialized as an `Any` type in the `ServiceData` message of an
-/// `AuditLog` message.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct AuditData {
-    /// The permission_delta when when creating or updating a Role.
-    #[prost(message, optional, tag="1")]
-    pub permission_delta: ::core::option::Option<audit_data::PermissionDelta>,
-}
-/// Nested message and enum types in `AuditData`.
-pub mod audit_data {
-    /// A PermissionDelta message to record the added_permissions and
-    /// removed_permissions inside a role.
-    #[derive(Clone, PartialEq, ::prost::Message)]
-    pub struct PermissionDelta {
-        /// Added permissions.
-        #[prost(string, repeated, tag="1")]
-        pub added_permissions: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
-        /// Removed permissions.
-        #[prost(string, repeated, tag="2")]
-        pub removed_permissions: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
     }
 }

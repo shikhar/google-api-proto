@@ -606,3 +606,18 @@ pub enum OperationResponseMapping {
     /// meaning as google.longrunning.Operation.error.message.
     ErrorMessage = 4,
 }
+impl OperationResponseMapping {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            OperationResponseMapping::Undefined => "UNDEFINED",
+            OperationResponseMapping::Name => "NAME",
+            OperationResponseMapping::Status => "STATUS",
+            OperationResponseMapping::ErrorCode => "ERROR_CODE",
+            OperationResponseMapping::ErrorMessage => "ERROR_MESSAGE",
+        }
+    }
+}

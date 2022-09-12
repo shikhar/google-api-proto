@@ -13,7 +13,7 @@ pub struct NodeInfo {
 pub struct Instance {
     /// Required. Unique name of the resource in this scope including project and
     /// location using the form:
-    ///     `projects/{project_id}/locations/{location_id}/instances/{instance_id}`
+    ///      `projects/{project_id}/locations/{location_id}/instances/{instance_id}`
     ///
     /// Note: Redis instances are managed and addressed at regional level so
     /// location_id here refers to a GCP region; however, users may choose which
@@ -46,10 +46,10 @@ pub struct Instance {
     /// If not provided, latest supported version will be used. Currently, the
     /// supported values are:
     ///
-    ///  *   `REDIS_3_2` for Redis 3.2 compatibility
-    ///  *   `REDIS_4_0` for Redis 4.0 compatibility (default)
-    ///  *   `REDIS_5_0` for Redis 5.0 compatibility
-    ///  *   `REDIS_6_X` for Redis 6.x compatibility
+    ///   *   `REDIS_3_2` for Redis 3.2 compatibility
+    ///   *   `REDIS_4_0` for Redis 4.0 compatibility (default)
+    ///   *   `REDIS_5_0` for Redis 5.0 compatibility
+    ///   *   `REDIS_6_X` for Redis 6.x compatibility
     #[prost(string, tag="7")]
     pub redis_version: ::prost::alloc::string::String,
     /// Optional. For DIRECT_PEERING mode, the CIDR range of internal addresses
@@ -70,7 +70,7 @@ pub struct Instance {
     #[prost(string, tag="30")]
     pub secondary_ip_range: ::prost::alloc::string::String,
     /// Output only. Hostname or IP address of the exposed Redis endpoint used by
-    ///  clients to connect to the service.
+    ///   clients to connect to the service.
     #[prost(string, tag="10")]
     pub host: ::prost::alloc::string::String,
     /// Output only. The port number of the exposed Redis endpoint.
@@ -95,22 +95,22 @@ pub struct Instance {
     /// <http://redis.io/topics/config.> Currently, the only supported parameters
     /// are:
     ///
-    ///  Redis version 3.2 and newer:
+    ///   Redis version 3.2 and newer:
     ///
-    ///  *   maxmemory-policy
-    ///  *   notify-keyspace-events
+    ///   *   maxmemory-policy
+    ///   *   notify-keyspace-events
     ///
-    ///  Redis version 4.0 and newer:
+    ///   Redis version 4.0 and newer:
     ///
-    ///  *   activedefrag
-    ///  *   lfu-decay-time
-    ///  *   lfu-log-factor
-    ///  *   maxmemory-gb
+    ///   *   activedefrag
+    ///   *   lfu-decay-time
+    ///   *   lfu-log-factor
+    ///   *   maxmemory-gb
     ///
-    ///  Redis version 5.0 and newer:
+    ///   Redis version 5.0 and newer:
     ///
-    ///  *   stream-node-max-bytes
-    ///  *   stream-node-max-entries
+    ///   *   stream-node-max-bytes
+    ///   *   stream-node-max-entries
     #[prost(btree_map="string, string", tag="16")]
     pub redis_configs: ::prost::alloc::collections::BTreeMap<::prost::alloc::string::String, ::prost::alloc::string::String>,
     /// Required. The service tier of the instance.
@@ -210,6 +210,25 @@ pub mod instance {
         /// Redis instance is failing over (availability may be affected).
         FailingOver = 10,
     }
+    impl State {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                State::Unspecified => "STATE_UNSPECIFIED",
+                State::Creating => "CREATING",
+                State::Ready => "READY",
+                State::Updating => "UPDATING",
+                State::Deleting => "DELETING",
+                State::Repairing => "REPAIRING",
+                State::Maintenance => "MAINTENANCE",
+                State::Importing => "IMPORTING",
+                State::FailingOver => "FAILING_OVER",
+            }
+        }
+    }
     /// Available service tiers to choose from
     #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
     #[repr(i32)]
@@ -220,6 +239,19 @@ pub mod instance {
         Basic = 1,
         /// STANDARD_HA tier: highly available primary/replica instances
         StandardHa = 3,
+    }
+    impl Tier {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                Tier::Unspecified => "TIER_UNSPECIFIED",
+                Tier::Basic => "BASIC",
+                Tier::StandardHa => "STANDARD_HA",
+            }
+        }
     }
     /// Available connection modes.
     #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
@@ -234,6 +266,19 @@ pub mod instance {
         /// Google Cloud services, including Memorystore.
         PrivateServiceAccess = 2,
     }
+    impl ConnectMode {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                ConnectMode::Unspecified => "CONNECT_MODE_UNSPECIFIED",
+                ConnectMode::DirectPeering => "DIRECT_PEERING",
+                ConnectMode::PrivateServiceAccess => "PRIVATE_SERVICE_ACCESS",
+            }
+        }
+    }
     /// Available TLS modes.
     #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
     #[repr(i32)]
@@ -244,6 +289,19 @@ pub mod instance {
         ServerAuthentication = 1,
         /// TLS is disabled for the instance.
         Disabled = 2,
+    }
+    impl TransitEncryptionMode {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                TransitEncryptionMode::Unspecified => "TRANSIT_ENCRYPTION_MODE_UNSPECIFIED",
+                TransitEncryptionMode::ServerAuthentication => "SERVER_AUTHENTICATION",
+                TransitEncryptionMode::Disabled => "DISABLED",
+            }
+        }
     }
     /// Read replicas mode.
     #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
@@ -258,6 +316,19 @@ pub mod instance {
         /// If enabled, read endpoint will be provided and the instance can scale
         /// up and down the number of replicas. Not valid for basic tier.
         ReadReplicasEnabled = 2,
+    }
+    impl ReadReplicasMode {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                ReadReplicasMode::Unspecified => "READ_REPLICAS_MODE_UNSPECIFIED",
+                ReadReplicasMode::ReadReplicasDisabled => "READ_REPLICAS_DISABLED",
+                ReadReplicasMode::ReadReplicasEnabled => "READ_REPLICAS_ENABLED",
+            }
+        }
     }
 }
 /// Configuration of the persistence functionality.
@@ -298,6 +369,19 @@ pub mod persistence_config {
         /// RDB based Persistence is enabled.
         Rdb = 2,
     }
+    impl PersistenceMode {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                PersistenceMode::Unspecified => "PERSISTENCE_MODE_UNSPECIFIED",
+                PersistenceMode::Disabled => "DISABLED",
+                PersistenceMode::Rdb => "RDB",
+            }
+        }
+    }
     /// Available snapshot periods for scheduling.
     #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
     #[repr(i32)]
@@ -313,12 +397,27 @@ pub mod persistence_config {
         /// Snapshot every 24 hours.
         TwentyFourHours = 6,
     }
+    impl SnapshotPeriod {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                SnapshotPeriod::Unspecified => "SNAPSHOT_PERIOD_UNSPECIFIED",
+                SnapshotPeriod::OneHour => "ONE_HOUR",
+                SnapshotPeriod::SixHours => "SIX_HOURS",
+                SnapshotPeriod::TwelveHours => "TWELVE_HOURS",
+                SnapshotPeriod::TwentyFourHours => "TWENTY_FOUR_HOURS",
+            }
+        }
+    }
 }
 /// Request for \[RescheduleMaintenance][google.cloud.redis.v1beta1.CloudRedis.RescheduleMaintenance\].
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct RescheduleMaintenanceRequest {
     /// Required. Redis instance resource name using the form:
-    ///     `projects/{project_id}/locations/{location_id}/instances/{instance_id}`
+    ///      `projects/{project_id}/locations/{location_id}/instances/{instance_id}`
     /// where `location_id` refers to a GCP region.
     #[prost(string, tag="1")]
     pub name: ::prost::alloc::string::String,
@@ -346,6 +445,20 @@ pub mod reschedule_maintenance_request {
         NextAvailableWindow = 2,
         /// If the user wants to reschedule the maintenance to a specific time.
         SpecificTime = 3,
+    }
+    impl RescheduleType {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                RescheduleType::Unspecified => "RESCHEDULE_TYPE_UNSPECIFIED",
+                RescheduleType::Immediate => "IMMEDIATE",
+                RescheduleType::NextAvailableWindow => "NEXT_AVAILABLE_WINDOW",
+                RescheduleType::SpecificTime => "SPECIFIC_TIME",
+            }
+        }
     }
 }
 /// Maintenance policy for an instance.
@@ -404,7 +517,7 @@ pub struct MaintenanceSchedule {
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ListInstancesRequest {
     /// Required. The resource name of the instance location using the form:
-    ///     `projects/{project_id}/locations/{location_id}`
+    ///      `projects/{project_id}/locations/{location_id}`
     /// where `location_id` refers to a GCP region.
     #[prost(string, tag="1")]
     pub parent: ::prost::alloc::string::String,
@@ -450,7 +563,7 @@ pub struct ListInstancesResponse {
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct GetInstanceRequest {
     /// Required. Redis instance resource name using the form:
-    ///     `projects/{project_id}/locations/{location_id}/instances/{instance_id}`
+    ///      `projects/{project_id}/locations/{location_id}/instances/{instance_id}`
     /// where `location_id` refers to a GCP region.
     #[prost(string, tag="1")]
     pub name: ::prost::alloc::string::String,
@@ -459,7 +572,7 @@ pub struct GetInstanceRequest {
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct GetInstanceAuthStringRequest {
     /// Required. Redis instance resource name using the form:
-    ///     `projects/{project_id}/locations/{location_id}/instances/{instance_id}`
+    ///      `projects/{project_id}/locations/{location_id}/instances/{instance_id}`
     /// where `location_id` refers to a GCP region.
     #[prost(string, tag="1")]
     pub name: ::prost::alloc::string::String,
@@ -475,7 +588,7 @@ pub struct InstanceAuthString {
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct CreateInstanceRequest {
     /// Required. The resource name of the instance location using the form:
-    ///     `projects/{project_id}/locations/{location_id}`
+    ///      `projects/{project_id}/locations/{location_id}`
     /// where `location_id` refers to a GCP region.
     #[prost(string, tag="1")]
     pub parent: ::prost::alloc::string::String,
@@ -500,11 +613,11 @@ pub struct UpdateInstanceRequest {
     /// this field. The elements of the repeated paths field may only include these
     /// fields from \[Instance][google.cloud.redis.v1beta1.Instance\]:
     ///
-    ///  *   `displayName`
-    ///  *   `labels`
-    ///  *   `memorySizeGb`
-    ///  *   `redisConfig`
-    ///  *   `replica_count`
+    ///   *   `displayName`
+    ///   *   `labels`
+    ///   *   `memorySizeGb`
+    ///   *   `redisConfig`
+    ///   *   `replica_count`
     #[prost(message, optional, tag="1")]
     pub update_mask: ::core::option::Option<::prost_types::FieldMask>,
     /// Required. Update description.
@@ -516,7 +629,7 @@ pub struct UpdateInstanceRequest {
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct UpgradeInstanceRequest {
     /// Required. Redis instance resource name using the form:
-    ///     `projects/{project_id}/locations/{location_id}/instances/{instance_id}`
+    ///      `projects/{project_id}/locations/{location_id}/instances/{instance_id}`
     /// where `location_id` refers to a GCP region.
     #[prost(string, tag="1")]
     pub name: ::prost::alloc::string::String,
@@ -528,7 +641,7 @@ pub struct UpgradeInstanceRequest {
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct DeleteInstanceRequest {
     /// Required. Redis instance resource name using the form:
-    ///     `projects/{project_id}/locations/{location_id}/instances/{instance_id}`
+    ///      `projects/{project_id}/locations/{location_id}/instances/{instance_id}`
     /// where `location_id` refers to a GCP region.
     #[prost(string, tag="1")]
     pub name: ::prost::alloc::string::String,
@@ -561,7 +674,7 @@ pub mod input_config {
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ImportInstanceRequest {
     /// Required. Redis instance resource name using the form:
-    ///     `projects/{project_id}/locations/{location_id}/instances/{instance_id}`
+    ///      `projects/{project_id}/locations/{location_id}/instances/{instance_id}`
     /// where `location_id` refers to a GCP region.
     #[prost(string, tag="1")]
     pub name: ::prost::alloc::string::String,
@@ -598,7 +711,7 @@ pub mod output_config {
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ExportInstanceRequest {
     /// Required. Redis instance resource name using the form:
-    ///     `projects/{project_id}/locations/{location_id}/instances/{instance_id}`
+    ///      `projects/{project_id}/locations/{location_id}/instances/{instance_id}`
     /// where `location_id` refers to a GCP region.
     #[prost(string, tag="1")]
     pub name: ::prost::alloc::string::String,
@@ -610,7 +723,7 @@ pub struct ExportInstanceRequest {
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct FailoverInstanceRequest {
     /// Required. Redis instance resource name using the form:
-    ///     `projects/{project_id}/locations/{location_id}/instances/{instance_id}`
+    ///      `projects/{project_id}/locations/{location_id}/instances/{instance_id}`
     /// where `location_id` refers to a GCP region.
     #[prost(string, tag="1")]
     pub name: ::prost::alloc::string::String,
@@ -635,6 +748,19 @@ pub mod failover_instance_request {
         LimitedDataLoss = 1,
         /// Instance failover will be performed without data loss control.
         ForceDataLoss = 2,
+    }
+    impl DataProtectionMode {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                DataProtectionMode::Unspecified => "DATA_PROTECTION_MODE_UNSPECIFIED",
+                DataProtectionMode::LimitedDataLoss => "LIMITED_DATA_LOSS",
+                DataProtectionMode::ForceDataLoss => "FORCE_DATA_LOSS",
+            }
+        }
     }
 }
 /// This location metadata represents additional configuration options for a
@@ -682,6 +808,7 @@ pub struct TlsCertificate {
 pub mod cloud_redis_client {
     #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
     use tonic::codegen::*;
+    use tonic::codegen::http::Uri;
     /// Configures and manages Cloud Memorystore for Redis instances
     ///
     /// Google Cloud Memorystore for Redis v1beta1
@@ -712,6 +839,10 @@ pub mod cloud_redis_client {
             let inner = tonic::client::Grpc::new(inner);
             Self { inner }
         }
+        pub fn with_origin(inner: T, origin: Uri) -> Self {
+            let inner = tonic::client::Grpc::with_origin(inner, origin);
+            Self { inner }
+        }
         pub fn with_interceptor<F>(
             inner: T,
             interceptor: F,
@@ -731,19 +862,19 @@ pub mod cloud_redis_client {
         {
             CloudRedisClient::new(InterceptedService::new(inner, interceptor))
         }
-        /// Compress requests with `gzip`.
+        /// Compress requests with the given encoding.
         ///
         /// This requires the server to support it otherwise it might respond with an
         /// error.
         #[must_use]
-        pub fn send_gzip(mut self) -> Self {
-            self.inner = self.inner.send_gzip();
+        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.send_compressed(encoding);
             self
         }
-        /// Enable decompressing responses with `gzip`.
+        /// Enable decompressing responses.
         #[must_use]
-        pub fn accept_gzip(mut self) -> Self {
-            self.inner = self.inner.accept_gzip();
+        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.accept_compressed(encoding);
             self
         }
         /// Lists all Redis instances owned by a project in either the specified
